@@ -531,7 +531,7 @@ body.dark-mode .my-activity-item .act-time {
   color: #94A3B8;
 }
 
-/* Simulator Panel in Dark Mode */
+/* Simulator Panel & #D69E2E Accent in Dark Mode */
 body.dark-mode .sim-panel-box {
   background: #1E293B;
   border-color: #334155;
@@ -539,6 +539,31 @@ body.dark-mode .sim-panel-box {
 
 body.dark-mode .sim-panel-box h4 {
   color: #F8FAFC;
+}
+
+body.dark-mode .sim-desc-text {
+  color: #D69E2E !important;
+}
+
+body.dark-mode .sim-val-text {
+  color: #D69E2E !important;
+}
+
+body.dark-mode .stat-val-pending {
+  color: #D69E2E !important;
+}
+
+body.dark-mode .badge-gold {
+  background-color: rgba(214, 158, 46, 0.22) !important;
+  color: #D69E2E !important;
+  border-color: rgba(214, 158, 46, 0.45) !important;
+  font-weight: 700;
+}
+
+body.dark-mode .toast-item.warning {
+  background: #D69E2E !important;
+  border-color: #B7791F !important;
+  color: #FFFFFF !important;
 }
 
 body.dark-mode .grand-total-banner {

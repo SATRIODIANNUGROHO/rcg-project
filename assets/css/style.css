@@ -872,9 +872,10 @@ input[type="number"] {
 }
 
 .badge-gold {
-  background-color: #FEF3C7;
-  color: #92400E;
-  border: 1px solid #FDE68A;
+  background-color: rgba(214, 158, 46, 0.14);
+  color: #D69E2E;
+  border: 1px solid rgba(214, 158, 46, 0.35);
+  font-weight: 600;
 }
 
 .badge-neutral {
@@ -2036,8 +2037,8 @@ input[type="number"] {
   border-color: #991B1B;
 }
 .toast-item.warning {
-  background: #78350F;
-  border-color: #92400E;
+  background: #D69E2E;
+  border-color: #B7791F;
 }
 
 .toast-content p {
@@ -2054,8 +2055,28 @@ input[type="number"] {
 }
 
 /* ==========================================================================
-   Simulator Panel Styling
+   Simulator Panel & Status Styling (#D69E2E Theme Colors)
    ========================================================================== */
+.sim-desc-text {
+  font-size: 12.5px;
+  color: #D69E2E;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.sim-val-text {
+  font-size: 16px;
+  font-weight: 700;
+  min-width: 110px;
+  color: #D69E2E;
+}
+
+.stat-val-pending {
+  color: #D69E2E !important;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .sim-panel-box {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
