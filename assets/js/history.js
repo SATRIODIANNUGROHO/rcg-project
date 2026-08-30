@@ -150,7 +150,7 @@ const HistoryManager = {
     if (paginatedItems.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="15" style="text-align: center; padding: 32px; color: var(--text-secondary);">
+          <td colspan="9" style="text-align: center; padding: 32px; color: var(--text-secondary);">
             <strong>Tidak ada data transaksi yang sesuai filter</strong>
             <p style="font-size: 12px; margin-top: 4px;">Coba reset filter atau buat transaksi penimbangan baru.</p>
           </td>
@@ -164,8 +164,23 @@ const HistoryManager = {
       const isLunas = tx.paymentStatus === 'Lunas';
 
       tr.innerHTML = `
-        <td class="actions-cell">
-          <button class="btn btn-table-action action-detail" title="Lihat Detail" onclick="HistoryManager.showDetailModal('${tx.id}')">
+        <td>
+          <div style="font-weight: 700; color: var(--primary);">${tx.material}</div>
+          <div class="text-small text-secondary mono-num">${tx.docNo}</div>
+        </td>
+        <td class="mono-num">${tx.date}</td>
+        <td><strong>${tx.supplier}</strong></td>
+        <td>${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
+        <td><span class="badge badge-neutral mono-num" style="font-weight: 700;">${tx.plateNo}</span></td>
+        <td class="num-cell text-right" style="font-weight: 700; color: var(--primary);">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
+        <td class="num-cell text-right" style="font-weight: 700; color: var(--primary-dark);">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
+        <td class="text-center">
+          <button class="badge ${isLunas ? 'badge-success' : 'badge-warning'}" style="cursor: pointer; border: none; height: 24px; padding: 0 8px;" onclick="HistoryManager.togglePaymentStatus('${tx.id}')" title="Klik untuk mengubah status pembayaran">
+            ${isLunas ? 'Lunas' : 'Belum Lunas'}
+          </button>
+        </td>
+        <td class="actions-cell text-center">
+          <button class="btn btn-table-action action-detail" title="Lihat Detail Lengkap" onclick="HistoryManager.showDetailModal('${tx.id}')">
             Detail
           </button>
           <button class="btn btn-table-action action-print" title="Cetak Nota" onclick="HistoryManager.printNotaById('${tx.id}')">
@@ -176,27 +191,6 @@ const HistoryManager = {
           </button>
           <button class="btn btn-table-action action-delete" title="Hapus Transaksi" onclick="HistoryManager.confirmDelete('${tx.id}')">
             Hapus
-          </button>
-        </td>
-        <td>
-          <div style="font-weight: 700; color: var(--primary);">${tx.material}</div>
-          <div class="text-small text-secondary mono-num">${tx.docNo}</div>
-        </td>
-        <td class="mono-num">${tx.date}</td>
-        <td><strong>${tx.supplier}</strong></td>
-        <td>${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
-        <td><span class="badge badge-neutral mono-num" style="font-weight:700;">${tx.plateNo}</span></td>
-        <td class="num-cell">${tx.grossWeight.toLocaleString('id-ID')}</td>
-        <td class="num-cell">${tx.tareWeight.toLocaleString('id-ID')}</td>
-        <td class="num-cell" style="font-weight: 600;">${tx.netLoadWeight.toLocaleString('id-ID')}</td>
-        <td class="num-cell text-center">${tx.refractionPercent}%</td>
-        <td class="num-cell" style="font-weight: 700; color: var(--primary-dark);">${tx.finalNetWeight.toLocaleString('id-ID')}</td>
-        <td class="num-cell" style="color: var(--primary);">${tx.k1Weight.toLocaleString('id-ID')}</td>
-        <td class="num-cell" style="color: var(--accent-gold);">${tx.k2Weight.toLocaleString('id-ID')}</td>
-        <td class="num-cell" style="font-weight: 700; color: var(--primary-dark);">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
-        <td class="text-center">
-          <button class="badge ${isLunas ? 'badge-success' : 'badge-warning'}" style="cursor: pointer; border: none; height: 24px; padding: 0 8px;" onclick="HistoryManager.togglePaymentStatus('${tx.id}')" title="Klik untuk mengubah status pembayaran">
-            ${isLunas ? 'Lunas' : 'Belum Lunas'}
           </button>
         </td>
       `;
@@ -230,69 +224,86 @@ const HistoryManager = {
     const modalBody = document.getElementById('detail-modal-content');
     if (!modalBody) return;
 
+    const isLunas = tx.paymentStatus === 'Lunas';
+
     modalBody.innerHTML = `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
-        <div class="mini-stat-item">
-          <div class="title">Nomor Dokumen</div>
-          <div class="value mono-num" style="color: var(--primary);">${tx.docNo}</div>
+      <!-- 1. Dokumen & Material -->
+      <div class="section-block" style="margin-bottom: 12px; padding: 14px;">
+        <div class="section-block-title" style="margin-bottom: 10px;">
+          <span>1. Dokumen &amp; Material</span>
+          <span class="badge ${isLunas ? 'badge-success' : 'badge-warning'}">${tx.paymentStatus}</span>
         </div>
-        <div class="mini-stat-item">
-          <div class="title">Tanggal & Waktu</div>
-          <div class="value mono-num">${tx.date} (${tx.timeIn || '-'} s/d ${tx.timeOut || '-'})</div>
-        </div>
-        <div class="mini-stat-item">
-          <div class="title">Nomor Polisi</div>
-          <div class="value mono-num">${tx.plateNo}</div>
-        </div>
-        <div class="mini-stat-item">
-          <div class="title">Pemasok / Supplier</div>
-          <div class="value">${tx.supplier}</div>
-        </div>
-        <div class="mini-stat-item">
-          <div class="title">Material & Karung</div>
-          <div class="value">${tx.material} ${tx.bagCount ? '(' + tx.bagCount + ' Karung)' : ''}</div>
-        </div>
-        <div class="mini-stat-item">
-          <div class="title">Asal Garam</div>
-          <div class="value">${tx.originArea || '-'}, ${tx.originRegion || '-'}</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+          <div><span class="text-secondary text-small">No. Dokumen:</span><br><strong class="mono-num" style="color: var(--primary);">${tx.docNo}</strong></div>
+          <div><span class="text-secondary text-small">Material:</span><br><strong>${tx.material} ${tx.bagCount ? '(' + tx.bagCount + ' Karung)' : ''}</strong></div>
+          <div><span class="text-secondary text-small">Tanggal:</span><br><strong class="mono-num">${tx.date}</strong></div>
+          <div><span class="text-secondary text-small">Waktu Masuk / Keluar:</span><br><span class="mono-num">${tx.timeIn || '-'} s/d ${tx.timeOut || '-'}</span></div>
         </div>
       </div>
 
-      <div class="section-block" style="margin-bottom: 14px;">
-        <div class="section-block-title">Rincian Timbangan</div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-          <div><span class="text-secondary text-small">Berat Kotor (Gross):</span> <br><strong class="mono-num">${tx.grossWeight.toLocaleString('id-ID')} Kg</strong></div>
-          <div><span class="text-secondary text-small">Berat Tara (Tare):</span> <br><strong class="mono-num">${tx.tareWeight.toLocaleString('id-ID')} Kg</strong></div>
-          <div><span class="text-secondary text-small">Berat Muatan (Bruto):</span> <br><strong class="mono-num">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</strong></div>
-          <div><span class="text-secondary text-small">Refraksi:</span> <br><strong class="mono-num">${tx.refractionPercent}% (${tx.refractionKg.toLocaleString('id-ID')} Kg)</strong></div>
-          <div style="grid-column: span 2;"><span class="text-secondary text-small">BERSIH TOTAL:</span> <br><strong class="mono-num text-display" style="font-size: 22px; color: var(--primary);">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</strong></div>
+      <!-- 2. Informasi Pemasok, Asal & Kendaraan -->
+      <div class="section-block" style="margin-bottom: 12px; padding: 14px;">
+        <div class="section-block-title" style="margin-bottom: 10px;">2. Pemasok, Asal &amp; Kendaraan</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+          <div><span class="text-secondary text-small">Pemasok:</span><br><strong>${tx.supplier}</strong></div>
+          <div><span class="text-secondary text-small">Asal Garam:</span><br><strong>${tx.originArea || '-'}, ${tx.originRegion || '-'}</strong></div>
+          <div><span class="text-secondary text-small">No. Polisi:</span><br><span class="badge badge-neutral mono-num" style="font-weight: 700;">${tx.plateNo}</span></div>
+          <div><span class="text-secondary text-small">Nama Supir:</span><br><strong>${tx.driverName || '-'}</strong></div>
         </div>
       </div>
 
-      <div class="section-block">
-        <div class="section-block-title">Rincian Mutu & Nominal</div>
+      <!-- 3. Rincian Lengkap Penimbangan (Kotor, Tara, Muatan, Refraksi, Bersih Total) -->
+      <div class="section-block" style="margin-bottom: 12px; padding: 14px;">
+        <div class="section-block-title" style="margin-bottom: 10px;">3. Rincian Lengkap Penimbangan (Kg)</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(115px, 1fr)); gap: 8px; margin-bottom: 10px;">
+          <div class="mini-stat-item">
+            <div class="title">BERAT KOTOR (GROSS)</div>
+            <div class="value mono-num">${tx.grossWeight.toLocaleString('id-ID')} Kg</div>
+          </div>
+          <div class="mini-stat-item">
+            <div class="title">BERAT TARA (TARE)</div>
+            <div class="value mono-num">${tx.tareWeight.toLocaleString('id-ID')} Kg</div>
+          </div>
+          <div class="mini-stat-item">
+            <div class="title">BERAT MUATAN (BRUTO)</div>
+            <div class="value mono-num">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</div>
+          </div>
+          <div class="mini-stat-item">
+            <div class="title">REFRAKSI (${tx.refractionPercent}%)</div>
+            <div class="value mono-num" style="color: var(--color-danger);">-${tx.refractionKg.toLocaleString('id-ID')} Kg</div>
+          </div>
+        </div>
+        <div class="grand-total-banner" style="background: rgba(37, 99, 184, 0.12); border: 1px solid var(--primary-border); margin: 0; padding: 10px 14px;">
+          <div class="lbl" style="color: var(--primary); font-weight: 700;">HASIL BERSIH TOTAL (NETTO)</div>
+          <div class="val mono-num" style="font-size: 24px; color: var(--primary);">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</div>
+        </div>
+      </div>
+
+      <!-- 4. Alokasi Mutu Garam & Nilai Pembayaran -->
+      <div class="section-block" style="margin-bottom: 12px; padding: 14px;">
+        <div class="section-block-title" style="margin-bottom: 10px;">4. Alokasi Mutu &amp; Nilai Pembayaran</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-          <div>
-            <span class="text-secondary text-small">Kualitas K1 (Super):</span><br>
-            <strong class="mono-num">${tx.k1Weight.toLocaleString('id-ID')} Kg</strong> @ Rp ${tx.k1Price.toLocaleString('id-ID')}<br>
-            <span class="mono-num" style="color: var(--primary);">Subtotal: Rp ${tx.k1Total.toLocaleString('id-ID')}</span>
+          <div class="mini-stat-item">
+            <div class="title" style="color: var(--primary);">KUALITAS K1 (GARAM SUPER)</div>
+            <div class="mono-num" style="font-size: 13.5px; font-weight: 700; color: var(--primary);">${tx.k1Weight.toLocaleString('id-ID')} Kg &times; Rp ${tx.k1Price.toLocaleString('id-ID')}</div>
+            <div class="text-small mono-num" style="color: var(--text-secondary); margin-top: 2px;">Subtotal: <strong>Rp ${tx.k1Total.toLocaleString('id-ID')}</strong></div>
           </div>
-          <div>
-            <span class="text-secondary text-small">Kualitas K2 (Standar):</span><br>
-            <strong class="mono-num">${tx.k2Weight.toLocaleString('id-ID')} Kg</strong> @ Rp ${tx.k2Price.toLocaleString('id-ID')}<br>
-            <span class="mono-num" style="color: var(--accent-gold);">Subtotal: Rp ${tx.k2Total.toLocaleString('id-ID')}</span>
+          <div class="mini-stat-item">
+            <div class="title" style="color: var(--accent-gold);">KUALITAS K2 (GARAM STANDAR)</div>
+            <div class="mono-num" style="font-size: 13.5px; font-weight: 700; color: var(--accent-gold);">${tx.k2Weight.toLocaleString('id-ID')} Kg &times; Rp ${tx.k2Price.toLocaleString('id-ID')}</div>
+            <div class="text-small mono-num" style="color: var(--text-secondary); margin-top: 2px;">Subtotal: <strong>Rp ${tx.k2Total.toLocaleString('id-ID')}</strong></div>
           </div>
         </div>
-        <div class="grand-total-banner" style="margin-top: 6px; padding: 12px;">
+        <div class="grand-total-banner" style="margin: 0; padding: 12px;">
           <div class="lbl">TOTAL PEMBAYARAN</div>
-          <div class="val" style="font-size: 24px;">Rp ${tx.grandTotal.toLocaleString('id-ID')}</div>
+          <div class="val mono-num" style="font-size: 24px;">Rp ${tx.grandTotal.toLocaleString('id-ID')}</div>
         </div>
       </div>
 
-      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-top: 10px;">
-        <div>Supir: <strong>${tx.driverName}</strong></div>
-        <div>Petugas: <strong>${tx.weighmasterName}</strong></div>
-        <div>Admin: <strong>${tx.adminName}</strong></div>
+      <!-- 5. Otorisasi & Log Petugas -->
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); padding: 0 4px;">
+        <div>Petugas Timbang: <strong style="color: var(--text-primary);">${tx.weighmasterName || '-'}</strong></div>
+        <div>Operator Admin: <strong style="color: var(--text-primary);">${tx.adminName || '-'}</strong></div>
       </div>
     `;
 
