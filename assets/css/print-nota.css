@@ -1,0 +1,185 @@
+/* ==========================================================================
+   PT. REKA CIPTA GARAM - NOTA TIMBANG PRINT STYLESHEET
+   Format: Official Weighing Receipt (Nota Timbang)
+   ========================================================================== */
+
+#printable-nota {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A5 landscape;
+    margin: 8mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-nota, #printable-nota * {
+    visibility: visible;
+  }
+
+  #printable-nota {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #000000 !important;
+    background: #FFFFFF !important;
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 11.5pt;
+    line-height: 1.35;
+  }
+
+  .nota-container {
+    border: 2px solid #000000;
+    padding: 14px 18px;
+    background: #FFFFFF;
+  }
+
+  .nota-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+
+  .nota-company h2 {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #000000;
+    margin: 0;
+  }
+
+  .nota-company p {
+    font-size: 8.5pt;
+    color: #333333;
+    margin: 2px 0 0 0;
+  }
+
+  .nota-title-box {
+    text-align: right;
+  }
+
+  .nota-title-box h1 {
+    font-size: 16pt;
+    font-weight: 800;
+    text-decoration: underline;
+    margin: 0;
+  }
+
+  .nota-doc-no {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10pt;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .nota-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .nota-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+
+  .nota-info-table td {
+    padding: 2.5px 4px;
+    vertical-align: top;
+  }
+
+  .nota-info-table td.label {
+    width: 32%;
+    font-weight: 600;
+  }
+
+  .nota-info-table td.colon {
+    width: 4%;
+  }
+
+  .nota-info-table td.val {
+    font-weight: 700;
+  }
+
+  .nota-weight-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    border: 1.5px solid #000000;
+  }
+
+  .nota-weight-table th {
+    background-color: #F0F0F0 !important;
+    color: #000000 !important;
+    border: 1px solid #000000;
+    padding: 6px 8px;
+    font-size: 9pt;
+    font-weight: 700;
+    text-align: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .nota-weight-table td {
+    border: 1px solid #000000;
+    padding: 6px 8px;
+    font-size: 9.5pt;
+  }
+
+  .nota-weight-table td.num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .nota-total-highlight {
+    background-color: #F0F0F0 !important;
+    font-weight: 800;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .nota-signatures {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+    margin-top: 14px;
+    padding-top: 6px;
+  }
+
+  .sign-col p {
+    font-size: 9pt;
+    margin-bottom: 45px;
+    font-weight: 600;
+  }
+
+  .sign-col .sign-name {
+    font-size: 9.5pt;
+    font-weight: 700;
+    border-top: 1px solid #000000;
+    display: inline-block;
+    min-width: 130px;
+    padding-top: 2px;
+    margin-bottom: 0;
+  }
+
+  .nota-footer-note {
+    font-size: 7.5pt;
+    color: #555555;
+    text-align: center;
+    margin-top: 8px;
+    border-top: 1px dashed #777777;
+    padding-top: 4px;
+  }
+}

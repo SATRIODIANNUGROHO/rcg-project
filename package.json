@@ -1,0 +1,63 @@
+{
+  "name": "rcg-salt-weighing-system",
+  "version": "7.5.0",
+  "description": "PT. Reka Cipta Garam - Salt Weighing System v7.5.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:icons": "node scripts/generate-icons.js",
+    "dist": "node scripts/generate-icons.js && electron-builder --win"
+  },
+  "keywords": [
+    "salt-weighing-system",
+    "reka-cipta-garam",
+    "industrial-scale",
+    "electron"
+  ],
+  "author": "PT. Reka Cipta Garam",
+  "license": "ISC",
+  "build": {
+    "appId": "com.rekaciptagaram.weighingsystem",
+    "productName": "RCG Salt Weighing System",
+    "files": [
+      "index.html",
+      "login.html",
+      "main.js",
+      "preload.js",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "RCG Salt Weighing System"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.4"
+  }
+}

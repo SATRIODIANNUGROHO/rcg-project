@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | PT. Reka Cipta Garam - Salt Weighing System</title>
+  <link rel="icon" type="image/webp" href="assets/images/RCG.webp">
+
+  <!-- Google Fonts: Plus Jakarta Sans & IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Theme Core Stylesheets (Same as Main App) -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+      padding: 20px;
+      margin: 0;
+      position: relative;
+    }
+
+    .login-top-actions {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      z-index: 10;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-modal);
+      box-shadow: var(--shadow-modal);
+      background-color: var(--bg-card);
+      overflow: hidden;
+    }
+
+    .login-header-bar {
+      background-color: #163A5F;
+      color: #FFFFFF;
+      padding: 16px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .login-header-bar h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    body.dark-mode .login-header-bar {
+      background-color: #0F172A;
+      border-bottom: 1px solid #334155;
+    }
+
+    body.dark-mode .login-header-bar h3 {
+      color: #F8FAFC;
+    }
+
+    .login-content {
+      padding: 24px;
+      background-color: var(--bg-card);
+    }
+
+    .login-brand-meta {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .login-logo-img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin: 0 auto 10px;
+      display: block;
+    }
+
+    .login-company-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 3px;
+    }
+
+    .login-system-sub {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .login-error-box {
+      display: none;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      background-color: var(--color-danger-light);
+      color: var(--color-danger);
+      border: 1px solid var(--color-danger-border);
+    }
+
+    .login-demo-bar {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .login-footer-copy {
+      margin-top: 20px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .theme-btn-content {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+  </style>
+
+  <!-- Immediate Theme Pre-loader -->
+  <script>
+    try {
+      const s = localStorage.getItem('rcg_settings_v75') || localStorage.getItem('rcg_settings_v7');
+      if (s && JSON.parse(s).darkMode) {
+        document.documentElement.classList.add('dark-mode');
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.classList.add('dark-mode');
+        });
+      }
+    } catch(e) {}
+  </script>
+</head>
+<body>
+
+  <!-- Top Theme Mode Switcher (Clean SVG Icon, No Emojis) -->
+  <div class="login-top-actions">
+    <button id="btn-login-theme" class="btn btn-secondary btn-sm" type="button" title="Ganti Mode Tampilan">
+      <span class="theme-btn-content">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span id="theme-btn-label">Mode Terang</span>
+      </span>
+    </button>
+  </div>
+
+  <!-- Centered Login Card -->
+  <div class="login-box">
+    <div class="login-header-bar">
+      <h3>Login Sistem Timbangan RCG</h3>
+    </div>
+
+    <div class="login-content">
+      <div class="login-brand-meta">
+        <img src="assets/images/RCG.webp" alt="PT. Reka Cipta Garam" class="login-logo-img">
+        <h4 class="login-company-title">PT. REKA CIPTA GARAM</h4>
+        <p class="login-system-sub">Silakan masuk menggunakan kredensial operator atau admin</p>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="login-error-alert" class="login-error-box">
+        <span id="login-error-msg">Username atau password salah!</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login-page">
+        <div class="form-group">
+          <label class="form-label" for="input-username">Username</label>
+          <input 
+            type="text" 
+            id="input-username" 
+            class="form-control" 
+            placeholder="Masukkan username" 
+            required 
+            autofocus
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="input-password">Password</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <input 
+              type="password" 
+              id="input-password" 
+              class="form-control" 
+              placeholder="Masukkan kata sandi" 
+              style="padding-right: 38px;"
+              required
+            >
+            <button 
+              type="button" 
+              id="btn-toggle-password" 
+              style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); border-radius: var(--radius-tight); transition: var(--transition);"
+              title="Tampilkan/Sembunyikan Kata Sandi"
+              aria-label="Tampilkan atau sembunyikan kata sandi"
+            >
+              <!-- Eye Open SVG (Clean 24x24 stroke-width: 2, matches all application icons) -->
+              <svg id="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <!-- Eye Slashed / Closed SVG (hidden initially) -->
+              <svg id="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px 0 18px;">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer;">
+            <input type="checkbox" id="check-remember" checked>
+            <span>Remember Me</span>
+          </label>
+        </div>
+
+        <button type="submit" id="btn-login-submit" class="btn btn-primary w-100" style="height: 40px;">
+          Masuk ke Aplikasi
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="login-footer-copy">
+    &copy; 2026 PT. Reka Cipta Garam &bull; Salt Weighing System v7.5.0
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Elements
+      const loginForm = document.getElementById('form-login-page');
+      const inputUsername = document.getElementById('input-username');
+      const inputPassword = document.getElementById('input-password');
+      const checkRemember = document.getElementById('check-remember');
+      const alertBox = document.getElementById('login-error-alert');
+      const alertMsg = document.getElementById('login-error-msg');
+      const btnTheme = document.getElementById('btn-login-theme');
+      const labelTheme = document.getElementById('theme-btn-label');
+      const btnTogglePw = document.getElementById('btn-toggle-password');
+      const iconEyeOpen = document.getElementById('icon-eye-open');
+      const iconEyeClosed = document.getElementById('icon-eye-closed');
+
+      // Pre-fill remembered username
+      const rememberedUser = localStorage.getItem('rcg_remembered_username');
+      if (rememberedUser && inputUsername) {
+        inputUsername.value = rememberedUser;
+        if (checkRemember) checkRemember.checked = true;
+        if (inputPassword) inputPassword.focus();
+      } else if (inputUsername) {
+        inputUsername.value = 'admin';
+        if (inputPassword) inputPassword.focus();
+      }
+
+      // Password Inspect Toggle Handler
+      if (btnTogglePw && inputPassword) {
+        btnTogglePw.addEventListener('click', () => {
+          const isCurrentlyPassword = inputPassword.type === 'password';
+          inputPassword.type = isCurrentlyPassword ? 'text' : 'password';
+          if (iconEyeOpen) iconEyeOpen.style.display = isCurrentlyPassword ? 'none' : 'block';
+          if (iconEyeClosed) iconEyeClosed.style.display = isCurrentlyPassword ? 'block' : 'none';
+          btnTogglePw.style.color = isCurrentlyPassword ? 'var(--primary)' : 'var(--text-secondary)';
+          inputPassword.focus();
+        });
+      }
+
+      // Theme toggle sync (Pure text, NO EMOJIS)
+      const updateThemeLabel = () => {
+        const isDark = document.body.classList.contains('dark-mode');
+        if (labelTheme) {
+          labelTheme.textContent = isDark ? 'Mode Terang' : 'Mode Gelap';
+        }
+      };
+
+      updateThemeLabel();
+
+      if (btnTheme) {
+        btnTheme.addEventListener('click', () => {
+          const isDark = document.body.classList.toggle('dark-mode');
+          document.documentElement.classList.toggle('dark-mode', isDark);
+          const currentSettings = JSON.parse(localStorage.getItem('rcg_settings_v75') || '{}');
+          currentSettings.darkMode = isDark;
+          localStorage.setItem('rcg_settings_v75', JSON.stringify(currentSettings));
+          localStorage.setItem('rcg_settings_v7', JSON.stringify(currentSettings));
+          updateThemeLabel();
+        });
+      }
+
+      // Form Submit
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = inputUsername.value.trim();
+        const password = inputPassword.value;
+        const remember = checkRemember.checked;
+
+        if (alertBox) alertBox.style.display = 'none';
+
+        const result = AuthManager.login(username, password, remember);
+        if (result.success) {
+          const submitBtn = document.getElementById('btn-login-submit');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Memuat Aplikasi...';
+          }
+          window.location.href = 'index.html';
+        } else {
+          if (alertBox && alertMsg) {
+            alertMsg.textContent = result.message || 'Username atau password salah!';
+            alertBox.style.display = 'block';
+          }
+          inputPassword.focus();
+          inputPassword.select();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

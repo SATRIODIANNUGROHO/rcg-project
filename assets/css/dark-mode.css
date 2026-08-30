@@ -1,0 +1,588 @@
+/* ==========================================================================
+   PT. REKA CIPTA GARAM - DARK THEME OVERRIDES
+   High-Contrast Clean Slate Dark Industrial Styling
+   ========================================================================== */
+
+body.dark-mode {
+  --bg-app: #0B1120;
+  --bg-surface: #1E293B;
+  --bg-surface-alt: #0F172A;
+  --bg-card: #1E293B;
+  --bg-table-stripe: #172338;
+  --bg-table-hover: #28374F;
+
+  /* Typography Colors in Dark Mode */
+  --primary-dark: #F8FAFC;    /* Bright white for all headings & key metrics */
+  --primary: #38BDF8;         /* Vibrant Sky Blue */
+  --primary-hover: #60A5FA;
+  --primary-light: rgba(56, 189, 248, 0.15);
+  --primary-border: #0284C7;
+
+  --text-primary: #F8FAFC;    /* Crisp White */
+  --text-secondary: #94A3B8;  /* Light Slate Gray */
+  --text-muted: #64748B;      /* Medium Slate Gray */
+  --text-inverse: #0F172A;
+  --border-color: #334155;    /* Crisp Dark Border */
+  --border-subtle: #1E293B;
+  --divider: #334155;
+
+  --accent-gold: #FBBF24;
+  --accent-gold-hover: #F59E0B;
+  --accent-light: rgba(245, 158, 11, 0.15);
+  --accent-border: #B45309;
+
+  --color-success: #4ADE80;
+  --color-success-light: rgba(74, 222, 128, 0.15);
+  --color-success-border: #166534;
+  
+  --color-warning: #FBBF24;
+  --color-warning-light: rgba(245, 158, 11, 0.15);
+  --color-warning-border: #B45309;
+  
+  --color-danger: #F87171;
+  --color-danger-light: rgba(248, 113, 113, 0.15);
+  --color-danger-border: #991B1B;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 16px 40px rgba(0, 0, 0, 0.6);
+
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+/* Custom Scrollbar in Dark Mode */
+body.dark-mode *::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+
+body.dark-mode *::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+/* Header & Nav in Dark Mode */
+body.dark-mode .app-header {
+  background-color: #0B132B;
+  border-bottom-color: #1E293B;
+}
+
+body.dark-mode .dropdown-menu-card {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+body.dark-mode .dropdown-user-name {
+  color: #F8FAFC;
+}
+
+body.dark-mode .dropdown-user-role {
+  color: #94A3B8;
+}
+
+body.dark-mode .dropdown-divider {
+  background-color: #334155;
+}
+
+body.dark-mode .dropdown-menu-item {
+  color: #F8FAFC;
+}
+
+body.dark-mode .dropdown-menu-item:hover {
+  background: #0F172A;
+  color: #38BDF8;
+}
+
+body.dark-mode .dropdown-menu-item:hover .menu-item-icon {
+  color: #38BDF8;
+}
+
+body.dark-mode .dropdown-menu-item.item-danger {
+  color: #F87171;
+}
+
+body.dark-mode .dropdown-menu-item.item-danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+}
+
+body.dark-mode .main-nav {
+  background-color: #070D1E;
+  border-bottom-color: #1E293B;
+}
+
+body.dark-mode .mobile-nav-header {
+  color: #F8FAFC;
+  border-bottom-color: #1E293B;
+}
+
+body.dark-mode .btn-close-drawer {
+  color: #94A3B8;
+}
+
+body.dark-mode .btn-close-drawer:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .nav-item {
+  color: #94A3B8;
+}
+
+body.dark-mode .nav-item:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.dark-mode .nav-item.active {
+  color: #FFFFFF;
+  background: rgba(56, 189, 248, 0.16);
+  border-bottom-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  body.dark-mode .main-nav {
+    background: #0B132B;
+    border-right-color: #1E293B;
+  }
+  body.dark-mode .nav-item.active {
+    border-left-color: #38BDF8;
+    border-bottom-color: transparent;
+  }
+}
+
+/* Scale Bar in Dark Mode */
+body.dark-mode .scale-indicator-card {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-mode .scale-status-text h4 {
+  color: #F8FAFC;
+}
+
+body.dark-mode .scale-status-text p {
+  color: #94A3B8;
+}
+
+body.dark-mode .scale-display-center {
+  background: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .scale-weight-val {
+  color: #38BDF8;
+}
+
+body.dark-mode .scale-weight-unit {
+  color: #94A3B8;
+}
+
+/* Stat Cards in Dark Mode */
+body.dark-mode .stat-card {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-mode .stat-card:hover {
+  border-color: #475569;
+}
+
+body.dark-mode .stat-label {
+  color: #94A3B8;
+}
+
+body.dark-mode .stat-main-val {
+  color: #F8FAFC;
+}
+
+body.dark-mode .stat-sub-info {
+  color: #94A3B8;
+  border-top-color: #334155;
+}
+
+body.dark-mode .stat-sub-info strong {
+  color: #F8FAFC;
+}
+
+body.dark-mode .stat-icon {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+}
+
+/* Cards & Section Blocks */
+body.dark-mode .card {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-mode .card-header {
+  background: #1E293B;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .card-title,
+body.dark-mode .section-title,
+body.dark-mode .section-block-title {
+  color: #F8FAFC;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .section-block {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-mode .mini-stat-item {
+  background: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .mini-stat-item .title {
+  color: #94A3B8;
+}
+
+body.dark-mode .mini-stat-item .value {
+  color: #F8FAFC;
+}
+
+/* Form Controls in Dark Mode */
+body.dark-mode .form-label {
+  color: #E2E8F0;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background-color: #0F172A;
+  color: #F8FAFC;
+  border-color: #334155;
+}
+
+body.dark-mode .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+body.dark-mode .form-select option {
+  background-color: #1E293B;
+  color: #F8FAFC;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  border-color: var(--primary);
+  background-color: #162032;
+}
+
+body.dark-mode .form-select:hover:not(:disabled) {
+  border-color: #475569;
+}
+
+body.dark-mode .form-control:disabled,
+body.dark-mode .form-control[readonly],
+body.dark-mode .form-select:disabled {
+  background-color: #070D1E;
+  color: #64748B;
+}
+
+/* Custom Select in Dark Mode */
+body.dark-mode .custom-select-trigger {
+  background-color: #0F172A;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+body.dark-mode .custom-select-trigger:hover,
+body.dark-mode .custom-select-container.open .custom-select-trigger {
+  border-color: var(--primary);
+  background-color: #162032;
+}
+
+body.dark-mode .custom-select-menu {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+body.dark-mode .custom-select-option {
+  color: #F8FAFC;
+}
+
+body.dark-mode .custom-select-option:hover {
+  background-color: #0F172A;
+  color: #38BDF8;
+}
+
+body.dark-mode .custom-select-option.selected {
+  background-color: rgba(56, 189, 248, 0.16);
+  color: #38BDF8;
+}
+
+/* Buttons in Dark Mode */
+body.dark-mode .btn-secondary,
+body.dark-mode .btn-neutral {
+  background-color: #0F172A;
+  color: #E2E8F0;
+  border-color: #334155;
+}
+
+body.dark-mode .btn-secondary:hover,
+body.dark-mode .btn-neutral:hover {
+  background-color: #1E293B;
+  color: #FFFFFF;
+  border-color: #475569;
+}
+
+body.dark-mode .btn-confirm-accent,
+body.dark-mode .btn-accent {
+  background-color: #D69E2E;
+  color: #0F172A;
+  border-color: #D69E2E;
+  font-weight: 700;
+}
+
+body.dark-mode .btn-confirm-accent:hover:not(:disabled),
+body.dark-mode .btn-accent:hover:not(:disabled) {
+  background-color: #ECC94B;
+  border-color: #ECC94B;
+  color: #0F172A;
+}
+
+body.dark-mode .btn-outline-danger {
+  background-color: #0F172A;
+  color: #F87171;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.dark-mode .btn-outline-danger:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: #EF4444;
+  color: #EF4444;
+}
+
+/* Table Action Buttons in Dark Mode (Clean & Uniform) */
+body.dark-mode .btn-table-action {
+  background-color: #0F172A;
+  color: #E2E8F0;
+  border-color: #334155;
+}
+
+body.dark-mode .btn-table-action.action-detail:hover,
+body.dark-mode .btn-table-action.action-edit:hover {
+  background-color: #1E293B;
+  color: #38BDF8;
+  border-color: #475569;
+}
+
+body.dark-mode .btn-table-action.action-print:hover {
+  background-color: rgba(37, 99, 184, 0.35);
+  color: #7DD3FC;
+  border-color: #38BDF8;
+}
+
+body.dark-mode .btn-table-action.action-delete:hover {
+  background-color: rgba(239, 68, 68, 0.25);
+  color: #EF4444;
+  border-color: #EF4444;
+}
+
+/* Role Text & Badges in Dark Mode */
+body.dark-mode .role-text.role-admin {
+  color: #38BDF8;
+}
+
+body.dark-mode .role-text.role-operator {
+  color: #94A3B8;
+}
+
+body.dark-mode .badge-admin,
+body.dark-mode .badge-info {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+body.dark-mode .badge-neutral {
+  background-color: #0F172A;
+  color: #94A3B8;
+  border-color: #334155;
+}
+
+/* Tables in Dark Mode */
+body.dark-mode .table-responsive {
+  border-color: #334155;
+  background: #1E293B;
+}
+
+body.dark-mode .data-table thead th {
+  background-color: #0F172A;
+  color: #F8FAFC;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .data-table tbody td {
+  color: #F1F5F9;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .data-table tbody tr:nth-child(even) {
+  background-color: #172338;
+}
+
+body.dark-mode .data-table tbody tr:hover {
+  background-color: #28374F;
+}
+
+body.dark-mode .pagination-area {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+/* Modals in Dark Mode */
+body.dark-mode .modal-container {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-mode .modal-header {
+  background: #0F172A;
+  border-bottom: 1px solid #334155;
+}
+
+body.dark-mode .modal-header h3 {
+  color: #F8FAFC;
+}
+
+body.dark-mode .modal-body {
+  color: #F8FAFC;
+}
+
+body.dark-mode .delete-verify-box {
+  background: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .verify-icon {
+  color: #38BDF8;
+}
+
+body.dark-mode .verify-content p {
+  color: #F8FAFC;
+}
+
+body.dark-mode .verify-sub {
+  color: #94A3B8;
+}
+
+body.dark-mode .modal-footer {
+  background: #0F172A;
+  border-top-color: #334155;
+}
+
+/* Profile Modal in Dark Mode */
+body.dark-mode .profile-tabs-header {
+  background-color: #0F172A;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .profile-tab-btn {
+  color: #94A3B8;
+}
+
+body.dark-mode .profile-tab-btn:hover {
+  color: #F8FAFC;
+}
+
+body.dark-mode .profile-tab-btn.active {
+  color: #38BDF8;
+  border-bottom-color: #38BDF8;
+  background-color: #1E293B;
+}
+
+body.dark-mode .profile-summary-card,
+body.dark-mode .profile-avatar-card {
+  background-color: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .profile-info-item {
+  background-color: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .profile-info-item .info-label {
+  color: #94A3B8;
+}
+
+body.dark-mode .profile-info-item .info-val {
+  color: #F8FAFC;
+}
+
+body.dark-mode .my-activity-item {
+  background-color: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .my-activity-item .act-text {
+  color: #F8FAFC;
+}
+
+body.dark-mode .my-activity-item .act-time {
+  color: #94A3B8;
+}
+
+/* Simulator Panel in Dark Mode */
+body.dark-mode .sim-panel-box {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-mode .sim-panel-box h4 {
+  color: #F8FAFC;
+}
+
+body.dark-mode .grand-total-banner {
+  background: #0F172A;
+  border: 1px solid #334155;
+}
+
+/* Custom Datepicker in Dark Mode */
+body.dark-mode .custom-datepicker-trigger {
+  background-color: #1E293B;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+body.dark-mode .custom-datepicker-popup {
+  background-color: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .datepicker-header,
+body.dark-mode .datepicker-footer {
+  border-color: #334155;
+}
+
+body.dark-mode .btn-datepicker-nav:hover,
+body.dark-mode .datepicker-day:hover {
+  background-color: #0F172A;
+  color: #38BDF8;
+}
+
+body.dark-mode .datepicker-day.today {
+  border-color: #38BDF8;
+}
+
+body.dark-mode .datepicker-day.selected {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+}
+
+body.dark-mode .btn-datepicker-footer.btn-today {
+  color: #38BDF8;
+}
+
+body.dark-mode .btn-datepicker-footer.btn-today:hover {
+  background-color: rgba(56, 189, 248, 0.15);
+}

@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT. Reka Cipta Garam | Salt Weighing System v7.5.0</title>
+  <link rel="icon" type="image/webp" href="assets/images/RCG.webp">
+
+  <!-- Google Fonts: Plus Jakarta Sans (UI) & IBM Plex Mono (Data & Numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/print-nota.css">
+
+  <!-- Chart.js & SheetJS libraries (with CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Immediate Theme & Auth Pre-loader -->
+  <script>
+    try {
+      const auth = localStorage.getItem('rcg_auth_session_v75');
+      if (!auth) {
+        window.location.replace('login.html');
+      }
+      const s = localStorage.getItem('rcg_settings_v75') || localStorage.getItem('rcg_settings_v7');
+      if (s && JSON.parse(s).darkMode) {
+        document.documentElement.classList.add('dark-mode');
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.classList.add('dark-mode');
+        });
+      }
+    } catch(e) {}
+  </script>
+</head>
+<body>
+
+  <!-- =========================================================================
+       Top Application Header
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="brand-section">
+      <!-- Mobile Hamburger Toggle Button (Visible on <= 768px) -->
+      <button id="btn-mobile-nav-toggle" class="btn-mobile-nav" type="button" aria-label="Buka Menu Navigasi" title="Navigasi Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" class="brand-logo-img">
+      <div class="brand-info">
+        <h1>PT. REKA CIPTA GARAM</h1>
+        <div class="app-sub">SALT WEIGHING SYSTEM</div>
+      </div>
+    </div>
+
+    <div class="header-status-area">
+      <!-- Clean Monospace Clock with breathing space -->
+      <div id="header-live-clock" class="header-clock-text">Memuat Waktu...</div>
+
+      <div class="header-divider"></div>
+
+      <!-- User Profile Dropdown Menu Container -->
+      <div class="user-profile-dropdown" id="profile-dropdown-wrapper">
+        <button class="user-profile-trigger" id="btn-profile-trigger" type="button" aria-haspopup="true" aria-expanded="false" title="Menu Pengguna">
+          <span class="user-avatar" id="user-avatar-text">AD</span>
+          <div class="user-meta">
+            <span class="user-name" id="user-display-name">admin</span>
+            <span class="user-role" id="user-display-role">Administrator</span>
+          </div>
+          <svg class="dropdown-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <!-- Dropdown Popup Card -->
+        <div class="dropdown-menu-card" id="profile-dropdown-menu">
+          <div class="dropdown-user-header">
+            <div class="dropdown-user-name" id="menu-user-name">admin</div>
+            <div class="dropdown-user-role" id="menu-user-role">Administrator RCG</div>
+          </div>
+          
+          <div class="dropdown-divider"></div>
+
+          <!-- Profile Modal Trigger -->
+          <button class="dropdown-menu-item" id="btn-open-profile" type="button">
+            <span class="menu-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <span class="menu-item-text">Profil Saya</span>
+          </button>
+
+          <div class="dropdown-divider"></div>
+
+          <!-- Theme Mode Switch Item -->
+          <button class="dropdown-menu-item" id="btn-toggle-theme" type="button">
+            <span class="menu-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </span>
+            <span class="menu-item-text" id="menu-theme-text">Mode Gelap (Dark Mode)</span>
+          </button>
+
+          <div class="dropdown-divider"></div>
+
+          <!-- Logout Item -->
+          <button class="dropdown-menu-item item-danger" id="btn-header-logout" type="button">
+            <span class="menu-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </span>
+            <span class="menu-item-text">Keluar (Logout)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="nav-overlay" class="nav-overlay"></div>
+
+  <!-- =========================================================================
+       Navigation Tabs (Adaptive Desktop Bar / Mobile Drawer)
+       ========================================================================= -->
+  <nav class="main-nav" id="main-nav-bar">
+    <div class="mobile-nav-header">
+      <span>Menu Navigasi</span>
+      <button id="btn-close-mobile-nav" class="btn-close-drawer" type="button">&times;</button>
+    </div>
+    <button class="nav-item active" data-tab="dashboard">
+      Dashboard
+    </button>
+    <button class="nav-item" data-tab="nota-timbang">
+      Transaksi Penimbangan
+    </button>
+    <button class="nav-item" data-tab="riwayat">
+      Riwayat Penimbangan
+    </button>
+    <button class="nav-item" data-tab="activity-log">
+      Activity Log
+    </button>
+    <button class="nav-item admin-only" data-tab="backup-restore">
+      Backup &amp; Manajemen Data
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       Main Application Shell Container
+       ========================================================================= -->
+  <main class="app-container">
+
+    <!-- Top Live Scale Indicator Bar -->
+    <div id="main-scale-card" class="scale-indicator-card">
+      <div class="scale-info-left">
+        <div class="scale-status-text">
+          <h4 id="scale-status-title">Timbangan Terputus</h4>
+          <p id="scale-status-desc">Menunggu koneksi Serial USB/RS232</p>
+        </div>
+      </div>
+
+      <div class="scale-display-center">
+        <div class="scale-weight-val" id="scale-live-weight">0</div>
+        <div class="scale-weight-unit">Kg</div>
+      </div>
+
+      <div class="scale-actions-right">
+        <button id="btn-connect-serial" class="btn btn-primary btn-sm">
+          Hubungkan Serial (USB/RS232)
+        </button>
+        <button id="btn-toggle-sim" class="btn btn-secondary btn-sm">
+          Simulasi ON/OFF
+        </button>
+      </div>
+    </div>
+
+    <!-- Simulator Interactive Panel (Visible when simulation is ON) -->
+    <div id="sim-interactive-panel" class="sim-panel-box" style="display: none;">
+      <h4>
+        <span>Kontrol Simulator Timbangan Garam</span>
+        <span class="badge badge-gold" id="sim-live-badge">16.500 Kg (STABIL)</span>
+      </h4>
+      <p style="font-size: 12.5px; color: #78350F; margin-bottom: 10px;">
+        Gunakan slider atau tombol preset untuk menguji input timbangan truk garam secara instan tanpa indikator hardware fisik:
+      </p>
+
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+        <input type="range" id="sim-weight-slider" class="range-slider" min="0" max="40000" step="50" value="16500">
+        <span id="sim-slider-val" class="mono-num" style="font-size: 16px; font-weight: 700; min-width: 110px; color: #975A16;">16.500 Kg</span>
+      </div>
+
+      <div class="sim-presets">
+        <button class="btn btn-secondary btn-sm btn-sim-preset" data-weight="0">Nol (0 Kg)</button>
+        <button class="btn btn-secondary btn-sm btn-sim-preset" data-weight="4200">Truk Kosong (4.200 Kg)</button>
+        <button class="btn btn-secondary btn-sm btn-sim-preset" data-weight="5100">Truk Engkel (5.100 Kg)</button>
+        <button class="btn btn-secondary btn-sm btn-sim-preset" data-weight="16500">Muatan Sedang (16.500 Kg)</button>
+        <button class="btn btn-secondary btn-sm btn-sim-preset" data-weight="22400">Fuso Garam (22.400 Kg)</button>
+        <button class="btn btn-secondary btn-sm btn-sim-preset" data-weight="32500">Tronton Garam (32.500 Kg)</button>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         SECTION 1: DASHBOARD & STATISTIK ANALYTICS
+         ======================================================================= -->
+    <section id="section-dashboard" class="view-section active">
+      <!-- 4 Core Summary Cards -->
+      <div class="stats-grid">
+        <!-- 1. Total Transaksi -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">TOTAL TRANSAKSI</span>
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-main-val mono-num" id="stat-total-tx">0</div>
+          <div class="stat-sub-info">
+            <span>Seluruh transaksi penimbangan garam</span>
+          </div>
+        </div>
+
+        <!-- 2. Total Berat Bersih -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">TOTAL BERAT BERSIH</span>
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+          </div>
+          <div class="stat-main-val mono-num" id="stat-total-net">0 Kg</div>
+          <div class="stat-sub-info">
+            <div class="k-item">K1: <strong id="stat-k1-weight">0 Kg</strong></div>
+            <div class="k-item">K2: <strong id="stat-k2-weight">0 Kg</strong></div>
+          </div>
+        </div>
+
+        <!-- 3. Total Pembayaran -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">TOTAL PEMBAYARAN</span>
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+          <div class="stat-main-val mono-num" id="stat-total-pay">Rp 0</div>
+          <div class="stat-sub-info">
+            <div class="k-item">K1: <strong id="stat-k1-pay">Rp 0</strong></div>
+            <div class="k-item">K2: <strong id="stat-k2-pay">Rp 0</strong></div>
+          </div>
+        </div>
+
+        <!-- 4. Transaksi Hari Ini -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">TRANSAKSI HARI INI</span>
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+          </div>
+          <div class="stat-main-val mono-num" id="stat-today-tx" style="font-size: 20px;">0 Transaksi Hari Ini</div>
+          <div class="stat-sub-info">
+            <span id="stat-today-trend" style="color: var(--primary);">— 0% Belum ada data kemarin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analisis Periode Banner -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="d-flex align-center gap-12">
+            <h3 class="card-title">Berat Bersih Periode</h3>
+            <select id="analytics-period-select" class="form-select form-select-sm" style="width: 160px; height: 32px;">
+              <option value="today">Hari Ini</option>
+              <option value="month">Bulan Ini</option>
+              <option value="all">Semua Waktu</option>
+            </select>
+            <button id="btn-analytics-period-show" class="btn btn-primary btn-sm">Tampilkan</button>
+          </div>
+        </div>
+        <div class="card-body d-flex align-center justify-between" style="padding: 16px 20px;">
+          <div>
+            <div class="text-display" id="period-net-weight" style="color: var(--primary); font-size: 30px;">0,0 Kg</div>
+            <div class="text-secondary text-small" id="period-net-sub" style="margin-top: 4px;">
+              Total berat bersih hari ini • 0 transaksi
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Analytics Grid (Mini Stats) -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <h3 class="card-title">Ringkasan Analitik Operasional</h3>
+        </div>
+        <div class="card-body">
+          <div class="mini-stats-grid">
+            <div class="mini-stat-item">
+              <div class="title">SUPPLIER TERBANYAK</div>
+              <div id="stat-top-supplier" class="value">-</div>
+            </div>
+            <div class="mini-stat-item">
+              <div class="title">MATERIAL TERBANYAK</div>
+              <div id="stat-top-material" class="value">-</div>
+            </div>
+            <div class="mini-stat-item">
+              <div class="title">ASAL MATERIAL TERBANYAK</div>
+              <div id="stat-top-origin" class="value">-</div>
+            </div>
+            <div class="mini-stat-item">
+              <div class="title">RATA-RATA TONASE TRUK</div>
+              <div id="stat-avg-weight" class="value mono-num">0 Kg</div>
+            </div>
+            <div class="mini-stat-item">
+              <div class="title">PEMBAYARAN LUNAS</div>
+              <div id="stat-pay-lunas" class="value" style="color: var(--color-success); font-size: 13px;">0 TRX (Rp 0)</div>
+            </div>
+            <div class="mini-stat-item">
+              <div class="title">PEMBAYARAN BELUM LUNAS</div>
+              <div id="stat-pay-belum-lunas" class="value" style="color: #B45309; font-size: 13px;">0 TRX (Rp 0)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="analytics-grid">
+        <!-- 1. Weekly Transactions Bar Chart -->
+        <div class="col-8">
+          <div class="card" style="height: 100%;">
+            <div class="card-header">
+              <h3 class="card-title">Grafik Transaksi per Minggu</h3>
+              <div class="d-flex align-center gap-8">
+                <span class="text-small text-secondary">Minggu:</span>
+                <input type="number" id="chart-week-start" class="form-control form-control-sm mono" value="1" min="1" max="5" style="width: 55px; height: 32px;">
+                <span class="text-small text-secondary">s/d</span>
+                <input type="number" id="chart-week-end" class="form-control form-control-sm mono" value="4" min="1" max="5" style="width: 55px; height: 32px;">
+                <button id="btn-filter-week-chart" class="btn btn-primary btn-sm">Tampilkan</button>
+              </div>
+            </div>
+            <div class="card-body" style="height: 300px; position: relative;">
+              <canvas id="chart-weekly"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. K1 vs K2 Ratio Chart -->
+        <div class="col-4">
+          <div class="card" style="height: 100%;">
+            <div class="card-header">
+              <h3 class="card-title">Komposisi Mutu K1 vs K2</h3>
+            </div>
+            <div class="card-body" style="height: 300px; position: relative;">
+              <canvas id="chart-k1-k2"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Origin Distribution Chart -->
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Sebaran Asal Garam (Wilayah &amp; Kecamatan)</h3>
+            </div>
+            <div class="card-body" style="height: 260px; position: relative;">
+              <canvas id="chart-origin"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         SECTION 2: TRANSAKSI PENIMBANGAN (NOTA TIMBANG)
+         ======================================================================= -->
+    <section id="section-nota-timbang" class="view-section">
+      <div class="d-flex align-center justify-between mb-3">
+        <div>
+          <h2 class="section-title">NOTA TIMBANG</h2>
+          <p class="text-secondary text-small" id="transaction-draft-msg">Draf penimbangan baru siap digunakan.</p>
+        </div>
+        <div class="d-flex gap-8 align-center">
+          <button id="btn-new-transaction" class="btn btn-primary">
+            Transaksi Baru
+          </button>
+          <button id="btn-save-transaction" class="btn btn-primary">
+            Simpan Transaksi
+          </button>
+          <button id="btn-print-nota" class="btn btn-primary">
+            Cetak Nota
+          </button>
+        </div>
+      </div>
+
+      <div class="transaction-layout">
+        <!-- Kolom Kiri: Dokumen, Kendaraan, Material, Asal -->
+        <div>
+          <!-- 1. Informasi Dokumen -->
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>1. Informasi Dokumen</span>
+              <span class="badge badge-info">Otomatis</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">No. Dokumen <span class="required">*</span></label>
+                <input type="text" id="input-doc-no" class="form-control mono" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Tanggal <span class="required">*</span></span>
+                  <button type="button" id="btn-set-today" class="btn btn-secondary btn-sm" style="padding: 0 8px; height: 24px; font-size: 11px;">Hari Ini</button>
+                </label>
+                <input type="date" id="input-doc-date" class="form-control mono">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Waktu Masuk</label>
+                <input type="time" id="input-time-in" class="form-control mono">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Waktu Keluar</label>
+                <input type="time" id="input-time-out" class="form-control mono">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Informasi Kendaraan & Pemasok -->
+          <div class="section-block">
+            <div class="section-block-title">2. Informasi Kendaraan &amp; Pemasok</div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">No. Polisi Kendaraan <span class="required">*</span></label>
+                <input type="text" id="input-plate-no" class="form-control mono" placeholder="Contoh: M 8234 UA" style="text-transform: uppercase;">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nama Pemasok / Supplier <span class="required">*</span></label>
+                <input type="text" id="input-supplier" class="form-control" list="supplier-presets" placeholder="Pilih atau ketik nama pemasok">
+                <datalist id="supplier-presets">
+                  <option value="UD. Garam Sejahtera Madura">
+                  <option value="PT. Tambak Garam Madura">
+                  <option value="CV. Garam Madura Abadi">
+                  <option value="Kelompok Petani Garam Majungan">
+                  <option value="UD. Sumber Rezeki Kalianget">
+                  <option value="PT. Garam Nusantara">
+                </datalist>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Material & Asal Garam -->
+          <div class="section-block">
+            <div class="section-block-title">3. Material &amp; Asal Garam</div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Jenis Material Garam</label>
+                <select id="select-material" class="form-select">
+                  <option value="Garam Karung Super">Garam Karung Super</option>
+                  <option value="Garam Karung Standar">Garam Karung Standar</option>
+                  <option value="Garam Curah K1">Garam Curah K1</option>
+                  <option value="Garam Curah K2">Garam Curah K2</option>
+                  <option value="Garam Briket / Krosok">Garam Briket / Krosok</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Jumlah Karung (Koli)</label>
+                <div class="input-unit">
+                  <input type="number" id="input-bag-count" class="form-control mono" min="0" value="180">
+                  <span class="unit-tag">Karung</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Wilayah Asal Garam</label>
+                <select id="select-origin-region" class="form-select"></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Area / Kecamatan</label>
+                <select id="select-origin-area" class="form-select"></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Penandatangan & Status -->
+          <div class="section-block">
+            <div class="section-block-title">4. Identitas &amp; Status Pembayaran</div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nama Supir</label>
+                <input type="text" id="input-driver-name" class="form-control" placeholder="ISMAIL" style="text-transform: uppercase;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Petugas Timbang</label>
+                <input type="text" id="input-weighmaster" class="form-control" placeholder="AFIF" style="text-transform: uppercase;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Admin Sesi</label>
+                <input type="text" id="input-admin-name" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Status Pembayaran</label>
+                <select id="select-payment-status" class="form-select">
+                  <option value="Lunas">Lunas</option>
+                  <option value="Belum Lunas">Belum Lunas</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Catatan Transaksi</label>
+                <input type="text" id="input-notes" class="form-control" placeholder="Kadar air standar, bersih">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: Pengambilan Berat, Refraksi, K1/K2, Harga, Total -->
+        <div>
+          <!-- 5. Timbang Masuk & Keluar -->
+          <div class="section-block">
+            <div class="section-block-title">5. Data Penimbangan (Kg)</div>
+
+            <!-- Berat Kotor -->
+            <div class="form-group">
+              <label class="form-label">Berat Kotor / Gross (Truk + Muatan) <span class="required">*</span></label>
+              <div class="input-with-action">
+                <div class="input-unit w-100">
+                  <input type="number" id="input-gross-weight" class="form-control mono" min="0" value="0">
+                  <span class="unit-tag">Kg</span>
+                </div>
+                <button type="button" id="btn-capture-gross" class="btn btn-primary btn-action-capture" title="Ambil nilai dari display timbangan aktif">
+                  Ambil
+                </button>
+              </div>
+            </div>
+
+            <!-- Berat Tara -->
+            <div class="form-group">
+              <label class="form-label">Berat Tara / Tare (Truk Kosong) <span class="required">*</span></label>
+              <div class="input-with-action">
+                <div class="input-unit w-100">
+                  <input type="number" id="input-tare-weight" class="form-control mono" min="0" value="0">
+                  <span class="unit-tag">Kg</span>
+                </div>
+                <button type="button" id="btn-capture-tare" class="btn btn-primary btn-action-capture" title="Ambil nilai dari display timbangan aktif">
+                  Ambil
+                </button>
+              </div>
+            </div>
+
+            <!-- Berat Muatan (Bruto) -->
+            <div class="form-group">
+              <label class="form-label">Berat Muatan (Bruto = Gross - Tare)</label>
+              <div class="input-unit">
+                <input type="text" id="input-net-load" class="form-control mono" readonly value="0">
+                <span class="unit-tag">Kg</span>
+              </div>
+            </div>
+
+            <!-- Refraksi -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Refraksi (%)</label>
+                <div class="input-unit">
+                  <input type="number" id="input-refraction-percent" class="form-control mono" step="0.5" min="0" max="50" value="5.0">
+                  <span class="unit-tag">%</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Potongan Refraksi (Kg)</label>
+                <div class="input-unit">
+                  <input type="text" id="input-refraction-kg" class="form-control mono" readonly value="0">
+                  <span class="unit-tag">Kg</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Berat Bersih Total -->
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 700; color: var(--primary);">BERAT BERSIH TOTAL (Kg)</label>
+              <div class="input-unit">
+                <input type="text" id="input-final-net" class="form-control mono" readonly value="0" style="font-size: 16px; font-weight: 700; color: var(--primary-dark); background: var(--primary-light);">
+                <span class="unit-tag">Kg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Klasifikasi Mutu K1 & K2 & Harga -->
+          <div class="section-block">
+            <div class="section-block-title">6. Klasifikasi Mutu &amp; Harga Satuan</div>
+
+            <!-- K1 -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Berat Bersih K1 (Super)</label>
+                <div class="input-unit">
+                  <input type="number" id="input-k1-weight" class="form-control mono" min="0" value="0">
+                  <span class="unit-tag">Kg</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Harga K1 / Kg (Rp)</label>
+                <div class="input-unit">
+                  <input type="number" id="input-k1-price" class="form-control mono" min="0" value="1250">
+                  <span class="unit-tag">Rp</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subtotal K1 (Rp)</label>
+              <input type="text" id="input-k1-total" class="form-control mono" readonly value="Rp 0">
+            </div>
+
+            <!-- K2 -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Berat Bersih K2 (Standar)</label>
+                <div class="input-unit">
+                  <input type="number" id="input-k2-weight" class="form-control mono" min="0" value="0">
+                  <span class="unit-tag">Kg</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Harga K2 / Kg (Rp)</label>
+                <div class="input-unit">
+                  <input type="number" id="input-k2-price" class="form-control mono" min="0" value="1050">
+                  <span class="unit-tag">Rp</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subtotal K2 (Rp)</label>
+              <input type="text" id="input-k2-total" class="form-control mono" readonly value="Rp 0">
+            </div>
+          </div>
+
+          <!-- Banner Grand Total -->
+          <div class="grand-total-banner">
+            <div class="lbl">TOTAL KESELURUHAN (RP)</div>
+            <div class="val" id="display-grand-total">Rp 0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         SECTION 3: RIWAYAT PENIMBANGAN
+         ======================================================================= -->
+    <section id="section-riwayat" class="view-section">
+      <div class="d-flex align-center justify-between mb-3">
+        <div>
+          <h2 class="section-title">Riwayat Penimbangan</h2>
+          <p class="text-secondary text-small">Daftar arsip seluruh transaksi penimbangan garam PT. Reka Cipta Garam</p>
+        </div>
+        <div class="d-flex gap-8">
+          <button id="btn-export-excel" class="btn btn-primary">
+            Export Excel (.xlsx)
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar Pencarian & Filter -->
+      <div class="table-toolbar">
+        <div class="search-box">
+          <input type="text" id="history-search-input" class="form-control" placeholder="Cari Material, Tanggal, Supplier, No. Polisi, No. Dok...">
+          <button id="history-reset-search" class="btn btn-secondary">Reset</button>
+        </div>
+
+        <div class="table-filter-group">
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Tanggal:</span>
+            <input type="date" id="history-date-filter" class="form-control mono" style="width: 145px; height: 38px;">
+          </div>
+
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Urutan:</span>
+            <select id="history-sort-select" class="form-select" style="width: 165px; height: 38px;">
+              <option value="desc">Terbaru &rarr; Terlama</option>
+              <option value="asc">Terlama &rarr; Terbaru</option>
+            </select>
+          </div>
+
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Tampilkan:</span>
+            <select id="history-page-size" class="form-select" style="width: 85px; height: 38px;">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Data Riwayat -->
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 160px; text-align: center;">Aksi</th>
+              <th>Material &amp; Dok</th>
+              <th>Tanggal</th>
+              <th>Pemasok</th>
+              <th>Asal</th>
+              <th>No. Pol</th>
+              <th>Kotor (Kg)</th>
+              <th>Tara (Kg)</th>
+              <th>Muatan (Kg)</th>
+              <th>Refr.</th>
+              <th>Bersih Total (Kg)</th>
+              <th>K1 (Kg)</th>
+              <th>K2 (Kg)</th>
+              <th>TOTAL (Rp)</th>
+              <th style="text-align: center;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Rendered by history.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Nav -->
+      <div class="pagination-area">
+        <div id="history-page-indicator" class="page-indicator">Halaman 1 / 1</div>
+        <div class="pagination-controls">
+          <button id="history-prev-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Sebelumnya">
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+            <span>Prev</span>
+          </button>
+          <button id="history-next-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Berikutnya">
+            <span>Next</span>
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         SECTION 4: ACTIVITY LOG
+         ======================================================================= -->
+    <section id="section-activity-log" class="view-section">
+      <div class="d-flex align-center justify-between mb-3">
+        <div>
+          <h2 class="section-title">Activity Log</h2>
+          <p class="text-secondary text-small">Pencatatan audit seluruh aktivitas pengguna (Login, Transaksi, Edit, Hapus)</p>
+        </div>
+        <button id="btn-clear-logs" class="btn btn-confirm-accent btn-sm admin-only">
+          Hapus Activity Log
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 180px;">Waktu</th>
+              <th style="width: 130px;">User</th>
+              <th style="width: 140px;">Role</th>
+              <th>Aktivitas</th>
+              <th style="width: 220px;">No. Dok</th>
+            </tr>
+          </thead>
+          <tbody id="activity-log-table-body">
+            <!-- Rendered by app.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         SECTION 5: BACKUP & DATA MANAGEMENT
+         ======================================================================= -->
+    <section id="section-backup-restore" class="view-section admin-only">
+      <div class="mb-3">
+        <h2 class="section-title">Backup &amp; Manajemen Data</h2>
+        <p class="text-secondary text-small">Fitur pemeliharaan basis data, export-import, dan auto backup sistem timbangan</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; align-items: stretch;">
+        <!-- Export & Backup Card -->
+        <div class="card" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="card-header">
+            <h3 class="card-title">1. Export &amp; Cadangkan Data</h3>
+          </div>
+          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+            <p class="text-secondary text-small mb-3">
+              Unduh cadangan data transaksi, activity log, dan konfigurasi aplikasi dalam format JSON terenkripsi atau Excel spreadsheet.
+            </p>
+            <div class="d-flex gap-8 flex-wrap" style="margin-top: auto;">
+              <button id="btn-export-json" class="btn btn-primary">
+                Export File Log (.json)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Import & Restore Card -->
+        <div class="card" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="card-header">
+            <h3 class="card-title">2. Pulihkan &amp; Impor Data</h3>
+          </div>
+          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+            <p class="text-secondary text-small mb-3">
+              Impor kembali file cadangan JSON atau pulihkan data dari slot auto-backup lokal otomatis terakhir.
+            </p>
+            <div class="d-flex gap-8 flex-wrap" style="margin-top: auto;">
+              <label class="btn btn-secondary" style="margin: 0; cursor: pointer;">
+                Import File Log
+                <input type="file" id="input-import-json" accept=".json" style="display: none;">
+              </label>
+              <button id="btn-restore-auto-backup" class="btn btn-primary">
+                Restore Auto Backup
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone Card -->
+        <div class="card" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="card-header">
+            <h3 class="card-title">3. Zona Bahaya (Reset Data)</h3>
+          </div>
+          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+            <p class="text-secondary text-small mb-3">
+              Menghapus seluruh rekaman data transaksi penimbangan secara permanen. Pastikan Anda telah melakukan export backup sebelum mengeksekusi tindakan ini.
+            </p>
+            <div style="margin-top: auto;">
+              <button id="btn-clear-all-data" class="btn btn-confirm-accent">
+                Hapus Semua Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- =========================================================================
+       MODALS & DIALOGS
+       ========================================================================= -->
+
+  <!-- Modal 0: User Profile & Account Settings -->
+  <div id="modal-user-profile" class="modal-overlay">
+    <div class="modal-container" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3>Profil &amp; Pengaturan Akun</h3>
+        <button class="modal-close-btn" type="button">&times;</button>
+      </div>
+
+      <!-- Profile Sub-Navigation Tabs (Clean SVG Icons, Zero Emojis) -->
+      <div class="profile-tabs-header">
+        <button class="profile-tab-btn active" data-profile-tab="personal-info" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Informasi Akun</span>
+        </button>
+
+        <button class="profile-tab-btn" data-profile-tab="edit-profile" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>Avatar &amp; Profil</span>
+        </button>
+
+        <button class="profile-tab-btn" data-profile-tab="change-password" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Ganti Password</span>
+        </button>
+
+        <button class="profile-tab-btn" data-profile-tab="my-activities" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Aktivitas Saya</span>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 20px 24px;">
+        <!-- Tab 1: Personal Information -->
+        <div class="profile-tab-pane active" id="pane-personal-info">
+          <div class="profile-summary-card">
+            <div class="profile-avatar-large" id="profile-view-avatar">AD</div>
+            <div class="profile-summary-text">
+              <h4 id="profile-view-fullname" style="margin: 0 0 2px; font-size: 16px;">Administrator RCG</h4>
+              <div class="text-secondary text-small" id="profile-view-email">admin@rekaciptagaram.co.id</div>
+              <div style="margin-top: 6px;">
+                <span class="badge badge-info" id="profile-view-role">Administrator</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-info-grid mt-3">
+            <div class="profile-info-item">
+              <div class="info-label">Username</div>
+              <div class="info-val" id="profile-view-username">admin</div>
+            </div>
+            <div class="profile-info-item">
+              <div class="info-label">Hak Akses (Role)</div>
+              <div class="info-val" id="profile-view-role-text">Administrator Sistem</div>
+            </div>
+            <div class="profile-info-item">
+              <div class="info-label">Status Akun</div>
+              <div class="info-val" style="color: var(--color-success); font-weight: 600;">Aktif &amp; Terverifikasi</div>
+            </div>
+            <div class="profile-info-item">
+              <div class="info-label">Tanggal Dibuat</div>
+              <div class="info-val" id="profile-view-created">2026-08-01 08:00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Edit Profile & Avatar -->
+        <div class="profile-tab-pane" id="pane-edit-profile">
+          <form id="form-edit-profile">
+            <!-- Structured Avatar Management Card -->
+            <div class="profile-avatar-card">
+              <div class="profile-avatar-large" id="profile-edit-avatar-preview">AD</div>
+              <div class="profile-avatar-meta">
+                <h5 class="meta-title">Foto Profil Pengguna</h5>
+                <div class="meta-actions">
+                  <label class="btn btn-secondary btn-sm" style="cursor: pointer; margin: 0;">
+                    Unggah Foto
+                    <input type="file" id="input-avatar-file" accept="image/*" style="display: none;">
+                  </label>
+                  <button type="button" id="btn-remove-avatar" class="btn btn-confirm-accent btn-sm">
+                    Hapus Avatar
+                  </button>
+                </div>
+                <p class="meta-hint">Format PNG, JPG, atau WEBP (Maksimal 2 MB)</p>
+              </div>
+            </div>
+
+            <div class="form-group mb-2">
+              <label class="form-label" for="input-avatar-url">Tautan URL Avatar (Opsional)</label>
+              <input type="url" id="input-avatar-url" class="form-control" placeholder="https://example.com/avatar.png">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px;">
+              <div class="form-group mb-0">
+                <label class="form-label" for="input-profile-fullname">Nama Lengkap</label>
+                <input type="text" id="input-profile-fullname" class="form-control" required>
+              </div>
+
+              <div class="form-group mb-0">
+                <label class="form-label" for="input-profile-email">Email Akun</label>
+                <input type="email" id="input-profile-email" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-submit-row">
+              <button type="submit" class="btn btn-primary">Simpan Profil</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tab 3: Change Password -->
+        <div class="profile-tab-pane" id="pane-change-password">
+          <form id="form-change-password">
+            <div class="form-group">
+              <label class="form-label" for="input-curr-pw">Kata Sandi Saat Ini</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="input-curr-pw" class="form-control" placeholder="Masukkan password saat ini" style="padding-right: 36px;" required>
+                <button type="button" class="btn-inspect-pw" data-target="input-curr-pw" style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-new-pw">Kata Sandi Baru</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="input-new-pw" class="form-control" placeholder="Minimal 4 karakter" style="padding-right: 36px;" required>
+                <button type="button" class="btn-inspect-pw" data-target="input-new-pw" style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-confirm-pw">Konfirmasi Kata Sandi Baru</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="input-confirm-pw" class="form-control" placeholder="Ulangi kata sandi baru" style="padding-right: 36px;" required>
+                <button type="button" class="btn-inspect-pw" data-target="input-confirm-pw" style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-submit-row">
+              <button type="submit" class="btn btn-primary">Perbarui Kata Sandi</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tab 4: My Activity -->
+        <div class="profile-tab-pane" id="pane-my-activities">
+          <div class="text-secondary text-small mb-2">Riwayat aktivitas terbaru dari sesi akun Anda:</div>
+          <div class="my-activities-list" id="profile-my-activities-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel" type="button">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Login -->
+  <div id="modal-login" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Login Sistem Timbangan RCG</h3>
+      </div>
+      <form id="form-login">
+        <div class="modal-body">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" class="brand-logo-img" style="margin: 0 auto 12px; width: 64px; height: 64px;">
+            <h4 style="color: var(--primary-dark);">PT. REKA CIPTA GARAM</h4>
+            <p class="text-secondary text-small">Silakan masuk menggunakan kredensial operator atau admin</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="login-username" class="form-control" value="admin" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="login-password" class="form-control" value="admin123" required>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+            <input type="checkbox" id="login-remember" checked>
+            <label for="login-remember" style="font-size: 13px; color: var(--text-secondary); cursor: pointer;">Remember Me</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100" style="height: 40px;">
+            Masuk ke Aplikasi
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Confirm Logout -->
+  <div id="modal-confirm-logout" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>Konfirmasi Logout</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin keluar dari aplikasi <strong>PT. Reka Cipta Garam</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-logout-yes" class="btn btn-confirm-accent">Ya, Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2b: Confirm Delete Avatar -->
+  <div id="modal-confirm-delete-avatar" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>Konfirmasi Hapus Avatar</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus foto avatar profil akun ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-delete-avatar-yes" class="btn btn-confirm-accent">Ya, Hapus Avatar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Serial Port Connection Setting -->
+  <div id="modal-serial-connect" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Hubungkan Indikator Timbangan Serial</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary text-small mb-3">
+          Sistem akan mendeteksi Port COM (RS232 / USB Serial Converter) yang terhubung ke indikator timbangan jembatan truk (A12E, CAS, Toledo, dsb).
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Baud Rate Serial</label>
+          <select id="serial-baud-rate" class="form-select mono">
+            <option value="9600" selected>9600 bps (Standar Industri)</option>
+            <option value="4800">4800 bps</option>
+            <option value="19200">19200 bps</option>
+            <option value="115200">115200 bps</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Data Bits / Parity / Stop Bits</label>
+          <input type="text" class="form-control mono" value="8 - None - 1" readonly>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-serial-connect" class="btn btn-primary">Pilih Port &amp; Hubungkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Transaction Detail -->
+  <div id="modal-transaction-detail" class="modal-overlay">
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h3>Detail Transaksi Penimbangan</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="detail-modal-content">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Confirm Delete Single Transaction -->
+  <div id="modal-confirm-delete" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>Konfirmasi Hapus Transaksi</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="delete-modal-msg">Apakah Anda yakin ingin menghapus data transaksi penimbangan ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-delete-trx" class="btn btn-confirm-accent">Ya, Hapus Transaksi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: Confirm Clear Activity Logs -->
+  <div id="modal-confirm-clear-logs" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>Konfirmasi Hapus Activity Log</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin membersihkan seluruh catatan <strong>Activity Log</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-clear-logs-yes" class="btn btn-confirm-accent">Ya, Bersihkan Log</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7: Confirm Clear All Data -->
+  <div id="modal-confirm-clear-all" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>Konfirmasi Reset Basis Data</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus seluruh rekaman <strong>data transaksi penimbangan</strong> secara permanen?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-clear-all-yes" class="btn btn-confirm-accent">Ya, Hapus Bersih</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Printable Nota Receipt (Triggered during print) -->
+  <div id="printable-nota"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- =========================================================================
+       Application Script Modules
+       ========================================================================= -->
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/serial-scale.js"></script>
+  <script src="assets/js/custom-select.js"></script>
+  <script src="assets/js/custom-datepicker.js"></script>
+  <script src="assets/js/transaction.js"></script>
+  <script src="assets/js/history.js"></script>
+  <script src="assets/js/analytics.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>
