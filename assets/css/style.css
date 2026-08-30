@@ -1959,13 +1959,13 @@ input[type="number"] {
 }
 
 .modal-footer {
-  padding: 12px 18px;
-  background: var(--bg-surface-alt);
+  padding: 14px 20px;
+  background: var(--bg-surface);
   border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 10px;
 }
 
 .delete-verify-box {

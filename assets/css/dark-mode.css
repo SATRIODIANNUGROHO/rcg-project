@@ -475,7 +475,7 @@ body.dark-mode .verify-sub {
 }
 
 body.dark-mode .modal-footer {
-  background: #0F172A;
+  background: transparent;
   border-top-color: #334155;
 }
 
