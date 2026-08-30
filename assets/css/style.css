@@ -710,6 +710,16 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--primary-light);
 }
 
+/* Remove native number input spin buttons */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .form-control.mono, .form-control-mono {
   font-family: var(--font-mono);
   font-weight: 500;
@@ -740,23 +750,81 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1;
 }
 
+/* Input Unit Tag Container (e.g. Karung, Kg, %) */
 .input-unit {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
 }
+
 .input-unit .form-control {
-  padding-right: 42px;
+  width: 100%;
+  padding-right: 78px;
 }
+
 .input-unit .unit-tag {
   position: absolute;
-  right: 12px;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  font-weight: 600;
+  right: 1px;
+  top: 1px;
+  bottom: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  background-color: var(--bg-surface-alt);
   color: var(--text-secondary);
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 600;
+  border-left: 1px solid var(--border-color);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   pointer-events: none;
+  user-select: none;
+}
+
+/* Custom Autocomplete / Searchable Dropdown */
+.custom-autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-autocomplete-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 4px;
+  display: none;
+  z-index: 1050;
+  animation: fadeInDown 0.12s ease-out;
+  box-sizing: border-box;
+}
+
+.custom-autocomplete-container.open .custom-autocomplete-menu {
+  display: block;
+}
+
+.custom-autocomplete-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  border-radius: var(--radius-tight);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.custom-autocomplete-item:hover,
+.custom-autocomplete-item.active {
+  background-color: var(--bg-surface-alt);
+  color: var(--primary);
 }
 
 .form-row {

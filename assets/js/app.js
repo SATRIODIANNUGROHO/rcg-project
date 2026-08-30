@@ -19,6 +19,7 @@ const App = {
     AnalyticsManager.init();
     CustomSelectManager.init();
     CustomDatePicker.init();
+    CustomAutocomplete.init();
 
     // 3. Setup UI & Listeners
     this.bindEvents();

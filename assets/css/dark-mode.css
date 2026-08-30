@@ -586,3 +586,27 @@ body.dark-mode .btn-datepicker-footer.btn-today {
 body.dark-mode .btn-datepicker-footer.btn-today:hover {
   background-color: rgba(56, 189, 248, 0.15);
 }
+
+/* Unit Tag in Dark Mode */
+body.dark-mode .input-unit .unit-tag {
+  background-color: #1E293B;
+  border-color: #334155;
+  color: #94A3B8;
+}
+
+/* Custom Autocomplete in Dark Mode */
+body.dark-mode .custom-autocomplete-menu {
+  background-color: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .custom-autocomplete-item {
+  color: #F8FAFC;
+}
+
+body.dark-mode .custom-autocomplete-item:hover,
+body.dark-mode .custom-autocomplete-item.active {
+  background-color: #0F172A;
+  color: #38BDF8;
+}
