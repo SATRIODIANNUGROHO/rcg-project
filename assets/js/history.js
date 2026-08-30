@@ -150,7 +150,7 @@ const HistoryManager = {
     if (paginatedItems.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="9" style="text-align: center; padding: 32px; color: var(--text-secondary);">
+          <td colspan="8" style="text-align: center; padding: 32px; color: var(--text-secondary);">
             <strong>Tidak ada data transaksi yang sesuai filter</strong>
             <p style="font-size: 12px; margin-top: 4px;">Coba reset filter atau buat transaksi penimbangan baru.</p>
           </td>
@@ -171,7 +171,6 @@ const HistoryManager = {
         <td class="mono-num">${tx.date}</td>
         <td><strong>${tx.supplier}</strong></td>
         <td>${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
-        <td><span class="badge badge-neutral mono-num" style="font-weight: 700;">${tx.plateNo}</span></td>
         <td class="num-cell text-right" style="font-weight: 700; color: var(--primary);">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
         <td class="num-cell text-right" style="font-weight: 700; color: var(--primary-dark);">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
         <td class="text-center" style="white-space: nowrap;">
