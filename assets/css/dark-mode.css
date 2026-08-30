@@ -334,7 +334,8 @@ body.dark-mode .btn-neutral:hover {
 }
 
 body.dark-mode .btn-confirm-accent,
-body.dark-mode .btn-accent {
+body.dark-mode .btn-accent,
+body.dark-mode .btn-action-capture {
   background-color: #D69E2E;
   color: #0F172A;
   border-color: #D69E2E;
@@ -342,7 +343,8 @@ body.dark-mode .btn-accent {
 }
 
 body.dark-mode .btn-confirm-accent:hover:not(:disabled),
-body.dark-mode .btn-accent:hover:not(:disabled) {
+body.dark-mode .btn-accent:hover:not(:disabled),
+body.dark-mode .btn-action-capture:hover:not(:disabled) {
   background-color: #ECC94B;
   border-color: #ECC94B;
   color: #0F172A;

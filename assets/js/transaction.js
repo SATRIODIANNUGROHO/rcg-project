@@ -42,16 +42,11 @@ const TransactionEngine = {
       regionSelect.addEventListener('change', () => this.updateAreaDropdown());
     }
 
-    // Capture Weight buttons
+    // Hapus/Reset Weight buttons
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
       btnCaptureGross.addEventListener('click', () => {
-        const w = ScaleEngine.currentWeight;
-        document.getElementById('input-gross-weight').value = w;
-        if (!document.getElementById('input-time-in').value) {
-          const now = new Date();
-          document.getElementById('input-time-in').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        }
+        document.getElementById('input-gross-weight').value = 0;
         this.handleCalculation('input-gross-weight');
       });
     }
@@ -59,12 +54,7 @@ const TransactionEngine = {
     const btnCaptureTare = document.getElementById('btn-capture-tare');
     if (btnCaptureTare) {
       btnCaptureTare.addEventListener('click', () => {
-        const w = ScaleEngine.currentWeight;
-        document.getElementById('input-tare-weight').value = w;
-        if (!document.getElementById('input-time-out').value) {
-          const now = new Date();
-          document.getElementById('input-time-out').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        }
+        document.getElementById('input-tare-weight').value = 0;
         this.handleCalculation('input-tare-weight');
       });
     }
