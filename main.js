@@ -2,8 +2,34 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
 let mainWindow;
+let splashWindow;
+
+function createSplashScreen() {
+  splashWindow = new BrowserWindow({
+    width: 540,
+    height: 360,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    center: true,
+    resizable: false,
+    skipTaskbar: false,
+    icon: path.join(__dirname, 'assets/icons/icon.png'),
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+
+  splashWindow.loadFile(path.join(__dirname, 'splash.html'));
+  splashWindow.on('closed', () => {
+    splashWindow = null;
+  });
+}
 
 function createWindow() {
+  createSplashScreen();
+
   mainWindow = new BrowserWindow({
     width: 1366,
     height: 850,
@@ -49,8 +75,16 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'login.html'));
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.maximize();
-    mainWindow.show();
+    // Give splash screen 1.9s to complete full progress animation
+    setTimeout(() => {
+      if (splashWindow && !splashWindow.isDestroyed()) {
+        splashWindow.close();
+      }
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.maximize();
+        mainWindow.show();
+      }
+    }, 1900);
   });
 
   mainWindow.on('closed', () => {

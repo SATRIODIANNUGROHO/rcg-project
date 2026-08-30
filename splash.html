@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT. Reka Cipta Garam - Salt Weighing System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    body {
+      background: transparent;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+    }
+
+    .splash-card {
+      width: 520px;
+      height: 340px;
+      background: linear-gradient(145deg, #1e40af 0%, #1e3a8a 55%, #0f172a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient soft background lighting */
+    .splash-card::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(30, 64, 175, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .splash-logo-container {
+      position: relative;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .splash-logo {
+      height: 64px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+    }
+
+    .splash-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .splash-subtitle {
+      font-size: 15px;
+      font-weight: 600;
+      color: #93C5FD;
+      letter-spacing: 0.2px;
+      margin-bottom: 6px;
+    }
+
+    .splash-version {
+      font-size: 12px;
+      font-weight: 500;
+      color: #CBD5E1;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+
+    .splash-status-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: #93C5FD;
+      margin-bottom: 10px;
+      height: 16px;
+      transition: opacity 0.2s ease;
+    }
+
+    .splash-progress-track {
+      width: 320px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .splash-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #D69E2E 0%, #F59E0B 40%, #38BDF8 100%);
+      border-radius: 999px;
+      transition: width 0.15s linear;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-card">
+    <div class="splash-logo-container">
+      <img src="assets/images/RCG.webp" alt="PT. Reka Cipta Garam" class="splash-logo">
+    </div>
+    <div class="splash-title">PT. Reka Cipta Garam</div>
+    <div class="splash-subtitle">Salt Weighing System</div>
+    <div class="splash-version">Version 7.5.0</div>
+
+    <div class="splash-status-text" id="splash-status">Memuat modul sistem...</div>
+    <div class="splash-progress-track">
+      <div class="splash-progress-bar" id="splash-progress"></div>
+    </div>
+  </div>
+
+  <script>
+    const progressBar = document.getElementById('splash-progress');
+    const statusText = document.getElementById('splash-status');
+
+    const steps = [
+      { progress: 20, status: 'Memuat modul sistem...', delay: 100 },
+      { progress: 45, status: 'Menyiapkan database lokal...', delay: 400 },
+      { progress: 75, status: 'Memeriksa driver timbangan...', delay: 900 },
+      { progress: 95, status: 'Menyiapkan antarmuka aplikasi...', delay: 1400 },
+      { progress: 100, status: 'Selesai!', delay: 1750 }
+    ];
+
+    steps.forEach(step => {
+      setTimeout(() => {
+        if (progressBar) progressBar.style.width = step.progress + '%';
+        if (statusText) statusText.textContent = step.status;
+      }, step.delay);
+    });
+  </script>
+</body>
+</html>

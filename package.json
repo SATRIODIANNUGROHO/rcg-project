@@ -22,6 +22,7 @@
     "files": [
       "index.html",
       "login.html",
+      "splash.html",
       "main.js",
       "preload.js",
       "assets/**/*"
