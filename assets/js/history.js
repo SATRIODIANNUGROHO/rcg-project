@@ -174,24 +174,26 @@ const HistoryManager = {
         <td><span class="badge badge-neutral mono-num" style="font-weight: 700;">${tx.plateNo}</span></td>
         <td class="num-cell text-right" style="font-weight: 700; color: var(--primary);">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
         <td class="num-cell text-right" style="font-weight: 700; color: var(--primary-dark);">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
-        <td class="text-center">
-          <button class="badge ${isLunas ? 'badge-success' : 'badge-warning'}" style="cursor: pointer; border: none; height: 24px; padding: 0 8px;" onclick="HistoryManager.togglePaymentStatus('${tx.id}')" title="Klik untuk mengubah status pembayaran">
+        <td class="text-center" style="white-space: nowrap;">
+          <button class="badge ${isLunas ? 'badge-success' : 'badge-warning'}" style="cursor: pointer; border: 1px solid; height: 26px; padding: 0 10px; font-weight: 600; white-space: nowrap; font-size: 11px;" onclick="HistoryManager.togglePaymentStatus('${tx.id}')" title="Klik untuk mengubah status pembayaran">
             ${isLunas ? 'Lunas' : 'Belum Lunas'}
           </button>
         </td>
-        <td class="actions-cell text-center">
-          <button class="btn btn-table-action action-detail" title="Lihat Detail Lengkap" onclick="HistoryManager.showDetailModal('${tx.id}')">
-            Detail
-          </button>
-          <button class="btn btn-table-action action-print" title="Cetak Nota" onclick="HistoryManager.printNotaById('${tx.id}')">
-            Cetak
-          </button>
-          <button class="btn btn-table-action action-edit" title="Edit Transaksi" onclick="HistoryManager.editById('${tx.id}')">
-            Edit
-          </button>
-          <button class="btn btn-table-action action-delete" title="Hapus Transaksi" onclick="HistoryManager.confirmDelete('${tx.id}')">
-            Hapus
-          </button>
+        <td class="actions-cell">
+          <div class="actions-group">
+            <button class="btn btn-table-action action-detail" title="Lihat Detail Lengkap" onclick="HistoryManager.showDetailModal('${tx.id}')">
+              Detail
+            </button>
+            <button class="btn btn-table-action action-print" title="Cetak Nota" onclick="HistoryManager.printNotaById('${tx.id}')">
+              Cetak
+            </button>
+            <button class="btn btn-table-action action-edit" title="Edit Transaksi" onclick="HistoryManager.editById('${tx.id}')">
+              Edit
+            </button>
+            <button class="btn btn-table-action action-delete" title="Hapus Transaksi" onclick="HistoryManager.confirmDelete('${tx.id}')">
+              Hapus
+            </button>
+          </div>
         </td>
       `;
       tbody.appendChild(tr);

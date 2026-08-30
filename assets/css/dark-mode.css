@@ -404,6 +404,20 @@ body.dark-mode .badge-info {
   border-color: rgba(56, 189, 248, 0.3);
 }
 
+body.dark-mode .badge-warning {
+  background-color: rgba(214, 158, 46, 0.2) !important;
+  color: #D69E2E !important;
+  border-color: rgba(214, 158, 46, 0.45) !important;
+  font-weight: 700;
+}
+
+body.dark-mode .badge-success {
+  background-color: rgba(16, 185, 129, 0.18) !important;
+  color: #34D399 !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  font-weight: 700;
+}
+
 body.dark-mode .badge-neutral {
   background-color: #0F172A;
   color: #94A3B8;
