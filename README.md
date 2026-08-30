@@ -96,6 +96,7 @@ RCG/
 │       ├── serial-scale.js       # Driver pembacaan timbangan serial RS232
 │       ├── custom-select.js      # Komponen dropdown kustom
 │       ├── custom-datepicker.js  # Komponen kalender pemilih tanggal
+│       ├── custom-timepicker.js  # Komponen pemilih waktu (WIB) kustom
 │       ├── custom-autocomplete.js# Komponen pencarian/autocomplete pemasok
 │       ├── transaction.js        # Logika input penimbangan garam
 │       ├── history.js            # Pencarian, filter & paginasi data

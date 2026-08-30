@@ -710,6 +710,195 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--primary-light);
 }
 
+/* ==========================================================================
+   Universal Custom Timepicker (Theme-Matched Clean & Sleek)
+   ========================================================================== */
+.custom-timepicker-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.custom-timepicker-trigger {
+  width: 100%;
+  height: var(--btn-height-standard);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+  text-align: left;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.custom-timepicker-trigger.custom-timepicker-sm {
+  height: var(--btn-height-sm);
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.custom-timepicker-trigger:hover,
+.custom-timepicker-container.open .custom-timepicker-trigger {
+  border-color: var(--primary);
+  background-color: var(--bg-surface);
+}
+
+.custom-timepicker-container.open .custom-timepicker-trigger {
+  box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12);
+}
+
+.custom-timepicker-text {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.custom-timepicker-icon {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.custom-timepicker-popup {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 220px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 10px;
+  display: none;
+  z-index: 1100;
+  animation: fadeInDown 0.12s ease-out;
+  box-sizing: border-box;
+}
+
+.custom-timepicker-container.open .custom-timepicker-popup {
+  display: block;
+}
+
+.timepicker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.timepicker-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.timepicker-preview {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.timepicker-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.timepicker-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.timepicker-col-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+}
+
+.timepicker-list {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-alt);
+  padding: 2px;
+}
+
+.timepicker-item {
+  padding: 6px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-radius: var(--radius-tight);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.timepicker-item:hover {
+  background-color: var(--bg-surface);
+  color: var(--primary);
+}
+
+.timepicker-item.selected {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+}
+
+.timepicker-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-timepicker-footer {
+  background: transparent;
+  border: none;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-tight);
+  transition: var(--transition);
+}
+
+.btn-timepicker-footer.btn-clear {
+  color: var(--text-secondary);
+}
+
+.btn-timepicker-footer.btn-clear:hover {
+  color: var(--color-danger);
+  background-color: var(--color-danger-light);
+}
+
+.btn-timepicker-footer.btn-now {
+  color: var(--primary);
+}
+
+.btn-timepicker-footer.btn-now:hover {
+  background-color: var(--primary-light);
+}
+
 /* Remove native number input spin buttons */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

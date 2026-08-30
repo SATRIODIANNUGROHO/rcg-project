@@ -612,6 +612,60 @@ body.dark-mode .btn-datepicker-footer.btn-today:hover {
   background-color: rgba(56, 189, 248, 0.15);
 }
 
+/* Custom Timepicker in Dark Mode */
+body.dark-mode .custom-timepicker-trigger {
+  background-color: #1E293B;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+body.dark-mode .custom-timepicker-popup {
+  background-color: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .timepicker-header,
+body.dark-mode .timepicker-footer {
+  border-color: #334155;
+}
+
+body.dark-mode .timepicker-title,
+body.dark-mode .timepicker-col-title {
+  color: #94A3B8;
+}
+
+body.dark-mode .timepicker-preview {
+  color: #38BDF8;
+}
+
+body.dark-mode .timepicker-list {
+  background-color: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .timepicker-item {
+  color: #F8FAFC;
+}
+
+body.dark-mode .timepicker-item:hover {
+  background-color: #1E293B;
+  color: #38BDF8;
+}
+
+body.dark-mode .timepicker-item.selected {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+}
+
+body.dark-mode .btn-timepicker-footer.btn-now {
+  color: #38BDF8;
+}
+
+body.dark-mode .btn-timepicker-footer.btn-now:hover {
+  background-color: rgba(56, 189, 248, 0.15);
+}
+
 /* Unit Tag in Dark Mode */
 body.dark-mode .input-unit .unit-tag {
   background-color: #1E293B;
