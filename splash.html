@@ -29,10 +29,10 @@
     .splash-card {
       width: 520px;
       height: 340px;
-      background: linear-gradient(145deg, #1e40af 0%, #1e3a8a 55%, #0f172a 100%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
       border-radius: 20px;
-      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(226, 232, 240, 0.7);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -43,23 +43,23 @@
       overflow: hidden;
     }
 
-    /* Ambient soft background lighting */
+    /* Ambient soft background glow */
     .splash-card::before {
       content: '';
       position: absolute;
-      top: -60px;
+      top: -50px;
       left: 50%;
       transform: translateX(-50%);
-      width: 260px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(30, 64, 175, 0) 70%);
+      width: 320px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(37, 99, 184, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
       border-radius: 50%;
       pointer-events: none;
     }
 
     .splash-logo-container {
       position: relative;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -69,38 +69,43 @@
       height: 64px;
       width: auto;
       object-fit: contain;
-      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.1));
     }
 
     .splash-title {
       font-size: 22px;
       font-weight: 800;
-      color: #FFFFFF;
-      letter-spacing: -0.3px;
+      color: #0F172A;
+      letter-spacing: -0.4px;
       line-height: 1.2;
       margin-bottom: 4px;
     }
 
     .splash-subtitle {
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
-      color: #93C5FD;
-      letter-spacing: 0.2px;
-      margin-bottom: 6px;
+      color: #2563EB;
+      letter-spacing: 0.1px;
+      margin-bottom: 8px;
     }
 
-    .splash-version {
-      font-size: 12px;
-      font-weight: 500;
-      color: #CBD5E1;
-      letter-spacing: 0.5px;
-      margin-bottom: 24px;
+    .splash-version-badge {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #1D4ED8;
+      background: #EFF6FF;
+      border: 1px solid #DBEAFE;
+      border-radius: 999px;
+      padding: 2.5px 12px;
+      letter-spacing: 0.3px;
+      margin-bottom: 22px;
     }
 
     .splash-status-text {
       font-size: 12px;
-      font-weight: 500;
-      color: #93C5FD;
+      font-weight: 600;
+      color: #64748B;
       margin-bottom: 10px;
       height: 16px;
       transition: opacity 0.2s ease;
@@ -108,8 +113,9 @@
 
     .splash-progress-track {
       width: 320px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.15);
+      height: 6px;
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
       border-radius: 999px;
       overflow: hidden;
       position: relative;
@@ -118,10 +124,10 @@
     .splash-progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #D69E2E 0%, #F59E0B 40%, #38BDF8 100%);
+      background: linear-gradient(90deg, #2563EB 0%, #3B82F6 60%, #D69E2E 100%);
       border-radius: 999px;
       transition: width 0.15s linear;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+      box-shadow: 0 2px 8px rgba(37, 99, 184, 0.35);
     }
   </style>
 </head>
@@ -132,7 +138,7 @@
     </div>
     <div class="splash-title">PT. Reka Cipta Garam</div>
     <div class="splash-subtitle">Salt Weighing System</div>
-    <div class="splash-version">Version 7.5.0</div>
+    <div class="splash-version-badge">Version 7.5.0</div>
 
     <div class="splash-status-text" id="splash-status">Memuat modul sistem...</div>
     <div class="splash-progress-track">
