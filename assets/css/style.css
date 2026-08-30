@@ -1261,12 +1261,14 @@ input[type="number"] {
 }
 
 /* ==========================================================================
-   App Container & Section View
+   App Container & Section View (100% Fluid & Fully Adaptive)
    ========================================================================== */
 .app-container {
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 18px 24px 36px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: clamp(14px, 1.8vw, 24px) clamp(16px, 2.5vw, 36px) 40px;
+  box-sizing: border-box;
 }
 
 .view-section {
@@ -2102,28 +2104,78 @@ input[type="number"] {
 
 /* ==========================================================================
    Comprehensive Responsive & Adaptive Breakpoints
-   1. Large Desktop (>= 1440px)
-   2. Laptop / Desktop (1024px - 1439px)
+   1. Ultra-Wide & Large Desktop (>= 1440px / 2K / 4K)
+   2. Standard Laptop / Desktop (1024px - 1439px)
    3. Tablet (768px - 1023px)
    4. Mobile (481px - 767px)
    5. Small Mobile (320px - 480px)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
+   Ultra-Wide & Large Desktop (>= 1440px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1440px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .mini-stats-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .transaction-layout {
+    grid-template-columns: 1.25fr 0.85fr;
+    gap: 20px;
+  }
+
+  .scale-weight-val {
+    font-size: 34px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Standard Laptop / Desktop (1024px - 1439px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .mini-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .transaction-layout {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 16px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Tablet & Smaller (<= 1023px)
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
   .app-container {
-    padding: 16px 18px 36px;
+    padding: 14px 16px 36px;
   }
 
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .mini-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .analytics-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
   .col-8, .col-4, .col-6, .col-12 {
@@ -2173,8 +2225,8 @@ input[type="number"] {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 270px;
-    max-width: 82vw;
+    width: 280px;
+    max-width: 84vw;
     background: #0B1C2D;
     z-index: 999;
     display: flex;
@@ -2335,6 +2387,11 @@ input[type="number"] {
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .mini-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .stat-card {
