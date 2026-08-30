@@ -1,4 +1,4 @@
-# 🧂 PT. Reka Cipta Garam - Salt Weighing System (Sistem Jembatan Timbang)
+# PT. Reka Cipta Garam - Salt Weighing System (Sistem Jembatan Timbang)
 
 Sistem Informasi Penimbangan Truk Garam Industri modern berbasis **Electron Desktop & Web Application** untuk **PT. Reka Cipta Garam**.
 
@@ -6,32 +6,32 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
 
 ---
 
-## 📸 Fitur Utama
+## Fitur Utama
 
-- 🚛 **Penimbangan Truk Otomatis & Simulator**:
+- **Penimbangan Truk Otomatis & Simulator**:
   - Koneksi langsung ke indikator timbangan jembatan truk via **RS-232 / USB Serial (Web Serial API)**.
   - Panel **Simulator Timbangan Interaktif** untuk pengujian dan pelatihan operator.
-- 🧮 **Perhitungan Kualitas Garam & Refraksi Otomatis**:
+- **Perhitungan Kualitas Garam & Refraksi Otomatis**:
   - Perhitungan Berat Muatan (Gross - Tara).
   - Potongan Refraksi (%) dan pembagian mutu Garam Kualitas 1 (K1) & Kualitas 2 (K2).
   - Kalkulasi nilai pembayaran rupiah otomatis.
-- 🧾 **Cetak Nota & Tiket Timbang**:
+- **Cetak Nota & Tiket Timbang**:
   - Format cetak nota standar industri lengkap dengan kop perusahaan, rincian muatan, dan tanda tangan operator.
-- 📊 **Dashboard & Statistik Interaktif**:
+- **Dashboard & Statistik Interaktif**:
   - Grafik tonase harian/mingguan, distribusi supplier Madura terbesar, rasio K1 vs K2, dan perputaran armada.
-- 🔐 **Manajemen Pengguna & Profil Akun**:
+- **Manajemen Pengguna & Profil Akun**:
   - Role-based Access Control: **Administrator** & **Operator**.
   - Manajemen Foto Profil, Avatar Kustom, dan Ganti Password.
-- 💾 **Backup, Restore, & Auto-Backup**:
+- **Backup, Restore, & Auto-Backup**:
   - Fitur backup otomatis berkala setiap 15 menit.
   - Export & Import data JSON (kompatibel dengan file arsip cadangan versi sebelumnya).
   - Export rekap laporan ke format Excel spreadsheet.
-- 🎨 **Desain Elegan (Mode Terang & Gelap)**:
+- **Desain Korporat Industri (Mode Terang & Gelap)**:
   - Antarmuka bertema industri modern dengan tipografi *Plus Jakarta Sans*, kalender kustom, dan dukungan Dark Mode.
 
 ---
 
-## 👤 Akun Masuk Bawaan (Default Login)
+## Akun Masuk Bawaan (Default Login)
 
 | Username | Password | Hak Akses (Role) | Keterangan |
 | :--- | :--- | :--- | :--- |
@@ -40,12 +40,12 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+## Cara Menjalankan Aplikasi
 
 ### Cara 1: Menjalankan Langsung (Paling Praktis)
 1. Buka folder proyek ini.
 2. Klik ganda (*double click*) file:
-   👉 **`run-app.bat`**
+   - **`run-app.bat`**
 3. Aplikasi desktop akan langsung terbuka dan siap digunakan.
 
 ---
@@ -62,12 +62,12 @@ npm start
 
 ---
 
-## 📦 Cara Membuat File Installer (.EXE)
+## Cara Membuat File Installer (.EXE)
 
 Untuk mengompilasi aplikasi menjadi file instalasi mandiri (*Standalone Installer & Portable .exe*):
 
 1. Klik ganda file:
-   👉 **`build-exe.bat`**
+   - **`build-exe.bat`**
    *(atau jalankan perintah `npm run dist` di terminal)*
 2. Tunggu proses pembuatan hingga selesai.
 3. File `.exe` siap pakai akan otomatis tersedia di dalam folder **`dist/`**:
@@ -76,7 +76,7 @@ Untuk mengompilasi aplikasi menjadi file instalasi mandiri (*Standalone Installe
 
 ---
 
-## 📂 Struktur Direktori
+## Struktur Direktori
 
 ```text
 RCG/
@@ -113,7 +113,7 @@ RCG/
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 - **Desktop Framework**: [Electron](https://www.electronjs.org/)
 - **Core Frontend**: HTML5, Vanilla JavaScript (ES6+), CSS3 Variables
@@ -124,7 +124,7 @@ RCG/
 
 ---
 
-## 📄 Hak Cipta & Lisensi
+## Hak Cipta & Lisensi
 
 &copy; 2026 **PT. Reka Cipta Garam**. *All Rights Reserved.*
 Dikembangkan untuk operasional jembatan timbang terintegrasi kawasan industri garam Madura.
