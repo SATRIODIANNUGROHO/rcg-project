@@ -4,44 +4,48 @@
    ========================================================================== */
 
 body.dark-mode {
-  --bg-app: #0B1120;
-  --bg-surface: #1E293B;
-  --bg-surface-alt: #0F172A;
-  --bg-card: #1E293B;
-  --bg-table-stripe: #172338;
-  --bg-table-hover: #28374F;
+  --bg-app: #0A1B40;          /* Deep Navy (Background Utama) */
+  --bg-surface: #16243A;      /* Surface Navy (Card, Table, Panel) */
+  --bg-surface-alt: #0A1B40;
+  --bg-card: #16243A;
+  --bg-table-stripe: #121E31;
+  --bg-table-hover: #1E2D44;   /* Light Surface (Hover, Secondary) */
 
-  /* Typography Colors in Dark Mode */
-  --primary-dark: #F8FAFC;    /* Bright white for all headings & key metrics */
-  --primary: #38BDF8;         /* Vibrant Sky Blue */
-  --primary-hover: #60A5FA;
-  --primary-light: rgba(56, 189, 248, 0.15);
-  --primary-border: #0284C7;
+  /* Typography & Identity Colors in Dark Mode */
+  --primary-dark: #F5F7FA;    /* Crisp White for Headings & Metric Numbers */
+  --primary: #3671C6;         /* Primary Action Blue */
+  --primary-hover: #2B5EA6;
+  --primary-light: rgba(54, 113, 198, 0.15);
+  --primary-border: #3671C6;
 
-  --text-primary: #F8FAFC;    /* Crisp White */
-  --text-secondary: #94A3B8;  /* Light Slate Gray */
-  --text-muted: #64748B;      /* Medium Slate Gray */
-  --text-inverse: #0F172A;
-  --border-color: #334155;    /* Crisp Dark Border */
-  --border-subtle: #1E293B;
+  --text-primary: #F5F7FA;    /* White Text Utama */
+  --text-secondary: #AAB4C3;  /* Muted Gray Secondary Text */
+  --text-muted: #64748B;
+  --text-inverse: #0A1B40;
+  --border-color: #334155;    /* Border Gray */
+  --border-subtle: #1E2D44;
   --divider: #334155;
 
-  --accent-gold: #FBBF24;
-  --accent-gold-hover: #F59E0B;
+  --accent-gold: #F59E0B;
+  --accent-gold-hover: #D97706;
   --accent-light: rgba(245, 158, 11, 0.15);
   --accent-border: #B45309;
 
-  --color-success: #4ADE80;
-  --color-success-light: rgba(74, 222, 128, 0.15);
+  /* Standard Status Colors */
+  --color-success: #22C55E;   /* Green (Lunas, Aktif, Connected) */
+  --color-success-light: rgba(34, 197, 94, 0.15);
   --color-success-border: #166534;
   
-  --color-warning: #FBBF24;
+  --color-warning: #F59E0B;   /* Amber Warning (Belum Lunas, Pending) */
   --color-warning-light: rgba(245, 158, 11, 0.15);
   --color-warning-border: #B45309;
   
-  --color-danger: #F87171;
-  --color-danger-light: rgba(248, 113, 113, 0.15);
+  --color-danger: #EF4444;    /* Red Error / Destructive */
+  --color-danger-light: rgba(239, 68, 68, 0.15);
   --color-danger-border: #991B1B;
+
+  --color-info: #38BDF8;      /* Sky Blue Info */
+  --color-info-light: rgba(56, 189, 248, 0.15);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4);
