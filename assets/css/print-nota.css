@@ -3,38 +3,59 @@
    Format: Official Weighing Receipt & Supplier Form
    ========================================================================== */
 
-#printable-nota,
-#printable-nota-area {
-  display: none !important;
+/* 1. Sembunyikan container cetak saat tampilan layar normal */
+@media screen {
+  #printable-nota,
+  #printable-nota-area {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
 }
 
+/* 2. Tampilkan khusus saat proses cetak / Print Preview */
 @media print {
   @page {
     size: auto;
     margin: 4mm;
   }
 
-  body * {
-    visibility: hidden;
+  html, body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
   }
 
-  #printable-nota, #printable-nota *,
-  #printable-nota-area, #printable-nota-area * {
-    visibility: visible;
+  /* Sembunyikan elemen aplikasi selain container cetak */
+  body > *:not(#printable-nota):not(#printable-nota-area) {
+    display: none !important;
+    visibility: hidden !important;
   }
 
   #printable-nota,
   #printable-nota-area {
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+    visibility: visible !important;
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 auto !important;
     color: #000000 !important;
     background: #FFFFFF !important;
     font-family: 'Plus Jakarta Sans', Arial, sans-serif;
     font-size: 11.5pt;
     line-height: 1.35;
+  }
+
+  #printable-nota *,
+  #printable-nota-area * {
+    visibility: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .nota-container {
