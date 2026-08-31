@@ -13,7 +13,7 @@ function createSplashScreen() {
     alwaysOnTop: true,
     center: true,
     resizable: false,
-    skipTaskbar: false,
+    skipTaskbar: true,
     icon: path.join(__dirname, 'assets/icons/icon.png'),
     webPreferences: {
       nodeIntegration: false,
@@ -74,18 +74,34 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, 'login.html'));
 
+  let hasTransitioned = false;
+  const revealMainWindow = () => {
+    if (hasTransitioned) return;
+    hasTransitioned = true;
+
+    if (splashWindow && !splashWindow.isDestroyed()) {
+      try {
+        splashWindow.setAlwaysOnTop(false);
+        splashWindow.destroy();
+      } catch (e) {
+        // ignore
+      }
+      splashWindow = null;
+    }
+
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.show();
+      mainWindow.maximize();
+      mainWindow.focus();
+    }
+  };
+
   mainWindow.once('ready-to-show', () => {
-    // Give splash screen 1.9s to complete full progress animation
-    setTimeout(() => {
-      if (splashWindow && !splashWindow.isDestroyed()) {
-        splashWindow.close();
-      }
-      if (mainWindow && !mainWindow.isDestroyed()) {
-        mainWindow.maximize();
-        mainWindow.show();
-      }
-    }, 1900);
+    setTimeout(revealMainWindow, 1200);
   });
+
+  // Safety fallback timeout to ensure window always appears without stalling
+  setTimeout(revealMainWindow, 2400);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
