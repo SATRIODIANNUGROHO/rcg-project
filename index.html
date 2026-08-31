@@ -15,6 +15,14 @@
   <!-- Local Offline Libraries (Chart.js & SheetJS) -->
   <script src="assets/vendor/chart.umd.min.js"></script>
   <script src="assets/vendor/xlsx.full.min.js"></script>
+  <script>
+    if (typeof window.Chart === 'undefined' && typeof Chart !== 'undefined') {
+      window.Chart = Chart;
+    }
+    if (typeof window.XLSX === 'undefined' && typeof XLSX !== 'undefined') {
+      window.XLSX = XLSX;
+    }
+  </script>
 
   <!-- Immediate Theme & Auth Pre-loader -->
   <script>

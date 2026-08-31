@@ -8,39 +8,45 @@ const App = {
 
   init() {
     // 1. Initialize Storage & Theme State first
-    StorageManager.init();
-    this.initTheme();
+    try { StorageManager.init(); } catch (e) { console.error('StorageManager init error:', e); }
+    try { this.initTheme(); } catch (e) { console.error('Theme init error:', e); }
 
-    // 2. Initialize Subsystems (Charts & Dropdowns will now render with correct theme state)
-    AuthManager.init();
-    ScaleEngine.init();
-    TransactionEngine.init();
-    HistoryManager.init();
-    SupplierHistoryManager.init();
-    AnalyticsManager.init();
-    PrintManager.init();
-    ExportExcelManager.init();
-    CustomSelectManager.init();
-    CustomDatePicker.init();
-    CustomTimePicker.init();
-    CustomAutocomplete.init();
+    // 2. Start Live Clock & Bind Global Events immediately so UI is always active & clickable
+    try { this.startLiveClock(); } catch (e) { console.error('startLiveClock error:', e); }
+    try { this.bindEvents(); } catch (e) { console.error('bindEvents error:', e); }
 
-    // 3. Setup UI & Listeners
-    this.bindEvents();
-    this.startLiveClock();
-    this.renderActivityLogs();
+    // 3. Initialize Subsystems safely with try-catch isolation
+    try { AuthManager.init(); } catch (e) { console.error('AuthManager init error:', e); }
+    try { ScaleEngine.init(); } catch (e) { console.error('ScaleEngine init error:', e); }
+    try { TransactionEngine.init(); } catch (e) { console.error('TransactionEngine init error:', e); }
+    try { HistoryManager.init(); } catch (e) { console.error('HistoryManager init error:', e); }
+    try { SupplierHistoryManager.init(); } catch (e) { console.error('SupplierHistoryManager init error:', e); }
+    try { AnalyticsManager.init(); } catch (e) { console.error('AnalyticsManager init error:', e); }
+    try { PrintManager.init(); } catch (e) { console.error('PrintManager init error:', e); }
+    try { ExportExcelManager.init(); } catch (e) { console.error('ExportExcelManager init error:', e); }
+    try { CustomSelectManager.init(); } catch (e) { console.error('CustomSelectManager init error:', e); }
+    try { CustomDatePicker.init(); } catch (e) { console.error('CustomDatePicker init error:', e); }
+    try { CustomTimePicker.init(); } catch (e) { console.error('CustomTimePicker init error:', e); }
+    try { CustomAutocomplete.init(); } catch (e) { console.error('CustomAutocomplete init error:', e); }
 
-    // 4. Scale Engine Subscriber for real-time form helper
-    ScaleEngine.subscribe((weight, isStable, status) => {
-      const liveBadge = document.getElementById('sim-live-badge');
-      if (liveBadge) {
-        liveBadge.textContent = `${weight.toLocaleString('id-ID')} Kg (${isStable ? 'STABIL' : 'GERAK'})`;
-      }
-    });
+    // 4. Render Activity Logs
+    try { this.renderActivityLogs(); } catch (e) { console.error('renderActivityLogs error:', e); }
 
-    // 5. Auto-backup background cron (every 15 mins)
+    // 5. Scale Engine Subscriber for real-time form helper
+    try {
+      ScaleEngine.subscribe((weight, isStable, status) => {
+        const liveBadge = document.getElementById('sim-live-badge');
+        if (liveBadge) {
+          liveBadge.textContent = `${weight.toLocaleString('id-ID')} Kg (${isStable ? 'STABIL' : 'GERAK'})`;
+        }
+      });
+    } catch (e) {
+      console.error('ScaleEngine subscribe error:', e);
+    }
+
+    // 6. Auto-backup background cron (every 15 mins)
     setInterval(() => {
-      StorageManager.createAutoBackup();
+      try { StorageManager.createAutoBackup(); } catch (e) {}
     }, 15 * 60 * 1000);
   },
 

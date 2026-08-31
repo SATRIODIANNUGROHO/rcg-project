@@ -261,56 +261,73 @@ const AnalyticsManager = {
   },
 
   renderCharts(txs, totalK1, totalK2) {
-    if (typeof Chart === 'undefined') return;
+    const ChartClass = window.Chart || (typeof Chart !== 'undefined' ? Chart : null);
+    if (!ChartClass) {
+      console.warn('Chart.js library is not available');
+      return;
+    }
     const theme = this.getThemeColors();
 
     // 1. Weekly Transactions Bar Chart (Mulai 26 Juli 2026)
-    this.renderWeeklyChart(txs);
+    try {
+      this.renderWeeklyChart(txs);
+    } catch (e) {
+      console.error('Error rendering weekly chart:', e);
+    }
 
     // 2. K1 vs K2 Doughnut Chart ("Komposisi Mutu Garam K1 dan Garam K2")
-    const ctxK1K2 = document.getElementById('chart-k1-k2');
-    if (ctxK1K2) {
-      if (this.chartK1K2) this.chartK1K2.destroy();
-      this.chartK1K2 = new Chart(ctxK1K2, {
-        type: 'doughnut',
-        data: {
-          labels: ['Garam K1', 'Garam K2'],
-          datasets: [{
-            data: [totalK1 || 1, totalK2 || 0],
-            backgroundColor: [theme.k1Color, theme.k2Color],
-            borderColor: theme.borderColor,
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                color: theme.textColor,
-                font: { size: 12, family: "'Plus Jakarta Sans', sans-serif" },
-                padding: 14
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => `${ctx.label}: ${ctx.raw.toLocaleString('id-ID')} Kg`
+    try {
+      const ctxK1K2 = document.getElementById('chart-k1-k2');
+      if (ctxK1K2) {
+        if (this.chartK1K2) this.chartK1K2.destroy();
+        this.chartK1K2 = new ChartClass(ctxK1K2, {
+          type: 'doughnut',
+          data: {
+            labels: ['Garam K1', 'Garam K2'],
+            datasets: [{
+              data: [totalK1 || 1, totalK2 || 0],
+              backgroundColor: [theme.k1Color, theme.k2Color],
+              borderColor: theme.borderColor,
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: theme.textColor,
+                  font: { size: 12, family: "'Plus Jakarta Sans', sans-serif" },
+                  padding: 14
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => `${ctx.label}: ${ctx.raw.toLocaleString('id-ID')} Kg`
+                }
               }
             }
           }
-        }
-      });
+        });
+      }
+    } catch (e) {
+      console.error('Error rendering K1/K2 chart:', e);
     }
 
     // 3. Sebaran Asal Garam: Double Donut Chart (Kabupaten & Desa)
-    this.renderDoubleDonutOriginChart(txs);
+    try {
+      this.renderDoubleDonutOriginChart(txs);
+    } catch (e) {
+      console.error('Error rendering origin chart:', e);
+    }
   },
 
   renderWeeklyChart(passedTxs = null) {
     const ctx = document.getElementById('chart-weekly');
-    if (!ctx || typeof Chart === 'undefined') return;
+    const ChartClass = window.Chart || (typeof Chart !== 'undefined' ? Chart : null);
+    if (!ctx || !ChartClass) return;
 
     const theme = this.getThemeColors();
     const txs = passedTxs || StorageManager.getTransactions();
@@ -357,7 +374,7 @@ const AnalyticsManager = {
 
     if (this.chartWeekly) this.chartWeekly.destroy();
 
-    this.chartWeekly = new Chart(ctx, {
+    this.chartWeekly = new ChartClass(ctx, {
       type: 'bar',
       data: {
         labels: labels,
@@ -425,7 +442,8 @@ const AnalyticsManager = {
 
   renderDoubleDonutOriginChart(txs) {
     const ctx = document.getElementById('chart-origin');
-    if (!ctx || typeof Chart === 'undefined') return;
+    const ChartClass = window.Chart || (typeof Chart !== 'undefined' ? Chart : null);
+    if (!ctx || !ChartClass) return;
     const theme = this.getThemeColors();
 
     if (this.chartOrigin) this.chartOrigin.destroy();
@@ -458,7 +476,7 @@ const AnalyticsManager = {
       desaData.push(1);
     }
 
-    this.chartOrigin = new Chart(ctx, {
+    this.chartOrigin = new ChartClass(ctx, {
       type: 'doughnut',
       data: {
         datasets: [
@@ -499,7 +517,10 @@ const AnalyticsManager = {
                     text: `Kab. ${k} (${kabData[idx].toLocaleString('id-ID')} Kg)`,
                     fillStyle: theme.kabPalette[idx % theme.kabPalette.length],
                     strokeStyle: theme.borderColor,
-                    lineWidth: 1
+                    lineWidth: 1,
+                    hidden: false,
+                    index: idx,
+                    datasetIndex: 1
                   });
                 });
                 return labels;

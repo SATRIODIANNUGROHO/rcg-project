@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body{
+
+margin:0;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:100vh;
+
+background:linear-gradient(
+135deg,
+#0F4C81 0%,
+#1C6CB3 100%
+);
+
+font-family:Lexend,sans-serif;
+
+color:white;
+
+}
+
+.box{
+
+text-align:center;
+animation:fade .6s ease;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+transform:translateY(12px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+img{
+
+width:180px;
+
+margin-bottom:15px;
+
+}
+
+.version{
+
+margin-top:15px;
+
+opacity:.8;
+
+}
+
+.loading{
+
+margin-top:30px;
+
+font-size:14px;
+
+opacity:.7;
+
+}
+
+.progress{
+
+width:260px;
+
+height:6px;
+
+margin:30px auto 0;
+
+background:rgba(255,255,255,.18);
+
+border-radius:100px;
+
+overflow:hidden;
+
+}
+
+#progressBar{
+
+width:0%;
+
+height:100%;
+
+background:#F4C542;
+
+border-radius:100px;
+
+transition:width .08s linear;
+
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<img src="logo login page.png">
+
+<h2>PT. Reka Cipta Garam</h2>
+
+<h3>Salt Weighing System</h3>
+
+<div class="version">
+
+Version 7.5.0
+
+</div>
+
+<div class="loading">
+
+<span id="loadingText">
+Initializing
+</span>
+
+</div>
+
+<div class="progress">
+
+<div id="progressBar"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const text =
+document.getElementById("loadingText");
+
+const bar =
+document.getElementById("progressBar");
+
+let progress = 0;
+
+let dot = 0;
+
+setInterval(()=>{
+
+    dot++;
+
+    if(dot>3) dot=0;
+
+    text.innerHTML =
+        "Initializing" + ".".repeat(dot);
+
+},350);
+
+const timer = setInterval(()=>{
+
+    progress += 2;
+
+    bar.style.width =
+        progress + "%";
+
+    if(progress>=100){
+
+        clearInterval(timer);
+
+    }
+
+},25);
+
+</script>
+
+</body>
+
+</html>
