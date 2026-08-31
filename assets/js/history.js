@@ -316,8 +316,14 @@ const HistoryManager = {
     const tx = list.find(t => t.id === id);
     if (tx) {
       TransactionEngine.preparePrintNota(tx);
-      if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
-        window.electronAPI.printNota();
+      if (typeof PrintManager !== 'undefined') {
+        PrintManager.openPrintDialog(() => {
+          if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
+            window.electronAPI.printNota();
+          } else {
+            window.print();
+          }
+        });
       } else {
         window.print();
       }
@@ -340,23 +346,41 @@ const HistoryManager = {
     this.selectedTxForAction = tx;
     const msg = document.getElementById('delete-modal-msg');
     if (msg) msg.innerHTML = `Apakah Anda yakin ingin menghapus data transaksi <strong>${tx.docNo}</strong> (${tx.supplier} - ${tx.plateNo})?`;
+
+    const reasonInput = document.getElementById('input-delete-reason');
+    if (reasonInput) reasonInput.value = '';
+
     App.openModal('modal-confirm-delete');
   },
 
   executeDelete() {
     if (this.selectedTxForAction) {
       const docNo = this.selectedTxForAction.docNo;
+      const reasonInput = document.getElementById('input-delete-reason');
+      const reason = reasonInput ? reasonInput.value.trim() : '';
+
+      if (!reason) {
+        App.showToast('Alasan penghapusan data wajib diisi!', 'warning');
+        if (reasonInput) reasonInput.focus();
+        return;
+      }
+
       StorageManager.deleteTransaction(this.selectedTxForAction.id);
       StorageManager.addLog(
         AuthManager.getCurrentUser().username,
         AuthManager.getCurrentUser().role,
         `Hapus Transaksi Penimbangan: ${docNo}`,
-        docNo
+        docNo,
+        reason
       );
       this.selectedTxForAction = null;
       App.closeModal('modal-confirm-delete');
       this.render();
+      if (typeof SupplierHistoryManager !== 'undefined') {
+        SupplierHistoryManager.render();
+      }
       AnalyticsManager.render();
+      App.renderActivityLogs();
       App.showToast(`Transaksi ${docNo} berhasil dihapus.`, 'danger');
     }
   }

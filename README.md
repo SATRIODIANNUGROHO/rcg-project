@@ -90,22 +90,29 @@ RCG/
 │   │   └── icon.png              # Ikon taskbar resolusi tinggi
 │   ├── images/
 │   │   └── RCG.webp              # Logo resmi PT. Reka Cipta Garam
+│   ├── vendor/
+│   │   ├── chart.umd.min.js      # Pustaka Chart.js lokal (Offline Mode)
+│   │   └── xlsx.full.min.js      # Pustaka SheetJS lokal (Offline Mode)
 │   └── js/
-│       ├── storage.js            # Penyimpanan basis data & export/import
-│       ├── auth.js               # Manajemen otentikasi & profil user
-│       ├── serial-scale.js       # Driver pembacaan timbangan serial RS232
+│       ├── storage.js            # Basis data & activity log audit
+│       ├── auth.js               # Otentikasi & manajemen hak akses user
+│       ├── serial-scale.js       # Driver timbangan serial RS232 & simulator
 │       ├── custom-select.js      # Komponen dropdown kustom
 │       ├── custom-datepicker.js  # Komponen kalender pemilih tanggal
 │       ├── custom-timepicker.js  # Komponen pemilih waktu (WIB) kustom
 │       ├── custom-autocomplete.js# Komponen pencarian/autocomplete pemasok
-│       ├── transaction.js        # Logika input penimbangan garam
-│       ├── history.js            # Pencarian, filter & paginasi data
-│       ├── analytics.js          # Grafik performa & statistik Chart.js
+│       ├── print-dialog.js       # Dialog pemilihan ukuran kertas & salinan cetak
+│       ├── export-excel.js       # Mesin ekspor Excel dengan AutoFilter & AutoSum
+│       ├── transaction.js        # Logika input penimbangan & kalkulasi mutu
+│       ├── history.js            # Riwayat transaksi 8-kolom & detail lengkap
+│       ├── supplier-history.js   # Modul Riwayat Pemasok & Cetak Form Supplier
+│       ├── analytics.js          # Double Donut Chart & statistik mingguan
 │       └── app.js                # Pengendali utama alur aplikasi
 ├── scripts/
 │   └── generate-icons.js         # Generator otomatis ikon multi-resolusi
 ├── index.html                    # Halaman Dashboard & Operasional Utama
 ├── login.html                    # Halaman Masuk Aplikasi
+├── splash.html                   # Splash Screen awal aplikasi
 ├── main.js                       # Electron Desktop Main Process
 ├── preload.js                    # Electron Preload Bridge
 ├── package.json                  # Konfigurasi proyek & skrip build

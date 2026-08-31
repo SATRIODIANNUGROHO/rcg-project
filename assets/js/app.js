@@ -16,7 +16,10 @@ const App = {
     ScaleEngine.init();
     TransactionEngine.init();
     HistoryManager.init();
+    SupplierHistoryManager.init();
     AnalyticsManager.init();
+    PrintManager.init();
+    ExportExcelManager.init();
     CustomSelectManager.init();
     CustomDatePicker.init();
     CustomTimePicker.init();
@@ -363,8 +366,12 @@ const App = {
     const btnExportExcel = document.getElementById('btn-export-excel');
     if (btnExportExcel) {
       btnExportExcel.addEventListener('click', () => {
-        StorageManager.exportExcel();
-        this.showToast('File Excel (.xlsx) berhasil diexport.', 'success');
+        if (typeof ExportExcelManager !== 'undefined') {
+          ExportExcelManager.openExportDialog('transaction');
+        } else {
+          StorageManager.exportExcel();
+          this.showToast('File Excel (.xlsx) berhasil diexport.', 'success');
+        }
       });
     }
 
@@ -415,10 +422,28 @@ const App = {
     const btnConfirmClearAllYes = document.getElementById('btn-confirm-clear-all-yes');
     if (btnConfirmClearAllYes) {
       btnConfirmClearAllYes.addEventListener('click', () => {
+        const reasonInput = document.getElementById('input-clear-all-reason');
+        const reason = reasonInput ? reasonInput.value.trim() : '';
+
+        if (!reason) {
+          this.showToast('Alasan reset seluruh database wajib diisi!', 'warning');
+          if (reasonInput) reasonInput.focus();
+          return;
+        }
+
         StorageManager.clearAllTransactions();
-        StorageManager.addLog(AuthManager.getCurrentUser().username, AuthManager.getCurrentUser().role, 'MENGHAPUS SELURUH DATA TRANSAKSI', '-');
+        StorageManager.addLog(
+          AuthManager.getCurrentUser().username,
+          AuthManager.getCurrentUser().role,
+          'MENGHAPUS SELURUH DATA TRANSAKSI',
+          '-',
+          reason
+        );
         this.closeModal('modal-confirm-clear-all');
         HistoryManager.render();
+        if (typeof SupplierHistoryManager !== 'undefined') {
+          SupplierHistoryManager.render();
+        }
         AnalyticsManager.render();
         this.renderActivityLogs();
         this.showToast('Seluruh data transaksi telah dihapus bersih.', 'danger');
@@ -462,6 +487,8 @@ const App = {
       AnalyticsManager.render();
     } else if (tabId === 'riwayat') {
       HistoryManager.render();
+    } else if (tabId === 'riwayat-pemasok') {
+      SupplierHistoryManager.render();
     } else if (tabId === 'activity-log') {
       this.renderActivityLogs();
     }
@@ -575,12 +602,14 @@ const App = {
 
     logs.forEach(log => {
       const tr = document.createElement('tr');
+      const hasReason = log.reason && log.reason !== '-';
       tr.innerHTML = `
         <td class="mono-num">${log.time}</td>
         <td><strong>${log.user}</strong></td>
         <td><span class="role-text ${log.role === 'Administrator' ? 'role-admin' : 'role-operator'}">${log.role}</span></td>
         <td>${log.activity}</td>
         <td class="mono-num">${log.docNo || '-'}</td>
+        <td>${hasReason ? `<span class="badge badge-warning" style="font-weight: 600; white-space: normal; text-align: left;">${log.reason}</span>` : '<span class="text-secondary">-</span>'}</td>
       `;
       tbody.appendChild(tr);
     });

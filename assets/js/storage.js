@@ -201,7 +201,7 @@ const StorageManager = {
     }
   },
 
-  addLog(user, role, activity, docNo = '-') {
+  addLog(user, role, activity, docNo = '-', reason = '-') {
     const logs = this.getLogs();
     const now = new Date();
     const timeStr = now.getFullYear() + '-' +
@@ -217,7 +217,8 @@ const StorageManager = {
       user: user || 'admin',
       role: role || 'Administrator',
       activity: activity,
-      docNo: docNo
+      docNo: docNo,
+      reason: reason || '-'
     });
 
     if (logs.length > 500) logs.length = 500; // retain max 500 logs

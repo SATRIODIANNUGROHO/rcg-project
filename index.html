@@ -16,9 +16,9 @@
   <link rel="stylesheet" href="assets/css/dark-mode.css">
   <link rel="stylesheet" href="assets/css/print-nota.css">
 
-  <!-- Chart.js & SheetJS libraries (with CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Local Offline Libraries (Chart.js & SheetJS) -->
+  <script src="assets/vendor/chart.umd.min.js"></script>
+  <script src="assets/vendor/xlsx.full.min.js"></script>
 
   <!-- Immediate Theme & Auth Pre-loader -->
   <script>
@@ -157,6 +157,9 @@
     <button class="nav-item" data-tab="riwayat">
       Riwayat Penimbangan
     </button>
+    <button class="nav-item" data-tab="riwayat-pemasok">
+      Riwayat Pemasok
+    </button>
     <button class="nav-item" data-tab="activity-log">
       Activity Log
     </button>
@@ -284,24 +287,47 @@
         </div>
       </div>
 
-      <!-- Analisis Periode Banner -->
+      <!-- Analisis Periode Banner (Berat Bersih & Pembayaran Periode) -->
       <div class="card mb-3">
         <div class="card-header">
-          <div class="d-flex align-center gap-12">
-            <h3 class="card-title">Berat Bersih Periode</h3>
-            <select id="analytics-period-select" class="form-select form-select-sm" style="width: 160px; height: 32px;">
-              <option value="today">Hari Ini</option>
-              <option value="month">Bulan Ini</option>
-              <option value="all">Semua Waktu</option>
-            </select>
-            <button id="btn-analytics-period-show" class="btn btn-primary btn-sm">Tampilkan</button>
+          <div class="d-flex align-center gap-12 flex-wrap">
+            <h3 class="card-title">Analisis Periode Transaksi</h3>
+            <div class="d-flex align-center gap-8 flex-wrap">
+              <select id="analytics-period-select" class="form-select form-select-sm" style="width: 175px; height: 32px;">
+                <option value="today">Hari Ini</option>
+                <option value="7days">7 Hari Terakhir</option>
+                <option value="30days">30 Hari Terakhir</option>
+                <option value="month">Bulan Ini</option>
+                <option value="all">Semua Waktu</option>
+                <option value="custom">Rentang Tanggal Kustom</option>
+              </select>
+              <div id="analytics-custom-date-wrap" class="d-flex align-center gap-6" style="display: none !important;">
+                <input type="date" id="analytics-date-start" class="form-control form-control-sm mono" style="width: 135px; height: 32px;">
+                <span class="text-small text-secondary">s/d</span>
+                <input type="date" id="analytics-date-end" class="form-control form-control-sm mono" style="width: 135px; height: 32px;">
+              </div>
+              <button id="btn-analytics-period-show" class="btn btn-primary btn-sm">Tampilkan</button>
+            </div>
           </div>
         </div>
-        <div class="card-body d-flex align-center justify-between" style="padding: 16px 20px;">
-          <div>
-            <div class="text-display" id="period-net-weight" style="color: var(--primary); font-size: 30px;">0,0 Kg</div>
-            <div class="text-secondary text-small" id="period-net-sub" style="margin-top: 4px;">
-              Total berat bersih hari ini • 0 transaksi
+        <div class="card-body" style="padding: 16px 20px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <!-- 1. Berat Bersih Periode -->
+            <div style="border-right: 1px solid var(--border-color); padding-right: 14px;">
+              <div class="text-small text-secondary" style="font-weight: 700; letter-spacing: 0.04em; margin-bottom: 4px;">BERAT BERSIH PERIODE</div>
+              <div class="text-display mono-num" id="period-net-weight" style="color: var(--primary); font-size: 28px;">0 Kg</div>
+              <div class="text-secondary text-small" id="period-net-sub" style="margin-top: 4px;">
+                Total berat bersih hari ini • 0 transaksi
+              </div>
+            </div>
+
+            <!-- 2. Pembayaran Periode -->
+            <div>
+              <div class="text-small text-secondary" style="font-weight: 700; letter-spacing: 0.04em; margin-bottom: 4px;">PEMBAYARAN PERIODE</div>
+              <div class="text-display mono-num" id="period-payment-total" style="color: var(--primary-dark); font-size: 28px;">Rp 0</div>
+              <div class="text-secondary text-small" id="period-payment-sub" style="margin-top: 4px;">
+                Total nilai pembayaran periode • 0 transaksi
+              </div>
             </div>
           </div>
         </div>
@@ -351,9 +377,9 @@
               <h3 class="card-title">Grafik Transaksi per Minggu</h3>
               <div class="d-flex align-center gap-8">
                 <span class="text-small text-secondary">Minggu:</span>
-                <input type="number" id="chart-week-start" class="form-control form-control-sm mono" value="1" min="1" max="5" style="width: 55px; height: 32px;">
+                <input type="number" id="chart-week-start" class="form-control form-control-sm mono" value="1" min="1" max="10" style="width: 55px; height: 32px;">
                 <span class="text-small text-secondary">s/d</span>
-                <input type="number" id="chart-week-end" class="form-control form-control-sm mono" value="4" min="1" max="5" style="width: 55px; height: 32px;">
+                <input type="number" id="chart-week-end" class="form-control form-control-sm mono" value="6" min="1" max="10" style="width: 55px; height: 32px;">
                 <button id="btn-filter-week-chart" class="btn btn-primary btn-sm">Tampilkan</button>
               </div>
             </div>
@@ -367,7 +393,7 @@
         <div class="col-4">
           <div class="card" style="height: 100%;">
             <div class="card-header">
-              <h3 class="card-title">Komposisi Mutu K1 vs K2</h3>
+              <h3 class="card-title">Komposisi Mutu Garam K1 dan Garam K2</h3>
             </div>
             <div class="card-body" style="height: 300px; position: relative;">
               <canvas id="chart-k1-k2"></canvas>
@@ -375,13 +401,13 @@
           </div>
         </div>
 
-        <!-- 3. Origin Distribution Chart -->
+        <!-- 3. Origin Distribution Chart (Double Donut) -->
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Sebaran Asal Garam (Wilayah &amp; Kecamatan)</h3>
+              <h3 class="card-title">Sebaran Asal Garam (Kabupaten &amp; Desa)</h3>
             </div>
-            <div class="card-body" style="height: 260px; position: relative;">
+            <div class="card-body" style="height: 280px; position: relative;">
               <canvas id="chart-origin"></canvas>
             </div>
           </div>
@@ -478,16 +504,13 @@
               <div class="form-group">
                 <label class="form-label">Jenis Material Garam</label>
                 <select id="select-material" class="form-select">
-                  <option value="Garam Karung Super">Garam Karung Super</option>
-                  <option value="Garam Karung Standar">Garam Karung Standar</option>
-                  <option value="Garam Curah K1">Garam Curah K1</option>
-                  <option value="Garam Curah K2">Garam Curah K2</option>
-                  <option value="Garam Briket / Krosok">Garam Briket / Krosok</option>
+                  <option value="Garam Karung" selected>Garam Karung</option>
+                  <option value="Garam Curah">Garam Curah</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Jumlah Karung (Koli)</label>
+                <label class="form-label">Jumlah</label>
                 <div class="input-unit">
                   <input type="number" id="input-bag-count" class="form-control mono" min="0" value="180">
                   <span class="unit-tag">Karung</span>
@@ -497,12 +520,12 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Wilayah Asal Garam</label>
+                <label class="form-label">Kabupaten Asal Garam</label>
                 <select id="select-origin-region" class="form-select"></select>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Area / Kecamatan</label>
+                <label class="form-label">Desa Asal Garam</label>
                 <select id="select-origin-area" class="form-select"></select>
               </div>
             </div>
@@ -520,10 +543,6 @@
               <div class="form-group">
                 <label class="form-label">Petugas Timbang</label>
                 <input type="text" id="input-weighmaster" class="form-control" placeholder="AFIF" style="text-transform: uppercase;">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Admin Sesi</label>
-                <input type="text" id="input-admin-name" class="form-control" readonly>
               </div>
             </div>
 
@@ -622,7 +641,7 @@
             <!-- K1 -->
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Berat Bersih K1 (Super)</label>
+                <label class="form-label">Berat Bersih Garam K1</label>
                 <div class="input-unit">
                   <input type="number" id="input-k1-weight" class="form-control mono" min="0" value="0">
                   <span class="unit-tag">Kg</span>
@@ -639,14 +658,14 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Subtotal K1 (Rp)</label>
+              <label class="form-label">Subtotal Garam K1 (Rp)</label>
               <input type="text" id="input-k1-total" class="form-control mono" readonly value="Rp 0">
             </div>
 
             <!-- K2 -->
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Berat Bersih K2 (Standar)</label>
+                <label class="form-label">Berat Bersih Garam K2</label>
                 <div class="input-unit">
                   <input type="number" id="input-k2-weight" class="form-control mono" min="0" value="0">
                   <span class="unit-tag">Kg</span>
@@ -663,7 +682,7 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Subtotal K2 (Rp)</label>
+              <label class="form-label">Subtotal Garam K2 (Rp)</label>
               <input type="text" id="input-k2-total" class="form-control mono" readonly value="Rp 0">
             </div>
           </div>
@@ -765,13 +784,114 @@
 
 
     <!-- =======================================================================
+         SECTION: RIWAYAT PEMASOK / SUPPLIER
+         ======================================================================= -->
+    <section id="section-riwayat-pemasok" class="view-section">
+      <div class="d-flex align-center justify-between mb-3 flex-wrap gap-12">
+        <div>
+          <h2 class="section-title">Riwayat Pemasok / Supplier</h2>
+          <p class="text-secondary text-small">Rekapitulasi transaksi penimbangan per pemasok dan cetak formulir supplier</p>
+        </div>
+        <div class="d-flex gap-8 align-center flex-wrap">
+          <button id="btn-export-supplier-excel" class="btn btn-primary btn-sm">
+            Export Excel (.xlsx)
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar Filter & Search Pemasok -->
+      <div class="table-toolbar">
+        <div class="search-box">
+          <input type="text" id="supplier-history-search" class="form-control" placeholder="Cari nama pemasok, no. dokumen, dll...">
+          <button id="supplier-history-reset-search" class="btn btn-secondary btn-sm" title="Reset Pencarian">
+            Reset
+          </button>
+        </div>
+
+        <div class="table-filter-group">
+          <!-- Filter Nama Pemasok -->
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Pemasok:</span>
+            <select id="supplier-history-supplier-filter" class="form-select" style="min-width: 180px; height: 38px;">
+              <option value="">Semua Pemasok</option>
+            </select>
+          </div>
+
+          <!-- Filter Tanggal -->
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Tanggal:</span>
+            <input type="date" id="supplier-history-date-filter" class="form-control mono" style="height: 38px; width: 140px;">
+          </div>
+
+          <!-- Urutan -->
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Urutan:</span>
+            <select id="supplier-history-sort" class="form-select" style="width: 140px; height: 38px;">
+              <option value="desc">Terbaru</option>
+              <option value="asc">Terlama</option>
+            </select>
+          </div>
+
+          <!-- Jumlah Baris -->
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Baris:</span>
+            <select id="supplier-history-page-size" class="form-select" style="width: 85px; height: 38px;">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Data Riwayat Pemasok -->
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 120px; text-align: center;">Cetak Form</th>
+              <th>Tanggal</th>
+              <th>Nama Pemasok</th>
+              <th class="text-right">Berat K1 (Kg)</th>
+              <th class="text-right">Berat K2 (Kg)</th>
+              <th class="text-right">Harga K1 (Rp)</th>
+              <th class="text-right">Harga K2 (Rp)</th>
+              <th class="text-right">Subtotal K1 (Rp)</th>
+              <th class="text-right">Subtotal K2 (Rp)</th>
+              <th class="text-right">Total (Rp)</th>
+            </tr>
+          </thead>
+          <tbody id="supplier-history-table-body">
+            <!-- Rendered by supplier-history.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Nav -->
+      <div class="pagination-area">
+        <div id="supplier-history-page-indicator" class="page-indicator">Halaman 1 / 1</div>
+        <div class="pagination-controls">
+          <button id="supplier-history-prev-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Sebelumnya">
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+            <span>Prev</span>
+          </button>
+          <button id="supplier-history-next-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Berikutnya">
+            <span>Next</span>
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
          SECTION 4: ACTIVITY LOG
          ======================================================================= -->
     <section id="section-activity-log" class="view-section">
       <div class="d-flex align-center justify-between mb-3">
         <div>
           <h2 class="section-title">Activity Log</h2>
-          <p class="text-secondary text-small">Pencatatan audit seluruh aktivitas pengguna (Login, Transaksi, Edit, Hapus)</p>
+          <p class="text-secondary text-small">Pencatatan audit seluruh aktivitas pengguna (Login, Transaksi, Edit, Hapus, Alasan)</p>
         </div>
         <button id="btn-clear-logs" class="btn btn-confirm-accent btn-sm admin-only">
           Hapus Activity Log
@@ -782,11 +902,12 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th style="width: 180px;">Waktu</th>
-              <th style="width: 130px;">User</th>
-              <th style="width: 140px;">Role</th>
+              <th style="width: 170px;">Waktu</th>
+              <th style="width: 120px;">User</th>
+              <th style="width: 130px;">Role</th>
               <th>Aktivitas</th>
-              <th style="width: 220px;">No. Dok</th>
+              <th style="width: 180px;">No. Dok</th>
+              <th>Alasan</th>
             </tr>
           </thead>
           <tbody id="activity-log-table-body">
@@ -1168,15 +1289,21 @@
     </div>
   </div>
 
-  <!-- Modal 5: Confirm Delete Single Transaction -->
+  <!-- Modal 5: Confirm Delete Single Transaction (Dengan Wajib Alasan) -->
   <div id="modal-confirm-delete" class="modal-overlay">
-    <div class="modal-container" style="max-width: 440px;">
+    <div class="modal-container" style="max-width: 480px;">
       <div class="modal-header">
         <h3>Konfirmasi Hapus Transaksi</h3>
         <button class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
         <p id="delete-modal-msg">Apakah Anda yakin ingin menghapus data transaksi penimbangan ini?</p>
+        <div class="form-group mt-3" style="text-align: left;">
+          <label class="form-label" for="input-delete-reason" style="font-weight: 600; color: var(--text-primary);">
+            Alasan Penghapusan <span class="required">*</span>
+          </label>
+          <textarea id="input-delete-reason" class="form-control" rows="2" placeholder="Tuliskan alasan penghapusan transaksi (wajib diisi)..." required></textarea>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary btn-modal-cancel">Batal</button>
@@ -1202,15 +1329,21 @@
     </div>
   </div>
 
-  <!-- Modal 7: Confirm Clear All Data -->
+  <!-- Modal 7: Confirm Clear All Data (Dengan Wajib Alasan) -->
   <div id="modal-confirm-clear-all" class="modal-overlay">
-    <div class="modal-container" style="max-width: 440px;">
+    <div class="modal-container" style="max-width: 480px;">
       <div class="modal-header">
         <h3>Konfirmasi Reset Basis Data</h3>
         <button class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
         <p>Apakah Anda yakin ingin menghapus seluruh rekaman <strong>data transaksi penimbangan</strong> secara permanen?</p>
+        <div class="form-group mt-3" style="text-align: left;">
+          <label class="form-label" for="input-clear-all-reason" style="font-weight: 600; color: var(--text-primary);">
+            Alasan Reset Database <span class="required">*</span>
+          </label>
+          <textarea id="input-clear-all-reason" class="form-control" rows="2" placeholder="Tuliskan alasan reset seluruh data (wajib diisi)..." required></textarea>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary btn-modal-cancel">Batal</button>
@@ -1219,7 +1352,110 @@
     </div>
   </div>
 
-  <!-- Hidden Printable Nota Receipt (Triggered during print) -->
+  <!-- Modal 8: Export Excel Data Scope Selector -->
+  <div id="modal-export-excel" class="modal-overlay">
+    <div class="modal-container" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="export-modal-title">Export to Excel (.xlsx)</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary text-small mb-3">Pilih cakupan tanggal data transaksi yang ingin diekspor:</p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+            <input type="radio" name="export-scope-option" value="today" checked>
+            <div>
+              <strong>Hari Ini</strong>
+              <div class="text-secondary text-small">Hanya transaksi hari ini</div>
+            </div>
+          </label>
+
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+            <input type="radio" name="export-scope-option" value="date">
+            <div>
+              <strong>Tanggal Tertentu</strong>
+              <div class="text-secondary text-small">Pilih 1 tanggal spesifik</div>
+            </div>
+          </label>
+          <div id="export-single-date-wrap" style="display: none; padding-left: 28px;">
+            <input type="date" id="export-input-single-date" class="form-control mono" style="height: 36px;">
+          </div>
+
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+            <input type="radio" name="export-scope-option" value="range">
+            <div>
+              <strong>Rentang Tanggal</strong>
+              <div class="text-secondary text-small">Dari tanggal awal s/d akhir</div>
+            </div>
+          </label>
+          <div id="export-range-date-wrap" class="d-flex align-center gap-8" style="display: none; padding-left: 28px;">
+            <input type="date" id="export-input-range-start" class="form-control mono" style="height: 36px;">
+            <span class="text-secondary text-small">s/d</span>
+            <input type="date" id="export-input-range-end" class="form-control mono" style="height: 36px;">
+          </div>
+
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+            <input type="radio" name="export-scope-option" value="all">
+            <div>
+              <strong>Seluruh Data</strong>
+              <div class="text-secondary text-small">Semua data transaksi tersimpan</div>
+            </div>
+          </label>
+        </div>
+
+        <div style="font-size: 11.5px; color: var(--text-secondary); background: var(--bg-surface-alt); padding: 8px 10px; border-radius: 4px;">
+          File hasil ekspor otomatis dilengkapi filter header (AutoFilter) bawaan Excel dan rumus penjumlahan otomatis (AutoSum).
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-export-excel" class="btn btn-primary">Unduh File Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 9: Print Settings & Paper Size Selection -->
+  <div id="modal-print-settings" class="modal-overlay">
+    <div class="modal-container" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3>Pengaturan Cetak Dokumen</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+          <label class="form-label" for="select-print-paper-size">Format &amp; Ukuran Kertas</label>
+          <select id="select-print-paper-size" class="form-select">
+            <option value="A6" selected>A6 (105 × 148 mm - Standar Tiket Timbang)</option>
+            <option value="A5">A5 (148 × 210 mm - Setengah HVS)</option>
+            <option value="A4">A4 (210 × 297 mm - HVS Penuh)</option>
+            <option value="Letter">Letter (8.5 × 11 inch)</option>
+            <option value="NCR_Wartel">NCR Wartel Double Sheet on Letter 9.5" × 11" Portrait</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-2">
+          <label class="form-label" for="select-print-copies">Jumlah Rangkap / Salinan</label>
+          <select id="select-print-copies" class="form-select">
+            <option value="1" selected>1 Rangkap (Lembar Utama)</option>
+            <option value="2">2 Rangkap (Asli + Arsip Kantor)</option>
+            <option value="3">3 Rangkap (Supir + Kasir + Arsip)</option>
+          </select>
+        </div>
+
+        <p class="text-secondary text-small" style="margin-top: 10px;">
+          Ukuran kertas akan disesuaikan secara langsung pada jendela printer tanpa mengubah pengaturan global aplikasi.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button id="btn-confirm-print-dialog" class="btn btn-primary">Cetak Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Printable Nota Area (Triggered during print) -->
+  <div id="printable-nota-area"></div>
   <div id="printable-nota"></div>
 
   <!-- Toast Container -->
@@ -1235,8 +1471,11 @@
   <script src="assets/js/custom-datepicker.js"></script>
   <script src="assets/js/custom-timepicker.js"></script>
   <script src="assets/js/custom-autocomplete.js"></script>
+  <script src="assets/js/print-dialog.js"></script>
+  <script src="assets/js/export-excel.js"></script>
   <script src="assets/js/transaction.js"></script>
   <script src="assets/js/history.js"></script>
+  <script src="assets/js/supplier-history.js"></script>
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/app.js"></script>
 

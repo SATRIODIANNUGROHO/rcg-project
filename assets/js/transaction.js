@@ -42,6 +42,18 @@ const TransactionEngine = {
       regionSelect.addEventListener('change', () => this.updateAreaDropdown());
     }
 
+    // Material dropdown change updates unit tag
+    const materialSelect = document.getElementById('select-material');
+    if (materialSelect) {
+      materialSelect.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const unitTag = document.querySelector('#input-bag-count ~ .unit-tag');
+        if (unitTag) {
+          unitTag.textContent = val.includes('Curah') ? 'Kg' : 'Karung';
+        }
+      });
+    }
+
     // Hapus/Reset Weight buttons
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
@@ -297,9 +309,9 @@ const TransactionEngine = {
       k1Total: k1Total,
       k2Total: k2Total,
       grandTotal: grandTotal,
-      driverName: document.getElementById('input-driver-name').value.trim().toUpperCase() || 'ISMAIL',
-      weighmasterName: document.getElementById('input-weighmaster').value.trim().toUpperCase() || 'AFIF',
-      adminName: document.getElementById('input-admin-name').value.trim() || 'admin',
+      driverName: (document.getElementById('input-driver-name')?.value.trim().toUpperCase()) || 'ISMAIL',
+      weighmasterName: (document.getElementById('input-weighmaster')?.value.trim().toUpperCase()) || 'AFIF',
+      adminName: (AuthManager.getCurrentUser() && AuthManager.getCurrentUser().username) || 'admin',
       paymentStatus: document.getElementById('select-payment-status').value,
       notes: document.getElementById('input-notes').value.trim()
     };
@@ -341,7 +353,11 @@ const TransactionEngine = {
     
     // Refresh tables and analytics
     HistoryManager.render();
+    if (typeof SupplierHistoryManager !== 'undefined') {
+      SupplierHistoryManager.render();
+    }
     AnalyticsManager.render();
+    App.renderActivityLogs();
 
     // Populate print preview modal
     this.preparePrintNota(tx);
@@ -532,10 +548,20 @@ const TransactionEngine = {
     const tx = this.getCurrentFormData();
     this.preparePrintNota(tx);
 
-    if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
-      window.electronAPI.printNota();
+    if (typeof PrintManager !== 'undefined') {
+      PrintManager.openPrintDialog(() => {
+        if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
+          window.electronAPI.printNota();
+        } else {
+          window.print();
+        }
+      });
     } else {
-      window.print();
+      if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
+        window.electronAPI.printNota();
+      } else {
+        window.print();
+      }
     }
   }
 };
