@@ -1,27 +1,30 @@
 /* ==========================================================================
-   PT. REKA CIPTA GARAM - NOTA TIMBANG PRINT STYLESHEET
-   Format: Official Weighing Receipt (Nota Timbang)
+   PT. REKA CIPTA GARAM - NOTA TIMBANG & FORM PEMASOK PRINT STYLESHEET
+   Format: Official Weighing Receipt & Supplier Form
    ========================================================================== */
 
-#printable-nota {
-  display: none;
+#printable-nota,
+#printable-nota-area {
+  display: none !important;
 }
 
 @media print {
   @page {
-    size: A5 landscape;
-    margin: 8mm;
+    size: auto;
+    margin: 4mm;
   }
 
   body * {
     visibility: hidden;
   }
 
-  #printable-nota, #printable-nota * {
+  #printable-nota, #printable-nota *,
+  #printable-nota-area, #printable-nota-area * {
     visibility: visible;
   }
 
-  #printable-nota {
+  #printable-nota,
+  #printable-nota-area {
     display: block !important;
     position: absolute;
     left: 0;
