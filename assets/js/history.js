@@ -315,16 +315,12 @@ const HistoryManager = {
     const list = StorageManager.getTransactions();
     const tx = list.find(t => t.id === id);
     if (tx) {
-      TransactionEngine.preparePrintNota(tx);
+      const generatorFn = (copyNumber, totalCopies) => TransactionEngine.generateNotaHtml(tx, copyNumber, totalCopies);
       if (typeof PrintManager !== 'undefined') {
-        PrintManager.openPrintDialog(() => {
-          if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
-            window.electronAPI.printNota();
-          } else {
-            window.print();
-          }
-        });
+        PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang');
       } else {
+        const container = document.getElementById('printable-nota');
+        if (container) container.innerHTML = generatorFn(1, 1);
         window.print();
       }
     }

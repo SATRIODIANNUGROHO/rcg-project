@@ -168,42 +168,96 @@ const TransactionEngine = {
     this.activeTxId = 'TRX-' + Date.now();
     this.activeDocNo = this.generateDocumentNumber();
 
-    const today = new Date().toISOString().slice(0, 10);
     const settings = StorageManager.getSettings();
     const currentUser = AuthManager.getCurrentUser();
 
     // Form inputs reset
-    document.getElementById('input-doc-no').value = this.activeDocNo;
-    document.getElementById('input-doc-date').value = today;
-    document.getElementById('input-time-in').value = '';
-    document.getElementById('input-time-out').value = '';
-    document.getElementById('input-plate-no').value = '';
-    document.getElementById('input-supplier').value = '';
-    document.getElementById('select-material').value = 'Garam Karung Super';
-    document.getElementById('input-bag-count').value = '180';
-    document.getElementById('select-origin-region').value = 'Pamekasan';
+    this.activeDocNo = this.generateDocumentNumber();
+    const docNoInput = document.getElementById('input-doc-no');
+    if (docNoInput) docNoInput.value = this.activeDocNo;
+
+    const docDateInput = document.getElementById('input-doc-date');
+    if (docDateInput) docDateInput.value = new Date().toISOString().slice(0, 10);
+
+    const nowStr = new Date().toTimeString().slice(0, 5);
+    const timeInInput = document.getElementById('input-time-in');
+    if (timeInInput) timeInInput.value = nowStr;
+
+    const timeOutInput = document.getElementById('input-time-out');
+    if (timeOutInput) timeOutInput.value = nowStr;
+
+    const plateNoInput = document.getElementById('input-plate-no');
+    if (plateNoInput) plateNoInput.value = '';
+
+    const supplierInput = document.getElementById('input-supplier');
+    if (supplierInput) supplierInput.value = '';
+
+    const materialSelect = document.getElementById('select-material');
+    if (materialSelect) materialSelect.value = 'Garam Karung';
+
+    const bagCountInput = document.getElementById('input-bag-count');
+    if (bagCountInput) bagCountInput.value = '180';
+
+    const regionSelect = document.getElementById('select-origin-region');
+    if (regionSelect) regionSelect.value = 'Pamekasan';
     this.updateAreaDropdown('Majungan');
 
-    document.getElementById('input-gross-weight').value = '0';
-    document.getElementById('input-tare-weight').value = '0';
-    document.getElementById('input-net-load').value = '0';
-    document.getElementById('input-refraction-percent').value = settings.defaultRefraction || 5.0;
-    document.getElementById('input-refraction-kg').value = '0';
-    document.getElementById('input-final-net').value = '0';
+    const grossInput = document.getElementById('input-gross-weight');
+    if (grossInput) grossInput.value = '0';
 
-    document.getElementById('input-k1-weight').value = '0';
-    document.getElementById('input-k2-weight').value = '0';
-    document.getElementById('input-k1-price').value = settings.defaultK1Price || 1250;
-    document.getElementById('input-k2-price').value = settings.defaultK2Price || 1050;
-    document.getElementById('input-k1-total').value = '0';
-    document.getElementById('input-k2-total').value = '0';
+    const tareInput = document.getElementById('input-tare-weight');
+    if (tareInput) tareInput.value = '0';
 
-    document.getElementById('display-grand-total').textContent = 'Rp 0';
-    document.getElementById('input-driver-name').value = '';
-    document.getElementById('input-weighmaster').value = settings.defaultWeighmaster || 'AFIF';
-    document.getElementById('input-admin-name').value = currentUser.username || 'admin';
-    document.getElementById('select-payment-status').value = 'Lunas';
-    document.getElementById('input-notes').value = '';
+    const netLoadInput = document.getElementById('input-net-load');
+    if (netLoadInput) netLoadInput.value = '0';
+
+    const refPercentInput = document.getElementById('input-refraction-percent');
+    if (refPercentInput) refPercentInput.value = settings.defaultRefraction || 5.0;
+
+    const refKgInput = document.getElementById('input-refraction-kg');
+    if (refKgInput) refKgInput.value = '0';
+
+    const finalNetInput = document.getElementById('input-final-net');
+    if (finalNetInput) finalNetInput.value = '0';
+
+    const k1WeightInput = document.getElementById('input-k1-weight');
+    if (k1WeightInput) k1WeightInput.value = '0';
+
+    const k2WeightInput = document.getElementById('input-k2-weight');
+    if (k2WeightInput) k2WeightInput.value = '0';
+
+    const k1PriceInput = document.getElementById('input-k1-price');
+    if (k1PriceInput) k1PriceInput.value = settings.defaultK1Price || 1250;
+
+    const k2PriceInput = document.getElementById('input-k2-price');
+    if (k2PriceInput) k2PriceInput.value = settings.defaultK2Price || 1050;
+
+    const k1TotalInput = document.getElementById('input-k1-total');
+    if (k1TotalInput) k1TotalInput.value = '0';
+
+    const k2TotalInput = document.getElementById('input-k2-total');
+    if (k2TotalInput) k2TotalInput.value = '0';
+
+    const grandTotalDisplay = document.getElementById('display-grand-total');
+    if (grandTotalDisplay) grandTotalDisplay.textContent = 'Rp 0';
+
+    const driverNameInput = document.getElementById('input-driver-name');
+    if (driverNameInput) driverNameInput.value = '';
+
+    const weighmasterInput = document.getElementById('input-weighmaster');
+    if (weighmasterInput) weighmasterInput.value = settings.defaultWeighmaster || 'AFIF';
+
+    const adminNameInput = document.getElementById('input-admin-name');
+    if (adminNameInput) adminNameInput.value = currentUser.username || 'admin';
+
+    const paymentStatusSelect = document.getElementById('select-payment-status');
+    if (paymentStatusSelect) paymentStatusSelect.value = 'Lunas';
+
+    const notesInput = document.getElementById('input-notes');
+    if (notesInput) notesInput.value = '';
+
+    const btnSave = document.getElementById('btn-save-transaction');
+    if (btnSave) btnSave.textContent = 'Simpan Transaksi';
 
     if (typeof CustomSelectManager !== 'undefined') {
       CustomSelectManager.syncAll();
@@ -362,6 +416,10 @@ const TransactionEngine = {
     // Populate print preview modal
     this.preparePrintNota(tx);
 
+    this.isEditingExisting = false;
+    const btnSave = document.getElementById('btn-save-transaction');
+    if (btnSave) btnSave.textContent = 'Simpan Transaksi';
+
     const draftMsg = document.getElementById('transaction-draft-msg');
     if (draftMsg) draftMsg.textContent = `Transaksi ${tx.docNo} tersimpan rapi.`;
 
@@ -373,38 +431,93 @@ const TransactionEngine = {
     this.activeTxId = tx.id;
     this.activeDocNo = tx.docNo;
 
-    document.getElementById('input-doc-no').value = tx.docNo;
-    document.getElementById('input-doc-date').value = tx.date;
-    document.getElementById('input-time-in').value = tx.timeIn || '';
-    document.getElementById('input-time-out').value = tx.timeOut || '';
-    document.getElementById('input-plate-no').value = tx.plateNo;
-    document.getElementById('input-supplier').value = tx.supplier;
-    document.getElementById('select-material').value = tx.material;
-    document.getElementById('input-bag-count').value = tx.bagCount || 0;
+    const docNoInput = document.getElementById('input-doc-no');
+    if (docNoInput) docNoInput.value = tx.docNo;
+
+    const docDateInput = document.getElementById('input-doc-date');
+    if (docDateInput) docDateInput.value = tx.date;
+
+    const timeInInput = document.getElementById('input-time-in');
+    if (timeInInput) timeInInput.value = tx.timeIn || '';
+
+    const timeOutInput = document.getElementById('input-time-out');
+    if (timeOutInput) timeOutInput.value = tx.timeOut || '';
+
+    const plateNoInput = document.getElementById('input-plate-no');
+    if (plateNoInput) plateNoInput.value = tx.plateNo || '';
+
+    const supplierInput = document.getElementById('input-supplier');
+    if (supplierInput) supplierInput.value = tx.supplier || '';
+
+    const materialSelect = document.getElementById('select-material');
+    if (materialSelect) materialSelect.value = tx.material || 'Garam Karung';
+
+    const bagCountInput = document.getElementById('input-bag-count');
+    if (bagCountInput) bagCountInput.value = tx.bagCount || 0;
     
-    document.getElementById('select-origin-region').value = tx.originRegion || 'Pamekasan';
+    const regionSelect = document.getElementById('select-origin-region');
+    if (regionSelect) regionSelect.value = tx.originRegion || 'Pamekasan';
     this.updateAreaDropdown(tx.originArea || 'Majungan');
 
-    document.getElementById('input-gross-weight').value = tx.grossWeight;
-    document.getElementById('input-tare-weight').value = tx.tareWeight;
-    document.getElementById('input-net-load').value = (tx.netLoadWeight || 0).toLocaleString('id-ID');
-    document.getElementById('input-refraction-percent').value = tx.refractionPercent;
-    document.getElementById('input-refraction-kg').value = (tx.refractionKg || 0).toLocaleString('id-ID');
-    document.getElementById('input-final-net').value = (tx.finalNetWeight || 0).toLocaleString('id-ID');
+    const grossInput = document.getElementById('input-gross-weight');
+    if (grossInput) grossInput.value = tx.grossWeight || 0;
 
-    document.getElementById('input-k1-weight').value = tx.k1Weight;
-    document.getElementById('input-k2-weight').value = tx.k2Weight;
-    document.getElementById('input-k1-price').value = tx.k1Price;
-    document.getElementById('input-k2-price').value = tx.k2Price;
-    document.getElementById('input-k1-total').value = 'Rp ' + (tx.k1Total || 0).toLocaleString('id-ID');
-    document.getElementById('input-k2-total').value = 'Rp ' + (tx.k2Total || 0).toLocaleString('id-ID');
-    document.getElementById('display-grand-total').textContent = 'Rp ' + (tx.grandTotal || 0).toLocaleString('id-ID');
+    const tareInput = document.getElementById('input-tare-weight');
+    if (tareInput) tareInput.value = tx.tareWeight || 0;
 
-    document.getElementById('input-driver-name').value = tx.driverName;
-    document.getElementById('input-weighmaster').value = tx.weighmasterName;
-    document.getElementById('input-admin-name').value = tx.adminName;
-    document.getElementById('select-payment-status').value = tx.paymentStatus || 'Lunas';
-    document.getElementById('input-notes').value = tx.notes || '';
+    const netLoadInput = document.getElementById('input-net-load');
+    if (netLoadInput) netLoadInput.value = (tx.netLoadWeight || 0).toLocaleString('id-ID');
+
+    const refPercentInput = document.getElementById('input-refraction-percent');
+    if (refPercentInput) refPercentInput.value = tx.refractionPercent || 0;
+
+    const refKgInput = document.getElementById('input-refraction-kg');
+    if (refKgInput) refKgInput.value = (tx.refractionKg || 0).toLocaleString('id-ID');
+
+    const finalNetInput = document.getElementById('input-final-net');
+    if (finalNetInput) finalNetInput.value = (tx.finalNetWeight || 0).toLocaleString('id-ID');
+
+    const k1WeightInput = document.getElementById('input-k1-weight');
+    if (k1WeightInput) k1WeightInput.value = tx.k1Weight || 0;
+
+    const k2WeightInput = document.getElementById('input-k2-weight');
+    if (k2WeightInput) k2WeightInput.value = tx.k2Weight || 0;
+
+    const k1PriceInput = document.getElementById('input-k1-price');
+    if (k1PriceInput) k1PriceInput.value = tx.k1Price || 0;
+
+    const k2PriceInput = document.getElementById('input-k2-price');
+    if (k2PriceInput) k2PriceInput.value = tx.k2Price || 0;
+
+    const k1TotalInput = document.getElementById('input-k1-total');
+    if (k1TotalInput) k1TotalInput.value = 'Rp ' + (tx.k1Total || 0).toLocaleString('id-ID');
+
+    const k2TotalInput = document.getElementById('input-k2-total');
+    if (k2TotalInput) k2TotalInput.value = 'Rp ' + (tx.k2Total || 0).toLocaleString('id-ID');
+
+    const grandTotalDisplay = document.getElementById('display-grand-total');
+    if (grandTotalDisplay) grandTotalDisplay.textContent = 'Rp ' + (tx.grandTotal || 0).toLocaleString('id-ID');
+
+    const driverNameInput = document.getElementById('input-driver-name');
+    if (driverNameInput) driverNameInput.value = tx.driverName || '';
+
+    const weighmasterInput = document.getElementById('input-weighmaster');
+    if (weighmasterInput) weighmasterInput.value = tx.weighmasterName || '';
+
+    const adminNameInput = document.getElementById('input-admin-name');
+    if (adminNameInput) adminNameInput.value = tx.adminName || '';
+
+    const paymentStatusSelect = document.getElementById('select-payment-status');
+    if (paymentStatusSelect) paymentStatusSelect.value = tx.paymentStatus || 'Lunas';
+
+    const notesInput = document.getElementById('input-notes');
+    if (notesInput) notesInput.value = tx.notes || '';
+
+    const btnSave = document.getElementById('btn-save-transaction');
+    if (btnSave) btnSave.textContent = 'Simpan Perubahan';
+
+    const draftMsg = document.getElementById('transaction-draft-msg');
+    if (draftMsg) draftMsg.innerHTML = `<span style="color: #38BDF8; font-weight: 600;">Mode Edit Dokumen: ${tx.docNo}</span> (Ubah atribut data di bawah, lalu klik <strong>Simpan Perubahan</strong>)`;
 
     if (typeof CustomSelectManager !== 'undefined') {
       CustomSelectManager.syncAll();
