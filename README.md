@@ -1,4 +1,4 @@
-# PT. Reka Cipta Garam - Salt Weighing System v7.5.0 (Sistem Jembatan Timbang)
+# PT. Reka Cipta Garam - Salt Weighing System v8.0 (Sistem Jembatan Timbang)
 
 Sistem Informasi Penimbangan Truk Garam Industri modern berbasis **Electron Desktop & Web Application** untuk **PT. Reka Cipta Garam**.
 
@@ -6,7 +6,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
 
 ---
 
-## Fitur Utama v7.5.0
+## Fitur Utama v8.0
 
 - **Penimbangan Truk Otomatis & Simulator**:
   - Koneksi langsung ke indikator jembatan timbang truk via **RS-232 / USB Serial (Web Serial API)**.
@@ -92,8 +92,8 @@ Untuk mengompilasi aplikasi menjadi installer desktop Windows mandiri:
    - **`build-exe.bat`**
    *(atau jalankan perintah `npm run dist` di terminal)*
 2. File hasil build akan tersedia di folder **`dist/`**:
-   - **`dist/RCG Salt Weighing System Setup 7.5.0.exe`** (*Installer Windows*)
-   - **`dist/RCG Salt Weighing System 7.5.0.exe`** (*Versi Portable*)
+   - **`dist/RCG Salt Weighing System Setup 8.0.0.exe`** (*Installer Windows*)
+   - **`dist/RCG Salt Weighing System 8.0.0.exe`** (*Versi Portable*)
    - **`dist/win-unpacked/RCG Salt Weighing System.exe`** (*Versi Unpacked*)
 
 ---

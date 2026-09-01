@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Analytics Engine & High-Contrast Charts
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Analytics Engine, Double Donut & Weekly Charts
  * Includes: Dual Period Metrics, Standardized 26-Jul-2026 Weekly Intervals,
  * Mutu K1/K2 Distribution, and Double Donut Chart (Kabupaten & Desa).
  */

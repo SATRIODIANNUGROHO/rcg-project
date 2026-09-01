@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Custom Theme-Matched Autocomplete / Datalist Enhancer
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Custom Autocomplete Component
  * Replaces native unstyled datalist popups with sleek corporate theme dropdowns
  */
 

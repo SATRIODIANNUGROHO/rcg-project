@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Weighing Transaction History (Riwayat Penimbangan)
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Transaction History Management
  */
 
 const HistoryManager = {

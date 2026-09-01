@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Print Settings & Interactive Live Document Preview Modal
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Interactive Print Settings, Paper Formats & Preview Dialog
  * Supports A6, A5, A4, Letter, and NCR Wartel 9.5" x 11" Continuous Sheet
  */
 

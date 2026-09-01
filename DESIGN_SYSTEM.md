@@ -1,6 +1,6 @@
 # PT. Reka Cipta Garam - Design System & UI Guidelines
 
-Dokumen acuan resmi (*baseline source of truth*) untuk desain antarmuka, tata letak, warna, tipografi, dan komponen aplikasi **Salt Weighing System v7.5.0**.
+Dokumen acuan resmi (*baseline source of truth*) untuk desain antarmuka, tata letak, warna, tipografi, dan komponen aplikasi **Salt Weighing System v8.0**.
 
 ---
 

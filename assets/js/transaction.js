@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Transaction Logic & Calculations (Nota Timbang Engine)
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Weighing Transaction Processing & Calculations
  */
 
 const TransactionEngine = {

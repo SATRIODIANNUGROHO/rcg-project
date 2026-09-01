@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Serial Weighing Scale Hardware Driver & Virtual Scale Simulator
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Serial Communication & Indicator Bridge (Web Serial API)
  */
 
 const ScaleEngine = {

@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Universal Custom Dropdown Enhancer
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Custom Select Dropdown Component
  * Converts native HTML selects into beautiful, fully styled floating dropdowns
  */
 

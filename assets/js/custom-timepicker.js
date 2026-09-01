@@ -1,6 +1,6 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Custom Theme-Matched Timepicker Component
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Module: Custom Timepicker Component
  * Replaces native browser time inputs with sleek, corporate theme timepicker popups
  */
 

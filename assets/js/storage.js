@@ -1,5 +1,5 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
  * Module: Storage & Master Data Layer
  */
 
@@ -388,7 +388,7 @@ const StorageManager = {
   exportJSON() {
     const data = {
       system: 'PT. Reka Cipta Garam - Salt Weighing System',
-      version: '7.5.0',
+      version: '8.0',
       exportedAt: new Date().toISOString(),
       transactions: this.getTransactions(),
       logs: this.getLogs(),

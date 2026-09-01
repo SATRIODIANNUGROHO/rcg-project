@@ -1,5 +1,5 @@
 /**
- * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
  * Module: Riwayat Pemasok / Supplier & Cetak Form Supplier
  * Handles supplier transaction log, filtering, supplier-specific rekap, and Excel export
  */

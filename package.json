@@ -1,7 +1,7 @@
 {
   "name": "rcg-salt-weighing-system",
-  "version": "7.5.0",
-  "description": "PT. Reka Cipta Garam - Salt Weighing System v7.5.0",
+  "version": "8.0.0",
+  "description": "PT. Reka Cipta Garam - Salt Weighing System v8.0",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
