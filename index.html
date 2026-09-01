@@ -19,6 +19,7 @@
   <!-- Local Offline Libraries (Chart.js & SheetJS & html2pdf) -->
   <script src="assets/vendor/chart.umd.min.js"></script>
   <script src="assets/vendor/xlsx.full.min.js"></script>
+  <script src="assets/vendor/exceljs.min.js"></script>
   <script src="assets/vendor/html2pdf.bundle.min.js"></script>
   <script>
     if (typeof window.Chart === 'undefined' && typeof Chart !== 'undefined') {
@@ -26,6 +27,9 @@
     }
     if (typeof window.XLSX === 'undefined' && typeof XLSX !== 'undefined') {
       window.XLSX = XLSX;
+    }
+    if (typeof window.ExcelJS === 'undefined' && typeof ExcelJS !== 'undefined') {
+      window.ExcelJS = ExcelJS;
     }
     if (typeof window.html2pdf === 'undefined' && typeof html2pdf !== 'undefined') {
       window.html2pdf = html2pdf;
