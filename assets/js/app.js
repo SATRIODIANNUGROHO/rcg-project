@@ -527,19 +527,25 @@ const App = {
     const settings = StorageManager.getSettings();
     if (settings.darkMode) {
       document.body.classList.add('dark-mode');
+      document.documentElement.classList.add('dark-mode');
       this.updateThemeButton(true);
     } else {
+      document.body.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark-mode');
       this.updateThemeButton(false);
     }
   },
 
   toggleTheme() {
     const isDark = document.body.classList.toggle('dark-mode');
+    document.documentElement.classList.toggle('dark-mode', isDark);
     const settings = StorageManager.getSettings();
     settings.darkMode = isDark;
     StorageManager.saveSettings(settings);
     this.updateThemeButton(isDark);
-    AnalyticsManager.render();
+    if (typeof AnalyticsManager !== 'undefined') {
+      AnalyticsManager.render();
+    }
   },
 
   updateThemeButton(isDark) {

@@ -1,7 +1,29 @@
 /**
  * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v7.5.0
- * Module: Authentication & User Profile Management (Modular Architecture)
+ * Module: Authentication, Role-Based Access Control (RBAC) & Permissions Management
  */
+
+const DEFAULT_PERMISSIONS_ADMIN = {
+  supplier: { view: true, add: true, edit: true, delete: true },
+  material: { view: true, add: true, edit: true, delete: true },
+  transaction: { view: true, add: true, edit: true, delete: true },
+  report: { view: true, export: true },
+  reprintNota: true,
+  changeSettings: true,
+  manageUsers: true,
+  backupDatabase: true
+};
+
+const DEFAULT_PERMISSIONS_OPERATOR = {
+  supplier: { view: true, add: true, edit: true, delete: false },
+  material: { view: true, add: false, edit: false, delete: false },
+  transaction: { view: true, add: true, edit: true, delete: false },
+  report: { view: true, export: true },
+  reprintNota: true,
+  changeSettings: false,
+  manageUsers: false,
+  backupDatabase: false
+};
 
 const DEFAULT_USERS = [
   {
@@ -11,6 +33,7 @@ const DEFAULT_USERS = [
     fullName: 'Administrator RCG',
     email: 'admin@rekaciptagaram.co.id',
     role: 'Administrator',
+    permissions: JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN)),
     avatarUrl: null,
     initials: 'AD',
     createdAt: '2026-08-01 08:00'
@@ -22,6 +45,7 @@ const DEFAULT_USERS = [
     fullName: 'Operator Timbang',
     email: 'operator@rekaciptagaram.co.id',
     role: 'Operator',
+    permissions: JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR)),
     avatarUrl: null,
     initials: 'OP',
     createdAt: '2026-08-15 09:30'
@@ -30,6 +54,7 @@ const DEFAULT_USERS = [
 
 const AuthManager = {
   currentUser: null,
+  selectedPermUserId: null,
 
   getUsers() {
     const raw = localStorage.getItem(STORAGE_KEYS.USERS);
@@ -38,7 +63,16 @@ const AuthManager = {
       return DEFAULT_USERS;
     }
     try {
-      return JSON.parse(raw);
+      const users = JSON.parse(raw);
+      // Ensure all users have permissions structure
+      users.forEach(u => {
+        if (!u.permissions) {
+          u.permissions = u.role === 'Administrator' 
+            ? JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN))
+            : JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR));
+        }
+      });
+      return users;
     } catch (e) {
       return DEFAULT_USERS;
     }
@@ -52,12 +86,12 @@ const AuthManager = {
     // 1. Ensure user DB exists
     const users = this.getUsers();
 
-    // 2. Check active saved session in localStorage (reliable across file:// protocol)
+    // 2. Check active saved session in localStorage
     const rawSession = localStorage.getItem(STORAGE_KEYS.AUTH_SESSION);
     if (rawSession) {
       try {
         const sessionUser = JSON.parse(rawSession);
-        const freshUser = users.find(u => u.username === sessionUser.username);
+        const freshUser = users.find(u => u.username.toLowerCase() === sessionUser.username.toLowerCase());
         this.currentUser = freshUser || sessionUser;
       } catch (e) {
         this.currentUser = null;
@@ -75,6 +109,7 @@ const AuthManager = {
     }
 
     this.updateUserUI();
+    this.bindPermissionsEvents();
   },
 
   login(username, password, remember = true) {
@@ -125,7 +160,27 @@ const AuthManager = {
   },
 
   isAdmin() {
-    return this.currentUser && this.currentUser.role === 'Administrator';
+    return this.currentUser && (this.currentUser.role === 'Administrator' || this.can('manageUsers'));
+  },
+
+  can(privilegeName) {
+    const user = this.getCurrentUser();
+    if (!user) return false;
+    if (user.role === 'Administrator') return true;
+    if (!user.permissions) return false;
+
+    // Direct system privilege boolean
+    if (typeof user.permissions[privilegeName] === 'boolean') {
+      return user.permissions[privilegeName];
+    }
+
+    // Category.action format e.g. "transaction.delete"
+    if (privilegeName.includes('.')) {
+      const [cat, act] = privilegeName.split('.');
+      return !!(user.permissions[cat] && user.permissions[cat][act]);
+    }
+
+    return false;
   },
 
   updateProfile(fullName, email) {
@@ -206,10 +261,415 @@ const AuthManager = {
     return { success: true, message: 'Kata sandi berhasil diperbarui!' };
   },
 
-  getUserActivities(username) {
-    const targetUser = username || (this.currentUser ? this.currentUser.username : '');
-    const allLogs = StorageManager.getActivityLogs();
-    return allLogs.filter(log => log.user.toLowerCase() === targetUser.toLowerCase());
+  // =========================================================================
+  // RBAC & User Permissions Management Methods
+  // =========================================================================
+
+  createUser(userData) {
+    const users = this.getUsers();
+    const exists = users.some(u => u.username.toLowerCase() === userData.username.trim().toLowerCase());
+    if (exists) {
+      return { success: false, message: `Username "${userData.username}" sudah digunakan!` };
+    }
+
+    const newId = `USR-${String(users.length + 1).padStart(3, '0')}`;
+    const parts = (userData.fullName || userData.username).split(' ').filter(Boolean);
+    const initials = parts.length > 1 
+      ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() 
+      : parts[0].substring(0, 2).toUpperCase();
+
+    const isAdm = userData.role === 'Administrator';
+    const permissions = userData.permissions || (isAdm 
+      ? JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN)) 
+      : JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR)));
+
+    const now = new Date();
+    const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const newUser = {
+      id: newId,
+      username: userData.username.trim(),
+      password: userData.password || '123456',
+      fullName: userData.fullName || userData.username,
+      email: userData.email || `${userData.username.toLowerCase()}@rekaciptagaram.co.id`,
+      role: userData.role || 'Operator',
+      permissions: permissions,
+      avatarUrl: null,
+      initials: initials,
+      createdAt: createdAt
+    };
+
+    users.push(newUser);
+    this.saveUsers(users);
+
+    StorageManager.addLog(
+      this.currentUser ? this.currentUser.username : 'admin',
+      this.currentUser ? this.currentUser.role : 'Administrator',
+      `Menambahkan Pengguna Baru: ${newUser.username} (${newUser.role})`,
+      '-'
+    );
+
+    return { success: true, user: newUser };
+  },
+
+  adminResetUserPassword(userId, newPassword) {
+    if (!newPassword || newPassword.length < 4) {
+      return { success: false, message: 'Password baru minimal 4 karakter.' };
+    }
+    const users = this.getUsers();
+    const target = users.find(u => u.id === userId);
+    if (!target) return { success: false, message: 'Pengguna tidak ditemukan.' };
+
+    target.password = newPassword;
+    this.saveUsers(users);
+
+    if (this.currentUser && this.currentUser.id === userId) {
+      this.currentUser.password = newPassword;
+      this.saveSession(true);
+    }
+
+    StorageManager.addLog(
+      this.currentUser ? this.currentUser.username : 'admin',
+      this.currentUser ? this.currentUser.role : 'Administrator',
+      `Mengubah Password User: ${target.username}`,
+      '-'
+    );
+
+    return { success: true, message: `Password untuk user "${target.username}" berhasil diperbarui.` };
+  },
+
+  deleteUser(userId) {
+    const users = this.getUsers();
+    const targetIndex = users.findIndex(u => u.id === userId);
+    if (targetIndex === -1) return { success: false, message: 'Pengguna tidak ditemukan.' };
+
+    const target = users[targetIndex];
+    if (target.username.toLowerCase() === 'admin') {
+      return { success: false, message: 'Akun Super Admin bawaan tidak dapat dihapus!' };
+    }
+    if (this.currentUser && this.currentUser.id === userId) {
+      return { success: false, message: 'Anda tidak dapat menghapus akun yang sedang aktif digunakan!' };
+    }
+
+    users.splice(targetIndex, 1);
+    this.saveUsers(users);
+
+    StorageManager.addLog(
+      this.currentUser ? this.currentUser.username : 'admin',
+      this.currentUser ? this.currentUser.role : 'Administrator',
+      `Menghapus Akun Pengguna: ${target.username}`,
+      '-'
+    );
+
+    return { success: true, message: `Pengguna "${target.username}" berhasil dihapus.` };
+  },
+
+  saveUserPermissions(userId, role, permissions) {
+    const users = this.getUsers();
+    const target = users.find(u => u.id === userId);
+    if (!target) return { success: false, message: 'Pengguna tidak ditemukan.' };
+
+    target.role = role || target.role;
+    target.permissions = permissions;
+    this.saveUsers(users);
+
+    if (this.currentUser && this.currentUser.id === userId) {
+      this.currentUser.role = target.role;
+      this.currentUser.permissions = permissions;
+      this.saveSession(true);
+      this.updateUserUI();
+    }
+
+    StorageManager.addLog(
+      this.currentUser ? this.currentUser.username : 'admin',
+      this.currentUser ? this.currentUser.role : 'Administrator',
+      `Memperbarui Hak Akses untuk Pengguna: ${target.username} (${target.role})`,
+      '-'
+    );
+
+    return { success: true, message: `Hak akses untuk "${target.username}" berhasil disimpan!` };
+  },
+
+  openPermissionsModal() {
+    const modal = document.getElementById('modal-user-permissions');
+    if (!modal) return;
+
+    this.renderPermissionsUserList();
+    modal.classList.add('active');
+  },
+
+  renderPermissionsUserList(filterKeyword = '') {
+    const tbody = document.getElementById('perm-user-list-tbody');
+    if (!tbody) return;
+
+    const users = this.getUsers();
+    const filtered = filterKeyword 
+      ? users.filter(u => u.username.toLowerCase().includes(filterKeyword.toLowerCase()) || u.fullName.toLowerCase().includes(filterKeyword.toLowerCase()) || u.role.toLowerCase().includes(filterKeyword.toLowerCase()))
+      : users;
+
+    tbody.innerHTML = '';
+    filtered.forEach(u => {
+      const isSelected = this.selectedPermUserId === u.id || (!this.selectedPermUserId && u.username === 'admin');
+      if (isSelected && !this.selectedPermUserId) {
+        this.selectedPermUserId = u.id;
+      }
+
+      const tr = document.createElement('tr');
+      tr.className = `perm-user-row ${isSelected ? 'active-user' : ''}`;
+      tr.style.cursor = 'pointer';
+      tr.innerHTML = `
+        <td style="font-weight: 600;">${u.username}</td>
+        <td><span class="badge ${u.role === 'Administrator' ? 'badge-primary' : 'badge-neutral'}">${u.role}</span></td>
+      `;
+      tr.addEventListener('click', () => {
+        this.selectedPermUserId = u.id;
+        document.querySelectorAll('.perm-user-row').forEach(r => r.classList.remove('active-user'));
+        tr.classList.add('active-user');
+        this.loadUserPermissionsToForm(u.id);
+      });
+      tbody.appendChild(tr);
+    });
+
+    if (this.selectedPermUserId) {
+      this.loadUserPermissionsToForm(this.selectedPermUserId);
+    }
+  },
+
+  loadUserPermissionsToForm(userId) {
+    const users = this.getUsers();
+    const user = users.find(u => u.id === userId) || users[0];
+    if (!user) return;
+
+    const titleElem = document.getElementById('perm-selected-user-title');
+    if (titleElem) titleElem.textContent = `Hak Akses : ${user.username} (${user.fullName})`;
+
+    const roleSelect = document.getElementById('perm-user-role-select');
+    if (roleSelect) {
+      roleSelect.value = user.role;
+      if (window.CustomSelect) window.CustomSelect.sync(roleSelect);
+    }
+
+    const p = user.permissions || (user.role === 'Administrator' ? DEFAULT_PERMISSIONS_ADMIN : DEFAULT_PERMISSIONS_OPERATOR);
+
+    // Entity Checkboxes
+    const setCb = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.checked = !!val;
+    };
+
+    setCb('perm-supplier-view', p.supplier?.view);
+    setCb('perm-supplier-add', p.supplier?.add);
+    setCb('perm-supplier-edit', p.supplier?.edit);
+    setCb('perm-supplier-delete', p.supplier?.delete);
+
+    setCb('perm-material-view', p.material?.view);
+    setCb('perm-material-add', p.material?.add);
+    setCb('perm-material-edit', p.material?.edit);
+    setCb('perm-material-delete', p.material?.delete);
+
+    setCb('perm-tx-view', p.transaction?.view);
+    setCb('perm-tx-add', p.transaction?.add);
+    setCb('perm-tx-edit', p.transaction?.edit);
+    setCb('perm-tx-delete', p.transaction?.delete);
+
+    setCb('perm-report-view', p.report?.view);
+    setCb('perm-report-export', p.report?.export);
+
+    // System Privileges Checkboxes
+    setCb('perm-sys-reprint', p.reprintNota);
+    setCb('perm-sys-settings', p.changeSettings);
+    setCb('perm-sys-manage-users', p.manageUsers);
+    setCb('perm-sys-backup', p.backupDatabase);
+  },
+
+  collectPermissionsFromForm() {
+    const getCb = (id) => {
+      const el = document.getElementById(id);
+      return el ? el.checked : false;
+    };
+
+    return {
+      supplier: {
+        view: getCb('perm-supplier-view'),
+        add: getCb('perm-supplier-add'),
+        edit: getCb('perm-supplier-edit'),
+        delete: getCb('perm-supplier-delete')
+      },
+      material: {
+        view: getCb('perm-material-view'),
+        add: getCb('perm-material-add'),
+        edit: getCb('perm-material-edit'),
+        delete: getCb('perm-material-delete')
+      },
+      transaction: {
+        view: getCb('perm-tx-view'),
+        add: getCb('perm-tx-add'),
+        edit: getCb('perm-tx-edit'),
+        delete: getCb('perm-tx-delete')
+      },
+      report: {
+        view: getCb('perm-report-view'),
+        export: getCb('perm-report-export')
+      },
+      reprintNota: getCb('perm-sys-reprint'),
+      changeSettings: getCb('perm-sys-settings'),
+      manageUsers: getCb('perm-sys-manage-users'),
+      backupDatabase: getCb('perm-sys-backup')
+    };
+  },
+
+  setAllPermissions(checked = true) {
+    const matrixContainer = document.getElementById('perm-matrix-container');
+    if (!matrixContainer) return;
+    matrixContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = checked;
+    });
+  },
+
+  bindPermissionsEvents() {
+    // Open Permissions Modal button from Backup/Data section
+    const btnOpenPerm = document.getElementById('btn-open-permissions-manager');
+    if (btnOpenPerm) {
+      btnOpenPerm.addEventListener('click', () => this.openPermissionsModal());
+    }
+
+    // Filter user search in permissions modal
+    const inputSearchUser = document.getElementById('perm-user-search-input');
+    if (inputSearchUser) {
+      inputSearchUser.addEventListener('input', (e) => {
+        this.renderPermissionsUserList(e.target.value);
+      });
+    }
+
+    // Select All / Clear All
+    const btnSelectAll = document.getElementById('btn-perm-select-all');
+    if (btnSelectAll) {
+      btnSelectAll.addEventListener('click', () => this.setAllPermissions(true));
+    }
+    const btnClearAll = document.getElementById('btn-perm-clear-all');
+    if (btnClearAll) {
+      btnClearAll.addEventListener('click', () => this.setAllPermissions(false));
+    }
+
+    // Save Permissions
+    const btnSavePerm = document.getElementById('btn-save-permissions');
+    if (btnSavePerm) {
+      btnSavePerm.addEventListener('click', () => {
+        if (!this.selectedPermUserId) {
+          alert('Pilih pengguna terlebih dahulu.');
+          return;
+        }
+        const roleSelect = document.getElementById('perm-user-role-select');
+        const newRole = roleSelect ? roleSelect.value : 'Operator';
+        const perms = this.collectPermissionsFromForm();
+
+        const res = this.saveUserPermissions(this.selectedPermUserId, newRole, perms);
+        if (res.success) {
+          alert(res.message);
+          this.renderPermissionsUserList();
+        } else {
+          alert(res.message);
+        }
+      });
+    }
+
+    // Add User Modal
+    const btnAddUser = document.getElementById('btn-perm-add-user');
+    if (btnAddUser) {
+      btnAddUser.addEventListener('click', () => {
+        const modalAdd = document.getElementById('modal-add-user');
+        if (modalAdd) {
+          const form = document.getElementById('form-add-new-user');
+          if (form) form.reset();
+          modalAdd.classList.add('active');
+        }
+      });
+    }
+
+    const formAddNewUser = document.getElementById('form-add-new-user');
+    if (formAddNewUser) {
+      formAddNewUser.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('input-add-user-username').value;
+        const fullName = document.getElementById('input-add-user-fullname').value;
+        const email = document.getElementById('input-add-user-email').value;
+        const password = document.getElementById('input-add-user-password').value;
+        const role = document.getElementById('input-add-user-role').value;
+
+        const res = this.createUser({ username, fullName, email, password, role });
+        if (res.success) {
+          alert(`Pengguna "${username}" berhasil ditambahkan!`);
+          document.getElementById('modal-add-user')?.classList.remove('active');
+          this.selectedPermUserId = res.user.id;
+          this.renderPermissionsUserList();
+        } else {
+          alert(res.message);
+        }
+      });
+    }
+
+    // Edit Pass Modal (Admin reset password)
+    const btnEditPass = document.getElementById('btn-perm-edit-pass');
+    if (btnEditPass) {
+      btnEditPass.addEventListener('click', () => {
+        if (!this.selectedPermUserId) {
+          alert('Pilih pengguna yang ingin diubah kata sandinya.');
+          return;
+        }
+        const users = this.getUsers();
+        const target = users.find(u => u.id === this.selectedPermUserId);
+        if (!target) return;
+
+        const modalPass = document.getElementById('modal-admin-edit-pass');
+        const targetLabel = document.getElementById('admin-edit-pass-target-username');
+        if (targetLabel) targetLabel.textContent = `${target.username} (${target.fullName})`;
+        if (modalPass) {
+          const inputPw = document.getElementById('input-admin-new-password');
+          if (inputPw) inputPw.value = '';
+          modalPass.classList.add('active');
+        }
+      });
+    }
+
+    const formAdminEditPass = document.getElementById('form-admin-edit-pass');
+    if (formAdminEditPass) {
+      formAdminEditPass.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newPw = document.getElementById('input-admin-new-password').value;
+        const res = this.adminResetUserPassword(this.selectedPermUserId, newPw);
+        if (res.success) {
+          alert(res.message);
+          document.getElementById('modal-admin-edit-pass')?.classList.remove('active');
+        } else {
+          alert(res.message);
+        }
+      });
+    }
+
+    // Delete User
+    const btnDelUser = document.getElementById('btn-perm-del-user');
+    if (btnDelUser) {
+      btnDelUser.addEventListener('click', () => {
+        if (!this.selectedPermUserId) {
+          alert('Pilih pengguna yang ingin dihapus.');
+          return;
+        }
+        const users = this.getUsers();
+        const target = users.find(u => u.id === this.selectedPermUserId);
+        if (!target) return;
+
+        if (confirm(`Apakah Anda yakin ingin menghapus akun pengguna "${target.username}" (${target.fullName})?`)) {
+          const res = this.deleteUser(this.selectedPermUserId);
+          if (res.success) {
+            alert(res.message);
+            this.selectedPermUserId = null;
+            this.renderPermissionsUserList();
+          } else {
+            alert(res.message);
+          }
+        }
+      });
+    }
   },
 
   updateUserUI() {

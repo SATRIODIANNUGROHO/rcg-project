@@ -6,21 +6,29 @@
   <title>PT. Reka Cipta Garam | Salt Weighing System v7.5.0</title>
   <link rel="icon" type="image/webp" href="assets/images/RCG.webp">
 
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/dark-mode.css">
   <link rel="stylesheet" href="assets/css/print-nota.css">
 
-  <!-- Local Offline Libraries (Chart.js & SheetJS) -->
+  <!-- Local Offline Libraries (Chart.js & SheetJS & html2pdf) -->
   <script src="assets/vendor/chart.umd.min.js"></script>
   <script src="assets/vendor/xlsx.full.min.js"></script>
+  <script src="assets/vendor/html2pdf.bundle.min.js"></script>
   <script>
     if (typeof window.Chart === 'undefined' && typeof Chart !== 'undefined') {
       window.Chart = Chart;
     }
     if (typeof window.XLSX === 'undefined' && typeof XLSX !== 'undefined') {
       window.XLSX = XLSX;
+    }
+    if (typeof window.html2pdf === 'undefined' && typeof html2pdf !== 'undefined') {
+      window.html2pdf = html2pdf;
     }
   </script>
 
@@ -294,10 +302,10 @@
       <!-- Analisis Periode Banner (Berat Bersih & Pembayaran Periode) -->
       <div class="card mb-3">
         <div class="card-header">
-          <div class="d-flex align-center gap-12 flex-wrap">
+          <div class="d-flex align-center gap-12 flex-wrap" style="width: 100%; justify-content: space-between;">
             <h3 class="card-title">Analisis Periode Transaksi</h3>
             <div class="d-flex align-center gap-8 flex-wrap">
-              <select id="analytics-period-select" class="form-select form-select-sm" style="width: 175px; height: 32px;">
+              <select id="analytics-period-select" class="form-select" style="min-width: 215px; width: auto;">
                 <option value="today">Hari Ini</option>
                 <option value="7days">7 Hari Terakhir</option>
                 <option value="30days">30 Hari Terakhir</option>
@@ -306,11 +314,11 @@
                 <option value="custom">Rentang Tanggal Kustom</option>
               </select>
               <div id="analytics-custom-date-wrap" class="d-flex align-center gap-6" style="display: none !important;">
-                <input type="date" id="analytics-date-start" class="form-control form-control-sm mono" style="width: 135px; height: 32px;">
+                <input type="date" id="analytics-date-start" class="form-control mono" style="width: 140px;">
                 <span class="text-small text-secondary">s/d</span>
-                <input type="date" id="analytics-date-end" class="form-control form-control-sm mono" style="width: 135px; height: 32px;">
+                <input type="date" id="analytics-date-end" class="form-control mono" style="width: 140px;">
               </div>
-              <button id="btn-analytics-period-show" class="btn btn-primary btn-sm">Tampilkan</button>
+              <button id="btn-analytics-period-show" class="btn btn-primary">Tampilkan</button>
             </div>
           </div>
         </div>
@@ -380,11 +388,11 @@
             <div class="card-header">
               <h3 class="card-title">Grafik Transaksi per Minggu</h3>
               <div class="d-flex align-center gap-8">
-                <span class="text-small text-secondary">Minggu:</span>
-                <input type="number" id="chart-week-start" class="form-control form-control-sm mono" value="1" min="1" max="10" style="width: 55px; height: 32px;">
+                <span class="text-small text-secondary" style="font-weight: 500;">Minggu:</span>
+                <input type="number" id="chart-week-start" class="form-control mono text-center" value="1" min="1" max="10" style="width: 52px;">
                 <span class="text-small text-secondary">s/d</span>
-                <input type="number" id="chart-week-end" class="form-control form-control-sm mono" value="6" min="1" max="10" style="width: 55px; height: 32px;">
-                <button id="btn-filter-week-chart" class="btn btn-primary btn-sm">Tampilkan</button>
+                <input type="number" id="chart-week-end" class="form-control mono text-center" value="6" min="1" max="10" style="width: 52px;">
+                <button id="btn-filter-week-chart" class="btn btn-primary">Tampilkan</button>
               </div>
             </div>
             <div class="card-body" style="height: 300px; position: relative;">
@@ -489,12 +497,37 @@
                 <label class="form-label">Nama Pemasok / Supplier <span class="required">*</span></label>
                 <input type="text" id="input-supplier" class="form-control" list="supplier-presets" placeholder="Pilih atau ketik nama pemasok">
                 <datalist id="supplier-presets">
+                  <option value="Andi">
+                  <option value="Baihaqi">
+                  <option value="Eva Pratama (H. Gafur)">
+                  <option value="Eva Pratama (Hj. Gafur)">
+                  <option value="H. Dulwafi">
+                  <option value="H. Junaidi">
+                  <option value="H. Tomi">
+                  <option value="Hj. Abbas">
+                  <option value="Hj. Faruq">
+                  <option value="Hj. Junaidi">
+                  <option value="Hosnan">
+                  <option value="Inung">
+                  <option value="Koperasi RGM">
+                  <option value="Lutfiadi">
+                  <option value="Moh Jufri">
+                  <option value="Moh. Syafi'i">
+                  <option value="Nasiruddin">
+                  <option value="Noval">
+                  <option value="Pak Sawawi">
+                  <option value="Rangga Mahardika">
+                  <option value="Ribut (Moh Saleh)">
+                  <option value="Sadili">
+                  <option value="Samsul">
+                  <option value="Samsul Intan Jaya">
+                  <option value="Sawawi">
+                  <option value="Serikat Nelayan (NU)">
+                  <option value="Sukamto">
+                  <option value="Supriadi">
+                  <option value="Surahman">
                   <option value="UD. Garam Sejahtera Madura">
                   <option value="PT. Tambak Garam Madura">
-                  <option value="CV. Garam Madura Abadi">
-                  <option value="Kelompok Petani Garam Majungan">
-                  <option value="UD. Sumber Rezeki Kalianget">
-                  <option value="PT. Garam Nusantara">
                 </datalist>
               </div>
             </div>
@@ -545,7 +578,7 @@
                 <input type="text" id="input-driver-name" class="form-control" placeholder="ISMAIL" style="text-transform: uppercase;">
               </div>
               <div class="form-group">
-                <label class="form-label">Petugas Timbang</label>
+                <label class="form-label">Nama Admin (Petugas Timbang)</label>
                 <input type="text" id="input-weighmaster" class="form-control" placeholder="AFIF" style="text-transform: uppercase;">
               </div>
             </div>
@@ -797,7 +830,7 @@
           <p class="text-secondary text-small">Rekapitulasi transaksi penimbangan per pemasok dan cetak formulir supplier</p>
         </div>
         <div class="d-flex gap-8 align-center flex-wrap">
-          <button id="btn-export-supplier-excel" class="btn btn-primary btn-sm">
+          <button id="btn-export-supplier-excel" class="btn btn-primary">
             Export Excel (.xlsx)
           </button>
         </div>
@@ -807,7 +840,7 @@
       <div class="table-toolbar">
         <div class="search-box">
           <input type="text" id="supplier-history-search" class="form-control" placeholder="Cari nama pemasok, no. dokumen, dll...">
-          <button id="supplier-history-reset-search" class="btn btn-secondary btn-sm" title="Reset Pencarian">
+          <button id="supplier-history-reset-search" class="btn btn-secondary" title="Reset Pencarian">
             Reset
           </button>
         </div>
@@ -853,7 +886,6 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th style="width: 120px; text-align: center;">Cetak Form</th>
               <th>Tanggal</th>
               <th>Nama Pemasok</th>
               <th class="text-right">Berat K1 (Kg)</th>
@@ -863,6 +895,7 @@
               <th class="text-right">Subtotal K1 (Rp)</th>
               <th class="text-right">Subtotal K2 (Rp)</th>
               <th class="text-right">Total (Rp)</th>
+              <th style="width: 120px; text-align: center;">Aksi</th>
             </tr>
           </thead>
           <tbody id="supplier-history-table-body">
@@ -982,6 +1015,23 @@
             <div style="margin-top: auto;">
               <button id="btn-clear-all-data" class="btn btn-confirm-accent">
                 Hapus Semua Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Permissions & Roles Card -->
+        <div class="card" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="card-header">
+            <h3 class="card-title">4. Hak Akses &amp; Manajemen Pemakai</h3>
+          </div>
+          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+            <p class="text-secondary text-small mb-3">
+              Kelola daftar pemakai sistem, tambahkan akun baru, ubah kata sandi, dan atur matriks kewenangan hak akses secara terperinci.
+            </p>
+            <div style="margin-top: auto;">
+              <button id="btn-open-permissions-manager" class="btn btn-primary">
+                Buka Hak Akses Pengguna
               </button>
             </div>
           </div>
@@ -1419,47 +1469,325 @@
     </div>
   </div>
 
-  <!-- Modal 9: Print Settings & Paper Size Selection -->
+  <!-- Modal 9: Print Settings & Interactive Document Preview Modal -->
   <div id="modal-print-settings" class="modal-overlay">
-    <div class="modal-container" style="max-width: 480px;">
+    <div class="modal-container" style="max-width: 860px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
       <div class="modal-header">
-        <h3>Pengaturan Cetak Dokumen</h3>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <h3 id="modal-print-title" style="margin: 0; font-size: 17px;">Pratinjau &amp; Pengaturan Cetak Dokumen</h3>
+        </div>
         <button class="modal-close-btn">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="form-group mb-3">
-          <label class="form-label" for="select-print-paper-size">Format &amp; Ukuran Kertas</label>
-          <select id="select-print-paper-size" class="form-select">
-            <option value="A6" selected>A6 (105 × 148 mm - Standar Tiket Timbang)</option>
-            <option value="A5">A5 (148 × 210 mm - Setengah HVS)</option>
-            <option value="A4">A4 (210 × 297 mm - HVS Penuh)</option>
-            <option value="Letter">Letter (8.5 × 11 inch)</option>
-            <option value="NCR_Wartel">NCR Wartel Double Sheet on Letter 9.5" × 11" Portrait</option>
-          </select>
+      
+      <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+        <!-- Toolbar Pengaturan Kertas -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; background: var(--bg-surface-alt); padding: 12px 16px; border-radius: var(--radius-tight); border: 1px solid var(--border-color);">
+          <div class="form-group mb-0">
+            <label class="form-label" for="select-print-paper-size" style="font-size: 12px; margin-bottom: 4px;">Format &amp; Ukuran Kertas</label>
+            <select id="select-print-paper-size" class="form-select form-control-sm">
+              <option value="A6" selected>A6 (105 × 148 mm - Standar Tiket Timbang)</option>
+              <option value="A5">A5 (148 × 210 mm - Setengah HVS)</option>
+              <option value="A4">A4 (210 × 297 mm - HVS Penuh)</option>
+              <option value="Letter">Letter (8.5 × 11 inch)</option>
+              <option value="NCR_Wartel">NCR Wartel Continuous Sheet 9.5" × 11"</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-0">
+            <label class="form-label" for="select-print-copies" style="font-size: 12px; margin-bottom: 4px;">Jumlah Rangkap / Salinan</label>
+            <select id="select-print-copies" class="form-select form-control-sm">
+              <option value="1" selected>1 Rangkap (Lembar Utama)</option>
+              <option value="2">2 Rangkap (Asli + Arsip Kantor)</option>
+              <option value="3">3 Rangkap (Supir + Kasir + Arsip)</option>
+            </select>
+          </div>
         </div>
 
-        <div class="form-group mb-2">
-          <label class="form-label" for="select-print-copies">Jumlah Rangkap / Salinan</label>
-          <select id="select-print-copies" class="form-select">
-            <option value="1" selected>1 Rangkap (Lembar Utama)</option>
-            <option value="2">2 Rangkap (Asli + Arsip Kantor)</option>
-            <option value="3">3 Rangkap (Supir + Kasir + Arsip)</option>
-          </select>
+        <!-- Box Pratinjau Lembar Fisik Dokumen (Live Preview Box) -->
+        <div class="print-preview-viewport" style="background: #070D19; padding: 24px 16px; border-radius: var(--radius-tight); border: none !important; overflow-x: auto; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+          <div id="modal-print-preview-content" style="width: 100%; max-width: 740px; display: flex; flex-direction: column; gap: 24px;">
+            <!-- Live rendered paper content -->
+          </div>
         </div>
-
-        <p class="text-secondary text-small" style="margin-top: 10px;">
-          Ukuran kertas akan disesuaikan secara langsung pada jendela printer tanpa mengubah pengaturan global aplikasi.
-        </p>
       </div>
-      <div class="modal-footer">
+
+      <div class="modal-footer" style="padding: 12px 16px;">
         <button class="btn btn-secondary btn-modal-cancel">Batal</button>
-        <button id="btn-confirm-print-dialog" class="btn btn-primary">Cetak Sekarang</button>
+        <button id="btn-confirm-print-dialog" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Unduh Dokumen PDF
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Hidden Printable Nota Area (Controlled by print-nota.css) -->
-  <div id="printable-nota-area"></div>
+  <!-- Modal 10: Hak Akses & Manajemen Pemakai (Strictly DESIGN_SYSTEM.md Compliant) -->
+  <div id="modal-user-permissions" class="modal-overlay">
+    <div class="modal-container" style="max-width: 920px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Hak Akses &amp; Manajemen Pengguna</h3>
+        </div>
+        <button class="modal-close-btn" type="button" aria-label="Tutup Modal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 16px;">
+          <!-- Kolom Kiri: Daftar Pengguna -->
+          <div class="perm-sidebar-panel">
+            <div class="perm-panel-title">
+              Daftar Pengguna
+            </div>
+            
+            <input type="text" id="perm-user-search-input" class="form-control form-control-sm mb-2" placeholder="Cari nama atau role...">
+            
+            <div class="perm-user-table-wrapper">
+              <table class="data-table perm-user-table">
+                <thead>
+                  <tr>
+                    <th>Nama</th>
+                    <th>Bagian / Role</th>
+                  </tr>
+                </thead>
+                <tbody id="perm-user-list-tbody">
+                  <!-- Rendered dynamically by auth.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Tombol Aksi Pengguna (Clean SVG Icons, Zero Emojis) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button type="button" id="btn-perm-add-user" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Tambah User</span>
+              </button>
+              <button type="button" id="btn-perm-edit-pass" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 2l-2 2m-1.5 1.5L16 7l-1.5-1.5M19 5l-7 7-4-1-1 4 4 1 1-4 7-7z"></path>
+                  <circle cx="7.5" cy="16.5" r="3.5"></circle>
+                </svg>
+                <span>Ubah Password</span>
+              </button>
+              <button type="button" id="btn-perm-del-user" class="btn btn-confirm-accent btn-sm" style="grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span>Hapus Pengguna</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Kolom Kanan: Matriks Hak Akses Granular -->
+          <div id="perm-matrix-container" class="perm-main-panel">
+            <div class="d-flex align-center justify-between mb-3" style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+              <h4 id="perm-selected-user-title" style="margin: 0; font-size: 15px; font-weight: 600;">
+                Hak Akses : wms
+              </h4>
+              <div class="d-flex align-center gap-8">
+                <span class="text-small text-secondary" style="font-weight: 500;">Bagian / Role:</span>
+                <select id="perm-user-role-select" class="form-select form-select-sm" style="width: 140px;">
+                  <option value="Administrator">Administrator</option>
+                  <option value="Operator">Operator</option>
+                  <option value="Supervisor">Supervisor</option>
+                  <option value="Viewer">Viewer</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Matriks Modul & Entitas -->
+            <table class="perm-matrix-table mb-3">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 8px 10px;">Modul &amp; Entitas</th>
+                  <th style="text-align: center; width: 68px; padding: 8px 4px;">Lihat</th>
+                  <th style="text-align: center; width: 68px; padding: 8px 4px;">Tambah</th>
+                  <th style="text-align: center; width: 68px; padding: 8px 4px;">Ubah</th>
+                  <th style="text-align: center; width: 68px; padding: 8px 4px;">Hapus</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="perm-entity-name">Perusahaan / Pemasok</td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-supplier-view"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-supplier-add"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-supplier-edit"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-supplier-delete"></td>
+                </tr>
+                <tr>
+                  <td class="perm-entity-name">Material &amp; Tarif</td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-material-view"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-material-add"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-material-edit"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-material-delete"></td>
+                </tr>
+                <tr>
+                  <td class="perm-entity-name">Transaksi Penimbangan</td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-tx-view"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-tx-add"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-tx-edit"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-tx-delete"></td>
+                </tr>
+                <tr>
+                  <td class="perm-entity-name">Laporan &amp; Rekapitulasi</td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-report-view"></td>
+                  <td style="text-align: center; color: var(--text-muted);">-</td>
+                  <td style="text-align: center; color: var(--text-muted);">-</td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-report-export" title="Export Excel / PDF"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Box Otoritas Khusus Sistem -->
+            <div class="perm-system-privileges-box mb-3">
+              <div class="perm-sub-title">
+                Otoritas Khusus Sistem
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px;">
+                <label class="perm-checkbox-label">
+                  <input type="checkbox" id="perm-sys-reprint">
+                  <span>Cetak Ulang Tiket Penimbangan</span>
+                </label>
+                <label class="perm-checkbox-label">
+                  <input type="checkbox" id="perm-sys-settings">
+                  <span>Ubah Pengaturan Sistem</span>
+                </label>
+                <label class="perm-checkbox-label">
+                  <input type="checkbox" id="perm-sys-manage-users">
+                  <span>Ubah Hak Akses Pengguna</span>
+                </label>
+                <label class="perm-checkbox-label">
+                  <input type="checkbox" id="perm-sys-backup">
+                  <span>Backup &amp; Pemeliharaan Database</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Tombol Cepat Matriks -->
+            <div class="d-flex justify-end gap-8">
+              <button type="button" id="btn-perm-select-all" class="btn btn-secondary btn-sm" style="padding: 0 14px;">
+                Pilih Semua
+              </button>
+              <button type="button" id="btn-perm-clear-all" class="btn btn-secondary btn-sm" style="padding: 0 14px;">
+                Kosongkan Semua
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding: 12px 16px; justify-content: space-between;">
+        <button class="btn btn-secondary btn-modal-cancel" type="button">Tutup</button>
+        <button id="btn-save-permissions" class="btn btn-primary" type="button" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Simpan Hak Akses</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 11: Entri Pengguna Baru -->
+  <div id="modal-add-user" class="modal-overlay">
+    <div class="modal-container" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 style="font-size: 17px; font-weight: 600;">Entri Pengguna Baru</h3>
+        <button class="modal-close-btn" type="button">&times;</button>
+      </div>
+      <form id="form-add-new-user">
+        <div class="modal-body" style="padding: 16px;">
+          <div class="form-group mb-3">
+            <label class="form-label" for="input-add-user-username">Username</label>
+            <input type="text" id="input-add-user-username" class="form-control" placeholder="Contoh: op_pagi" required>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label" for="input-add-user-fullname">Nama Lengkap</label>
+            <input type="text" id="input-add-user-fullname" class="form-control" placeholder="Contoh: Budi Santoso" required>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label" for="input-add-user-email">Email Akun (Opsional)</label>
+            <input type="email" id="input-add-user-email" class="form-control" placeholder="budi@rekaciptagaram.co.id">
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label" for="input-add-user-password">Kata Sandi Awal</label>
+            <input type="password" id="input-add-user-password" class="form-control" placeholder="Minimal 4 karakter" required>
+          </div>
+          <div class="form-group mb-0">
+            <label class="form-label" for="input-add-user-role">Bagian / Role</label>
+            <select id="input-add-user-role" class="form-select">
+              <option value="Operator" selected>Operator</option>
+              <option value="Supervisor">Supervisor</option>
+              <option value="Administrator">Administrator</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 12px 16px;">
+          <button type="button" class="btn btn-secondary btn-modal-cancel">Batal</button>
+          <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Simpan Pengguna</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 12: Admin Edit Password User -->
+  <div id="modal-admin-edit-pass" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 17px; font-weight: 600;">Ubah Password Pengguna</h3>
+        <button class="modal-close-btn" type="button">&times;</button>
+      </div>
+      <form id="form-admin-edit-pass">
+        <div class="modal-body" style="padding: 16px;">
+          <p class="text-secondary text-small mb-3">
+            Mengatur ulang kata sandi untuk akun: <strong id="admin-edit-pass-target-username" style="color: var(--text-primary);">-</strong>
+          </p>
+          <div class="form-group mb-0">
+            <label class="form-label" for="input-admin-new-password">Kata Sandi Baru</label>
+            <input type="password" id="input-admin-new-password" class="form-control" placeholder="Masukkan password baru" required>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 12px 16px;">
+          <button type="button" class="btn btn-secondary btn-modal-cancel">Batal</button>
+          <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Simpan Password</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dedicated Hidden Print Output Container (Strictly for window.print output) -->
   <div id="printable-nota"></div>
 
   <!-- Toast Container -->

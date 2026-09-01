@@ -33,12 +33,37 @@ const CustomAutocomplete = {
     // Default supplier list fallback if empty
     if (options.length === 0 && input.id === 'input-supplier') {
       options = [
+        'Andi',
+        'Baihaqi',
+        'Eva Pratama (H. Gafur)',
+        'Eva Pratama (Hj. Gafur)',
+        'H. Dulwafi',
+        'H. Junaidi',
+        'H. Tomi',
+        'Hj. Abbas',
+        'Hj. Faruq',
+        'Hj. Junaidi',
+        'Hosnan',
+        'Inung',
+        'Koperasi RGM',
+        'Lutfiadi',
+        'Moh Jufri',
+        "Moh. Syafi'i",
+        'Nasiruddin',
+        'Noval',
+        'Pak Sawawi',
+        'Rangga Mahardika',
+        'Ribut (Moh Saleh)',
+        'Sadili',
+        'Samsul',
+        'Samsul Intan Jaya',
+        'Sawawi',
+        'Serikat Nelayan (NU)',
+        'Sukamto',
+        'Supriadi',
+        'Surahman',
         'UD. Garam Sejahtera Madura',
-        'PT. Tambak Garam Madura',
-        'CV. Garam Madura Abadi',
-        'Kelompok Petani Garam Majungan',
-        'UD. Sumber Rezeki Kalianget',
-        'PT. Garam Nusantara'
+        'PT. Tambak Garam Madura'
       ];
     }
 

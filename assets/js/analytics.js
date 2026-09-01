@@ -43,22 +43,32 @@ const AnalyticsManager = {
   },
 
   getThemeColors() {
-    const isDark = document.body.classList.contains('dark-mode');
-    return {
+    const isDark = document.body.classList.contains('dark-mode') || document.documentElement.classList.contains('dark-mode');
+    const colors = {
       isDark,
-      textColor: isDark ? '#F8FAFC' : '#0F172A',
-      mutedColor: isDark ? '#94A3B8' : '#64748B',
+      textColor: isDark ? '#F5F7FA' : '#0F172A',
+      mutedColor: isDark ? '#AAB4C3' : '#64748B',
       gridColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
-      borderColor: isDark ? '#1E293B' : '#FFFFFF',
+      borderColor: isDark ? '#16243A' : '#FFFFFF',
       k1Color: isDark ? '#38BDF8' : '#2563B8',
       k2Color: isDark ? '#FBBF24' : '#D69E2E',
       kabPalette: isDark
-        ? ['#2563EB', '#D97706', '#059669', '#7C3AED', '#DC2626']
+        ? ['#3671C6', '#D97706', '#059669', '#7C3AED', '#DC2626']
         : ['#163A5F', '#D69E2E', '#1F7A5A', '#6D28D9', '#C05621'],
       desaPalette: isDark
         ? ['#60A5FA', '#93C5FD', '#FCD34D', '#FDE68A', '#6EE7B7', '#A7F3D0', '#C4B5FD', '#FCA5A5']
         : ['#2563B8', '#60A5FA', '#E6A817', '#FBBF24', '#2D9D78', '#5EEAD4', '#8B5CF6', '#F87171']
     };
+
+    const ChartClass = window.Chart || (typeof Chart !== 'undefined' ? Chart : null);
+    if (ChartClass && ChartClass.defaults) {
+      ChartClass.defaults.color = colors.textColor;
+      if (ChartClass.defaults.font) {
+        ChartClass.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+      }
+    }
+
+    return colors;
   },
 
   render() {
@@ -517,6 +527,7 @@ const AnalyticsManager = {
                     text: `Kab. ${k} (${kabData[idx].toLocaleString('id-ID')} Kg)`,
                     fillStyle: theme.kabPalette[idx % theme.kabPalette.length],
                     strokeStyle: theme.borderColor,
+                    fontColor: theme.textColor,
                     lineWidth: 1,
                     hidden: false,
                     index: idx,

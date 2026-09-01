@@ -37,7 +37,7 @@ function createWindow() {
     minHeight: 700,
     title: 'PT. Reka Cipta Garam | Salt Weighing System',
     icon: path.join(__dirname, 'assets/icons/icon.png'),
-    backgroundColor: '#0F172A',
+    backgroundColor: '#0B1120',
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
@@ -121,6 +121,48 @@ ipcMain.handle('app:print', async (event, options) => {
   } catch (error) {
     console.error('Print error:', error);
     return false;
+  }
+});
+
+ipcMain.handle('app:save-pdf', async (event, options = {}) => {
+  if (!mainWindow) return { success: false, error: 'Window not found' };
+  try {
+    const fs = require('fs');
+    const defaultFilename = options.defaultFilename || 'Dokumen_RCG.pdf';
+
+    const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Unduh / Simpan Dokumen PDF',
+      defaultPath: defaultFilename,
+      filters: [{ name: 'PDF Documents', extensions: ['pdf'] }]
+    });
+
+    if (canceled || !filePath) {
+      return { success: false, canceled: true };
+    }
+
+    let pageSize = 'A4';
+    if (options.paperSize === 'A6') pageSize = 'A6';
+    else if (options.paperSize === 'A5') pageSize = 'A5';
+    else if (options.paperSize === 'Letter') pageSize = 'Letter';
+    else if (options.paperSize === 'NCR_Wartel') pageSize = 'Letter';
+
+    const pdfBuffer = await mainWindow.webContents.printToPDF({
+      printBackground: true,
+      pageSize: pageSize,
+      landscape: options.landscape || false,
+      margins: {
+        top: 0.2,
+        bottom: 0.2,
+        left: 0.2,
+        right: 0.2
+      }
+    });
+
+    await fs.promises.writeFile(filePath, pdfBuffer);
+    return { success: true, filePath: filePath };
+  } catch (err) {
+    console.error('Failed to save PDF:', err);
+    return { success: false, error: err.message };
   }
 });
 

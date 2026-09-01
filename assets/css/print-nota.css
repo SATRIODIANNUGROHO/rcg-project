@@ -29,14 +29,19 @@
     overflow: visible !important;
   }
 
-  /* Sembunyikan elemen aplikasi selain container cetak */
-  body > *:not(#printable-nota):not(#printable-nota-area) {
+  /* Sembunyikan elemen aplikasi dan modal saat printer aktif */
+  body > *:not(#printable-nota) {
     display: none !important;
     visibility: hidden !important;
   }
 
-  #printable-nota,
-  #printable-nota-area {
+  .modal-overlay,
+  .modal-container {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  #printable-nota {
     display: block !important;
     visibility: visible !important;
     position: relative !important;
@@ -59,7 +64,7 @@
   }
 
   .nota-container {
-    border: 2px solid #000000;
+    border: none !important;
     padding: 14px 18px;
     background: #FFFFFF;
   }
@@ -176,7 +181,7 @@
 
   .nota-signatures {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     text-align: center;
     margin-top: 14px;
     padding-top: 6px;

@@ -13,7 +13,7 @@ Pendekatan: **Dark Professional / Industrial Dashboard**.
 | Warna | Hex | Fungsi | Rasio Visual |
 | :--- | :--- | :--- | :---: |
 | **Primary Blue** | `#3671C6` | Primary action, button aktif, link, highlight utama | **10%** |
-| **Deep Navy** | `#0A1B40` | Background aplikasi utama & area navigasi | **35%** |
+| **Deep Dark Blue** | `#0B1120` | Background aplikasi utama & area navigasi | **35%** |
 | **Surface Navy** | `#16243A` | Card, table body, panel container | **25%** |
 | **Light Surface** | `#1E2D44` | Hover state, table striping, secondary surface | **10%** |
 | **White** | `#F5F7FA` | Text utama, judul tabel, angka metrik penting | **10%** |
