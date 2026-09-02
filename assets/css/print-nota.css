@@ -18,14 +18,18 @@
 @media print {
   @page {
     size: auto;
-    margin: 4mm;
+    margin: 0 !important;
   }
 
-  html, body {
+  html, body, html.dark-mode, body.dark-mode {
     background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
     color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     overflow: visible !important;
   }
 
@@ -144,13 +148,14 @@
     width: 100%;
     border-collapse: collapse;
     margin: 10px 0;
-    border: 1.5px solid #000000;
+    border: none;
   }
 
   .nota-weight-table th {
     background-color: #F0F0F0 !important;
     color: #000000 !important;
-    border: 1px solid #000000;
+    border: none;
+    border-bottom: 1.5px solid #000000;
     padding: 6px 8px;
     font-size: 9pt;
     font-weight: 700;
@@ -160,7 +165,8 @@
   }
 
   .nota-weight-table td {
-    border: 1px solid #000000;
+    border: none;
+    border-bottom: 1px solid #E2E8F0;
     padding: 6px 8px;
     font-size: 9.5pt;
   }

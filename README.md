@@ -31,8 +31,27 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
   - Panel manajemen pengguna 2-kolom dengan matriks hak akses (*Lihat, Tambah, Ubah, Hapus* per modul).
   - Otoritas khusus sistem: Cetak ulang tiket, pengaturan sistem, kelola hak akses, backup/compact database.
   - Tombol instan *Pilih Semua* dan *Kosongkan Semua*.
-- **Ekspor Excel Cerdas (.xlsx)**:
-  - Dilengkapi fitur **AutoFilter** bawaan Excel, formula otomatis **AutoSum** `=SUM()`, dan penataan warna header.
+- **Ekspor Excel Presisi Tinggi (.xlsx)**:
+  - Didukung engine **ExcelJS**, menghasilkan output 100% identik dengan standar buku besar PT. Reka Cipta Garam.
+  - Header **Navy Blue (`#0F4C81`)** dengan **AutoFilter** aktif, data baris rapi dengan border halus, serta baris **TOTAL Pale Gold (`#FFF2CC`)** dengan formula otomatis **AutoSum** `=SUM()`.
+- **Cetak Nota Timbang & Form Supplier (PDF & Printer)**:
+  - Pratinjau interaktif (*live paper preview*) sebelum mencetak.
+  - Pilihan ukuran kertas: **A6** (standar tiket), **A5**, **A4**, **Letter**, dan **NCR Wartel 9.5" × 11"**.
+  - Pilihan rangkap/salinan (1x, 2x, 3x) dan area tanda tangan (Supir & Admin).
+  - Ekspor PDF vektor bersih (*zero-border & zero-margin*) dengan logo resmi tersemat instan.
+- **Riwayat Transaksi & Riwayat Pemasok/Supplier**:
+  - Menu **Riwayat Penimbangan** dengan pencarian realtime, filter tanggal, dan tombol aksi (*Detail, Edit, Cetak, Hapus*).
+  - Menu **Riwayat Pemasok** untuk memantau rekap tonase dan mencetak Formulir Pemasok.
+  - Fitur pengeditan atribut dokumen nota langsung dari riwayat transaksi.
+- **Dashboard & Analitik Visual (Double Donut Chart)**:
+  - Kartu Ringkasan: *Berat Bersih Periode, Pembayaran Periode, & Ringkasan Analitik*.
+  - Grafik Transaksi per Minggu (Minggu 1 mulai 26 Juli 2026).
+  - Pie Chart Mutu: *Komposisi Mutu Garam K1 dan Garam K2*.
+  - **Double Donut Chart**: Sebaran Asal Garam (Cincin Dalam: Kabupaten; Cincin Luar: Desa).
+- **Hak Akses & Manajemen Pengguna (RBAC Granular)**:
+  - Panel manajemen pengguna 2-kolom dengan matriks hak akses (*Lihat, Tambah, Ubah, Hapus* per modul).
+  - Otoritas khusus sistem: Cetak ulang tiket, pengaturan sistem, kelola hak akses, backup/compact database.
+  - Tombol aksi minimalis teks (*Tambah User, Ubah Password, Hapus Pengguna*).
 - **Backup, Restore, & Audit Log**:
   - Backup otomatis lokal berkala.
   - Export & Import data JSON (kompatibel dengan file arsip cadangan versi sebelumnya).
@@ -40,7 +59,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
 - **Standar Desain Resmi ([DESIGN_SYSTEM.md](DESIGN_SYSTEM.md))**:
   - Mode Gelap & Mode Terang dengan tipografi modern **Plus Jakarta Sans**, ikon SVG bersih (Zero Emojis), dan palet warna industrial profesional.
 - **100% Offline Lokal (Tanpa Dependensi Internet)**:
-  - Semua library (*Chart.js, SheetJS XLSX, html2pdf.js*) berjalan secara lokal.
+  - Semua library (*Chart.js, ExcelJS, SheetJS XLSX, html2pdf.js*) berjalan secara lokal.
 
 ---
 
@@ -114,6 +133,7 @@ RCG/
 │   │   └── RCG.webp              # Logo resmi PT. Reka Cipta Garam
 │   ├── vendor/
 │   │   ├── chart.umd.min.js      # Pustaka Chart.js lokal (Offline Mode)
+│   │   ├── exceljs.min.js        # Pustaka ExcelJS lokal untuk spreadsheet berdesain
 │   │   ├── xlsx.full.min.js      # Pustaka SheetJS lokal (Offline Mode)
 │   │   └── html2pdf.bundle.min.js# Pustaka konversi PDF lokal (Offline Mode)
 │   └── js/

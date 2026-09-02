@@ -285,12 +285,12 @@ const HistoryManager = {
         <div class="section-block-title" style="margin-bottom: 10px;">4. Alokasi Mutu &amp; Nilai Pembayaran</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
           <div class="mini-stat-item">
-            <div class="title" style="color: var(--primary);">KUALITAS K1 (GARAM SUPER)</div>
+            <div class="title" style="color: var(--primary);">GARAM K1</div>
             <div class="mono-num" style="font-size: 13.5px; font-weight: 700; color: var(--primary);">${tx.k1Weight.toLocaleString('id-ID')} Kg &times; Rp ${tx.k1Price.toLocaleString('id-ID')}</div>
             <div class="text-small mono-num" style="color: var(--text-secondary); margin-top: 2px;">Subtotal: <strong>Rp ${tx.k1Total.toLocaleString('id-ID')}</strong></div>
           </div>
           <div class="mini-stat-item">
-            <div class="title" style="color: var(--accent-gold);">KUALITAS K2 (GARAM STANDAR)</div>
+            <div class="title" style="color: var(--accent-gold);">GARAM K2</div>
             <div class="mono-num" style="font-size: 13.5px; font-weight: 700; color: var(--accent-gold);">${tx.k2Weight.toLocaleString('id-ID')} Kg &times; Rp ${tx.k2Price.toLocaleString('id-ID')}</div>
             <div class="text-small mono-num" style="color: var(--text-secondary); margin-top: 2px;">Subtotal: <strong>Rp ${tx.k2Total.toLocaleString('id-ID')}</strong></div>
           </div>

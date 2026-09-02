@@ -529,45 +529,59 @@ const TransactionEngine = {
   },
 
   generateNotaHtml(tx, copyNumber = 1, totalCopies = 1) {
+    let copyBadgeText = 'NOTA TIMBANG';
     let copyReceiverText = 'LEMBAR UTAMA (ASLI)';
     let copyFooterText = '* Dokumen ini merupakan bukti sah penerimaan & penimbangan garam PT. Reka Cipta Garam.';
 
     if (totalCopies === 2) {
       if (copyNumber === 1) {
+        copyBadgeText = 'NOTA TIMBANG (ASLI)';
         copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
         copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
       } else {
+        copyBadgeText = 'NOTA TIMBANG (ARSIP)';
         copyReceiverText = 'LEMBAR 2: ARSIP KANTOR / KEUANGAN';
         copyFooterText = '* Lembar 2: Untuk Arsip Kantor & Pembukuan Keuangan PT. RCG.';
       }
     } else if (totalCopies === 3) {
       if (copyNumber === 1) {
+        copyBadgeText = 'NOTA TIMBANG (LEMBAR 1)';
         copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
         copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
       } else if (copyNumber === 2) {
+        copyBadgeText = 'NOTA TIMBANG (LEMBAR 2)';
         copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & OPERASIONAL';
         copyFooterText = '* Lembar 2: Untuk Arsip Bagian Timbangan & Lapangan.';
       } else {
+        copyBadgeText = 'NOTA TIMBANG (LEMBAR 3)';
         copyReceiverText = 'LEMBAR 3: KASIR & KEUANGAN';
         copyFooterText = '* Lembar 3: Untuk Kasir & Verifikasi Pembayaran.';
       }
     }
 
+    const isLunas = (tx.paymentStatus === 'Lunas');
+    const payStatusText = isLunas ? 'Lunas' : 'Belum Lunas';
+
     return `
-      <div class="nota-container" style="background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 18px; border: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
-        <div class="nota-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #163A5F; padding-bottom: 8px; margin-bottom: 12px;">
-          <div class="nota-company">
-            <h2 style="font-size: 15px; font-weight: 800; color: #163A5F; margin: 0;">PT. REKA CIPTA GARAM</h2>
-            <p style="font-size: 10px; color: #64748B; margin: 2px 0 0 0;">Kawasan Industri Garam Terpadu, Madura - Jawa Timur | Telp: (0324) 321888</p>
+      <div class="nota-container" style="background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 20px; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
+        <!-- Header Perusahaan (Identik dengan Kop Formulir) -->
+        <div class="nota-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #163A5F; padding-bottom: 12px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <img src="assets/images/RCG.webp" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
+            <div>
+              <div style="font-size: 16px; font-weight: 800; color: #163A5F; letter-spacing: 0.02em;">PT. REKA CIPTA GARAM</div>
+              <div style="font-size: 11px; color: #64748B;">Pabrik Pengolahan &amp; Distribusi Garam Bahan Baku Industri</div>
+              <div style="font-size: 10px; color: #64748B;">Pamekasan - Madura, Jawa Timur | Telp: (0324) 321-RCG</div>
+            </div>
           </div>
           <div class="nota-title-box" style="text-align: right;">
-            <h1 style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 0;">NOTA TIMBANG</h1>
-            <div style="font-size: 10px; font-weight: 700; color: #163A5F; margin-top: 2px;">[ ${copyReceiverText} ]</div>
-            <div class="nota-doc-no" style="font-size: 10.5px; font-family: monospace; color: #64748B;">${tx.docNo}</div>
+            <div style="font-size: 13px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 3px 8px; border-radius: 4px; display: inline-block;">${copyBadgeText}</div>
+            <div style="font-size: 10px; font-weight: 700; color: #163A5F; margin-top: 3px; letter-spacing: 0.02em;">[ ${copyReceiverText} ]</div>
+            <div class="nota-doc-no" style="font-size: 10.5px; font-family: monospace; color: #64748B; margin-top: 2px;">No: ${tx.docNo}</div>
           </div>
         </div>
 
-        <div class="nota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 12px; font-size: 11.5px; background: #F8FAFC; padding: 10px 14px; border-radius: 4px; border: 1px solid #E2E8F0;">
+        <div class="nota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 12px; font-size: 11.5px; background: #F8FAFC; padding: 10px 14px; border-radius: 4px; border: none;">
           <table class="nota-info-table" style="width: 100%; border-collapse: collapse;">
             <tr>
               <td class="label" style="width: 90px; color: #64748B; padding: 3px 0;">Tanggal</td>
@@ -600,59 +614,59 @@ const TransactionEngine = {
             <tr>
               <td class="label" style="color: #64748B; padding: 3px 0;">Status Bayar</td>
               <td class="colon" style="width: 14px; text-align: center; color: #64748B; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; padding: 3px 0;">:</td>
-              <td class="val" style="padding: 3px 0;"><strong style="color: ${tx.paymentStatus === 'Lunas' ? '#16A34A' : '#D97706'};">${tx.paymentStatus}</strong></td>
+              <td class="val" style="padding: 3px 0;"><strong style="color: ${isLunas ? '#16A34A' : '#D97706'};">${payStatusText}</strong></td>
             </tr>
           </table>
         </div>
 
-        <table class="nota-weight-table" style="width: 100%; border-collapse: collapse; margin: 10px 0; border: 1px solid #CBD5E1; font-size: 11.5px;">
+        <table class="nota-weight-table" style="width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11.5px; border: none;">
           <thead>
             <tr style="background: #163A5F; color: #FFFFFF;">
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Kotor (Gross)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Tara (Tare)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Muatan (Bruto)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: center;">Refraksi (%)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Potongan (Kg)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right; background: #0F2844;">BERSIH TOTAL (Kg)</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Kotor (Gross)</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Tara (Tare)</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Muatan (Bruto)</th>
+              <th style="padding: 6px 8px; text-align: center; border: none;">Refraksi (%)</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Potongan (Kg)</th>
+              <th style="padding: 6px 8px; text-align: right; background: #0F2844; border: none;">BERSIH TOTAL (Kg)</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">${tx.grossWeight.toLocaleString('id-ID')} Kg</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">${tx.tareWeight.toLocaleString('id-ID')} Kg</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: center; font-family: monospace;">${tx.refractionPercent}%</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">${tx.refractionKg.toLocaleString('id-ID')} Kg</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #CBD5E1; text-align: right; font-family: monospace; font-weight: 800; background: #EEF2F6; color: #163A5F;">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.grossWeight.toLocaleString('id-ID')} Kg</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.tareWeight.toLocaleString('id-ID')} Kg</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</td>
+              <td class="num" style="padding: 6px 8px; text-align: center; font-family: monospace; border: none;">${tx.refractionPercent}%</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.refractionKg.toLocaleString('id-ID')} Kg</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; font-weight: 800; background: #EEF2F6; color: #163A5F; border: none;">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
             </tr>
           </tbody>
         </table>
 
-        <table class="nota-weight-table" style="width: 100%; border-collapse: collapse; margin: 10px 0; border: 1px solid #CBD5E1; font-size: 11.5px;">
+        <table class="nota-weight-table" style="width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11.5px; border: none;">
           <thead>
             <tr style="background: #163A5F; color: #FFFFFF;">
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: left;">Kategori Mutu</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Berat (Kg)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Harga Satuan (Rp/Kg)</th>
-              <th style="padding: 6px 8px; border: 1px solid #163A5F; text-align: right;">Subtotal (Rp)</th>
+              <th style="padding: 6px 8px; text-align: left; border: none;">Kategori Mutu</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Berat (Kg)</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Harga Satuan (Rp/Kg)</th>
+              <th style="padding: 6px 8px; text-align: right; border: none;">Subtotal (Rp)</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style="padding: 6px 8px; border: 1px solid #E2E8F0;"><strong>K1 (Garam Super / Putih)</strong></td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">${tx.k1Weight.toLocaleString('id-ID')} Kg</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">Rp ${tx.k1Price.toLocaleString('id-ID')}</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F;">Rp ${tx.k1Total.toLocaleString('id-ID')}</td>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 6px 8px; border: none;"><strong>Garam K1</strong></td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.k1Weight.toLocaleString('id-ID')} Kg</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">Rp ${tx.k1Price.toLocaleString('id-ID')}</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F; border: none;">Rp ${tx.k1Total.toLocaleString('id-ID')}</td>
             </tr>
-            <tr style="background: #F8FAFC;">
-              <td style="padding: 6px 8px; border: 1px solid #E2E8F0;"><strong>K2 (Garam Standar)</strong></td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">${tx.k2Weight.toLocaleString('id-ID')} Kg</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace;">Rp ${tx.k2Price.toLocaleString('id-ID')}</td>
-              <td class="num" style="padding: 6px 8px; border: 1px solid #E2E8F0; text-align: right; font-family: monospace; font-weight: 700; color: #B45309;">Rp ${tx.k2Total.toLocaleString('id-ID')}</td>
+            <tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 6px 8px; border: none;"><strong>Garam K2</strong></td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.k2Weight.toLocaleString('id-ID')} Kg</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">Rp ${tx.k2Price.toLocaleString('id-ID')}</td>
+              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; font-weight: 700; color: #B45309; border: none;">Rp ${tx.k2Total.toLocaleString('id-ID')}</td>
             </tr>
             <tr style="background: #EEF2F6; font-weight: 800;">
-              <td colspan="3" style="padding: 8px 10px; text-align: right; border: 1px solid #CBD5E1; font-size: 12px;">TOTAL PEMBAYARAN:</td>
-              <td class="num" style="padding: 8px 10px; text-align: right; border: 1px solid #CBD5E1; font-size: 13px; font-family: monospace; color: #163A5F;">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
+              <td colspan="3" style="padding: 8px 10px; text-align: right; font-size: 12px; border: none;">TOTAL PEMBAYARAN:</td>
+              <td class="num" style="padding: 8px 10px; text-align: right; font-size: 13px; font-family: monospace; color: #163A5F; border: none;">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
             </tr>
           </tbody>
         </table>

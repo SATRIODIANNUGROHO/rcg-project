@@ -45,12 +45,13 @@ const PrintManager = {
         // 3. Close modal preview
         App.closeModal('modal-print-settings');
 
-        // 4. In Electron: Save directly as crisp vector PDF using native printToPDF without Windows print dialog
+        // 4. In Electron: Save directly as crisp vector PDF using dedicated isolated offscreen renderer
         if (window.electronAPI && typeof window.electronAPI.savePDF === 'function') {
           App.showToast('Mempersiapkan dokumen PDF...', 'info');
           const result = await window.electronAPI.savePDF({
             defaultFilename: filename,
-            paperSize: paperVal
+            paperSize: paperVal,
+            htmlContent: finalHtml
           });
 
           if (result && result.success) {
@@ -112,7 +113,7 @@ const PrintManager = {
         renderedCards.push(`
           <div class="preview-sheet-wrapper" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             ${copies > 1 ? `<div style="font-size: 11.5px; font-weight: 600; color: #94A3B8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">— ${copyLabel} —</div>` : ''}
-            <div style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: 740px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); border-radius: 4px; padding: 18px; box-sizing: border-box; border: none !important;">
+            <div style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: 740px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); border-radius: 4px; padding: 20px; box-sizing: border-box; border: none !important; outline: none !important;">
               ${sheetHtml}
             </div>
           </div>
@@ -121,7 +122,7 @@ const PrintManager = {
       previewContainer.innerHTML = renderedCards.join('');
     } else {
       previewContainer.innerHTML = `
-        <div style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: 740px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); border-radius: 4px; padding: 18px; box-sizing: border-box; border: none !important;">
+        <div style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: 740px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); border-radius: 4px; padding: 20px; box-sizing: border-box; border: none !important; outline: none !important;">
           ${this.currentHtmlContent}
         </div>
       `;
@@ -134,22 +135,35 @@ const PrintManager = {
 
       const tempContainer = document.createElement('div');
       tempContainer.style.background = '#FFFFFF';
+      tempContainer.style.backgroundColor = '#FFFFFF';
       tempContainer.style.color = '#0F172A';
       tempContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      tempContainer.style.padding = '8px';
+      tempContainer.style.padding = '0';
+      tempContainer.style.margin = '0';
+      tempContainer.style.border = 'none';
+      tempContainer.style.outline = 'none';
+      tempContainer.style.boxShadow = 'none';
       tempContainer.style.width = '780px';
       tempContainer.innerHTML = htmlContent;
+
+      // Ensure images inside tempContainer have absolute URLs
+      tempContainer.querySelectorAll('img').forEach(img => {
+        const rawSrc = img.getAttribute('src');
+        if (rawSrc && !rawSrc.startsWith('data:') && !rawSrc.startsWith('http')) {
+          img.src = new URL(rawSrc, window.location.href).href;
+        }
+      });
 
       let format = 'a4';
       if (paperSize === 'A6') format = 'a6';
       else if (paperSize === 'A5') format = 'a5';
-      else if (paperSize === 'Letter') format = 'letter';
+      else if (paperSize === 'Letter' || paperSize === 'NCR_Wartel') format = 'letter';
 
       const opt = {
-        margin: [4, 4, 4, 4],
+        margin: 0,
         filename: filename.endsWith('.pdf') ? filename : `${filename}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
+        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#FFFFFF' },
         jsPDF: { unit: 'mm', format: format, orientation: 'portrait' }
       };
 

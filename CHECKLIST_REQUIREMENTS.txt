@@ -1,0 +1,76 @@
+================================================================================
+PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+CHECKLIST STATUS IMPLEMENTASI REQUIREMENT SISTEM
+================================================================================
+
+Dashboard & Visualisasi
+[✓] Menambahkan informasi Pembayaran Periode pada Dashboard.
+[✓] Menambahkan pilihan rentang tanggal/periode menggunakan pop-up kalender.
+[✓] Menyesuaikan keterangan Grafik Transaksi per Minggu.
+[✓] Mengubah penamaan Komposisi Mutu K1 vs K2 menjadi Komposisi Mutu Garam K1 dan Garam K2.
+[✓] Mengubah label K1 (Garam Super) menjadi Garam K1 dan K2 (Garam Standar) menjadi Garam K2.
+[✓] Mengubah Wilayah Asal Garam menjadi Kabupaten Asal Garam.
+[✓] Mengubah Area/Kecamatan menjadi Desa Asal Garam.
+[✓] Mengubah Pie Chart Sebaran Asal Garam menjadi Double Donut Chart.
+[✓] Menghapus field Admin Sesi dari Identitas & Status Pembayaran.
+[✓] Menyesuaikan seluruh label Berat Bersih K1/K2 dan Subtotal K1/K2.
+
+Manajemen Data & Export
+[✓] Menyederhanakan pilihan Material menjadi Garam Karung dan Garam Curah.
+[✓] Mengubah label Jumlah Karung (Koli) menjadi Jumlah.
+[✓] Menyesuaikan suffix jumlah pada hasil Export Excel berdasarkan jenis material.
+[✓] Menambahkan pilihan cakupan data saat Export Excel.
+[✓] Memisahkan fitur Export Excel untuk Riwayat Penimbangan dan Riwayat Pemasok/Supplier.
+[✓] Mempertahankan filter pencarian pada tabel aplikasi.
+[✓] Menghilangkan filter tambahan yang tidak diperlukan dari pop-up Export Excel.
+[✓] Menambahkan AutoFilter pada file Excel hasil ekspor.
+[✓] Menyesuaikan format Excel dengan template lama, termasuk header, pemisah data, dan AutoSum.
+
+Hak Akses & Activity Log
+[✓] Membuat hak akses Admin secara granular berdasarkan modul dan jenis tindakan.
+[✓] Menambahkan pengaturan hak akses khusus seperti cetak ulang, pengaturan sistem, user management, dan backup database.
+[✓] Menambahkan fitur Pilih Semua / Kosongkan Semua pada pengaturan hak akses.
+[✓] Menampilkan pop-up konfirmasi wajib dengan input alasan sebelum proses Hapus/Reset Data dapat dilanjutkan.
+[✓] Mencatat setiap proses Hapus/Reset Data ke dalam Activity Log.
+[✓] Activity Log mencatat Pengguna, Waktu, Jenis Tindakan, Data yang Terpengaruh, dan Alasan.
+
+Riwayat Transaksi & Supplier
+[✓] Menambahkan menu Riwayat Pemasok/Supplier.
+[✓] Menyesuaikan struktur tabel Riwayat Pemasok.
+[✓] Menambahkan filter tanggal/periode dan nama pemasok.
+[✓] Menambahkan fitur Cetak Form Supplier.
+[✓] Form Supplier memuat total supply, rincian pembayaran, dan area tanda tangan.
+
+Pencetakan & Nota Timbang
+[✓] Menambahkan pilihan format dan ukuran kertas sebelum mencetak.
+[✓] Menambahkan pop-up pengaturan cetak sebelum proses printing.
+[✓] Menyesuaikan kembali layout Nota Timbang berdasarkan versi lama.
+[✓] Memastikan informasi Nota Timbang lengkap.
+[✓] Menggunakan layout dua kolom dengan pemisah yang jelas.
+[✓] Menambahkan area tanda tangan Sopir & Admin.
+
+Infrastruktur & Offline
+[✓] Mengubah JavaScript menjadi local asset.
+[✓] Mengubah CSS menjadi local asset.
+[ ] Menggunakan font secara lokal.
+[✓] Menggunakan icon secara lokal.
+[ ] Menghapus seluruh dependensi CDN eksternal.
+[✓] Memastikan aplikasi tetap dapat berjalan dalam kondisi offline.
+
+UI/UX & Design System
+[✓] Menetapkan color palette utama aplikasi.
+[✓] Menetapkan persentase penggunaan masing-masing warna.
+[✓] Menetapkan font palette dan font pendukung Jakarta Sans.
+[✓] Menetapkan hierarki dan ukuran font.
+[✓] Menetapkan aturan corner radius / corner sharp.
+[✓] Menetapkan aturan margin dan spacing.
+[✓] Menetapkan jarak konsisten antara heading, sub-heading, dan content.
+[✓] Menetapkan rasio ukuran tombol dengan ukuran teks di dalamnya.
+[✓] Menggabungkan fitur yang secara fungsi berkaitan, misalnya Profile + Logout.
+[✓] Tidak menggunakan emoji sebagai bagian dari UI.
+[✓] Tidak menggunakan simbol sebagai pengganti icon apabila tersedia icon yang sesuai.
+[✓] Menggunakan icon set yang konsisten dengan tema aplikasi.
+[✓] Menjaga konsistensi penggunaan bahasa di seluruh aplikasi.
+[✓] Menjaga konsistensi warna, typography, iconography, spacing, dan komponen UI.
+[✓] Memastikan desain responsif dan tidak rusak pada berbagai ukuran layar.
+[✓] Memastikan layout tetap nyaman digunakan pada laptop, desktop, tablet, iPad, dan smartphone.

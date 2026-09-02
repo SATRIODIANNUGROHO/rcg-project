@@ -142,21 +142,87 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
 
     let pageSize = 'A4';
     if (options.paperSize === 'A6') pageSize = 'A6';
-    else if (options.paperSize === 'A5') pageSize = 'A5';
-    else if (options.paperSize === 'Letter') pageSize = 'Letter';
-    else if (options.paperSize === 'NCR_Wartel') pageSize = 'Letter';
+    let htmlContent = options.htmlContent || '';
 
-    const pdfBuffer = await mainWindow.webContents.printToPDF({
+    // Convert local logo paths to embedded base64 data URLs for 100% reliable rendering
+    const logoFile = path.join(__dirname, 'assets/images/RCG.webp');
+    if (fs.existsSync(logoFile)) {
+      const logoBase64 = `data:image/webp;base64,${fs.readFileSync(logoFile).toString('base64')}`;
+      htmlContent = htmlContent.replace(/src=["'](?:(?:\.\/)?assets\/images\/RCG\.webp|assets\/images\/RCG\.webp)["']/g, `src="${logoBase64}"`);
+    }
+
+    const baseHref = `file:///${path.join(__dirname, '/').replace(/\\/g, '/')}`;
+
+    // Create an isolated offscreen BrowserWindow for pristine, zero-border PDF export
+    const printWin = new BrowserWindow({
+      show: false,
+      width: 1024,
+      height: 768,
+      backgroundColor: '#FFFFFF',
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true
+      }
+    });
+
+    const fullDoc = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <base href="${baseHref}">
+  <title>${defaultFilename}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #FFFFFF !important;
+      background-color: #FFFFFF !important;
+      color: #0F172A !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    }
+    @page {
+      margin: 0 !important;
+      size: ${pageSize} portrait;
+    }
+    .nota-container, .nota-sheet {
+      margin: 0 auto !important;
+      padding: 16px 20px !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: #FFFFFF !important;
+    }
+  </style>
+</head>
+<body style="background: #FFFFFF !important; margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important;">
+  ${htmlContent}
+</body>
+</html>`;
+
+    await printWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(fullDoc));
+
+    const pdfBuffer = await printWin.webContents.printToPDF({
       printBackground: true,
       pageSize: pageSize,
       landscape: options.landscape || false,
       margins: {
-        top: 0.2,
-        bottom: 0.2,
-        left: 0.2,
-        right: 0.2
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
       }
     });
+
+    printWin.destroy();
 
     await fs.promises.writeFile(filePath, pdfBuffer);
     return { success: true, filePath: filePath };
