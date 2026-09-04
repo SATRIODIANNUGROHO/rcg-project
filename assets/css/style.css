@@ -1246,6 +1246,28 @@ input[type="number"] {
   background: rgba(100, 116, 139, 0.5);
 }
 
+/* Upward Floating Dropdown Positioning (Collision-Aware Flip) */
+.custom-select-container.open-upward .custom-select-menu,
+.custom-combobox.open-upward .custom-combobox-menu,
+.custom-combobox.open-upward .dropdown-menu-card,
+.custom-autocomplete-container.open-upward .custom-autocomplete-menu,
+.custom-autocomplete-container.open-upward .dropdown-menu-card {
+  top: auto;
+  bottom: calc(100% + 4px);
+  animation: fadeInUp 0.12s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-select-container.open,
+.custom-combobox.open,
+.custom-autocomplete-container.open {
+  z-index: 1050;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2205,7 +2227,20 @@ input[type="number"] {
   overflow-y: auto;
 }
 
-/* Modal Serial Connect - Spacious Height & Non-Scrolling */
+/* Modals with floating dropdowns - Spacious Height & Non-Scrolling Overlay */
+#modal-serial-connect .modal-container,
+#modal-export-excel .modal-container,
+#modal-add-user .modal-container {
+  overflow: visible;
+}
+
+#modal-serial-connect .modal-body,
+#modal-export-excel .modal-body,
+#modal-add-user .modal-body {
+  overflow: visible;
+  max-height: none;
+}
+
 #modal-serial-connect .modal-container {
   max-width: 520px;
   min-height: 380px;
@@ -2215,7 +2250,6 @@ input[type="number"] {
 
 #modal-serial-connect .modal-body {
   min-height: 260px;
-  overflow: visible;
   padding: 22px 24px;
 }
 

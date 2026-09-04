@@ -121,6 +121,18 @@ const CustomAutocomplete = {
         menu.appendChild(item);
       });
 
+      // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
+      const inputRect = input.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - inputRect.bottom;
+      const spaceAbove = inputRect.top;
+      const menuHeight = 240;
+
+      if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
+        wrapper.classList.add('open-upward');
+      } else {
+        wrapper.classList.remove('open-upward');
+      }
+
       wrapper.classList.add('open');
     };
 
@@ -149,19 +161,19 @@ const CustomAutocomplete = {
         if (activeIndex >= 0 && items[activeIndex]) {
           e.preventDefault();
           input.value = items[activeIndex].textContent;
-          wrapper.classList.remove('open');
+          wrapper.classList.remove('open', 'open-upward');
           input.dispatchEvent(new Event('input', { bubbles: true }));
           input.dispatchEvent(new Event('change', { bubbles: true }));
         }
       } else if (e.key === 'Escape') {
-        wrapper.classList.remove('open');
+        wrapper.classList.remove('open', 'open-upward');
       }
     });
 
     input.addEventListener('blur', () => {
       // Delay closing so mousedown on item can trigger
       setTimeout(() => {
-        wrapper.classList.remove('open');
+        wrapper.classList.remove('open', 'open-upward');
       }, 180);
     });
   },
@@ -260,25 +272,37 @@ const CustomAutocomplete = {
         });
       }
 
+      // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
+      const inputRect = input.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - inputRect.bottom;
+      const spaceAbove = inputRect.top;
+      const menuHeight = 240;
+
+      if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
+        container.classList.add('open-upward');
+      } else {
+        container.classList.remove('open-upward');
+      }
+
       container.classList.add('open');
     };
 
     const selectSupplier = (supplier) => {
       selectedValue = supplier ? supplier.trim() : '';
       input.value = selectedValue;
-      container.classList.remove('open');
+      container.classList.remove('open', 'open-upward');
       onSelect(selectedValue);
     };
 
     const openDropdown = (forceAll = true) => {
       document.querySelectorAll('.custom-combobox.open, .custom-autocomplete-container.open').forEach(c => {
-        if (c !== container) c.classList.remove('open');
+        if (c !== container) c.classList.remove('open', 'open-upward');
       });
       renderMenu(input.value, forceAll);
     };
 
     const closeDropdown = () => {
-      container.classList.remove('open');
+      container.classList.remove('open', 'open-upward');
     };
 
     // Events

@@ -87,14 +87,26 @@ const CustomSelectManager = {
       const isAlreadyOpen = wrapper.classList.contains('open');
       document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open').forEach(w => {
         if (w !== wrapper) {
-          w.classList.remove('open');
-          const parentBlock = w.closest('.section-block, .form-row, .card');
+          w.classList.remove('open', 'open-upward');
+          const parentBlock = w.closest('.section-block, .form-row, .card, .form-group');
           if (parentBlock) parentBlock.style.zIndex = '';
         }
       });
 
-      const parentBlock = wrapper.closest('.section-block, .form-row, .card');
+      const parentBlock = wrapper.closest('.section-block, .form-row, .card, .form-group');
       if (!isAlreadyOpen) {
+        // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
+        const triggerRect = trigger.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - triggerRect.bottom;
+        const spaceAbove = triggerRect.top;
+        const menuHeight = Math.min(280, (select.options.length * 36) + 16);
+
+        if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
+          wrapper.classList.add('open-upward');
+        } else {
+          wrapper.classList.remove('open-upward');
+        }
+
         wrapper.classList.add('open');
         if (parentBlock) parentBlock.style.zIndex = '500';
 
@@ -113,7 +125,7 @@ const CustomSelectManager = {
           }
         });
       } else {
-        wrapper.classList.remove('open');
+        wrapper.classList.remove('open', 'open-upward');
         if (parentBlock) parentBlock.style.zIndex = '';
       }
     });
