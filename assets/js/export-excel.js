@@ -51,7 +51,7 @@ const ExportExcelManager = {
     if (dateStart && !dateStart.value) dateStart.value = todayStr;
     if (dateEnd && !dateEnd.value) dateEnd.value = todayStr;
 
-    // Synchronize Material Filter with HistoryManager
+    // Synchronize Material Filter with HistoryManager (Transaction Context)
     const matWrap = document.getElementById('export-material-filter-wrap');
     const matSelect = document.getElementById('export-select-material');
     if (matWrap) {
@@ -61,7 +61,36 @@ const ExportExcelManager = {
       matSelect.value = (typeof HistoryManager !== 'undefined' && HistoryManager.materialFilter) || '';
     }
 
+    // Synchronize Supplier Filter with SupplierHistoryManager (Supplier Context)
+    const suppWrap = document.getElementById('export-supplier-filter-wrap');
+    const suppSelect = document.getElementById('export-select-supplier');
+    if (suppWrap) {
+      suppWrap.style.display = (context === 'supplier') ? 'block' : 'none';
+    }
+    if (context === 'supplier') {
+      this.populateExportSupplierSelect();
+      if (suppSelect) {
+        suppSelect.value = (typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '';
+      }
+    }
+
     App.openModal('modal-export-excel');
+  },
+
+  populateExportSupplierSelect() {
+    const select = document.getElementById('export-select-supplier');
+    if (!select) return;
+
+    const txs = StorageManager.getTransactions();
+    const suppliers = Array.from(new Set(txs.map(t => (t.supplier || '').trim()).filter(Boolean))).sort();
+
+    select.innerHTML = '<option value="">Semua Pemasok</option>';
+    suppliers.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      select.appendChild(opt);
+    });
   },
 
   getScopedData() {
@@ -103,13 +132,33 @@ const ExportExcelManager = {
       }
     }
 
+    // 3. Filter by Supplier Scope (Supplier Context)
+    if (this.activeContext === 'supplier') {
+      const exportSuppSelect = document.getElementById('export-select-supplier');
+      const selectedSupp = (exportSuppSelect && exportSuppSelect.value !== undefined && exportSuppSelect.value !== '')
+        ? exportSuppSelect.value
+        : ((typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '');
+
+      if (selectedSupp) {
+        txs = txs.filter(t => (t.supplier || '').trim().toLowerCase() === selectedSupp.trim().toLowerCase());
+      }
+    }
+
     return txs;
   },
 
   getExportFileName(context = 'transaction') {
     const todayStr = new Date().toISOString().slice(0, 10);
     if (context === 'supplier') {
-      return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${todayStr}.xlsx`;
+      const exportSuppSelect = document.getElementById('export-select-supplier');
+      const selectedSupp = (exportSuppSelect && exportSuppSelect.value)
+        || ((typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '');
+
+      if (selectedSupp) {
+        const sanitized = selectedSupp.trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+        return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${sanitized}_${todayStr}.xlsx`;
+      }
+      return `PT_Reka_Cipta_Garam_Rekap_Pemasok_Semua_${todayStr}.xlsx`;
     }
 
     const exportMatSelect = document.getElementById('export-select-material');
@@ -513,7 +562,7 @@ const ExportExcelManager = {
 
         const buffer = await wb.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const fileName = `PT_RCG_Rekap_Pemasok_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        const fileName = this.getExportFileName('supplier');
         
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -591,7 +640,8 @@ const ExportExcelManager = {
     const ws = XLSX.utils.aoa_to_sheet(rows);
     ws['!autofilter'] = { ref: `A1:W${lastDataRow}` };
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Data Penimbangan');
-    XLSX.writeFile(wb, this.getExportFileName('transaction'));
+    const sheetName = this.activeContext === 'supplier' ? 'Rekapitulasi Pemasok' : 'Data Penimbangan';
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    XLSX.writeFile(wb, this.getExportFileName(this.activeContext));
   }
 };

@@ -113,16 +113,21 @@ const SupplierHistoryManager = {
     const select = document.getElementById('supplier-history-supplier-filter');
     if (!select) return;
 
+    const currentVal = this.selectedSupplier || select.value || '';
     const txs = StorageManager.getTransactions();
-    const suppliers = Array.from(new Set(txs.map(t => t.supplier).filter(Boolean))).sort();
+    const suppliers = Array.from(new Set(txs.map(t => (t.supplier || '').trim()).filter(Boolean))).sort();
 
     select.innerHTML = '<option value="">Semua Pemasok</option>';
     suppliers.forEach(s => {
       const opt = document.createElement('option');
       opt.value = s;
       opt.textContent = s;
+      if (s === currentVal) {
+        opt.selected = true;
+      }
       select.appendChild(opt);
     });
+    select.value = currentVal;
 
     if (typeof CustomSelectManager !== 'undefined') {
       CustomSelectManager.sync(select);
