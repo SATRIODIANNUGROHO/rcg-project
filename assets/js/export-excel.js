@@ -6,9 +6,26 @@
 
 const ExportExcelManager = {
   activeContext: 'transaction',
+  supplierCombobox: null,
 
   init() {
     this.bindEvents();
+    this.initSupplierCombobox();
+  },
+
+  initSupplierCombobox() {
+    if (typeof CustomAutocomplete !== 'undefined' && CustomAutocomplete.createSupplierCombobox) {
+      this.supplierCombobox = CustomAutocomplete.createSupplierCombobox({
+        containerId: 'export-supplier-combobox',
+        inputId: 'export-supplier-input',
+        chevronBtnId: 'export-supplier-combobox-btn',
+        menuId: 'export-supplier-combobox-menu',
+        placeholder: 'Semua Pemasok (Ketik untuk mencari...)',
+        initialValue: '',
+        onSelect: () => {},
+        onInput: () => {}
+      });
+    }
   },
 
   bindEvents() {
@@ -66,31 +83,16 @@ const ExportExcelManager = {
 
     // 2. Synchronize Supplier Filter with SupplierHistoryManager (Supplier Context)
     const suppWrap = document.getElementById('export-supplier-filter-wrap');
-    const suppSelect = document.getElementById('export-select-supplier');
     if (suppWrap) {
       suppWrap.style.display = (context === 'supplier') ? 'block' : 'none';
     }
-    if (suppSelect && context === 'supplier') {
-      const txs = StorageManager.getTransactions();
-      const suppliers = Array.from(new Set(txs.map(t => t.supplier).filter(Boolean))).sort((a, b) => a.localeCompare('id'));
-
-      suppSelect.innerHTML = '<option value="">Semua Pemasok</option>';
-      suppliers.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
-        suppSelect.appendChild(opt);
-      });
-
-      const currentSupp = (typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '';
-      if (suppliers.includes(currentSupp)) {
-        suppSelect.value = currentSupp;
+    if (context === 'supplier') {
+      const activeSupp = (typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '';
+      if (this.supplierCombobox) {
+        this.supplierCombobox.setValue(activeSupp);
       } else {
-        suppSelect.value = '';
-      }
-
-      if (typeof CustomSelectManager !== 'undefined') {
-        CustomSelectManager.sync(suppSelect);
+        const suppInput = document.getElementById('export-supplier-input');
+        if (suppInput) suppInput.value = activeSupp;
       }
     }
 
@@ -138,13 +140,12 @@ const ExportExcelManager = {
 
     // 3. Filter by Supplier Scope (Supplier Context)
     if (this.activeContext === 'supplier') {
-      const exportSuppSelect = document.getElementById('export-select-supplier');
-      const selectedSupplier = (exportSuppSelect && exportSuppSelect.value !== undefined)
-        ? exportSuppSelect.value
-        : ((typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '');
+      const rawSupplier = (this.supplierCombobox ? this.supplierCombobox.getValue() : '')
+        || document.getElementById('export-supplier-input')?.value.trim() || '';
 
-      if (selectedSupplier) {
-        txs = txs.filter(t => (t.supplier || '').trim().toLowerCase() === selectedSupplier.trim().toLowerCase());
+      if (rawSupplier && rawSupplier.toLowerCase() !== 'semua pemasok') {
+        const target = rawSupplier.toLowerCase().trim();
+        txs = txs.filter(t => (t.supplier || '').toLowerCase().includes(target));
       }
     }
 
@@ -154,12 +155,11 @@ const ExportExcelManager = {
   getExportFileName(context = 'transaction') {
     const todayStr = new Date().toISOString().slice(0, 10);
     if (context === 'supplier') {
-      const exportSuppSelect = document.getElementById('export-select-supplier');
-      const selectedSupp = (exportSuppSelect && exportSuppSelect.value)
-        || ((typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '');
+      const rawSupplier = (this.supplierCombobox ? this.supplierCombobox.getValue() : '')
+        || document.getElementById('export-supplier-input')?.value.trim() || '';
 
-      if (selectedSupp) {
-        const sanitized = selectedSupp.replace(/[^a-zA-Z0-9_-]/g, '_');
+      if (rawSupplier && rawSupplier.toLowerCase() !== 'semua pemasok') {
+        const sanitized = rawSupplier.replace(/[^a-zA-Z0-9_-]/g, '_');
         return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${sanitized}_${todayStr}.xlsx`;
       }
       return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${todayStr}.xlsx`;

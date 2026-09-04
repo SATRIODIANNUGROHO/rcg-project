@@ -56,9 +56,9 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 6. Riwayat Pemasok (Supplier History)
 - **Rekapitulasi Akumulasi Per Pemasok**: Ringkasan data pasokan garam, tonase K1, tonase K2, subtotal, dan grand total per transaksi pemasok.
-- **Filter Pemasok Terintegrasi**: Pemfilteran rekapitulasi berdasarkan nama pemasok (Semua Pemasok dan daftar nama pemasok aktif di basis data).
+- **Searchable Combobox & Sugesti Otomatis**: Fitur pencarian pemasok fleksibel di mana pengguna dapat memilih langsung dari dropdown atau mengetik huruf/nama untuk mendapatkan sugesti atau rekomendasi nama pemasok secara real-time yang tersimpan di basis data.
 - **Cetak Formulir Pemasok**: Penerbitan formulir bukti penyerahan garam khusus pemasok dengan live preview dan multi-copy.
-- **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi pemasok yang tersaring sesuai pemasok terpilih.
+- **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi pemasok yang tersaring sesuai pemasok terpilih dengan perhitungan otomatis.
 
 ### 7. Dashboard & Analitik Tonase Interaktif
 - **Kartu Ringkasan Metrik**: Total Berat Bersih Periode, Total Nilai Pembayaran Periode, dan Rata-rata Tonase per Transaksi.
@@ -71,7 +71,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 8. Ekspor Spreadsheet Excel Presisi Tinggi (.xlsx) via ExcelJS
 - **Standar Tata Letak Korporat**: Output berkas Excel yang diformat khusus sesuai standar buku besar pembukuan PT. Reka Cipta Garam.
-- **Filter Lingkup Fleksibel**: Pemfilteran ekspor berdasarkan tanggal hari ini, tanggal tertentu, rentang tanggal, jenis material garam (Garam Curah / Garam Karung), maupun nama pemasok tertentu secara otomatis.
+- **Filter Lingkup Fleksibel & Autocomplete**: Pemfilteran ekspor berdasarkan tanggal hari ini, tanggal tertentu, rentang tanggal, jenis material garam (Garam Curah / Garam Karung), maupun nama pemasok tertentu (dilengkapi fitur input sugesti pencarian otomatis).
 - **Penamaan Berkas Cerdas**: Penamaan berkas otomatis sesuai konteks filter (contoh: `PT_Reka_Cipta_Garam_Rekap_Pemasok_H_Mahmud_2026-09-04.xlsx` atau `PT_Reka_Cipta_Garam_Garam_Curah_2026-09-04.xlsx`).
 - **Header Navy Blue (#0F4C81)**: Judul kolom profesional dengan font tebal putih dan fitur AutoFilter aktif pada seluruh header.
 - **Format Angka & Mata Uang**: Format numerik rapi dengan desimal bobot (`#,##0.0`) dan mata uang Rupiah (`"Rp " #,##0`).

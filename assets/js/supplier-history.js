@@ -11,11 +11,39 @@ const SupplierHistoryManager = {
   selectedSupplier: '',
   selectedDate: '',
   sortOrder: 'desc',
+  combobox: null,
 
   init() {
     this.bindEvents();
-    this.populateSupplierFilter();
+    this.initCombobox();
     this.render();
+  },
+
+  initCombobox() {
+    if (typeof CustomAutocomplete !== 'undefined' && CustomAutocomplete.createSupplierCombobox) {
+      this.combobox = CustomAutocomplete.createSupplierCombobox({
+        containerId: 'supplier-history-combobox',
+        inputId: 'supplier-history-supplier-input',
+        chevronBtnId: 'supplier-history-combobox-btn',
+        menuId: 'supplier-history-combobox-menu',
+        placeholder: 'Semua Pemasok',
+        initialValue: this.selectedSupplier || '',
+        onSelect: (supplier) => {
+          this.selectedSupplier = supplier || '';
+          this.currentPage = 1;
+          this.render();
+        },
+        onInput: (val) => {
+          if (!val || val.toLowerCase() === 'semua pemasok') {
+            this.selectedSupplier = '';
+          } else {
+            this.selectedSupplier = val;
+          }
+          this.currentPage = 1;
+          this.render();
+        }
+      });
+    }
   },
 
   bindEvents() {
@@ -35,24 +63,14 @@ const SupplierHistoryManager = {
         this.selectedSupplier = '';
         this.selectedDate = '';
         if (searchInput) searchInput.value = '';
-        const suppSelect = document.getElementById('supplier-history-supplier-filter');
-        if (suppSelect) {
-          suppSelect.value = '';
-          if (typeof CustomSelectManager !== 'undefined') {
-            CustomSelectManager.sync(suppSelect);
-          }
+        if (this.combobox) {
+          this.combobox.setValue('');
+        } else {
+          const suppInput = document.getElementById('supplier-history-supplier-input');
+          if (suppInput) suppInput.value = '';
         }
         const dateInput = document.getElementById('supplier-history-date-filter');
         if (dateInput) dateInput.value = '';
-        this.currentPage = 1;
-        this.render();
-      });
-    }
-
-    const suppFilter = document.getElementById('supplier-history-supplier-filter');
-    if (suppFilter) {
-      suppFilter.addEventListener('change', (e) => {
-        this.selectedSupplier = e.target.value;
         this.currentPage = 1;
         this.render();
       });
@@ -114,34 +132,6 @@ const SupplierHistoryManager = {
     }
   },
 
-  populateSupplierFilter() {
-    const select = document.getElementById('supplier-history-supplier-filter');
-    if (!select) return;
-
-    const currentVal = this.selectedSupplier || select.value || '';
-    const txs = StorageManager.getTransactions();
-    const suppliers = Array.from(new Set(txs.map(t => t.supplier).filter(Boolean))).sort((a, b) => a.localeCompare('id'));
-
-    select.innerHTML = '<option value="">Semua Pemasok</option>';
-    suppliers.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s;
-      opt.textContent = s;
-      select.appendChild(opt);
-    });
-
-    if (suppliers.includes(currentVal)) {
-      select.value = currentVal;
-    } else {
-      select.value = '';
-      this.selectedSupplier = '';
-    }
-
-    if (typeof CustomSelectManager !== 'undefined') {
-      CustomSelectManager.sync(select);
-    }
-  },
-
   getFilteredData() {
     let txs = StorageManager.getTransactions();
 
@@ -158,7 +148,8 @@ const SupplierHistoryManager = {
     }
 
     if (this.selectedSupplier) {
-      txs = txs.filter(t => t.supplier === this.selectedSupplier);
+      const target = this.selectedSupplier.toLowerCase().trim();
+      txs = txs.filter(t => (t.supplier || '').toLowerCase().includes(target));
     }
 
     if (this.selectedDate) {
@@ -175,7 +166,9 @@ const SupplierHistoryManager = {
   },
 
   render() {
-    this.populateSupplierFilter();
+    if (this.combobox) {
+      this.combobox.refresh();
+    }
     const tbody = document.getElementById('supplier-history-table-body');
     if (!tbody) return;
 

@@ -19,15 +19,15 @@ const App = {
     try { AuthManager.init(); } catch (e) { console.error('AuthManager init error:', e); }
     try { ScaleEngine.init(); } catch (e) { console.error('ScaleEngine init error:', e); }
     try { TransactionEngine.init(); } catch (e) { console.error('TransactionEngine init error:', e); }
+    try { CustomSelectManager.init(); } catch (e) { console.error('CustomSelectManager init error:', e); }
+    try { CustomDatePicker.init(); } catch (e) { console.error('CustomDatePicker init error:', e); }
+    try { CustomTimePicker.init(); } catch (e) { console.error('CustomTimePicker init error:', e); }
+    try { CustomAutocomplete.init(); } catch (e) { console.error('CustomAutocomplete init error:', e); }
     try { HistoryManager.init(); } catch (e) { console.error('HistoryManager init error:', e); }
     try { SupplierHistoryManager.init(); } catch (e) { console.error('SupplierHistoryManager init error:', e); }
     try { AnalyticsManager.init(); } catch (e) { console.error('AnalyticsManager init error:', e); }
     try { PrintManager.init(); } catch (e) { console.error('PrintManager init error:', e); }
     try { ExportExcelManager.init(); } catch (e) { console.error('ExportExcelManager init error:', e); }
-    try { CustomSelectManager.init(); } catch (e) { console.error('CustomSelectManager init error:', e); }
-    try { CustomDatePicker.init(); } catch (e) { console.error('CustomDatePicker init error:', e); }
-    try { CustomTimePicker.init(); } catch (e) { console.error('CustomTimePicker init error:', e); }
-    try { CustomAutocomplete.init(); } catch (e) { console.error('CustomAutocomplete init error:', e); }
 
     // 4. Render Activity Logs
     try { this.renderActivityLogs(); } catch (e) { console.error('renderActivityLogs error:', e); }

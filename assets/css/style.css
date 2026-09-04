@@ -1060,6 +1060,127 @@ input[type="number"] {
   color: var(--primary);
 }
 
+/* Custom Combobox / Searchable Autocomplete Dropdown */
+.custom-combobox {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.custom-combobox input.form-control {
+  cursor: text;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  padding-right: 32px;
+}
+
+.custom-combobox input.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+}
+
+.combobox-chevron-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.combobox-chevron-btn:hover {
+  color: var(--primary);
+}
+
+.combobox-chevron-btn svg {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-combobox.open .combobox-chevron-btn svg {
+  transform: rotate(180deg);
+}
+
+.custom-combobox-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 4px;
+  display: none;
+  z-index: 1050;
+  animation: fadeInDown 0.12s ease-out;
+  box-sizing: border-box;
+}
+
+.custom-combobox.open .custom-combobox-menu {
+  display: block;
+}
+
+.custom-combobox-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  border-radius: var(--radius-tight);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.custom-combobox-item:hover,
+.custom-combobox-item.active {
+  background-color: var(--bg-surface-alt);
+  color: var(--primary);
+}
+
+.custom-combobox-item.selected {
+  background-color: rgba(15, 76, 129, 0.08);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.custom-combobox-item .highlight-match {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.custom-combobox-item.special-all {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 3px;
+  padding-bottom: 9px;
+  font-weight: 600;
+}
+
+.custom-combobox-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
