@@ -560,12 +560,6 @@ const AuthManager = {
     const titleElem = document.getElementById('perm-selected-user-title');
     if (titleElem) titleElem.textContent = `Hak Akses : ${user.username} (${user.fullName})`;
 
-    const roleSelect = document.getElementById('perm-user-role-select');
-    if (roleSelect) {
-      roleSelect.value = user.role;
-      if (window.CustomSelect) window.CustomSelect.sync(roleSelect);
-    }
-
     let defaultP = DEFAULT_PERMISSIONS_OPERATOR;
     if (user.role === 'Administrator') defaultP = DEFAULT_PERMISSIONS_ADMIN;
     else if (user.role === 'Supervisor' || user.role === 'Viewer') defaultP = DEFAULT_PERMISSIONS_SUPERVISOR;
@@ -643,21 +637,6 @@ const AuthManager = {
       btnClearAll.addEventListener('click', () => this.setAllPermissions(false));
     }
 
-    // Auto-preset permissions when role dropdown changes in modal
-    const roleSelect = document.getElementById('perm-user-role-select');
-    if (roleSelect) {
-      roleSelect.addEventListener('change', (e) => {
-        const newRole = e.target.value;
-        if (newRole === 'Administrator') {
-          this.applyPermissionsTemplateToForm(DEFAULT_PERMISSIONS_ADMIN);
-        } else if (newRole === 'Supervisor' || newRole === 'Viewer') {
-          this.applyPermissionsTemplateToForm(DEFAULT_PERMISSIONS_SUPERVISOR);
-        } else if (newRole === 'Operator') {
-          this.applyPermissionsTemplateToForm(DEFAULT_PERMISSIONS_OPERATOR);
-        }
-      });
-    }
-
     // Save Permissions
     const btnSavePerm = document.getElementById('btn-save-permissions');
     if (btnSavePerm) {
@@ -666,11 +645,12 @@ const AuthManager = {
           this.notify('Pilih pengguna terlebih dahulu.', 'warning');
           return;
         }
-        const roleSelect = document.getElementById('perm-user-role-select');
-        const newRole = roleSelect ? roleSelect.value : 'Operator';
+        const users = this.getUsers();
+        const target = users.find(u => u.id === this.selectedPermUserId);
+        const role = target ? target.role : 'Operator';
         const perms = this.collectPermissionsFromForm();
 
-        const res = this.saveUserPermissions(this.selectedPermUserId, newRole, perms);
+        const res = this.saveUserPermissions(this.selectedPermUserId, role, perms);
         if (res.success) {
           this.notify(res.message, 'success');
           this.renderPermissionsUserList();
