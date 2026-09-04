@@ -499,12 +499,14 @@ textarea.form-control {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
+  right: 0;
   min-width: 100%;
-  width: max-content;
-  max-width: 340px;
+  width: 100%;
+  max-width: none;
   max-height: 280px;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
   background: #FFFFFF;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -1026,13 +1028,19 @@ input[type="number"] {
   width: 100%;
 }
 
-.custom-autocomplete-menu {
+.custom-autocomplete-menu,
+.custom-autocomplete-container .dropdown-menu-card {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  max-height: 220px;
+  min-width: 100%;
+  width: 100%;
+  max-width: none;
+  max-height: 240px;
   overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -1044,7 +1052,8 @@ input[type="number"] {
   box-sizing: border-box;
 }
 
-.custom-autocomplete-container.open .custom-autocomplete-menu {
+.custom-autocomplete-container.open .custom-autocomplete-menu,
+.custom-autocomplete-container.open .dropdown-menu-card {
   display: block;
 }
 
@@ -1056,6 +1065,7 @@ input[type="number"] {
   border-radius: var(--radius-tight);
   cursor: pointer;
   transition: var(--transition);
+  box-sizing: border-box;
 }
 
 .custom-autocomplete-item:hover,
@@ -1123,13 +1133,19 @@ input[type="number"] {
   transform: rotate(180deg);
 }
 
-.custom-combobox-menu {
+.custom-combobox-menu,
+.custom-combobox .dropdown-menu-card {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
+  min-width: 100%;
+  width: 100%;
+  max-width: none;
   max-height: 240px;
   overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -1141,7 +1157,8 @@ input[type="number"] {
   box-sizing: border-box;
 }
 
-.custom-combobox.open .custom-combobox-menu {
+.custom-combobox.open .custom-combobox-menu,
+.custom-combobox.open .dropdown-menu-card {
   display: block;
 }
 
@@ -1158,6 +1175,7 @@ input[type="number"] {
   justify-content: space-between;
   user-select: none;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .custom-combobox-item:hover,
@@ -1192,6 +1210,40 @@ input[type="number"] {
   color: var(--text-secondary);
   text-align: center;
   font-style: italic;
+}
+
+/* Custom Sleek Scrollbars for Dropdown Lists */
+.custom-select-menu::-webkit-scrollbar,
+.custom-autocomplete-menu::-webkit-scrollbar,
+.custom-combobox-menu::-webkit-scrollbar,
+.custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar,
+.custom-combobox .dropdown-menu-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-menu::-webkit-scrollbar-track,
+.custom-autocomplete-menu::-webkit-scrollbar-track,
+.custom-combobox-menu::-webkit-scrollbar-track,
+.custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar-track,
+.custom-combobox .dropdown-menu-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-select-menu::-webkit-scrollbar-thumb,
+.custom-autocomplete-menu::-webkit-scrollbar-thumb,
+.custom-combobox-menu::-webkit-scrollbar-thumb,
+.custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar-thumb,
+.custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 3px;
+}
+
+.custom-select-menu::-webkit-scrollbar-thumb:hover,
+.custom-autocomplete-menu::-webkit-scrollbar-thumb:hover,
+.custom-combobox-menu::-webkit-scrollbar-thumb:hover,
+.custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar-thumb:hover,
+.custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.5);
 }
 
 .form-row {

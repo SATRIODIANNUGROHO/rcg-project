@@ -778,13 +778,15 @@ body.dark-mode .input-unit .unit-tag {
 }
 
 /* Custom Autocomplete in Dark Mode */
-body.dark-mode .custom-autocomplete-menu {
+body.dark-mode .custom-autocomplete-menu,
+body.dark-mode .custom-autocomplete-container .dropdown-menu-card {
   background-color: #1E2D44;
   border-color: #475569;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  max-height: 220px;
+  overscroll-behavior: contain;
+  max-height: 240px;
 }
 
 body.dark-mode .custom-autocomplete-item {
@@ -827,10 +829,15 @@ body.dark-mode .combobox-chevron-btn:hover {
   color: var(--primary);
 }
 
-body.dark-mode .custom-combobox-menu {
+body.dark-mode .custom-combobox-menu,
+body.dark-mode .custom-combobox .dropdown-menu-card {
   background-color: #1E2D44;
   border-color: #475569;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  max-height: 240px;
 }
 
 body.dark-mode .custom-combobox-item {
@@ -858,6 +865,23 @@ body.dark-mode .custom-combobox-item.special-all {
 
 body.dark-mode .custom-combobox-empty {
   color: #94A3B8;
+}
+
+/* Dark Mode Scrollbars for Dropdowns */
+body.dark-mode .custom-select-menu::-webkit-scrollbar-thumb,
+body.dark-mode .custom-autocomplete-menu::-webkit-scrollbar-thumb,
+body.dark-mode .custom-combobox-menu::-webkit-scrollbar-thumb,
+body.dark-mode .custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar-thumb,
+body.dark-mode .custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+body.dark-mode .custom-select-menu::-webkit-scrollbar-thumb:hover,
+body.dark-mode .custom-autocomplete-menu::-webkit-scrollbar-thumb:hover,
+body.dark-mode .custom-combobox-menu::-webkit-scrollbar-thumb:hover,
+body.dark-mode .custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar-thumb:hover,
+body.dark-mode .custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
 }
 
 /* User Permissions (RBAC) in Dark Mode (DESIGN_SYSTEM.md Compliant) */
