@@ -51,7 +51,7 @@ const ExportExcelManager = {
     if (dateStart && !dateStart.value) dateStart.value = todayStr;
     if (dateEnd && !dateEnd.value) dateEnd.value = todayStr;
 
-    // Synchronize Material Filter with HistoryManager (Transaction Context)
+    // 1. Synchronize Material Filter with HistoryManager (Transaction Context)
     const matWrap = document.getElementById('export-material-filter-wrap');
     const matSelect = document.getElementById('export-select-material');
     if (matWrap) {
@@ -59,38 +59,42 @@ const ExportExcelManager = {
     }
     if (matSelect && context === 'transaction') {
       matSelect.value = (typeof HistoryManager !== 'undefined' && HistoryManager.materialFilter) || '';
+      if (typeof CustomSelectManager !== 'undefined') {
+        CustomSelectManager.sync(matSelect);
+      }
     }
 
-    // Synchronize Supplier Filter with SupplierHistoryManager (Supplier Context)
+    // 2. Synchronize Supplier Filter with SupplierHistoryManager (Supplier Context)
     const suppWrap = document.getElementById('export-supplier-filter-wrap');
     const suppSelect = document.getElementById('export-select-supplier');
     if (suppWrap) {
       suppWrap.style.display = (context === 'supplier') ? 'block' : 'none';
     }
-    if (context === 'supplier') {
-      this.populateExportSupplierSelect();
-      if (suppSelect) {
-        suppSelect.value = (typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '';
+    if (suppSelect && context === 'supplier') {
+      const txs = StorageManager.getTransactions();
+      const suppliers = Array.from(new Set(txs.map(t => t.supplier).filter(Boolean))).sort((a, b) => a.localeCompare('id'));
+
+      suppSelect.innerHTML = '<option value="">Semua Pemasok</option>';
+      suppliers.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        suppSelect.appendChild(opt);
+      });
+
+      const currentSupp = (typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '';
+      if (suppliers.includes(currentSupp)) {
+        suppSelect.value = currentSupp;
+      } else {
+        suppSelect.value = '';
+      }
+
+      if (typeof CustomSelectManager !== 'undefined') {
+        CustomSelectManager.sync(suppSelect);
       }
     }
 
     App.openModal('modal-export-excel');
-  },
-
-  populateExportSupplierSelect() {
-    const select = document.getElementById('export-select-supplier');
-    if (!select) return;
-
-    const txs = StorageManager.getTransactions();
-    const suppliers = Array.from(new Set(txs.map(t => (t.supplier || '').trim()).filter(Boolean))).sort();
-
-    select.innerHTML = '<option value="">Semua Pemasok</option>';
-    suppliers.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s;
-      opt.textContent = s;
-      select.appendChild(opt);
-    });
   },
 
   getScopedData() {
@@ -135,12 +139,12 @@ const ExportExcelManager = {
     // 3. Filter by Supplier Scope (Supplier Context)
     if (this.activeContext === 'supplier') {
       const exportSuppSelect = document.getElementById('export-select-supplier');
-      const selectedSupp = (exportSuppSelect && exportSuppSelect.value !== undefined && exportSuppSelect.value !== '')
+      const selectedSupplier = (exportSuppSelect && exportSuppSelect.value !== undefined)
         ? exportSuppSelect.value
         : ((typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '');
 
-      if (selectedSupp) {
-        txs = txs.filter(t => (t.supplier || '').trim().toLowerCase() === selectedSupp.trim().toLowerCase());
+      if (selectedSupplier) {
+        txs = txs.filter(t => (t.supplier || '').trim().toLowerCase() === selectedSupplier.trim().toLowerCase());
       }
     }
 
@@ -155,10 +159,10 @@ const ExportExcelManager = {
         || ((typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.selectedSupplier) || '');
 
       if (selectedSupp) {
-        const sanitized = selectedSupp.trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+        const sanitized = selectedSupp.replace(/[^a-zA-Z0-9_-]/g, '_');
         return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${sanitized}_${todayStr}.xlsx`;
       }
-      return `PT_Reka_Cipta_Garam_Rekap_Pemasok_Semua_${todayStr}.xlsx`;
+      return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${todayStr}.xlsx`;
     }
 
     const exportMatSelect = document.getElementById('export-select-material');
@@ -166,7 +170,7 @@ const ExportExcelManager = {
       || ((typeof HistoryManager !== 'undefined' && HistoryManager.materialFilter) || '');
 
     if (selectedMat) {
-      const sanitized = selectedMat.replace(/\s+/g, '_');
+      const sanitized = selectedMat.replace(/[^a-zA-Z0-9_-]/g, '_');
       return `PT_Reka_Cipta_Garam_${sanitized}_${todayStr}.xlsx`;
     }
     return `PT_Reka_Cipta_Garam_Semua_Data_${todayStr}.xlsx`;
@@ -585,6 +589,57 @@ const ExportExcelManager = {
 
   fallbackSheetJSExport(txs) {
     if (typeof XLSX === 'undefined') return;
+
+    if (this.activeContext === 'supplier') {
+      const rows = [
+        [
+          'No', 'Tanggal', 'No Dokumen', 'Nama Pemasok', 'Kabupaten Asal', 'Desa Asal',
+          'No Polisi', 'Berat K1 (Kg)', 'Harga K1 / Kg', 'Total K1',
+          'Berat K2 (Kg)', 'Harga K2 / Kg', 'Total K2', 'TOTAL PEMBAYARAN', 'Status Pembayaran'
+        ]
+      ];
+
+      txs.forEach((t, index) => {
+        rows.push([
+          index + 1,
+          this.formatDateToSlash(t.date),
+          t.docNo || '',
+          t.supplier || '',
+          t.originRegion || '-',
+          t.originArea || '-',
+          t.plateNo || '',
+          Number(t.k1Weight) || 0,
+          Number(t.k1Price) || 0,
+          Number(t.k1Total) || 0,
+          Number(t.k2Weight) || 0,
+          Number(t.k2Price) || 0,
+          Number(t.k2Total) || 0,
+          Number(t.grandTotal) || 0,
+          t.paymentStatus || 'Lunas'
+        ]);
+      });
+
+      const lastDataRow = rows.length;
+      rows.push([
+        'TOTAL', '', '', '', '', '', '',
+        { f: `SUM(H2:H${lastDataRow})` },
+        '',
+        { f: `SUM(J2:J${lastDataRow})` },
+        { f: `SUM(K2:K${lastDataRow})` },
+        '',
+        { f: `SUM(M2:M${lastDataRow})` },
+        { f: `SUM(N2:N${lastDataRow})` },
+        ''
+      ]);
+
+      const ws = XLSX.utils.aoa_to_sheet(rows);
+      ws['!autofilter'] = { ref: `A1:O${lastDataRow}` };
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Rekapitulasi Pemasok');
+      XLSX.writeFile(wb, this.getExportFileName('supplier'));
+      return;
+    }
+
     const rows = [
       [
         'ID', 'No Dokumen', 'Tanggal', 'Pemasok', 'No Polisi', 'Material', 'Asal Material',
@@ -640,8 +695,7 @@ const ExportExcelManager = {
     const ws = XLSX.utils.aoa_to_sheet(rows);
     ws['!autofilter'] = { ref: `A1:W${lastDataRow}` };
     const wb = XLSX.utils.book_new();
-    const sheetName = this.activeContext === 'supplier' ? 'Rekapitulasi Pemasok' : 'Data Penimbangan';
-    XLSX.utils.book_append_sheet(wb, ws, sheetName);
-    XLSX.writeFile(wb, this.getExportFileName(this.activeContext));
+    XLSX.utils.book_append_sheet(wb, ws, 'Data Penimbangan');
+    XLSX.writeFile(wb, this.getExportFileName('transaction'));
   }
 };

@@ -36,7 +36,12 @@ const SupplierHistoryManager = {
         this.selectedDate = '';
         if (searchInput) searchInput.value = '';
         const suppSelect = document.getElementById('supplier-history-supplier-filter');
-        if (suppSelect) suppSelect.value = '';
+        if (suppSelect) {
+          suppSelect.value = '';
+          if (typeof CustomSelectManager !== 'undefined') {
+            CustomSelectManager.sync(suppSelect);
+          }
+        }
         const dateInput = document.getElementById('supplier-history-date-filter');
         if (dateInput) dateInput.value = '';
         this.currentPage = 1;
@@ -115,19 +120,22 @@ const SupplierHistoryManager = {
 
     const currentVal = this.selectedSupplier || select.value || '';
     const txs = StorageManager.getTransactions();
-    const suppliers = Array.from(new Set(txs.map(t => (t.supplier || '').trim()).filter(Boolean))).sort();
+    const suppliers = Array.from(new Set(txs.map(t => t.supplier).filter(Boolean))).sort((a, b) => a.localeCompare('id'));
 
     select.innerHTML = '<option value="">Semua Pemasok</option>';
     suppliers.forEach(s => {
       const opt = document.createElement('option');
       opt.value = s;
       opt.textContent = s;
-      if (s === currentVal) {
-        opt.selected = true;
-      }
       select.appendChild(opt);
     });
-    select.value = currentVal;
+
+    if (suppliers.includes(currentVal)) {
+      select.value = currentVal;
+    } else {
+      select.value = '';
+      this.selectedSupplier = '';
+    }
 
     if (typeof CustomSelectManager !== 'undefined') {
       CustomSelectManager.sync(select);
@@ -167,6 +175,7 @@ const SupplierHistoryManager = {
   },
 
   render() {
+    this.populateSupplierFilter();
     const tbody = document.getElementById('supplier-history-table-body');
     if (!tbody) return;
 

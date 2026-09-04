@@ -43,6 +43,8 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 5. Riwayat Penimbangan & Riwayat Pemasok
 - **Pencarian Cerdas Real-Time**: Pencarian cepat berdasarkan Nomor Dokumen/Tiket, Nomor Polisi Truk, Nama Pemasok, atau Nama Supir.
+- **Filter Material Penimbangan**: Pemfilteran transaksi berdasarkan jenis material garam (Semua Jenis Garam, Garam Curah, Garam Karung) yang tersinkronisasi langsung dengan keluaran berkas Excel.
+- **Filter Pemasok**: Pemfilteran rekapitulasi berdasarkan nama pemasok spesifik (Semua Pemasok dan daftar nama pemasok aktif di basis data) yang tersinkronisasi langsung dengan keluaran berkas Excel.
 - **Filter Rentang Tanggal**: Opsi pemfilteran tanggal harian, mingguan, bulanan, atau rentang kustom.
 - **Pengelolaan Transaksi**: Menu aksi per baris transaksi untuk melihat detail lengkap, mengubah atribut dokumen, mencetak ulang tiket, atau menghapus transaksi.
 - **Riwayat Pemasok (Supplier History)**: Menu rekapitulasi akumulasi tonase bersih dan total transaksi per pemasok serta fitur cetak Formulir Pemasok.
@@ -57,6 +59,8 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 7. Ekspor Spreadsheet Excel Presisi Tinggi (.xlsx) via ExcelJS
 - **Standar Tata Letak Korporat**: Output berkas Excel yang diformat khusus sesuai format buku besar pembukuan PT. Reka Cipta Garam.
+- **Filter Lingkup Fleksibel**: Pemfilteran ekspor berdasarkan rentang tanggal, jenis material garam (Garam Curah / Garam Karung), maupun nama pemasok tertentu secara otomatis.
+- **Penamaan Berkas Cerdas**: Penamaan berkas otomatis sesuai konteks filter (misalnya `PT_Reka_Cipta_Garam_Rekap_Pemasok_H_Mahmud_2026-09-04.xlsx`).
 - **Header Navy Blue (#0F4C81)**: Judul kolom profesional dengan fitur AutoFilter aktif pada seluruh header.
 - **Format Angka & Mata Uang**: Format numerik rapi dengan pemisah ribuan dan mata uang Rupiah.
 - **Baris Total Pale Gold (#FFF2CC)**: Baris ringkasan di bagian bawah yang dilengkapi formula otomatis AutoSum `=SUM()`.
