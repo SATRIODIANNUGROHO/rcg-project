@@ -1854,6 +1854,24 @@
     </div>
   </div>
 
+  <!-- Modal 13: Konfirmasi Hapus Pengguna -->
+  <div id="modal-confirm-delete-user" class="modal-overlay">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 17px; font-weight: 600;">Konfirmasi Hapus Pengguna</h3>
+        <button class="modal-close-btn" type="button">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <p>Apakah Anda yakin ingin menghapus akun pengguna <strong id="delete-user-target-name" style="color: var(--text-primary);">-</strong>?</p>
+        <p class="text-secondary text-small mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+      </div>
+      <div class="modal-footer" style="padding: 12px 16px;">
+        <button type="button" class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button type="button" id="btn-confirm-delete-user-yes" class="btn btn-confirm-accent">Ya, Hapus Pengguna</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Dedicated Hidden Print Output Container (Strictly for window.print output) -->
   <div id="printable-nota"></div>
 

@@ -79,6 +79,14 @@ const AuthManager = {
   currentUser: null,
   selectedPermUserId: null,
 
+  notify(message, type = 'info') {
+    if (typeof App !== 'undefined' && App.showToast) {
+      App.showToast(message, type);
+    } else {
+      console.log(`[Toast ${type}] ${message}`);
+    }
+  },
+
   getUsers() {
     const raw = localStorage.getItem(STORAGE_KEYS.USERS);
     if (!raw) {
@@ -640,7 +648,7 @@ const AuthManager = {
     if (btnSavePerm) {
       btnSavePerm.addEventListener('click', () => {
         if (!this.selectedPermUserId) {
-          alert('Pilih pengguna terlebih dahulu.');
+          this.notify('Pilih pengguna terlebih dahulu.', 'warning');
           return;
         }
         const roleSelect = document.getElementById('perm-user-role-select');
@@ -649,10 +657,10 @@ const AuthManager = {
 
         const res = this.saveUserPermissions(this.selectedPermUserId, newRole, perms);
         if (res.success) {
-          alert(res.message);
+          this.notify(res.message, 'success');
           this.renderPermissionsUserList();
         } else {
-          alert(res.message);
+          this.notify(res.message, 'danger');
         }
       });
     }
@@ -682,12 +690,12 @@ const AuthManager = {
 
         const res = this.createUser({ username, fullName, email, password, role });
         if (res.success) {
-          alert(`Pengguna "${username}" berhasil ditambahkan!`);
+          this.notify(`Pengguna "${username}" berhasil ditambahkan!`, 'success');
           document.getElementById('modal-add-user')?.classList.remove('active');
           this.selectedPermUserId = res.user.id;
           this.renderPermissionsUserList();
         } else {
-          alert(res.message);
+          this.notify(res.message, 'danger');
         }
       });
     }
@@ -697,7 +705,7 @@ const AuthManager = {
     if (btnEditPass) {
       btnEditPass.addEventListener('click', () => {
         if (!this.selectedPermUserId) {
-          alert('Pilih pengguna yang ingin diubah kata sandinya.');
+          this.notify('Pilih pengguna yang ingin diubah kata sandinya.', 'warning');
           return;
         }
         const users = this.getUsers();
@@ -722,35 +730,47 @@ const AuthManager = {
         const newPw = document.getElementById('input-admin-new-password').value;
         const res = this.adminResetUserPassword(this.selectedPermUserId, newPw);
         if (res.success) {
-          alert(res.message);
+          this.notify(res.message, 'success');
           document.getElementById('modal-admin-edit-pass')?.classList.remove('active');
         } else {
-          alert(res.message);
+          this.notify(res.message, 'danger');
         }
       });
     }
 
-    // Delete User
+    // Delete User Confirmation Modal
     const btnDelUser = document.getElementById('btn-perm-del-user');
     if (btnDelUser) {
       btnDelUser.addEventListener('click', () => {
         if (!this.selectedPermUserId) {
-          alert('Pilih pengguna yang ingin dihapus.');
+          this.notify('Pilih pengguna yang ingin dihapus.', 'warning');
           return;
         }
         const users = this.getUsers();
         const target = users.find(u => u.id === this.selectedPermUserId);
         if (!target) return;
 
-        if (confirm(`Apakah Anda yakin ingin menghapus akun pengguna "${target.username}" (${target.fullName})?`)) {
-          const res = this.deleteUser(this.selectedPermUserId);
-          if (res.success) {
-            alert(res.message);
-            this.selectedPermUserId = null;
-            this.renderPermissionsUserList();
-          } else {
-            alert(res.message);
-          }
+        const modalDel = document.getElementById('modal-confirm-delete-user');
+        const targetLabel = document.getElementById('delete-user-target-name');
+        if (targetLabel) targetLabel.textContent = `"${target.username}" (${target.fullName})`;
+        if (modalDel) {
+          modalDel.classList.add('active');
+        }
+      });
+    }
+
+    const btnConfirmDelUserYes = document.getElementById('btn-confirm-delete-user-yes');
+    if (btnConfirmDelUserYes) {
+      btnConfirmDelUserYes.addEventListener('click', () => {
+        if (!this.selectedPermUserId) return;
+        const res = this.deleteUser(this.selectedPermUserId);
+        document.getElementById('modal-confirm-delete-user')?.classList.remove('active');
+        if (res.success) {
+          this.notify(res.message, 'success');
+          this.selectedPermUserId = null;
+          this.renderPermissionsUserList();
+        } else {
+          this.notify(res.message, 'danger');
         }
       });
     }
