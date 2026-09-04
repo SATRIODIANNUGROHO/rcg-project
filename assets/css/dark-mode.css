@@ -3,6 +3,13 @@
    High-Contrast Clean Slate Dark Industrial Styling
    ========================================================================== */
 
+html.dark-mode {
+  background-color: #0B1120;
+  color: #F5F7FA;
+  color-scheme: dark;
+}
+
+html.dark-mode,
 body.dark-mode {
   --bg-app: #0B1120;          /* Deep Dark Blue (Background Utama Aplikasi & Web) */
   --bg-surface: #16243A;      /* Surface Navy (Card, Table, Panel) */

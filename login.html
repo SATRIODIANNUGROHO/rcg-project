@@ -62,11 +62,23 @@
       letter-spacing: -0.01em;
     }
 
+    html.dark-mode {
+      background-color: #0B1120;
+    }
+
+    html.dark-mode body,
+    body.dark-mode {
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+    }
+
+    html.dark-mode .login-header-bar,
     body.dark-mode .login-header-bar {
       background-color: #0F172A;
       border-bottom: 1px solid #334155;
     }
 
+    html.dark-mode .login-header-bar h3,
     body.dark-mode .login-header-bar h3 {
       color: #F8FAFC;
     }
@@ -135,20 +147,24 @@
     }
   </style>
 
-  <!-- Immediate Theme Pre-loader -->
+  <!-- Immediate Theme Pre-loader (Prevents FOUC) -->
   <script>
-    try {
-      const s = localStorage.getItem('rcg_settings_v75') || localStorage.getItem('rcg_settings_v7');
-      if (s && JSON.parse(s).darkMode) {
-        document.documentElement.classList.add('dark-mode');
-        document.addEventListener('DOMContentLoaded', () => {
-          document.body.classList.add('dark-mode');
-        });
-      }
-    } catch(e) {}
+    (function() {
+      try {
+        var s = localStorage.getItem('rcg_settings_v75') || localStorage.getItem('rcg_settings_v7');
+        if (s && JSON.parse(s).darkMode) {
+          document.documentElement.classList.add('dark-mode');
+        }
+      } catch(e) {}
+    })();
   </script>
 </head>
 <body>
+  <script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
 
   <!-- Top Theme Mode Switcher (Clean SVG Icon, No Emojis) -->
   <div class="login-top-actions">

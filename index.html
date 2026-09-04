@@ -40,24 +40,28 @@
     }
   </script>
 
-  <!-- Immediate Theme & Auth Pre-loader -->
+  <!-- Immediate Theme & Auth Pre-loader (Zero FOUC) -->
   <script>
-    try {
-      const auth = localStorage.getItem('rcg_auth_session_v75');
-      if (!auth) {
-        window.location.replace('login.html');
-      }
-      const s = localStorage.getItem('rcg_settings_v75') || localStorage.getItem('rcg_settings_v7');
-      if (s && JSON.parse(s).darkMode) {
-        document.documentElement.classList.add('dark-mode');
-        document.addEventListener('DOMContentLoaded', () => {
-          document.body.classList.add('dark-mode');
-        });
-      }
-    } catch(e) {}
+    (function() {
+      try {
+        var auth = localStorage.getItem('rcg_auth_session_v75');
+        if (!auth) {
+          window.location.replace('login.html');
+        }
+        var s = localStorage.getItem('rcg_settings_v75') || localStorage.getItem('rcg_settings_v7');
+        if (s && JSON.parse(s).darkMode) {
+          document.documentElement.classList.add('dark-mode');
+        }
+      } catch(e) {}
+    })();
   </script>
 </head>
 <body>
+  <script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
 
   <!-- =========================================================================
        Top Application Header
