@@ -52,6 +52,7 @@ const CustomAutocomplete = {
         'Nasiruddin',
         'Noval',
         'Pak Sawawi',
+        'PT. Tambak Garam Madura',
         'Rangga Mahardika',
         'Ribut (Moh Saleh)',
         'Sadili',
@@ -62,8 +63,7 @@ const CustomAutocomplete = {
         'Sukamto',
         'Supriadi',
         'Surahman',
-        'UD. Garam Sejahtera Madura',
-        'PT. Tambak Garam Madura'
+        'UD. Garam Sejahtera Madura'
       ];
     }
 
@@ -84,16 +84,18 @@ const CustomAutocomplete = {
       menu.innerHTML = '';
       activeIndex = -1;
 
-      // Also merge dynamic suppliers from storage if available
-      let allOptions = [...options];
+      // Merge options and dynamic suppliers from storage, deduplicate, and sort strictly A - Z
+      const optionSet = new Set(options.map(opt => typeof opt === 'string' ? opt.trim() : opt).filter(Boolean));
       if (typeof StorageManager !== 'undefined' && StorageManager.getTransactions) {
         const txs = StorageManager.getTransactions();
         txs.forEach(t => {
-          if (t.supplier && !allOptions.includes(t.supplier)) {
-            allOptions.push(t.supplier);
+          if (t.supplier && t.supplier.trim()) {
+            optionSet.add(t.supplier.trim());
           }
         });
       }
+
+      const allOptions = Array.from(optionSet).sort((a, b) => a.localeCompare(b, 'id', { sensitivity: 'base' }));
 
       const cleanQuery = filterText.toLowerCase().trim();
       const filtered = allOptions.filter(opt => opt.toLowerCase().includes(cleanQuery));
@@ -192,9 +194,10 @@ const CustomAutocomplete = {
         'H. Dulwafi', 'H. Junaidi', 'H. Tomi', 'Hj. Abbas', 'Hj. Faruq',
         'Hj. Junaidi', 'Hosnan', 'Inung', 'Koperasi RGM', 'Lutfiadi',
         'Moh Jufri', "Moh. Syafi'i", 'Nasiruddin', 'Noval', 'Pak Sawawi',
-        'Rangga Mahardika', 'Ribut (Moh Saleh)', 'Sadili', 'Samsul',
-        'Samsul Intan Jaya', 'Sawawi', 'Serikat Nelayan (NU)', 'Sukamto',
-        'Supriadi', 'Surahman', 'UD. Garam Sejahtera Madura', 'PT. Tambak Garam Madura'
+        'PT. Tambak Garam Madura', 'Rangga Mahardika', 'Ribut (Moh Saleh)',
+        'Sadili', 'Samsul', 'Samsul Intan Jaya', 'Sawawi',
+        'Serikat Nelayan (NU)', 'Sukamto', 'Supriadi', 'Surahman',
+        'UD. Garam Sejahtera Madura'
       ];
       const supplierSet = new Set();
       if (typeof StorageManager !== 'undefined' && StorageManager.getTransactions) {
@@ -202,8 +205,8 @@ const CustomAutocomplete = {
           if (t.supplier && t.supplier.trim()) supplierSet.add(t.supplier.trim());
         });
       }
-      defaultPresets.forEach(p => supplierSet.add(p));
-      return Array.from(supplierSet).sort((a, b) => a.localeCompare('id'));
+      defaultPresets.forEach(p => supplierSet.add(p.trim()));
+      return Array.from(supplierSet).sort((a, b) => a.localeCompare(b, 'id', { sensitivity: 'base' }));
     };
 
     const highlightMatch = (text, query) => {
