@@ -464,6 +464,10 @@ body.dark-mode .role-text.role-admin {
   color: #38BDF8;
 }
 
+body.dark-mode .role-text.role-supervisor {
+  color: #FBBF24;
+}
+
 body.dark-mode .role-text.role-operator {
   color: #94A3B8;
 }

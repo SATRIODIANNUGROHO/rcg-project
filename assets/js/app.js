@@ -653,7 +653,7 @@ const App = {
       tr.innerHTML = `
         <td class="mono-num">${log.time}</td>
         <td><strong>${log.user}</strong></td>
-        <td><span class="role-text ${log.role === 'Administrator' ? 'role-admin' : 'role-operator'}">${log.role}</span></td>
+        <td><span class="role-text ${log.role === 'Administrator' ? 'role-admin' : (log.role === 'Supervisor' ? 'role-supervisor' : 'role-operator')}">${log.role}</span></td>
         <td>${log.activity}</td>
         <td class="mono-num">${log.docNo || '-'}</td>
         <td>${hasReason ? `<span class="badge badge-warning" style="font-weight: 600; white-space: normal; text-align: left;">${log.reason}</span>` : '<span class="text-secondary">-</span>'}</td>

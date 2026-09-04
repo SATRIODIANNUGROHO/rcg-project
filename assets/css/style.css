@@ -1263,6 +1263,11 @@ input[type="number"] {
   font-weight: 600;
 }
 
+.role-text.role-supervisor {
+  color: #B45309;
+  font-weight: 600;
+}
+
 .role-text.role-operator {
   color: var(--text-secondary);
   font-weight: 500;

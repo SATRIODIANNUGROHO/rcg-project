@@ -494,7 +494,7 @@ const AuthManager = {
       tr.style.cursor = 'pointer';
       tr.innerHTML = `
         <td style="font-weight: 600;">${u.username}</td>
-        <td><span class="badge ${u.role === 'Administrator' ? 'badge-primary' : (u.role === 'Supervisor' ? 'badge-warning' : 'badge-neutral')}">${u.role}</span></td>
+        <td><span class="role-text ${u.role === 'Administrator' ? 'role-admin' : (u.role === 'Supervisor' ? 'role-supervisor' : 'role-operator')}">${u.role}</span></td>
       `;
       tr.addEventListener('click', () => {
         this.selectedPermUserId = u.id;
