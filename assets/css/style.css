@@ -2243,14 +2243,14 @@ input[type="number"] {
   max-height: none;
 }
 
-/* Modal Export Excel - Always Upward Floating Dropdowns & Clean No-Shadow */
+/* Modal Export Excel - Always Upward Floating Dropdowns & Elevated Shadow */
 #modal-export-excel .custom-select-menu,
 #modal-export-excel .custom-combobox-menu,
 #modal-export-excel .dropdown-menu-card {
   top: auto !important;
   bottom: calc(100% + 4px) !important;
   animation: fadeInUp 0.12s ease-out !important;
-  box-shadow: none !important;
+  box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.18), 0 -2px 6px rgba(15, 23, 42, 0.08) !important;
 }
 
 #modal-export-excel .custom-select-container.open .custom-select-menu,

@@ -884,11 +884,11 @@ body.dark-mode .custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb:hov
   background: rgba(148, 163, 184, 0.45);
 }
 
-/* Modal Export Excel in Dark Mode - No Shadow */
+/* Modal Export Excel in Dark Mode - Elevated Upward Shadow */
 body.dark-mode #modal-export-excel .custom-select-menu,
 body.dark-mode #modal-export-excel .custom-combobox-menu,
 body.dark-mode #modal-export-excel .dropdown-menu-card {
-  box-shadow: none !important;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.75), 0 -2px 8px rgba(0, 0, 0, 0.45) !important;
 }
 
 /* User Permissions (RBAC) in Dark Mode (DESIGN_SYSTEM.md Compliant) */
