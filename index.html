@@ -766,6 +766,17 @@
         </div>
 
         <div class="table-filter-group">
+          <!-- Filter Material -->
+          <div class="d-flex align-center gap-6">
+            <span class="text-small text-secondary">Material:</span>
+            <select id="history-material-filter" class="form-select" style="min-width: 175px; height: 38px;">
+              <option value="">Semua Jenis Garam</option>
+              <option value="Garam Curah">Garam Curah</option>
+              <option value="Garam Karung">Garam Karung</option>
+            </select>
+          </div>
+
+          <!-- Filter Tanggal -->
           <div class="d-flex align-center gap-6">
             <span class="text-small text-secondary">Tanggal:</span>
             <input type="date" id="history-date-filter" class="form-control mono" style="width: 145px; height: 38px;">
@@ -1498,6 +1509,16 @@
               <div class="text-secondary text-small">Semua data transaksi tersimpan</div>
             </div>
           </label>
+        </div>
+
+        <!-- Filter Material Scope -->
+        <div id="export-material-filter-wrap" class="form-group mb-3">
+          <label class="form-label" for="export-select-material" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Filter Jenis Material Garam:</label>
+          <select id="export-select-material" class="form-select" style="height: 38px;">
+            <option value="">Semua Jenis Garam</option>
+            <option value="Garam Curah">Garam Curah</option>
+            <option value="Garam Karung">Garam Karung</option>
+          </select>
         </div>
 
         <div style="font-size: 11.5px; color: var(--text-secondary); background: var(--bg-surface-alt); padding: 8px 10px; border-radius: 4px;">

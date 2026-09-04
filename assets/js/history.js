@@ -8,6 +8,7 @@ const HistoryManager = {
   pageSize: 10,
   searchQuery: '',
   dateFilter: '',
+  materialFilter: '',
   sortOrder: 'desc', // 'desc' (Terbaru -> Terlama) | 'asc' (Terlama -> Terbaru)
   selectedTxForAction: null,
 
@@ -32,8 +33,20 @@ const HistoryManager = {
         if (searchInput) searchInput.value = '';
         this.searchQuery = '';
         this.dateFilter = '';
+        this.materialFilter = '';
         const dateInput = document.getElementById('history-date-filter');
         if (dateInput) dateInput.value = '';
+        const materialSelect = document.getElementById('history-material-filter');
+        if (materialSelect) materialSelect.value = '';
+        this.currentPage = 1;
+        this.render();
+      });
+    }
+
+    const materialSelect = document.getElementById('history-material-filter');
+    if (materialSelect) {
+      materialSelect.addEventListener('change', (e) => {
+        this.materialFilter = e.target.value;
         this.currentPage = 1;
         this.render();
       });
@@ -105,12 +118,26 @@ const HistoryManager = {
       });
     }
 
-    // 2. Date Filter
+    // 2. Material Filter (Semua Jenis Garam | Garam Curah | Garam Karung)
+    if (this.materialFilter) {
+      data = data.filter(t => {
+        const mat = (t.material || '').trim().toLowerCase();
+        const target = this.materialFilter.trim().toLowerCase();
+        if (target === 'garam curah') {
+          return mat.includes('curah');
+        } else if (target === 'garam karung') {
+          return mat.includes('karung');
+        }
+        return mat === target;
+      });
+    }
+
+    // 3. Date Filter
     if (this.dateFilter) {
       data = data.filter(t => t.date === this.dateFilter);
     }
 
-    // 3. Sorting
+    // 4. Sorting
     data.sort((a, b) => {
       const dateA = new Date(a.date + ' ' + (a.timeIn || '00:00')).getTime();
       const dateB = new Date(b.date + ' ' + (b.timeIn || '00:00')).getTime();

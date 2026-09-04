@@ -51,6 +51,16 @@ const ExportExcelManager = {
     if (dateStart && !dateStart.value) dateStart.value = todayStr;
     if (dateEnd && !dateEnd.value) dateEnd.value = todayStr;
 
+    // Synchronize Material Filter with HistoryManager
+    const matWrap = document.getElementById('export-material-filter-wrap');
+    const matSelect = document.getElementById('export-select-material');
+    if (matWrap) {
+      matWrap.style.display = (context === 'transaction') ? 'block' : 'none';
+    }
+    if (matSelect && context === 'transaction') {
+      matSelect.value = (typeof HistoryManager !== 'undefined' && HistoryManager.materialFilter) || '';
+    }
+
     App.openModal('modal-export-excel');
   },
 
@@ -60,6 +70,7 @@ const ExportExcelManager = {
     const scope = scopeEl ? scopeEl.value : 'all';
     const todayStr = new Date().toISOString().slice(0, 10);
 
+    // 1. Filter by Date Scope
     if (scope === 'today') {
       txs = txs.filter(t => t.date === todayStr);
     } else if (scope === 'date') {
@@ -71,13 +82,51 @@ const ExportExcelManager = {
       txs = txs.filter(t => t.date >= start && t.date <= end);
     }
 
+    // 2. Filter by Material Scope (Transaction Context)
+    if (this.activeContext === 'transaction') {
+      const exportMatSelect = document.getElementById('export-select-material');
+      const selectedMat = (exportMatSelect && exportMatSelect.value !== undefined)
+        ? exportMatSelect.value
+        : ((typeof HistoryManager !== 'undefined' && HistoryManager.materialFilter) || '');
+
+      if (selectedMat) {
+        txs = txs.filter(t => {
+          const mat = (t.material || '').trim().toLowerCase();
+          const target = selectedMat.trim().toLowerCase();
+          if (target === 'garam curah') {
+            return mat.includes('curah');
+          } else if (target === 'garam karung') {
+            return mat.includes('karung');
+          }
+          return mat === target;
+        });
+      }
+    }
+
     return txs;
+  },
+
+  getExportFileName(context = 'transaction') {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (context === 'supplier') {
+      return `PT_Reka_Cipta_Garam_Rekap_Pemasok_${todayStr}.xlsx`;
+    }
+
+    const exportMatSelect = document.getElementById('export-select-material');
+    const selectedMat = (exportMatSelect && exportMatSelect.value)
+      || ((typeof HistoryManager !== 'undefined' && HistoryManager.materialFilter) || '');
+
+    if (selectedMat) {
+      const sanitized = selectedMat.replace(/\s+/g, '_');
+      return `PT_Reka_Cipta_Garam_${sanitized}_${todayStr}.xlsx`;
+    }
+    return `PT_Reka_Cipta_Garam_Semua_Data_${todayStr}.xlsx`;
   },
 
   executeExport() {
     const txs = this.getScopedData();
     if (txs.length === 0) {
-      App.showToast('Tidak ada data yang sesuai dengan cakupan tanggal yang dipilih.', 'warning');
+      App.showToast('Tidak ada data yang sesuai dengan cakupan filter yang dipilih.', 'warning');
       return;
     }
 
@@ -100,13 +149,19 @@ const ExportExcelManager = {
 
   // Format material string identically to template
   formatMaterialStr(t) {
-    const isKarung = (t.material || '').toLowerCase().includes('karung');
+    const matRaw = (t.material || '').trim();
+    const isKarung = matRaw.toLowerCase().includes('karung');
+    const isCurah = matRaw.toLowerCase().includes('curah');
+
     if (isKarung) {
       const bags = t.bagCount || 0;
-      return `GARAM ${bags} KARUNG`;
+      return bags > 0 ? `GARAM ${bags} KARUNG` : 'GARAM KARUNG';
     }
-    const netKg = (t.finalNetWeight || 0).toLocaleString('id-ID');
-    return `GARAM CURAH ${netKg} KG`;
+    if (isCurah) {
+      const netKg = (t.finalNetWeight || 0).toLocaleString('id-ID');
+      return netKg && netKg !== '0' ? `GARAM CURAH ${netKg} KG` : 'GARAM CURAH';
+    }
+    return matRaw.toUpperCase() || 'GARAM';
   },
 
   formatTimeString(timeStr) {
@@ -286,7 +341,7 @@ const ExportExcelManager = {
         // 6. Generate & Download Buffer
         const buffer = await wb.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const fileName = `PT_Reka_Cipta_Garam_Semua_Data_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        const fileName = this.getExportFileName('transaction');
         
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -537,6 +592,6 @@ const ExportExcelManager = {
     ws['!autofilter'] = { ref: `A1:W${lastDataRow}` };
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Data Penimbangan');
-    XLSX.writeFile(wb, `PT_Reka_Cipta_Garam_Semua_Data_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    XLSX.writeFile(wb, this.getExportFileName('transaction'));
   }
 };
