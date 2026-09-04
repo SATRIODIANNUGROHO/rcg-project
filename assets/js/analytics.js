@@ -477,6 +477,8 @@ const AnalyticsManager = {
     return `hsl(${hue}, 75%, ${lightness}%)`;
   },
 
+  hiddenKabOrigin: new Set(),
+
   renderDoubleDonutOriginChart(txs) {
     const ctx = document.getElementById('chart-origin');
     const ChartClass = window.Chart || (typeof Chart !== 'undefined' ? Chart : null);
@@ -509,11 +511,11 @@ const AnalyticsManager = {
     const kabList = Object.values(hierarchy).sort((a, b) => b.total - a.total);
 
     const kabLabels = [];
-    const kabData = [];
+    const allKabData = [];
     const kabColors = [];
 
     const desaLabels = [];
-    const desaData = [];
+    const allDesaData = [];
     const desaColors = [];
     const desaParents = [];
 
@@ -521,7 +523,7 @@ const AnalyticsManager = {
       const kabColor = theme.kabPalette[kabIdx % theme.kabPalette.length];
       
       kabLabels.push(kabObj.name);
-      kabData.push(kabObj.total);
+      allKabData.push(kabObj.total);
       kabColors.push(kabColor);
 
       // Sort desas within this kabupaten (by weight descending)
@@ -530,7 +532,7 @@ const AnalyticsManager = {
 
       desaEntries.forEach(([desaName, desaWeight], desaIdx) => {
         desaLabels.push(desaName);
-        desaData.push(desaWeight);
+        allDesaData.push(desaWeight);
         desaParents.push(kabObj.name);
         desaColors.push(this.getDesaColorShade(kabIdx, desaIdx, totalDesasInKab, theme.isDark));
       });
@@ -538,16 +540,18 @@ const AnalyticsManager = {
 
     if (kabLabels.length === 0) {
       kabLabels.push('Belum Ada Data');
-      kabData.push(1);
+      allKabData.push(1);
       kabColors.push(theme.kabPalette[0]);
 
       desaLabels.push('Belum Ada Data');
-      desaData.push(1);
+      allDesaData.push(1);
       desaColors.push(theme.desaPalette[0]);
       desaParents.push('Belum Ada Data');
     }
 
-    const totalAllWeight = kabData.reduce((a, b) => a + b, 0) || 1;
+    // Build active dataset arrays respecting hiddenKabOrigin state
+    const currentKabData = kabLabels.map((k, i) => this.hiddenKabOrigin.has(k) ? 0 : allKabData[i]);
+    const currentDesaData = desaLabels.map((d, i) => this.hiddenKabOrigin.has(desaParents[i]) ? 0 : allDesaData[i]);
 
     this.chartOrigin = new ChartClass(ctx, {
       type: 'doughnut',
@@ -556,7 +560,7 @@ const AnalyticsManager = {
           // Outer Ring (Index 0): Desa Asal Garam (Aligned directly outside parent Kabupaten)
           {
             label: 'Desa Asal Garam',
-            data: desaData,
+            data: currentDesaData,
             backgroundColor: desaColors,
             borderColor: theme.borderColor,
             borderWidth: 2,
@@ -565,7 +569,7 @@ const AnalyticsManager = {
           // Inner Ring (Index 1): Kabupaten Asal Garam
           {
             label: 'Kabupaten Asal Garam',
-            data: kabData,
+            data: currentKabData,
             backgroundColor: kabColors,
             borderColor: theme.borderColor,
             borderWidth: 2,
@@ -579,27 +583,54 @@ const AnalyticsManager = {
         plugins: {
           legend: {
             position: 'bottom',
+            onClick: (e, legendItem, legend) => {
+              const chart = legend.chart;
+              const kabIdx = legendItem.index;
+              const kabName = kabLabels[kabIdx];
+
+              // Toggle Kabupaten visibility state
+              if (this.hiddenKabOrigin.has(kabName)) {
+                this.hiddenKabOrigin.delete(kabName);
+              } else {
+                this.hiddenKabOrigin.add(kabName);
+              }
+
+              // Update Inner Ring (Kabupaten) data
+              kabLabels.forEach((k, kIdx) => {
+                const isKabHidden = this.hiddenKabOrigin.has(k);
+                chart.data.datasets[1].data[kIdx] = isKabHidden ? 0 : allKabData[kIdx];
+              });
+
+              // Update Outer Ring (Desa) data - cascaded to parent Kabupaten state
+              desaLabels.forEach((d, dIdx) => {
+                const parentKab = desaParents[dIdx];
+                const isParentHidden = this.hiddenKabOrigin.has(parentKab);
+                chart.data.datasets[0].data[dIdx] = isParentHidden ? 0 : allDesaData[dIdx];
+              });
+
+              chart.update();
+            },
             labels: {
               color: theme.textColor,
               font: { size: 11.5, family: "'Plus Jakarta Sans', sans-serif" },
               padding: 12,
               generateLabels: () => {
-                const labels = [];
-                kabLabels.forEach((k, idx) => {
-                  const val = kabData[idx];
-                  const pct = ((val / totalAllWeight) * 100).toFixed(1);
-                  labels.push({
+                const totalAll = allKabData.reduce((a, b) => a + b, 0) || 1;
+                return kabLabels.map((k, idx) => {
+                  const val = allKabData[idx];
+                  const isHidden = this.hiddenKabOrigin.has(k);
+                  const pct = ((val / totalAll) * 100).toFixed(1);
+                  return {
                     text: `Kab. ${k}: ${val.toLocaleString('id-ID')} Kg (${pct}%)`,
-                    fillStyle: kabColors[idx],
+                    fillStyle: isHidden ? (theme.isDark ? '#334155' : '#CBD5E1') : kabColors[idx],
                     strokeStyle: theme.borderColor,
-                    fontColor: theme.textColor,
+                    fontColor: isHidden ? theme.mutedColor : theme.textColor,
                     lineWidth: 1,
-                    hidden: false,
+                    hidden: isHidden,
                     index: idx,
                     datasetIndex: 1
-                  });
+                  };
                 });
-                return labels;
               }
             }
           },
@@ -611,20 +642,26 @@ const AnalyticsManager = {
               },
               label: (ctx) => {
                 const datasetIdx = ctx.datasetIndex;
+                const activeTotal = kabLabels.reduce((sum, k, kIdx) => {
+                  return sum + (this.hiddenKabOrigin.has(k) ? 0 : allKabData[kIdx]);
+                }, 0) || 1;
+                const grandTotal = allKabData.reduce((a, b) => a + b, 0) || 1;
+
                 if (datasetIdx === 1) {
                   const kabName = kabLabels[ctx.dataIndex];
-                  const val = ctx.raw;
-                  const pct = ((val / totalAllWeight) * 100).toFixed(1);
-                  return `Kab. ${kabName}: ${val.toLocaleString('id-ID')} Kg (${pct}%)`;
+                  const val = allKabData[ctx.dataIndex];
+                  const pctActive = ((val / activeTotal) * 100).toFixed(1);
+                  const pctGrand = ((val / grandTotal) * 100).toFixed(1);
+                  return `Kab. ${kabName}: ${val.toLocaleString('id-ID')} Kg (${pctActive}% aktif • ${pctGrand}% total)`;
                 } else {
                   const desaName = desaLabels[ctx.dataIndex];
                   const parentKab = desaParents[ctx.dataIndex];
-                  const val = ctx.raw;
+                  const val = allDesaData[ctx.dataIndex];
                   const kabObj = hierarchy[parentKab];
-                  const kabTotal = kabObj ? kabObj.total : totalAllWeight;
+                  const kabTotal = kabObj ? kabObj.total : grandTotal;
                   const pctOfKab = ((val / (kabTotal || 1)) * 100).toFixed(1);
-                  const pctOfTotal = ((val / totalAllWeight) * 100).toFixed(1);
-                  return `Desa ${desaName} (Kab. ${parentKab}): ${val.toLocaleString('id-ID')} Kg (${pctOfKab}% dari Kab. ${parentKab} • ${pctOfTotal}% Total)`;
+                  const pctActive = ((val / activeTotal) * 100).toFixed(1);
+                  return `Desa ${desaName} (Kab. ${parentKab}): ${val.toLocaleString('id-ID')} Kg (${pctOfKab}% dari Kab. ${parentKab} • ${pctActive}% aktif)`;
                 }
               }
             }
