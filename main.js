@@ -1,5 +1,16 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
+
+// Database path configuration
+function getDatabaseFilePath() {
+  const userDataDir = app.getPath('userData');
+  const dataDir = path.join(userDataDir, 'data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  return path.join(dataDir, 'rcg_salt_v8.sqlite');
+}
 
 let mainWindow;
 let splashWindow;
@@ -234,6 +245,98 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
 
 ipcMain.handle('app:get-version', () => {
   return app.getVersion();
+});
+
+// =========================================================================
+// SQLite Database Engine IPC Handlers (v8.0)
+// =========================================================================
+
+ipcMain.handle('db:load-file', async () => {
+  try {
+    const dbPath = getDatabaseFilePath();
+    if (fs.existsSync(dbPath)) {
+      const buffer = await fs.promises.readFile(dbPath);
+      return { exists: true, data: buffer, path: dbPath };
+    }
+    return { exists: false, path: dbPath };
+  } catch (err) {
+    console.error('Error loading SQLite file:', err);
+    return { exists: false, error: err.message };
+  }
+});
+
+ipcMain.handle('db:save-file', async (event, binaryArray) => {
+  try {
+    const dbPath = getDatabaseFilePath();
+    const buffer = Buffer.from(binaryArray);
+    await fs.promises.writeFile(dbPath, buffer);
+
+    // Also maintain a duplicate backup in local project directory /data/
+    try {
+      const localDataDir = path.join(__dirname, 'data');
+      if (!fs.existsSync(localDataDir)) {
+        fs.mkdirSync(localDataDir, { recursive: true });
+      }
+      await fs.promises.writeFile(path.join(localDataDir, 'rcg_database.sqlite'), buffer);
+    } catch (e) {}
+
+    return { success: true, path: dbPath };
+  } catch (err) {
+    console.error('Error saving SQLite file:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('db:export-file', async (event, binaryArray, defaultName) => {
+  try {
+    const result = await dialog.showSaveDialog(mainWindow, {
+      title: 'Unduh Database SQLite PT. RCG',
+      defaultPath: defaultName || `RCG_Database_${new Date().toISOString().slice(0, 10)}.sqlite`,
+      filters: [
+        { name: 'SQLite Database (*.sqlite; *.db)', extensions: ['sqlite', 'db'] },
+        { name: 'Semua File (*.*)', extensions: ['*'] }
+      ]
+    });
+
+    if (result.canceled || !result.filePath) {
+      return { canceled: true };
+    }
+
+    const buffer = Buffer.from(binaryArray);
+    await fs.promises.writeFile(result.filePath, buffer);
+    return { success: true, filePath: result.filePath };
+  } catch (err) {
+    console.error('Error exporting SQLite file:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('db:import-file', async () => {
+  try {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Buka File Database SQLite',
+      properties: ['openFile'],
+      filters: [
+        { name: 'SQLite Database (*.sqlite; *.db)', extensions: ['sqlite', 'db'] },
+        { name: 'Semua File (*.*)', extensions: ['*'] }
+      ]
+    });
+
+    if (result.canceled || !result.filePaths || result.filePaths.length === 0) {
+      return { canceled: true };
+    }
+
+    const filePath = result.filePaths[0];
+    const buffer = await fs.promises.readFile(filePath);
+    return { success: true, data: buffer, filePath: filePath };
+  } catch (err) {
+    console.error('Error importing SQLite file:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('db:get-path', () => {
+  return getDatabaseFilePath();
 });
 
 app.whenReady().then(() => {

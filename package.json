@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "exceljs": "^4.4.0",
-    "html2pdf.js": "^0.14.0"
+    "html2pdf.js": "^0.14.0",
+    "sql.js": "^1.14.2"
   }
 }

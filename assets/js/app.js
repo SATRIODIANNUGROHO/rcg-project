@@ -361,6 +361,17 @@ const App = {
       });
     }
 
+    const btnExportSqlite = document.getElementById('btn-export-sqlite');
+    if (btnExportSqlite) {
+      btnExportSqlite.addEventListener('click', async () => {
+        try {
+          await StorageManager.exportSQLite();
+        } catch (e) {
+          this.showToast(`Gagal mengunduh SQLite: ${e.message}`, 'danger');
+        }
+      });
+    }
+
     const btnExportJson = document.getElementById('btn-export-json');
     if (btnExportJson) {
       btnExportJson.addEventListener('click', () => {
@@ -378,6 +389,30 @@ const App = {
           StorageManager.exportExcel();
           this.showToast('File Excel (.xlsx) berhasil diexport.', 'success');
         }
+      });
+    }
+
+    const inputImportSqlite = document.getElementById('input-import-sqlite');
+    if (inputImportSqlite) {
+      inputImportSqlite.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          this.showToast('Memproses impor database SQLite...', 'info');
+          const res = await StorageManager.importSQLite(file);
+          if (res.success) {
+            this.showToast(`Basis data SQLite berhasil dipulihkan! (${res.count} data transaksi)`, 'success');
+            if (typeof HistoryManager !== 'undefined') HistoryManager.render();
+            if (typeof SupplierHistoryManager !== 'undefined') SupplierHistoryManager.render();
+            if (typeof AnalyticsManager !== 'undefined') AnalyticsManager.render();
+            this.renderActivityLogs();
+          } else {
+            this.showToast(`Gagal mengimpor database SQLite: ${res.error || res.message}`, 'danger');
+          }
+        } catch (err) {
+          this.showToast(`Gagal mengimpor file SQLite: ${err.message}`, 'danger');
+        }
+        inputImportSqlite.value = '';
       });
     }
 

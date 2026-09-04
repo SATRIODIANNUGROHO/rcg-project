@@ -372,6 +372,17 @@ const TransactionEngine = {
   },
 
   saveTransaction() {
+    if (typeof AuthManager !== 'undefined') {
+      if (!this.isEditingExisting && !AuthManager.canAddTransaction()) {
+        App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+        return false;
+      }
+      if (this.isEditingExisting && !AuthManager.canEditTransaction()) {
+        App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+        return false;
+      }
+    }
+
     const tx = this.getCurrentFormData();
 
     // Validations
@@ -427,6 +438,11 @@ const TransactionEngine = {
   },
 
   loadForEdit(tx) {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.canEditTransaction()) {
+      App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+      return;
+    }
+
     this.isEditingExisting = true;
     this.activeTxId = tx.id;
     this.activeDocNo = tx.docNo;

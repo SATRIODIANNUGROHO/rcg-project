@@ -244,6 +244,16 @@
         <button type="submit" id="btn-login-submit" class="btn btn-primary w-100" style="height: 40px;">
           Masuk ke Aplikasi
         </button>
+
+        <!-- Quick Role Selector for Fast Login / Demo -->
+        <div class="login-demo-bar" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-color); text-align: center;">
+          <div class="text-small text-secondary" style="font-size: 11.5px; margin-bottom: 8px; font-weight: 600;">Pilihan Masuk Cepat Berdasarkan Role:</div>
+          <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary btn-sm btn-quick-login" data-user="admin" data-pass="admin123" style="font-size: 11.5px; padding: 4px 10px;" title="Login sebagai Administrator (Akses Penuh)">Admin</button>
+            <button type="button" class="btn btn-secondary btn-sm btn-quick-login" data-user="operator" data-pass="operator123" style="font-size: 11.5px; padding: 4px 10px;" title="Login sebagai Operator (Input & Transaksi)">Operator</button>
+            <button type="button" class="btn btn-secondary btn-sm btn-quick-login" data-user="supervisor" data-pass="supervisor123" style="font-size: 11.5px; padding: 4px 10px;" title="Login sebagai Supervisor (Pengawas / Read-Only)">Supervisor</button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -253,6 +263,12 @@
   </div>
 
   <!-- Scripts -->
+  <script src="assets/vendor/sql-wasm.js"></script>
+  <script>
+    if (typeof window.initSqlJs === 'undefined' && typeof initSqlJs !== 'undefined') {
+      window.initSqlJs = initSqlJs;
+    }
+  </script>
   <script src="assets/js/storage.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
@@ -269,6 +285,19 @@
       const btnTogglePw = document.getElementById('btn-toggle-password');
       const iconEyeOpen = document.getElementById('icon-eye-open');
       const iconEyeClosed = document.getElementById('icon-eye-closed');
+
+      // Quick Role Login Handler
+      document.querySelectorAll('.btn-quick-login').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const user = btn.getAttribute('data-user');
+          const pass = btn.getAttribute('data-pass');
+          if (inputUsername) inputUsername.value = user;
+          if (inputPassword) inputPassword.value = pass;
+          if (loginForm) {
+            loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }
+        });
+      });
 
       // Pre-fill remembered username
       const rememberedUser = localStorage.getItem('rcg_remembered_username');

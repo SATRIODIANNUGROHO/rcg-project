@@ -8,6 +8,12 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
 
 ## Fitur Utama v8.0
 
+- **Basis Data Relasional SQLite Engine (SQLite3 via sql.js WebAssembly)**:
+  - Penyimpanan data transaksi, akun pengguna, log aktivitas, dan pengaturan kini menggunakan format basis data relasional standar **SQLite 3** (`data/rcg_database.sqlite`).
+  - Dilengkapi indeks performa tinggi (*query latency* instan): `idx_tx_date`, `idx_tx_supplier`, `idx_tx_docno`, `idx_logs_time`.
+  - Fitur **Unduh Basis Data (.sqlite)** dan **Impor Database SQLite** untuk pencadangan tingkat lanjut dan portabilitas enterprise.
+  - Berkas database SQLite dapat dibuka dan dianalisis secara langsung menggunakan perangkat lunak standar industri seperti *DB Browser for SQLite*, *DBeaver*, atau *TablePlus*.
+  - Mekanisme **Auto-Migration** cerdas yang mengonversi data lama dari `localStorage` secara otomatis tanpa kehilangan data (*zero data loss*).
 - **Penimbangan Truk Otomatis & Simulator**:
   - Koneksi langsung ke indikator jembatan timbang truk via **RS-232 / USB Serial (Web Serial API)**.
   - Panel **Simulator Timbangan Interaktif** untuk pengujian dan pelatihan operator timbang.
@@ -15,25 +21,6 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
   - Perhitungan Berat Muatan (Gross - Tare).
   - Potongan Refraksi (%) dan pembagian mutu **Garam K1** & **Garam K2**.
   - Kalkulasi nilai pembayaran rupiah otomatis.
-- **Cetak Nota Timbang & Form Supplier (PDF & Printer)**:
-  - Pratinjau interaktif (*live paper preview*) sebelum mencetak.
-  - Pilihan ukuran kertas: **A6** (standar tiket), **A5**, **A4**, **Letter**, dan **NCR Wartel 9.5" × 11"**.
-  - Pilihan rangkap/salinan (1x, 2x, 3x) dan area tanda tangan (Supir & Admin).
-- **Riwayat Transaksi & Riwayat Pemasok/Supplier**:
-  - Menu **Riwayat Penimbangan** dengan pencarian realtime, filter tanggal, dan tombol aksi (*Detail, Edit, Cetak, Hapus*).
-  - Menu **Riwayat Pemasok** untuk memantau rekap tonase dan mencetak Formulir Pemasok.
-- **Dashboard & Analitik Visual (Double Donut Chart)**:
-  - Kartu Ringkasan: *Berat Bersih Periode, Pembayaran Periode, & Ringkasan Analitik*.
-  - Grafik Transaksi per Minggu (Minggu 1 mulai 26 Juli 2026).
-  - Pie Chart Mutu: *Komposisi Mutu Garam K1 dan Garam K2*.
-  - **Double Donut Chart**: Sebaran Asal Garam (Cincin Dalam: Kabupaten; Cincin Luar: Desa).
-- **Hak Akses & Manajemen Pengguna (RBAC Granular)**:
-  - Panel manajemen pengguna 2-kolom dengan matriks hak akses (*Lihat, Tambah, Ubah, Hapus* per modul).
-  - Otoritas khusus sistem: Cetak ulang tiket, pengaturan sistem, kelola hak akses, backup/compact database.
-  - Tombol instan *Pilih Semua* dan *Kosongkan Semua*.
-- **Ekspor Excel Presisi Tinggi (.xlsx)**:
-  - Didukung engine **ExcelJS**, menghasilkan output 100% identik dengan standar buku besar PT. Reka Cipta Garam.
-  - Header **Navy Blue (`#0F4C81`)** dengan **AutoFilter** aktif, data baris rapi dengan border halus, serta baris **TOTAL Pale Gold (`#FFF2CC`)** dengan formula otomatis **AutoSum** `=SUM()`.
 - **Cetak Nota Timbang & Form Supplier (PDF & Printer)**:
   - Pratinjau interaktif (*live paper preview*) sebelum mencetak.
   - Pilihan ukuran kertas: **A6** (standar tiket), **A5**, **A4**, **Letter**, dan **NCR Wartel 9.5" × 11"**.
@@ -52,14 +39,17 @@ Aplikasi ini dirancang khusus untuk mempermudah operator dan manajemen dalam men
   - Panel manajemen pengguna 2-kolom dengan matriks hak akses (*Lihat, Tambah, Ubah, Hapus* per modul).
   - Otoritas khusus sistem: Cetak ulang tiket, pengaturan sistem, kelola hak akses, backup/compact database.
   - Tombol aksi minimalis teks (*Tambah User, Ubah Password, Hapus Pengguna*).
+- **Ekspor Excel Presisi Tinggi (.xlsx)**:
+  - Didukung engine **ExcelJS**, menghasilkan output 100% identik dengan standar buku besar PT. Reka Cipta Garam.
+  - Header **Navy Blue (`#0F4C81`)** dengan **AutoFilter** aktif, data baris rapi dengan border halus, serta baris **TOTAL Pale Gold (`#FFF2CC`)** dengan formula otomatis **AutoSum** `=SUM()`.
 - **Backup, Restore, & Audit Log**:
-  - Backup otomatis lokal berkala.
-  - Export & Import data JSON (kompatibel dengan file arsip cadangan versi sebelumnya).
-  - Activity Log mendetail dengan alasan wajib pada setiap proses penghapusan/reset data.
+  - Dukungan ganda: Berkas binary database **SQLite (.sqlite)** dan file cadangan **JSON (.json)**.
+  - Backup otomatis lokal berkala (*auto-backup slot*).
+  - Activity Log mendetail dengan pencatatan alasan wajib pada setiap proses penghapusan/reset data.
 - **Standar Desain Resmi ([DESIGN_SYSTEM.md](DESIGN_SYSTEM.md))**:
   - Mode Gelap & Mode Terang dengan tipografi modern **Plus Jakarta Sans**, ikon SVG bersih (Zero Emojis), dan palet warna industrial profesional.
 - **100% Offline Lokal (Tanpa Dependensi Internet)**:
-  - Semua library (*Chart.js, ExcelJS, SheetJS XLSX, html2pdf.js*) berjalan secara lokal.
+  - Semua library (*sql.js WASM, Chart.js, ExcelJS, SheetJS XLSX, html2pdf.js*) berjalan secara mandiri dan offline di komputer pengguna.
 
 ---
 
@@ -132,6 +122,8 @@ RCG/
 │   ├── images/
 │   │   └── RCG.webp              # Logo resmi PT. Reka Cipta Garam
 │   ├── vendor/
+│   │   ├── sql-wasm.js           # Mesin SQLite3 WebAssembly Engine (sql.js)
+│   │   ├── sql-wasm.wasm         # Modul biner WebAssembly SQLite 3
 │   │   ├── chart.umd.min.js      # Pustaka Chart.js lokal (Offline Mode)
 │   │   ├── exceljs.min.js        # Pustaka ExcelJS lokal untuk spreadsheet berdesain
 │   │   ├── xlsx.full.min.js      # Pustaka SheetJS lokal (Offline Mode)
@@ -152,7 +144,8 @@ RCG/
 │       ├── analytics.js          # Double Donut Chart & statistik mingguan
 │       └── app.js                # Pengendali utama alur aplikasi
 ├── scripts/
-│   └── generate-icons.js         # Generator otomatis ikon multi-resolusi
+│   ├── generate-icons.js         # Generator otomatis ikon multi-resolusi
+│   └── test-sqlite-engine.js     # Skrip verifikasi & uji diagnostik SQLite Engine
 ├── DESIGN_SYSTEM.md              # Dokumen acuan resmi desain antarmuka RCG
 ├── index.html                    # Halaman Dashboard & Operasional Utama
 ├── login.html                    # Halaman Masuk Aplikasi

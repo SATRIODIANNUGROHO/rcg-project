@@ -159,6 +159,10 @@ const HistoryManager = {
       return;
     }
 
+    const isSupervisor = typeof AuthManager !== 'undefined' && AuthManager.isSupervisor();
+    const canEdit = typeof AuthManager !== 'undefined' ? AuthManager.canEditTransaction() : true;
+    const canDelete = typeof AuthManager !== 'undefined' ? AuthManager.canDeleteTransaction() : true;
+
     paginatedItems.forEach((tx) => {
       const tr = document.createElement('tr');
       const isLunas = tx.paymentStatus === 'Lunas';
@@ -174,7 +178,7 @@ const HistoryManager = {
         <td class="num-cell text-right" style="font-weight: 700; color: var(--primary);">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
         <td class="num-cell text-right" style="font-weight: 700; color: var(--primary-dark);">Rp ${tx.grandTotal.toLocaleString('id-ID')}</td>
         <td class="text-center" style="white-space: nowrap;">
-          <button class="badge ${isLunas ? 'badge-success' : 'badge-warning'}" style="cursor: pointer; border: 1px solid; height: 26px; padding: 0 10px; font-weight: 600; white-space: nowrap; font-size: 11px;" onclick="HistoryManager.togglePaymentStatus('${tx.id}')" title="Klik untuk mengubah status pembayaran">
+          <button class="badge ${isLunas ? 'badge-success' : 'badge-warning'}" style="${isSupervisor ? 'cursor: default; opacity: 0.9;' : 'cursor: pointer;'} border: 1px solid; height: 26px; padding: 0 10px; font-weight: 600; white-space: nowrap; font-size: 11px;" ${isSupervisor ? '' : `onclick="HistoryManager.togglePaymentStatus('${tx.id}')"`} title="${isSupervisor ? 'Status Pembayaran (Read-only untuk Supervisor)' : 'Klik untuk mengubah status pembayaran'}">
             ${isLunas ? 'Lunas' : 'Belum Lunas'}
           </button>
         </td>
@@ -186,12 +190,14 @@ const HistoryManager = {
             <button class="btn btn-table-action action-print" title="Cetak Nota" onclick="HistoryManager.printNotaById('${tx.id}')">
               Cetak
             </button>
+            ${canEdit ? `
             <button class="btn btn-table-action action-edit" title="Edit Transaksi" onclick="HistoryManager.editById('${tx.id}')">
               Edit
-            </button>
+            </button>` : ''}
+            ${canDelete ? `
             <button class="btn btn-table-action action-delete" title="Hapus Transaksi" onclick="HistoryManager.confirmDelete('${tx.id}')">
               Hapus
-            </button>
+            </button>` : ''}
           </div>
         </td>
       `;
@@ -200,6 +206,10 @@ const HistoryManager = {
   },
 
   togglePaymentStatus(id) {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.canChangePaymentStatus()) {
+      App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+      return;
+    }
     const list = StorageManager.getTransactions();
     const tx = list.find(t => t.id === id);
     if (tx) {
@@ -327,6 +337,10 @@ const HistoryManager = {
   },
 
   editById(id) {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.canEditTransaction()) {
+      App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+      return;
+    }
     const list = StorageManager.getTransactions();
     const tx = list.find(t => t.id === id);
     if (tx) {
@@ -335,6 +349,10 @@ const HistoryManager = {
   },
 
   confirmDelete(id) {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.canDeleteTransaction()) {
+      App.showToast('Anda tidak memiliki hak akses untuk menghapus transaksi ini!', 'warning');
+      return;
+    }
     const list = StorageManager.getTransactions();
     const tx = list.find(t => t.id === id);
     if (!tx) return;

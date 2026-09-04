@@ -25,6 +25,17 @@ const DEFAULT_PERMISSIONS_OPERATOR = {
   backupDatabase: false
 };
 
+const DEFAULT_PERMISSIONS_SUPERVISOR = {
+  supplier: { view: true, add: false, edit: false, delete: false },
+  material: { view: true, add: false, edit: false, delete: false },
+  transaction: { view: true, add: false, edit: false, delete: false },
+  report: { view: true, export: true },
+  reprintNota: true,
+  changeSettings: false,
+  manageUsers: false,
+  backupDatabase: false
+};
+
 const DEFAULT_USERS = [
   {
     id: 'USR-001',
@@ -49,6 +60,18 @@ const DEFAULT_USERS = [
     avatarUrl: null,
     initials: 'OP',
     createdAt: '2026-08-15 09:30'
+  },
+  {
+    id: 'USR-003',
+    username: 'supervisor',
+    password: 'supervisor123',
+    fullName: 'Supervisor Pengawas',
+    email: 'supervisor@rekaciptagaram.co.id',
+    role: 'Supervisor',
+    permissions: JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_SUPERVISOR)),
+    avatarUrl: null,
+    initials: 'SP',
+    createdAt: '2026-08-20 10:00'
   }
 ];
 
@@ -67,11 +90,23 @@ const AuthManager = {
       // Ensure all users have permissions structure
       users.forEach(u => {
         if (!u.permissions) {
-          u.permissions = u.role === 'Administrator' 
-            ? JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN))
-            : JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR));
+          if (u.role === 'Administrator') {
+            u.permissions = JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN));
+          } else if (u.role === 'Supervisor' || u.role === 'Viewer') {
+            u.permissions = JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_SUPERVISOR));
+          } else {
+            u.permissions = JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR));
+          }
         }
       });
+      // Ensure default supervisor user exists if not already present
+      if (!users.some(u => u.username.toLowerCase() === 'supervisor')) {
+        const sup = DEFAULT_USERS.find(u => u.username === 'supervisor');
+        if (sup) {
+          users.push(JSON.parse(JSON.stringify(sup)));
+          this.saveUsers(users);
+        }
+      }
       return users;
     } catch (e) {
       return DEFAULT_USERS;
@@ -161,6 +196,34 @@ const AuthManager = {
 
   isAdmin() {
     return this.currentUser && (this.currentUser.role === 'Administrator' || this.can('manageUsers'));
+  },
+
+  isSupervisor() {
+    return this.currentUser && (this.currentUser.role === 'Supervisor' || this.currentUser.role === 'Viewer');
+  },
+
+  isOperator() {
+    return this.currentUser && this.currentUser.role === 'Operator';
+  },
+
+  canAddTransaction() {
+    if (this.isSupervisor()) return false;
+    return this.currentUser?.permissions?.transaction?.add !== false;
+  },
+
+  canEditTransaction() {
+    if (this.isSupervisor()) return false;
+    return this.currentUser?.permissions?.transaction?.edit !== false;
+  },
+
+  canDeleteTransaction() {
+    if (this.isSupervisor()) return false;
+    return this.isAdmin() || this.currentUser?.permissions?.transaction?.delete === true;
+  },
+
+  canChangePaymentStatus() {
+    if (this.isSupervisor()) return false;
+    return true;
   },
 
   can(privilegeName) {
@@ -278,10 +341,11 @@ const AuthManager = {
       ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() 
       : parts[0].substring(0, 2).toUpperCase();
 
-    const isAdm = userData.role === 'Administrator';
-    const permissions = userData.permissions || (isAdm 
-      ? JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN)) 
-      : JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR)));
+    let defaultPerm = DEFAULT_PERMISSIONS_OPERATOR;
+    if (userData.role === 'Administrator') defaultPerm = DEFAULT_PERMISSIONS_ADMIN;
+    else if (userData.role === 'Supervisor' || userData.role === 'Viewer') defaultPerm = DEFAULT_PERMISSIONS_SUPERVISOR;
+
+    const permissions = userData.permissions || JSON.parse(JSON.stringify(defaultPerm));
 
     const now = new Date();
     const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -419,7 +483,7 @@ const AuthManager = {
       tr.style.cursor = 'pointer';
       tr.innerHTML = `
         <td style="font-weight: 600;">${u.username}</td>
-        <td><span class="badge ${u.role === 'Administrator' ? 'badge-primary' : 'badge-neutral'}">${u.role}</span></td>
+        <td><span class="badge ${u.role === 'Administrator' ? 'badge-primary' : (u.role === 'Supervisor' ? 'badge-warning' : 'badge-neutral')}">${u.role}</span></td>
       `;
       tr.addEventListener('click', () => {
         this.selectedPermUserId = u.id;
@@ -435,23 +499,7 @@ const AuthManager = {
     }
   },
 
-  loadUserPermissionsToForm(userId) {
-    const users = this.getUsers();
-    const user = users.find(u => u.id === userId) || users[0];
-    if (!user) return;
-
-    const titleElem = document.getElementById('perm-selected-user-title');
-    if (titleElem) titleElem.textContent = `Hak Akses : ${user.username} (${user.fullName})`;
-
-    const roleSelect = document.getElementById('perm-user-role-select');
-    if (roleSelect) {
-      roleSelect.value = user.role;
-      if (window.CustomSelect) window.CustomSelect.sync(roleSelect);
-    }
-
-    const p = user.permissions || (user.role === 'Administrator' ? DEFAULT_PERMISSIONS_ADMIN : DEFAULT_PERMISSIONS_OPERATOR);
-
-    // Entity Checkboxes
+  applyPermissionsTemplateToForm(p) {
     const setCb = (id, val) => {
       const el = document.getElementById(id);
       if (el) el.checked = !!val;
@@ -475,11 +523,32 @@ const AuthManager = {
     setCb('perm-report-view', p.report?.view);
     setCb('perm-report-export', p.report?.export);
 
-    // System Privileges Checkboxes
     setCb('perm-sys-reprint', p.reprintNota);
     setCb('perm-sys-settings', p.changeSettings);
     setCb('perm-sys-manage-users', p.manageUsers);
     setCb('perm-sys-backup', p.backupDatabase);
+  },
+
+  loadUserPermissionsToForm(userId) {
+    const users = this.getUsers();
+    const user = users.find(u => u.id === userId) || users[0];
+    if (!user) return;
+
+    const titleElem = document.getElementById('perm-selected-user-title');
+    if (titleElem) titleElem.textContent = `Hak Akses : ${user.username} (${user.fullName})`;
+
+    const roleSelect = document.getElementById('perm-user-role-select');
+    if (roleSelect) {
+      roleSelect.value = user.role;
+      if (window.CustomSelect) window.CustomSelect.sync(roleSelect);
+    }
+
+    let defaultP = DEFAULT_PERMISSIONS_OPERATOR;
+    if (user.role === 'Administrator') defaultP = DEFAULT_PERMISSIONS_ADMIN;
+    else if (user.role === 'Supervisor' || user.role === 'Viewer') defaultP = DEFAULT_PERMISSIONS_SUPERVISOR;
+
+    const p = user.permissions || defaultP;
+    this.applyPermissionsTemplateToForm(p);
   },
 
   collectPermissionsFromForm() {
@@ -549,6 +618,21 @@ const AuthManager = {
     const btnClearAll = document.getElementById('btn-perm-clear-all');
     if (btnClearAll) {
       btnClearAll.addEventListener('click', () => this.setAllPermissions(false));
+    }
+
+    // Auto-preset permissions when role dropdown changes in modal
+    const roleSelect = document.getElementById('perm-user-role-select');
+    if (roleSelect) {
+      roleSelect.addEventListener('change', (e) => {
+        const newRole = e.target.value;
+        if (newRole === 'Administrator') {
+          this.applyPermissionsTemplateToForm(DEFAULT_PERMISSIONS_ADMIN);
+        } else if (newRole === 'Supervisor' || newRole === 'Viewer') {
+          this.applyPermissionsTemplateToForm(DEFAULT_PERMISSIONS_SUPERVISOR);
+        } else if (newRole === 'Operator') {
+          this.applyPermissionsTemplateToForm(DEFAULT_PERMISSIONS_OPERATOR);
+        }
+      });
     }
 
     // Save Permissions
@@ -674,6 +758,8 @@ const AuthManager = {
 
   updateUserUI() {
     const user = this.getCurrentUser();
+    if (!user) return;
+
     const nameElem = document.getElementById('user-display-name');
     const roleElem = document.getElementById('user-display-role');
     const avatarElem = document.getElementById('user-avatar-text');
@@ -686,7 +772,7 @@ const AuthManager = {
       if (user.avatarUrl) {
         avatarElem.innerHTML = `<img src="${user.avatarUrl}" alt="${user.username}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
       } else {
-        avatarElem.textContent = user.initials || 'AD';
+        avatarElem.textContent = user.initials || (user.role === 'Supervisor' ? 'SP' : (user.role === 'Operator' ? 'OP' : 'AD'));
       }
     }
 
@@ -700,5 +786,28 @@ const AuthManager = {
     adminElements.forEach(el => {
       el.style.display = this.isAdmin() ? '' : 'none';
     });
+
+    // Supervisor-specific UI adjustments (Read-Only Mode)
+    const isSup = this.isSupervisor();
+    const btnSaveTx = document.getElementById('btn-save-transaction');
+    if (btnSaveTx) {
+      if (isSup) {
+        btnSaveTx.disabled = true;
+        btnSaveTx.style.opacity = '0.55';
+        btnSaveTx.style.cursor = 'not-allowed';
+        btnSaveTx.setAttribute('title', 'Supervisor hanya memiliki hak akses melihat data tanpa perubahan transaksi');
+      } else {
+        btnSaveTx.disabled = false;
+        btnSaveTx.style.opacity = '1';
+        btnSaveTx.style.cursor = 'pointer';
+        btnSaveTx.removeAttribute('title');
+      }
+    }
+
+    const draftMsg = document.getElementById('transaction-draft-msg');
+    if (draftMsg && isSup) {
+      draftMsg.textContent = 'Mode Pengawas (Supervisor): Hak akses melihat data (Read-Only).';
+      draftMsg.style.color = 'var(--accent-gold)';
+    }
   }
 };
