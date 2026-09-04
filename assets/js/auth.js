@@ -26,9 +26,9 @@ const DEFAULT_PERMISSIONS_OPERATOR = {
 };
 
 const DEFAULT_PERMISSIONS_SUPERVISOR = {
-  supplier: { view: true, add: false, edit: false, delete: false },
+  supplier: { view: true, add: true, edit: true, delete: false },
   material: { view: true, add: false, edit: false, delete: false },
-  transaction: { view: true, add: false, edit: false, delete: false },
+  transaction: { view: true, add: true, edit: true, delete: false },
   report: { view: true, export: true },
   reprintNota: true,
   changeSettings: false,
@@ -105,6 +105,11 @@ const AuthManager = {
           } else {
             u.permissions = JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_OPERATOR));
           }
+        } else if (u.role === 'Supervisor' && u.permissions.transaction && u.permissions.transaction.add === false && !u.customPermissionsSaved) {
+          u.permissions.transaction.add = true;
+          u.permissions.transaction.edit = true;
+          u.permissions.supplier.add = true;
+          u.permissions.supplier.edit = true;
         }
       });
       // Ensure default supervisor user exists if not already present
@@ -112,9 +117,9 @@ const AuthManager = {
         const sup = DEFAULT_USERS.find(u => u.username === 'supervisor');
         if (sup) {
           users.push(JSON.parse(JSON.stringify(sup)));
-          this.saveUsers(users);
         }
       }
+      this.saveUsers(users);
       return users;
     } catch (e) {
       return DEFAULT_USERS;
@@ -136,6 +141,11 @@ const AuthManager = {
         const sessionUser = JSON.parse(rawSession);
         const freshUser = users.find(u => u.username.toLowerCase() === sessionUser.username.toLowerCase());
         this.currentUser = freshUser || sessionUser;
+        if (this.currentUser && this.currentUser.role === 'Supervisor' && this.currentUser.permissions?.transaction?.add === false && !this.currentUser.customPermissionsSaved) {
+          this.currentUser.permissions.transaction.add = true;
+          this.currentUser.permissions.transaction.edit = true;
+          this.saveSession(true);
+        }
       } catch (e) {
         this.currentUser = null;
       }
@@ -439,11 +449,13 @@ const AuthManager = {
 
     target.role = role || target.role;
     target.permissions = permissions;
+    target.customPermissionsSaved = true;
     this.saveUsers(users);
 
     if (this.currentUser && this.currentUser.id === userId) {
       this.currentUser.role = target.role;
       this.currentUser.permissions = permissions;
+      this.currentUser.customPermissionsSaved = true;
       this.saveSession(true);
       this.updateUserUI();
     }
@@ -833,7 +845,8 @@ const AuthManager = {
         draftMsg.textContent = 'Mode Terbatas: Hak akses akun Anda saat ini hanya untuk melihat data (Read-Only).';
         draftMsg.style.color = 'var(--accent-gold)';
       } else {
-        draftMsg.textContent = '';
+        draftMsg.textContent = 'Draf penimbangan baru siap digunakan.';
+        draftMsg.style.color = '';
       }
     }
   }

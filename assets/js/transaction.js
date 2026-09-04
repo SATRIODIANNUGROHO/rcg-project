@@ -264,7 +264,14 @@ const TransactionEngine = {
     }
 
     const draftMsg = document.getElementById('transaction-draft-msg');
-    if (draftMsg) draftMsg.textContent = 'Draf penimbangan baru siap digunakan.';
+    if (draftMsg) {
+      draftMsg.textContent = 'Draf penimbangan baru siap digunakan.';
+      draftMsg.style.color = '';
+    }
+
+    if (typeof AuthManager !== 'undefined' && AuthManager.updateUserUI) {
+      AuthManager.updateUserUI();
+    }
   },
 
   handleCalculation(triggerId) {
