@@ -300,14 +300,18 @@ body.dark-mode .form-select option {
   color: #F5F7FA;
 }
 
-body.dark-mode .form-control:focus,
-body.dark-mode .form-select:focus {
+body.dark-mode .form-control:hover:not(:disabled):not([readonly]),
+body.dark-mode .form-select:hover:not(:disabled) {
   border-color: var(--primary);
   background-color: #1E2D44;
 }
 
-body.dark-mode .form-select:hover:not(:disabled) {
-  border-color: #475569;
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  border-color: var(--primary);
+  background-color: #1E2D44;
+  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25);
+  outline: none;
 }
 
 body.dark-mode .form-control:disabled,
@@ -784,22 +788,32 @@ body.dark-mode .custom-autocomplete-item.active {
 
 /* Custom Combobox in Dark Mode */
 body.dark-mode .custom-combobox input.form-control {
-  background-color: #1E2D44;
-  border-color: #475569;
+  background-color: #16243A;
+  border-color: #334155;
   color: #F5F7FA;
 }
 
+body.dark-mode .custom-combobox:hover input.form-control:not(:disabled),
+body.dark-mode .custom-combobox input.form-control:hover:not(:disabled) {
+  border-color: var(--primary);
+  background-color: #1E2D44;
+}
+
+body.dark-mode .custom-combobox.open input.form-control,
 body.dark-mode .custom-combobox input.form-control:focus {
-  border-color: #38BDF8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  border-color: var(--primary);
+  background-color: #1E2D44;
+  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25);
+  outline: none;
 }
 
 body.dark-mode .combobox-chevron-btn {
   color: #94A3B8;
 }
 
+body.dark-mode .custom-combobox:hover .combobox-chevron-btn,
 body.dark-mode .combobox-chevron-btn:hover {
-  color: #38BDF8;
+  color: var(--primary);
 }
 
 body.dark-mode .custom-combobox-menu {

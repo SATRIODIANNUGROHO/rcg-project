@@ -958,13 +958,17 @@ input[type="number"] {
   font-weight: 500;
 }
 
+.form-control:hover:not(:disabled):not([readonly]) {
+  border-color: var(--primary);
+}
+
 .form-control:focus, .form-select:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12);
 }
 
 .form-select:hover:not(:disabled) {
-  border-color: #CBD5E1;
+  border-color: var(--primary);
 }
 
 .form-control:disabled, .form-control[readonly], .form-select:disabled {
@@ -1077,9 +1081,16 @@ input[type="number"] {
   padding-right: 32px;
 }
 
+.custom-combobox:hover input.form-control:not(:disabled),
+.custom-combobox input.form-control:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.custom-combobox.open input.form-control,
 .custom-combobox input.form-control:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+  box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12);
+  outline: none;
 }
 
 .combobox-chevron-btn {
@@ -1099,6 +1110,7 @@ input[type="number"] {
   transition: color 0.15s ease;
 }
 
+.custom-combobox:hover .combobox-chevron-btn,
 .combobox-chevron-btn:hover {
   color: var(--primary);
 }
