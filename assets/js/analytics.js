@@ -450,6 +450,33 @@ const AnalyticsManager = {
     });
   },
 
+  getDesaColorShade(kabIndex, desaIndex, totalDesas, isDark) {
+    const familiesDark = [
+      ['#60A5FA', '#93C5FD', '#38BDF8', '#7DD3FC', '#2563EB', '#1D4ED8', '#BFDBFE', '#0284C7', '#0EA5E9', '#BAE6FD'], // Blue (Pamekasan)
+      ['#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#D97706', '#B45309', '#EA580C', '#FB923C', '#F97316', '#FFEDD5'], // Amber (Sampang)
+      ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#059669', '#047857', '#0D9488', '#2DD4BF', '#14B8A6', '#CCFBF1'], // Emerald (Sumenep)
+      ['#8B5CF6', '#A78BFA', '#C4B5FD', '#DDD6FE', '#7C3AED', '#6D28D9', '#9333EA', '#C084FC', '#A855F7', '#F3E8FF'], // Purple (Bangkalan)
+      ['#F43F5E', '#FB7185', '#FDA4AF', '#FECDD3', '#E11D48', '#BE123C', '#9F1239', '#FFE4E6', '#FB7185', '#FFF1F2']  // Rose
+    ];
+    const familiesLight = [
+      ['#2563B8', '#3B82F6', '#60A5FA', '#93C5FD', '#1D4ED8', '#1E40AF', '#0284C7', '#38BDF8', '#0EA5E9', '#7DD3FC'], // Blue (Pamekasan)
+      ['#E6A817', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#D97706', '#EA580C', '#FB923C', '#B45309', '#FED7AA'], // Amber (Sampang)
+      ['#16A34A', '#22C55E', '#2D9D78', '#4ADE80', '#86EFAC', '#1F7A5A', '#047857', '#0D9488', '#2DD4BF', '#A7F3D0'], // Emerald (Sumenep)
+      ['#7C3AED', '#8B5CF6', '#A78BFA', '#C4B5FD', '#6D28D9', '#5B21B6', '#9333EA', '#C084FC', '#A855F7', '#DDD6FE'], // Purple (Bangkalan)
+      ['#EA580C', '#F97316', '#FB923C', '#FDBA74', '#C05621', '#9A3412', '#C2410C', '#FFEDD5', '#FED7AA', '#FFF7ED']  // Orange
+    ];
+
+    const families = isDark ? familiesDark : familiesLight;
+    const fam = families[kabIndex % families.length];
+    if (desaIndex < fam.length) {
+      return fam[desaIndex];
+    }
+    const baseHues = [215, 38, 155, 270, 345];
+    const hue = baseHues[kabIndex % baseHues.length];
+    const lightness = isDark ? (42 + ((desaIndex * 8) % 40)) : (38 + ((desaIndex * 8) % 40));
+    return `hsl(${hue}, 75%, ${lightness}%)`;
+  },
+
   renderDoubleDonutOriginChart(txs) {
     const ctx = document.getElementById('chart-origin');
     const ChartClass = window.Chart || (typeof Chart !== 'undefined' ? Chart : null);
@@ -458,52 +485,88 @@ const AnalyticsManager = {
 
     if (this.chartOrigin) this.chartOrigin.destroy();
 
-    // 1. Group data by Kabupaten (Inner Ring) and Desa (Outer Ring)
-    const kabMap = {};
-    const desaMap = {};
+    // 1. Hierarchical Grouping: Group by Kabupaten first, then by Desa
+    const hierarchy = {};
 
     txs.forEach(t => {
-      const kab = t.originRegion || 'Pamekasan';
-      const desa = t.originArea || 'Majungan';
-      const net = t.finalNetWeight || 0;
+      const kab = (t.originRegion && t.originRegion.trim()) || 'Pamekasan';
+      const desa = (t.originArea && t.originArea.trim()) || 'Majungan';
+      const net = parseFloat(t.finalNetWeight) || 0;
 
-      kabMap[kab] = (kabMap[kab] || 0) + net;
+      if (!hierarchy[kab]) {
+        hierarchy[kab] = {
+          name: kab,
+          total: 0,
+          desas: {}
+        };
+      }
 
-      const desaKey = `${desa} (${kab})`;
-      desaMap[desaKey] = (desaMap[desaKey] || 0) + net;
+      hierarchy[kab].total += net;
+      hierarchy[kab].desas[desa] = (hierarchy[kab].desas[desa] || 0) + net;
     });
 
-    const kabLabels = Object.keys(kabMap);
-    const kabData = Object.values(kabMap);
+    // 2. Sort Kabupaten by total weight descending for deterministic angle layout
+    const kabList = Object.values(hierarchy).sort((a, b) => b.total - a.total);
 
-    const desaLabels = Object.keys(desaMap);
-    const desaData = Object.values(desaMap);
+    const kabLabels = [];
+    const kabData = [];
+    const kabColors = [];
+
+    const desaLabels = [];
+    const desaData = [];
+    const desaColors = [];
+    const desaParents = [];
+
+    kabList.forEach((kabObj, kabIdx) => {
+      const kabColor = theme.kabPalette[kabIdx % theme.kabPalette.length];
+      
+      kabLabels.push(kabObj.name);
+      kabData.push(kabObj.total);
+      kabColors.push(kabColor);
+
+      // Sort desas within this kabupaten (by weight descending)
+      const desaEntries = Object.entries(kabObj.desas).sort((a, b) => b[1] - a[1]);
+      const totalDesasInKab = desaEntries.length;
+
+      desaEntries.forEach(([desaName, desaWeight], desaIdx) => {
+        desaLabels.push(desaName);
+        desaData.push(desaWeight);
+        desaParents.push(kabObj.name);
+        desaColors.push(this.getDesaColorShade(kabIdx, desaIdx, totalDesasInKab, theme.isDark));
+      });
+    });
 
     if (kabLabels.length === 0) {
       kabLabels.push('Belum Ada Data');
       kabData.push(1);
+      kabColors.push(theme.kabPalette[0]);
+
       desaLabels.push('Belum Ada Data');
       desaData.push(1);
+      desaColors.push(theme.desaPalette[0]);
+      desaParents.push('Belum Ada Data');
     }
+
+    const totalAllWeight = kabData.reduce((a, b) => a + b, 0) || 1;
 
     this.chartOrigin = new ChartClass(ctx, {
       type: 'doughnut',
       data: {
         datasets: [
-          // Outer Ring: Desa Asal Garam
+          // Outer Ring (Index 0): Desa Asal Garam (Aligned directly outside parent Kabupaten)
           {
             label: 'Desa Asal Garam',
             data: desaData,
-            backgroundColor: theme.desaPalette.slice(0, desaLabels.length),
+            backgroundColor: desaColors,
             borderColor: theme.borderColor,
             borderWidth: 2,
             weight: 1.3
           },
-          // Inner Ring: Kabupaten Asal Garam
+          // Inner Ring (Index 1): Kabupaten Asal Garam
           {
             label: 'Kabupaten Asal Garam',
             data: kabData,
-            backgroundColor: theme.kabPalette.slice(0, kabLabels.length),
+            backgroundColor: kabColors,
             borderColor: theme.borderColor,
             borderWidth: 2,
             weight: 0.9
@@ -523,9 +586,11 @@ const AnalyticsManager = {
               generateLabels: () => {
                 const labels = [];
                 kabLabels.forEach((k, idx) => {
+                  const val = kabData[idx];
+                  const pct = ((val / totalAllWeight) * 100).toFixed(1);
                   labels.push({
-                    text: `Kab. ${k} (${kabData[idx].toLocaleString('id-ID')} Kg)`,
-                    fillStyle: theme.kabPalette[idx % theme.kabPalette.length],
+                    text: `Kab. ${k}: ${val.toLocaleString('id-ID')} Kg (${pct}%)`,
+                    fillStyle: kabColors[idx],
                     strokeStyle: theme.borderColor,
                     fontColor: theme.textColor,
                     lineWidth: 1,
@@ -546,8 +611,21 @@ const AnalyticsManager = {
               },
               label: (ctx) => {
                 const datasetIdx = ctx.datasetIndex;
-                const labelName = datasetIdx === 1 ? kabLabels[ctx.dataIndex] : desaLabels[ctx.dataIndex];
-                return `${labelName}: ${ctx.raw.toLocaleString('id-ID')} Kg`;
+                if (datasetIdx === 1) {
+                  const kabName = kabLabels[ctx.dataIndex];
+                  const val = ctx.raw;
+                  const pct = ((val / totalAllWeight) * 100).toFixed(1);
+                  return `Kab. ${kabName}: ${val.toLocaleString('id-ID')} Kg (${pct}%)`;
+                } else {
+                  const desaName = desaLabels[ctx.dataIndex];
+                  const parentKab = desaParents[ctx.dataIndex];
+                  const val = ctx.raw;
+                  const kabObj = hierarchy[parentKab];
+                  const kabTotal = kabObj ? kabObj.total : totalAllWeight;
+                  const pctOfKab = ((val / (kabTotal || 1)) * 100).toFixed(1);
+                  const pctOfTotal = ((val / totalAllWeight) * 100).toFixed(1);
+                  return `Desa ${desaName} (Kab. ${parentKab}): ${val.toLocaleString('id-ID')} Kg (${pctOfKab}% dari Kab. ${parentKab} • ${pctOfTotal}% Total)`;
+                }
               }
             }
           }
