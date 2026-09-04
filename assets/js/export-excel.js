@@ -51,6 +51,10 @@ const ExportExcelManager = {
   },
 
   openExportDialog(context = 'transaction') {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.can('report.export')) {
+      App.showToast('Akun Anda tidak memiliki hak akses untuk mengekspor laporan ke Excel!', 'warning');
+      return;
+    }
     this.activeContext = context;
     const titleEl = document.getElementById('export-modal-title');
     if (titleEl) {

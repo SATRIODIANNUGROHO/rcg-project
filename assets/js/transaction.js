@@ -374,11 +374,11 @@ const TransactionEngine = {
   saveTransaction() {
     if (typeof AuthManager !== 'undefined') {
       if (!this.isEditingExisting && !AuthManager.canAddTransaction()) {
-        App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+        App.showToast('Akun Anda tidak memiliki hak akses untuk menambah transaksi baru!', 'warning');
         return false;
       }
       if (this.isEditingExisting && !AuthManager.canEditTransaction()) {
-        App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+        App.showToast('Akun Anda tidak memiliki hak akses untuk mengubah data transaksi!', 'warning');
         return false;
       }
     }
@@ -439,7 +439,7 @@ const TransactionEngine = {
 
   loadForEdit(tx) {
     if (typeof AuthManager !== 'undefined' && !AuthManager.canEditTransaction()) {
-      App.showToast('Supervisor hanya memiliki hak akses melihat data tanpa hak perubahan transaksi!', 'warning');
+      App.showToast('Akun Anda tidak memiliki hak akses untuk mengubah data transaksi!', 'warning');
       return;
     }
 

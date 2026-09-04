@@ -694,7 +694,7 @@ const App = {
     if (vEmail) vEmail.textContent = user.email || '-';
     if (vRole) vRole.textContent = user.role;
     if (vUsername) vUsername.textContent = user.username;
-    if (vRoleText) vRoleText.textContent = user.role === 'Administrator' ? 'Administrator Sistem' : 'Operator Penimbangan';
+    if (vRoleText) vRoleText.textContent = user.role === 'Administrator' ? 'Administrator Sistem' : (user.role === 'Supervisor' ? 'Supervisor Pengawas' : 'Operator Penimbangan');
     if (vCreated) vCreated.textContent = user.createdAt || '2026-08-01 08:00';
     if (inputFullName) inputFullName.value = user.fullName || '';
     if (inputEmail) inputEmail.value = user.email || '';

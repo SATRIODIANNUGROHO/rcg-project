@@ -215,23 +215,19 @@ const AuthManager = {
   },
 
   canAddTransaction() {
-    if (this.isSupervisor()) return false;
-    return this.currentUser?.permissions?.transaction?.add !== false;
+    return this.can('transaction.add');
   },
 
   canEditTransaction() {
-    if (this.isSupervisor()) return false;
-    return this.currentUser?.permissions?.transaction?.edit !== false;
+    return this.can('transaction.edit');
   },
 
   canDeleteTransaction() {
-    if (this.isSupervisor()) return false;
-    return this.isAdmin() || this.currentUser?.permissions?.transaction?.delete === true;
+    return this.can('transaction.delete');
   },
 
   canChangePaymentStatus() {
-    if (this.isSupervisor()) return false;
-    return true;
+    return this.can('transaction.edit');
   },
 
   can(privilegeName) {
@@ -450,6 +446,13 @@ const AuthManager = {
       this.currentUser.permissions = permissions;
       this.saveSession(true);
       this.updateUserUI();
+    }
+
+    if (typeof HistoryManager !== 'undefined' && HistoryManager.render) {
+      HistoryManager.render();
+    }
+    if (typeof SupplierHistoryManager !== 'undefined' && SupplierHistoryManager.render) {
+      SupplierHistoryManager.render();
     }
 
     StorageManager.addLog(
@@ -807,15 +810,15 @@ const AuthManager = {
       el.style.display = this.isAdmin() ? '' : 'none';
     });
 
-    // Supervisor-specific UI adjustments (Read-Only Mode)
-    const isSup = this.isSupervisor();
+    // Transaction form UI adjustments (Dynamic permission check)
+    const canAddTx = this.canAddTransaction();
     const btnSaveTx = document.getElementById('btn-save-transaction');
     if (btnSaveTx) {
-      if (isSup) {
+      if (!canAddTx) {
         btnSaveTx.disabled = true;
         btnSaveTx.style.opacity = '0.55';
         btnSaveTx.style.cursor = 'not-allowed';
-        btnSaveTx.setAttribute('title', 'Supervisor hanya memiliki hak akses melihat data tanpa perubahan transaksi');
+        btnSaveTx.setAttribute('title', 'Akun Anda tidak memiliki hak akses untuk menambah atau menyimpan transaksi');
       } else {
         btnSaveTx.disabled = false;
         btnSaveTx.style.opacity = '1';
@@ -825,9 +828,13 @@ const AuthManager = {
     }
 
     const draftMsg = document.getElementById('transaction-draft-msg');
-    if (draftMsg && isSup) {
-      draftMsg.textContent = 'Mode Pengawas (Supervisor): Hak akses melihat data (Read-Only).';
-      draftMsg.style.color = 'var(--accent-gold)';
+    if (draftMsg) {
+      if (!canAddTx) {
+        draftMsg.textContent = 'Mode Terbatas: Hak akses akun Anda saat ini hanya untuk melihat data (Read-Only).';
+        draftMsg.style.color = 'var(--accent-gold)';
+      } else {
+        draftMsg.textContent = '';
+      }
     }
   }
 };
