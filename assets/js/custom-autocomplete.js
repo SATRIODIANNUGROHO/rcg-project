@@ -223,7 +223,7 @@ const CustomAutocomplete = {
       if (isSemuaMatch) {
         const itemAll = document.createElement('div');
         itemAll.className = `custom-combobox-item special-all ${!selectedValue ? 'selected' : ''}`;
-        itemAll.innerHTML = `<span>Semua Pemasok</span><span class="text-small text-secondary" style="font-size: 11px;">(Seluruh Data)</span>`;
+        itemAll.innerHTML = `<span>Semua Pemasok</span>`;
         
         itemAll.addEventListener('mousedown', (e) => {
           e.preventDefault();
