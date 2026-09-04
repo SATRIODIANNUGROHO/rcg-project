@@ -2195,6 +2195,8 @@ input[type="number"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-top-left-radius: calc(var(--radius-modal) - 1px);
+  border-top-right-radius: calc(var(--radius-modal) - 1px);
 }
 
 .modal-header h3 {
@@ -2241,6 +2243,22 @@ input[type="number"] {
   max-height: none;
 }
 
+/* Modal Export Excel - Always Upward Floating Dropdowns & Clean No-Shadow */
+#modal-export-excel .custom-select-menu,
+#modal-export-excel .custom-combobox-menu,
+#modal-export-excel .dropdown-menu-card {
+  top: auto !important;
+  bottom: calc(100% + 4px) !important;
+  animation: fadeInUp 0.12s ease-out !important;
+  box-shadow: none !important;
+}
+
+#modal-export-excel .custom-select-container.open .custom-select-menu,
+#modal-export-excel .custom-combobox.open .custom-combobox-menu,
+#modal-export-excel .custom-combobox.open .dropdown-menu-card {
+  display: block !important;
+}
+
 #modal-serial-connect .modal-container {
   max-width: 520px;
   min-height: 380px;
@@ -2261,6 +2279,8 @@ input[type="number"] {
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
+  border-bottom-left-radius: calc(var(--radius-modal) - 1px);
+  border-bottom-right-radius: calc(var(--radius-modal) - 1px);
 }
 
 .delete-verify-box {

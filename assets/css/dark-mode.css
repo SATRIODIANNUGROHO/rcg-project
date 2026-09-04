@@ -884,6 +884,13 @@ body.dark-mode .custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb:hov
   background: rgba(148, 163, 184, 0.45);
 }
 
+/* Modal Export Excel in Dark Mode - No Shadow */
+body.dark-mode #modal-export-excel .custom-select-menu,
+body.dark-mode #modal-export-excel .custom-combobox-menu,
+body.dark-mode #modal-export-excel .dropdown-menu-card {
+  box-shadow: none !important;
+}
+
 /* User Permissions (RBAC) in Dark Mode (DESIGN_SYSTEM.md Compliant) */
 body.dark-mode .perm-sidebar-panel {
   background-color: #0B1120;
