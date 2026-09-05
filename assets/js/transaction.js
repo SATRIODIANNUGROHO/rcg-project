@@ -431,8 +431,11 @@ const TransactionEngine = {
     AnalyticsManager.render();
     App.renderActivityLogs();
 
-    // Populate print preview modal
-    this.preparePrintNota(tx);
+    // Prepare printable preview if container exists
+    if (typeof this.generateNotaHtml === 'function') {
+      const container = document.getElementById('printable-nota');
+      if (container) container.innerHTML = this.generateNotaHtml(tx, 1, 1);
+    }
 
     this.isEditingExisting = false;
     const btnSave = document.getElementById('btn-save-transaction');

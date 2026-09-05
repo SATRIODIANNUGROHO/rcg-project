@@ -228,17 +228,20 @@ const PrintManager = {
     if (typeof html2pdf !== 'undefined') {
       App.showToast('Menyiapkan file PDF...', 'info');
 
+      const formatCfg = PAPER_FORMATS[paperSize] || PAPER_FORMATS.A6;
+
       const tempContainer = document.createElement('div');
       tempContainer.style.background = '#FFFFFF';
       tempContainer.style.backgroundColor = '#FFFFFF';
       tempContainer.style.color = '#0F172A';
       tempContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
       tempContainer.style.padding = '0';
-      tempContainer.style.margin = '0';
+      tempContainer.style.margin = '0 auto';
       tempContainer.style.border = 'none';
       tempContainer.style.outline = 'none';
       tempContainer.style.boxShadow = 'none';
-      tempContainer.style.width = '780px';
+      tempContainer.style.width = formatCfg.previewWidth || '520px';
+      tempContainer.style.boxSizing = 'border-box';
       tempContainer.innerHTML = htmlContent;
 
       // Ensure images inside tempContainer have absolute URLs
@@ -255,7 +258,7 @@ const PrintManager = {
       else if (paperSize === 'Letter' || paperSize === 'NCR_Wartel') format = 'letter';
 
       const opt = {
-        margin: 0,
+        margin: [3, 3, 3, 3],
         filename: filename.endsWith('.pdf') ? filename : `${filename}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#FFFFFF' },
@@ -314,17 +317,20 @@ const PrintManager = {
         @media print {
           @page {
             size: ${formatCfg.cssPageSize} !important;
-            margin: 4mm !important;
+            margin: 3mm !important;
           }
           #printable-nota {
             width: ${formatCfg.cssContainerWidth} !important;
+            max-width: ${formatCfg.cssContainerWidth} !important;
             margin: 0 auto !important;
           }
           .nota-sheet,
           .nota-container {
             width: 100% !important;
+            max-width: 100% !important;
             box-shadow: none !important;
             border: none !important;
+            padding: 8px 10px !important;
           }
         }
       `;

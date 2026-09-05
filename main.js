@@ -120,12 +120,24 @@ function createWindow() {
 }
 
 // IPC Handlers for desktop integration
-ipcMain.handle('app:print', async (event, options) => {
+ipcMain.handle('app:print', async (event, options = {}) => {
   if (!mainWindow) return false;
   try {
+    let pageSize = { width: 210000, height: 297000 };
+    if (options.pageSize === 'A6') {
+      pageSize = { width: 105000, height: 148000 };
+    } else if (options.pageSize === 'A5') {
+      pageSize = { width: 148000, height: 210000 };
+    } else if (options.pageSize === 'Letter') {
+      pageSize = { width: 215900, height: 279400 };
+    } else if (options.pageSize === 'NCR_Wartel') {
+      pageSize = { width: 241300, height: 279400 };
+    }
+
     mainWindow.webContents.print({
       silent: false,
       printBackground: true,
+      pageSize: pageSize,
       ...options
     });
     return true;
@@ -151,20 +163,26 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       return { success: false, canceled: true };
     }
 
-    let pageSize = 'A4';
-    let pageCSS = 'A4';
+    let pageSize = { width: 210000, height: 297000 };
+    let pageCSS = '210mm 297mm';
+    let containerWidth = '190mm';
+
     if (options.paperSize === 'A6') {
-      pageSize = 'A6';
+      pageSize = { width: 105000, height: 148000 };
       pageCSS = '105mm 148mm';
+      containerWidth = '98mm';
     } else if (options.paperSize === 'A5') {
-      pageSize = 'A5';
+      pageSize = { width: 148000, height: 210000 };
       pageCSS = '148mm 210mm';
+      containerWidth = '138mm';
     } else if (options.paperSize === 'Letter') {
-      pageSize = 'Letter';
+      pageSize = { width: 215900, height: 279400 };
       pageCSS = '8.5in 11in';
+      containerWidth = '7.8in';
     } else if (options.paperSize === 'NCR_Wartel') {
       pageSize = { width: 241300, height: 279400 };
       pageCSS = '9.5in 11in';
+      containerWidth = '8.8in';
     }
 
     let htmlContent = options.htmlContent || '';
@@ -187,8 +205,8 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     // Create an isolated offscreen BrowserWindow for pristine, zero-border PDF export
     const printWin = new BrowserWindow({
       show: false,
-      width: 1024,
-      height: 768,
+      width: 1200,
+      height: 900,
       backgroundColor: '#FFFFFF',
       webPreferences: {
         nodeIntegration: false,
@@ -206,7 +224,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     *, *::before, *::after {
-      box-sizing: border-box;
+      box-sizing: border-box !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
@@ -219,19 +237,25 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
-      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
     }
     @page {
-      margin: 4mm !important;
+      margin: 3mm !important;
       size: ${pageCSS} portrait;
     }
     .nota-container, .nota-sheet {
+      width: ${containerWidth} !important;
+      max-width: ${containerWidth} !important;
       margin: 0 auto !important;
-      padding: 14px 16px !important;
+      padding: 10px 12px !important;
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
       background: #FFFFFF !important;
+      box-sizing: border-box !important;
+    }
+    table {
+      border-collapse: collapse !important;
     }
   </style>
 </head>
@@ -241,6 +265,8 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
 </html>`;
 
     await printWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(fullDoc));
+    await printWin.webContents.executeJavaScript('document.fonts.ready');
+    await new Promise(r => setTimeout(r, 400));
 
     const pdfBuffer = await printWin.webContents.printToPDF({
       printBackground: true,

@@ -2,7 +2,6 @@
 
 /* ==========================================================================
    PT. REKA CIPTA GARAM - NOTA TIMBANG & FORM PEMASOK PRINT STYLESHEET
-   Format: Official Weighing Receipt & Supplier Form
    ========================================================================== */
 
 /* 1. Sembunyikan container cetak saat tampilan layar normal */
@@ -19,20 +18,27 @@
 /* 2. Tampilkan khusus saat proses cetak / Print Preview */
 @media print {
   @page {
-    size: auto;
-    margin: 0 !important;
+    margin: 3mm !important;
+  }
+
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    box-sizing: border-box !important;
   }
 
   html, body, html.dark-mode, body.dark-mode {
     background: #FFFFFF !important;
     background-color: #FFFFFF !important;
-    color: #000000 !important;
+    color: #0F172A !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
     overflow: visible !important;
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
   }
 
   /* Sembunyikan elemen aplikasi dan modal saat printer aktif */
@@ -55,168 +61,20 @@
     top: 0 !important;
     width: 100% !important;
     margin: 0 auto !important;
-    color: #000000 !important;
+    color: #0F172A !important;
     background: #FFFFFF !important;
-    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-    font-size: 11.5pt;
-    line-height: 1.35;
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
   }
 
-  #printable-nota *,
-  #printable-nota-area * {
+  #printable-nota * {
     visibility: visible !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
   }
 
-  .nota-container {
+  .nota-container,
+  .nota-sheet {
+    box-shadow: none !important;
     border: none !important;
-    padding: 14px 18px;
-    background: #FFFFFF;
-  }
-
-  .nota-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #000000;
-    padding-bottom: 8px;
-    margin-bottom: 12px;
-  }
-
-  .nota-company h2 {
-    font-size: 14pt;
-    font-weight: 800;
-    color: #000000;
-    margin: 0;
-  }
-
-  .nota-company p {
-    font-size: 8.5pt;
-    color: #333333;
-    margin: 2px 0 0 0;
-  }
-
-  .nota-title-box {
-    text-align: right;
-  }
-
-  .nota-title-box h1 {
-    font-size: 16pt;
-    font-weight: 800;
-    text-decoration: underline;
-    margin: 0;
-  }
-
-  .nota-doc-no {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 10pt;
-    font-weight: 700;
-    margin-top: 2px;
-  }
-
-  .nota-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 12px;
-  }
-
-  .nota-info-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 9.5pt;
-  }
-
-  .nota-info-table td {
-    padding: 2.5px 4px;
-    vertical-align: top;
-  }
-
-  .nota-info-table td.label {
-    width: 32%;
-    font-weight: 600;
-  }
-
-  .nota-info-table td.colon {
-    width: 4%;
-  }
-
-  .nota-info-table td.val {
-    font-weight: 700;
-  }
-
-  .nota-weight-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 10px 0;
-    border: none;
-  }
-
-  .nota-weight-table th {
-    background-color: #F0F0F0 !important;
-    color: #000000 !important;
-    border: none;
-    border-bottom: 1.5px solid #000000;
-    padding: 6px 8px;
-    font-size: 9pt;
-    font-weight: 700;
-    text-align: center;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .nota-weight-table td {
-    border: none;
-    border-bottom: 1px solid #E2E8F0;
-    padding: 6px 8px;
-    font-size: 9.5pt;
-  }
-
-  .nota-weight-table td.num {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    font-weight: 700;
-  }
-
-  .nota-total-highlight {
-    background-color: #F0F0F0 !important;
-    font-weight: 800;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .nota-signatures {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    text-align: center;
-    margin-top: 14px;
-    padding-top: 6px;
-  }
-
-  .sign-col p {
-    font-size: 9pt;
-    margin-bottom: 45px;
-    font-weight: 600;
-  }
-
-  .sign-col .sign-name {
-    font-size: 9.5pt;
-    font-weight: 700;
-    border-top: 1px solid #000000;
-    display: inline-block;
-    min-width: 130px;
-    padding-top: 2px;
-    margin-bottom: 0;
-  }
-
-  .nota-footer-note {
-    font-size: 7.5pt;
-    color: #555555;
-    text-align: center;
-    margin-top: 8px;
-    border-top: 1px dashed #777777;
-    padding-top: 4px;
+    background: #FFFFFF !important;
   }
 }
+
