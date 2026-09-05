@@ -265,7 +265,7 @@ const SupplierHistoryManager = {
           <!-- Header Perusahaan -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #163A5F; padding-bottom: 12px; margin-bottom: 14px;">
             <div style="display: flex; align-items: center;">
-              <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam" style="height: 48px; max-width: 270px; object-fit: contain;">
+              <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam - Subsidiary Bawang Mas Grup" style="height: 46px; max-width: 320px; object-fit: contain;">
             </div>
             <div style="text-align: right;">
               <div style="font-size: 13px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 3px 8px; border-radius: 4px; display: inline-block;">${copyBadgeText}</div>

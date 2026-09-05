@@ -54,36 +54,20 @@ const TransactionEngine = {
       });
     }
 
-    // Ambil Weight buttons
+    // Hapus/Reset Weight buttons
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
       btnCaptureGross.addEventListener('click', () => {
-        const liveWeight = (typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight > 0)
-          ? ScaleEngine.currentWeight
-          : 0;
-        document.getElementById('input-gross-weight').value = liveWeight;
+        document.getElementById('input-gross-weight').value = 0;
         this.handleCalculation('input-gross-weight');
-        if (liveWeight > 0) {
-          App.showToast(`Berat kotor berhasil diambil: ${liveWeight.toLocaleString('id-ID')} Kg`, 'info');
-        } else {
-          App.showToast('Nilai berat kotor diatur ke 0 Kg', 'info');
-        }
       });
     }
 
     const btnCaptureTare = document.getElementById('btn-capture-tare');
     if (btnCaptureTare) {
       btnCaptureTare.addEventListener('click', () => {
-        const liveWeight = (typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight > 0)
-          ? ScaleEngine.currentWeight
-          : 0;
-        document.getElementById('input-tare-weight').value = liveWeight;
+        document.getElementById('input-tare-weight').value = 0;
         this.handleCalculation('input-tare-weight');
-        if (liveWeight > 0) {
-          App.showToast(`Berat tara berhasil diambil: ${liveWeight.toLocaleString('id-ID')} Kg`, 'info');
-        } else {
-          App.showToast('Nilai berat tara diatur ke 0 Kg', 'info');
-        }
       });
     }
 
@@ -606,7 +590,7 @@ const TransactionEngine = {
         <!-- Header Perusahaan (Identik dengan Kop Formulir) -->
         <div class="nota-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #163A5F; padding-bottom: 12px; margin-bottom: 14px;">
           <div style="display: flex; align-items: center;">
-            <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam" style="height: 48px; max-width: 270px; object-fit: contain;">
+            <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam - Subsidiary Bawang Mas Grup" style="height: 46px; max-width: 320px; object-fit: contain;">
           </div>
           <div class="nota-title-box" style="text-align: right;">
             <div style="font-size: 13px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 3px 8px; border-radius: 4px; display: inline-block;">${copyBadgeText}</div>

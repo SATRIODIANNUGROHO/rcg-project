@@ -343,21 +343,20 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 80px;
   padding: 0 16px;
   font-weight: 700;
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: #3671c6;
+  border-color: #3671c6;
   color: #FFFFFF;
 }
 
 .btn-action-capture:hover:not(:disabled) {
-  background-color: var(--primary-hover);
-  border-color: var(--primary-hover);
+  background-color: #2b5ea8;
+  border-color: #2b5ea8;
   color: #FFFFFF;
 }
 
 .btn-action-capture:active:not(:disabled) {
-  background-color: var(--primary-active);
-  border-color: var(--primary-active);
-  color: #FFFFFF;
+  background-color: #234c87;
+  border-color: #234c87;
 }
 
 /* ==========================================================================

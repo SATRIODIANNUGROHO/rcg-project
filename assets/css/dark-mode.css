@@ -425,15 +425,15 @@ body.dark-mode .btn-accent:hover:not(:disabled) {
 }
 
 body.dark-mode .btn-action-capture {
-  background-color: #2563EB;
+  background-color: #3671c6;
   color: #FFFFFF;
-  border-color: #2563EB;
+  border-color: #3671c6;
   font-weight: 700;
 }
 
 body.dark-mode .btn-action-capture:hover:not(:disabled) {
-  background-color: #1D4ED8;
-  border-color: #1D4ED8;
+  background-color: #4b88e0;
+  border-color: #4b88e0;
   color: #FFFFFF;
 }
 
