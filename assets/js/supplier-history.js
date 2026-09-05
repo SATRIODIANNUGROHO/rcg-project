@@ -279,24 +279,24 @@ const SupplierHistoryManager = {
             <div>
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Nama Pemasok</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Pemasok</td>
                   <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
                   <td style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;" title="${tx.supplier}">${tx.supplier}</td>
+                </tr>
+                <tr>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">No. Polisi</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+                  <td style="font-family: monospace; font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.plateNo}</td>
+                </tr>
+                <tr>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Nama Supir</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+                  <td style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.driverName || '-'}</td>
                 </tr>
                 <tr>
                   <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Asal Daerah</td>
                   <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
                   <td style="color: #0F172A; padding: 2.5px 0; white-space: nowrap; font-weight: 600;">${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
-                </tr>
-                <tr>
-                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">No. Polisi Truk</td>
-                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
-                  <td style="font-family: monospace; font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.plateNo}</td>
-                </tr>
-                <tr>
-                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Jenis Material</td>
-                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
-                  <td style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.material || 'Garam'} ${tx.bagCount ? '(' + tx.bagCount + ' Karung)' : ''}</td>
                 </tr>
               </table>
             </div>
@@ -313,9 +313,9 @@ const SupplierHistoryManager = {
                   <td style="font-family: monospace; color: #0F172A; padding: 2.5px 0; white-space: nowrap; font-size: 10px;">${tx.timeIn || '-'} s/d ${tx.timeOut || '-'} WIB</td>
                 </tr>
                 <tr>
-                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Nama Supir</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Material</td>
                   <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
-                  <td style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.driverName || '-'}</td>
+                  <td style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.material || 'Garam'}</td>
                 </tr>
                 <tr>
                   <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Status Bayar</td>
