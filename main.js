@@ -163,24 +163,24 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       return { success: false, canceled: true };
     }
 
-    let pageSize = { width: 210000, height: 297000 };
+    let pageSize = 'A4';
     let pageCSS = '210mm 297mm';
     let containerWidth = '190mm';
 
     if (options.paperSize === 'A6') {
-      pageSize = { width: 105000, height: 148000 };
+      pageSize = { width: 105 / 25.4, height: 148 / 25.4 };
       pageCSS = '105mm 148mm';
       containerWidth = '98mm';
     } else if (options.paperSize === 'A5') {
-      pageSize = { width: 148000, height: 210000 };
+      pageSize = 'A5';
       pageCSS = '148mm 210mm';
       containerWidth = '138mm';
     } else if (options.paperSize === 'Letter') {
-      pageSize = { width: 215900, height: 279400 };
+      pageSize = 'Letter';
       pageCSS = '8.5in 11in';
       containerWidth = '7.8in';
     } else if (options.paperSize === 'NCR_Wartel') {
-      pageSize = { width: 241300, height: 279400 };
+      pageSize = { width: 9.5, height: 11.0 };
       pageCSS = '9.5in 11in';
       containerWidth = '8.8in';
     }
