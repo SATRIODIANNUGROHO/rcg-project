@@ -589,126 +589,126 @@ const TransactionEngine = {
     const payStatusText = isLunas ? 'Lunas' : 'Belum Lunas';
 
     return `
-      <div class="nota-container" style="background: #FFFFFF; color: #000000; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 16px 18px; border: none !important; outline: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
+      <div class="nota-container" style="background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 16px 18px; border: none !important; outline: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
         <!-- Header Logo Centered -->
         <div style="text-align: center; margin-bottom: 12px;">
           <img src="assets/images/kop surat nota timbang.webp" alt="PT REKA CIPTA GARAM - Subsidiary Bawang Mas Grup" style="max-height: 56px; max-width: 100%; width: auto; height: auto; object-fit: contain; display: inline-block;">
         </div>
 
-        <!-- Solid Divider -->
-        <div style="border-top: 2.5px solid #000000; margin: 0 0 12px 0;"></div>
+        <!-- Solid Theme Divider -->
+        <div style="border-top: 2.5px solid #163A5F; margin: 0 0 12px 0;"></div>
 
         <!-- Title -->
-        <div style="text-align: center; font-size: 15px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; color: #000000;">
+        <div style="text-align: center; font-size: 15px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; color: #163A5F;">
           ${copyBadgeText}
-          ${totalCopies > 1 ? `<div style="font-size: 9.5px; font-weight: 700; color: #475569; margin-top: 2px; letter-spacing: 0.04em;">[ ${copyReceiverText} ]</div>` : ''}
+          ${totalCopies > 1 ? `<div style="font-size: 9.5px; font-weight: 700; color: #64748B; margin-top: 2px; letter-spacing: 0.04em;">[ ${copyReceiverText} ]</div>` : ''}
         </div>
 
         <!-- Metadata Section (2 Columns) -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; font-size: 11px; margin-bottom: 8px; line-height: 1.4;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; font-size: 11px; margin-bottom: 6px; line-height: 1.4;">
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Tanggal</div>
-            <div style="color: #000000; margin-bottom: 8px;">${tx.date}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Tanggal</div>
+            <div style="color: #0F172A; font-weight: 600; margin-bottom: 7px;">${tx.date}</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">No. Polisi</div>
-            <div style="color: #000000; margin-bottom: 8px;">${tx.plateNo}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">No. Polisi</div>
+            <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 7px;">${tx.plateNo}</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Material</div>
-            <div style="display: flex; justify-content: space-between; color: #000000; margin-bottom: 8px;">
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Material</div>
+            <div style="display: flex; justify-content: space-between; color: #0F172A; font-weight: 600; margin-bottom: 7px;">
               <span>${tx.material}</span>
-              <span>${tx.bagCount ? tx.bagCount : ''}</span>
+              <span>${tx.bagCount ? tx.bagCount + ' Karung' : ''}</span>
             </div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Masuk</div>
-            <div style="color: #000000;">${tx.timeIn ? tx.timeIn + ' WIB' : '-'}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Masuk</div>
+            <div style="color: #0F172A; font-weight: 500; font-size: 10.5px;">${tx.timeIn ? tx.timeIn + ' WIB' : '-'}</div>
           </div>
 
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">No. Dok</div>
-            <div style="color: #000000; margin-bottom: 8px;">${tx.docNo}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">No. Dok</div>
+            <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 7px;">${tx.docNo}</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Nama Pemasok</div>
-            <div style="color: #000000; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.supplier}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Nama Pemasok</div>
+            <div style="color: #0F172A; font-weight: 700; margin-bottom: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.supplier}</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Asal Material</div>
-            <div style="display: flex; justify-content: space-between; color: #000000; margin-bottom: 8px;">
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Asal Material</div>
+            <div style="display: flex; justify-content: space-between; color: #0F172A; font-weight: 600; margin-bottom: 7px;">
               <span>${tx.originRegion || '-'}</span>
               <span>${tx.originArea || ''}</span>
             </div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Keluar</div>
-            <div style="color: #000000;">${tx.timeOut ? tx.timeOut + ' WIB' : '-'}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Keluar</div>
+            <div style="color: #0F172A; font-weight: 500; font-size: 10.5px;">${tx.timeOut ? tx.timeOut + ' WIB' : '-'}</div>
           </div>
         </div>
 
         <!-- Dashed Divider 1 -->
-        <div style="border-top: 1px dashed #000000; margin: 10px 0;"></div>
+        <div style="border-top: 1px dashed #94A3B8; margin: 9px 0;"></div>
 
         <!-- Weight Section (2 Columns) -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; font-size: 11px; margin-bottom: 8px; line-height: 1.4;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; font-size: 11px; margin-bottom: 6px; line-height: 1.4;">
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Berat Kotor (Gross)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${tx.grossWeight.toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Berat Kotor (Gross)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">${tx.grossWeight.toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Berat Muatan (Bruto)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${tx.netLoadWeight.toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Berat Muatan (Bruto)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Berat Bersih Total (Kg)</div>
-            <div style="color: #000000;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Berat Bersih Total (Kg)</div>
+            <div style="color: #163A5F; font-weight: 800; font-family: monospace;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
           </div>
 
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Berat Tara (Tare)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${tx.tareWeight.toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Berat Tara (Tare)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">${tx.tareWeight.toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Refraksi (%)</div>
-            <div style="color: #000000;">${tx.refractionPercent}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Refraksi (%)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace;">${tx.refractionPercent}%</div>
           </div>
         </div>
 
         <!-- Dashed Divider 2 -->
-        <div style="border-top: 1px dashed #000000; margin: 10px 0;"></div>
+        <div style="border-top: 1px dashed #94A3B8; margin: 9px 0;"></div>
 
         <!-- Quality & Price Section (2 Columns) -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; font-size: 11px; margin-bottom: 8px; line-height: 1.4;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; font-size: 11px; margin-bottom: 6px; line-height: 1.4;">
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Berat Bersih K1 (Kg)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${(tx.k1Weight || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Berat Bersih K1 (Kg)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">${(tx.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Berat Bersih K2 (Kg)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${(tx.k2Weight || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Berat Bersih K2 (Kg)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">${(tx.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Total K1 (Rp)</div>
-            <div style="color: #000000;">Rp ${(tx.k1Total || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Total K1 (Rp)</div>
+            <div style="color: #163A5F; font-weight: 700; font-family: monospace;">Rp ${(tx.k1Total || 0).toLocaleString('id-ID')}</div>
           </div>
 
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Harga K1 / Kg (Rp)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${(tx.k1Price || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Harga K1 / Kg (Rp)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">Rp ${(tx.k1Price || 0).toLocaleString('id-ID')}</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Harga K2 / Kg (Rp)</div>
-            <div style="color: #000000; margin-bottom: 8px;">${(tx.k2Price || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Harga K2 / Kg (Rp)</div>
+            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 7px;">Rp ${(tx.k2Price || 0).toLocaleString('id-ID')}</div>
 
-            <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Total K2 (Rp)</div>
-            <div style="color: #000000;">Rp ${(tx.k2Total || 0).toLocaleString('id-ID')}</div>
+            <div style="font-weight: 700; color: #475569; font-size: 10.5px; margin-bottom: 2px;">Total K2 (Rp)</div>
+            <div style="color: #B45309; font-weight: 700; font-family: monospace;">Rp ${(tx.k2Total || 0).toLocaleString('id-ID')}</div>
           </div>
         </div>
 
-        <!-- Total Keseluruhan -->
-        <div style="margin-top: 8px; font-size: 11px;">
-          <div style="font-weight: 800; color: #000000; text-transform: uppercase;">TOTAL KESELURUHAN (Rp)</div>
-          <div style="font-weight: 800; font-size: 12px; color: #000000; margin-top: 2px;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</div>
+        <!-- Total Keseluruhan (Thematic Accent Box) -->
+        <div style="margin-top: 10px; background: #F8FAFC; border-left: 3.5px solid #163A5F; border-top: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0; padding: 7px 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+          <span style="font-weight: 800; font-size: 10.5px; color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL KESELURUHAN:</span>
+          <span style="font-weight: 800; font-size: 13px; color: #163A5F; font-family: monospace;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</span>
         </div>
 
         <!-- Signatures -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 28px; font-size: 11px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 24px; font-size: 10.5px;">
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 42px;">Supir</div>
-            <div style="font-weight: 700; color: #000000; text-transform: uppercase;">${tx.driverName || 'SUPIR'}</div>
+            <div style="color: #64748B; margin-bottom: 34px;">Supir Kendaraan</div>
+            <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 110px; padding-top: 3px;">( ${tx.driverName || 'SUPIR'} )</div>
           </div>
           <div>
-            <div style="font-weight: 700; color: #000000; margin-bottom: 42px;">Admin</div>
-            <div style="font-weight: 700; color: #000000; text-transform: uppercase;">${tx.adminName || tx.weighmasterName || 'ADMIN'}</div>
+            <div style="color: #64748B; margin-bottom: 34px;">Petugas / Admin</div>
+            <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 110px; padding-top: 3px;">( ${tx.adminName || tx.weighmasterName || 'ADMIN'} )</div>
           </div>
         </div>
 
