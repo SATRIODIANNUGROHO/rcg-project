@@ -554,6 +554,40 @@ const TransactionEngine = {
     App.showToast(`Memuat data transaksi ${tx.docNo} untuk disunting`, 'info');
   },
 
+  formatMaterialDisplay(tx) {
+    if (!tx) return 'GARAM';
+    const mat = (tx.material || '').trim();
+    const bagCount = parseInt(tx.bagCount, 10) || 0;
+
+    if (!mat) {
+      return bagCount > 0 ? `GARAM ${bagCount} KARUNG` : 'GARAM';
+    }
+
+    const upper = mat.toUpperCase();
+    const isCurah = upper.includes('CURAH');
+
+    // If string already contains digits and unit descriptors (e.g. "GARAM 200 KARUNG", "GARAM CURAH 10350.0 KG", "GARAM 200 KARUNG.")
+    if (/\d+/.test(upper)) {
+      if (upper.includes('KARUNG') || upper.includes('KG') || upper.includes('TON')) {
+        return upper;
+      }
+      return isCurah ? `${upper} KG` : `${upper} KARUNG`;
+    }
+
+    // If string is without numbers (e.g. "Garam Karung", "Garam Curah", "GARAM")
+    if (isCurah) {
+      if (bagCount > 0) {
+        return `GARAM CURAH ${bagCount} KG`;
+      }
+      return 'GARAM CURAH';
+    } else {
+      if (bagCount > 0) {
+        return `GARAM ${bagCount} KARUNG`;
+      }
+      return upper.includes('KARUNG') ? upper : `${upper} KARUNG`;
+    }
+  },
+
   generateNotaHtml(tx, copyNumber = 1, totalCopies = 1) {
     let copyBadgeText = 'NOTA TIMBANG';
     let copyReceiverText = 'LEMBAR UTAMA (ASLI)';
@@ -571,12 +605,12 @@ const TransactionEngine = {
       }
     } else if (totalCopies === 3) {
       if (copyNumber === 1) {
-        copyBadgeText = 'NOTA TIMBANG (LEMBAR 1)';
+        copyBadgeText = 'NOTA TIMBANG (ASLI)';
         copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
         copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
       } else if (copyNumber === 2) {
-        copyBadgeText = 'NOTA TIMBANG (LEMBAR 2)';
-        copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & OPERASIONAL';
+        copyBadgeText = 'NOTA TIMBANG (LAPANGAN)';
+        copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & LAPANGAN';
         copyFooterText = '* Lembar 2: Untuk Arsip Bagian Timbangan & Lapangan.';
       } else {
         copyBadgeText = 'NOTA TIMBANG (LEMBAR 3)';
@@ -614,10 +648,7 @@ const TransactionEngine = {
             <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px;">${tx.plateNo}</div>
 
             <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Material</div>
-            <div style="display: flex; justify-content: space-between; color: #0F172A; font-weight: 600; margin-bottom: 4px;">
-              <span>${tx.material}</span>
-              <span>${tx.bagCount ? tx.bagCount + ' Karung' : ''}</span>
-            </div>
+            <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px;">${this.formatMaterialDisplay(tx)}</div>
 
             <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Masuk</div>
             <div style="color: #0F172A; font-weight: 500; font-size: 9.5px;">${tx.timeIn ? tx.timeIn + ' WIB' : '-'}</div>

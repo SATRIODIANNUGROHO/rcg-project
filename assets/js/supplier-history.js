@@ -229,9 +229,43 @@ const SupplierHistoryManager = {
     });
   },
 
-  printSupplierForm(txId) {
-    const txs = StorageManager.getTransactions();
-    const tx = txs.find(t => t.id === txId);
+  formatMaterialDisplay(tx) {
+    if (!tx) return 'GARAM';
+    const mat = (tx.material || '').trim();
+    const bagCount = parseInt(tx.bagCount, 10) || 0;
+
+    if (!mat) {
+      return bagCount > 0 ? `GARAM ${bagCount} KARUNG` : 'GARAM';
+    }
+
+    const upper = mat.toUpperCase();
+    const isCurah = upper.includes('CURAH');
+
+    // If string already contains digits and unit descriptors (e.g. "GARAM 200 KARUNG", "GARAM CURAH 10350.0 KG", "GARAM 200 KARUNG.")
+    if (/\d+/.test(upper)) {
+      if (upper.includes('KARUNG') || upper.includes('KG') || upper.includes('TON')) {
+        return upper;
+      }
+      return isCurah ? `${upper} KG` : `${upper} KARUNG`;
+    }
+
+    // If string is without numbers (e.g. "Garam Karung", "Garam Curah", "GARAM")
+    if (isCurah) {
+      if (bagCount > 0) {
+        return `GARAM CURAH ${bagCount} KG`;
+      }
+      return 'GARAM CURAH';
+    } else {
+      if (bagCount > 0) {
+        return `GARAM ${bagCount} KARUNG`;
+      }
+      return upper.includes('KARUNG') ? upper : `${upper} KARUNG`;
+    }
+  },
+
+  printSupplierForm(id) {
+    const list = StorageManager.getTransactions();
+    const tx = list.find(t => t.id === id);
     if (!tx) return;
 
     const generatorFn = (copyNumber, totalCopies) => {
@@ -303,10 +337,7 @@ const SupplierHistoryManager = {
               <div style="color: #0F172A; font-weight: 700; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.supplier}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Material</div>
-              <div style="display: flex; justify-content: space-between; color: #0F172A; font-weight: 600; margin-bottom: 4px;">
-                <span>${tx.material || 'Garam'}</span>
-                <span>${tx.bagCount ? tx.bagCount + ' Karung' : ''}</span>
-              </div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px;">${this.formatMaterialDisplay(tx)}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Waktu Timbang / Status</div>
               <div style="display: flex; justify-content: space-between; color: #0F172A; font-weight: 600;">

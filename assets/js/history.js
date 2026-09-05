@@ -275,7 +275,7 @@ const HistoryManager = {
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
           <div><span class="text-secondary text-small">No. Dokumen:</span><br><strong class="mono-num" style="color: var(--primary);">${tx.docNo}</strong></div>
-          <div><span class="text-secondary text-small">Material:</span><br><strong>${tx.material} ${tx.bagCount ? '(' + tx.bagCount + ' Karung)' : ''}</strong></div>
+          <div><span class="text-secondary text-small">Material:</span><br><strong>${(typeof TransactionEngine !== 'undefined' && TransactionEngine.formatMaterialDisplay) ? TransactionEngine.formatMaterialDisplay(tx) : tx.material}</strong></div>
           <div><span class="text-secondary text-small">Tanggal:</span><br><strong class="mono-num">${tx.date}</strong></div>
           <div><span class="text-secondary text-small">Waktu Masuk / Keluar:</span><br><span class="mono-num">${tx.timeIn || '-'} s/d ${tx.timeOut || '-'}</span></div>
         </div>
