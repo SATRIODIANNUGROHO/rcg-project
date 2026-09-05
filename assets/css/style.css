@@ -54,8 +54,8 @@
   --color-info-light: #EFF6FF;
 
   /* Typography - Unified Plus Jakarta Sans */
-  --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-primary: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'Plus Jakarta Sans', sans-serif;
 
   /* Clean Radius System */
   --radius-tight: 4px;
@@ -115,6 +115,11 @@ html, body {
   padding: 0;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body, button, input, select, textarea, optgroup {
+  font-family: var(--font-primary);
 }
 
 body {
@@ -1473,6 +1478,12 @@ input[type="number"] {
   cursor: pointer;
   transition: var(--transition);
   color: #FFFFFF;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.user-profile-trigger,
+.user-profile-trigger * {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
 .user-profile-trigger:hover,
@@ -1490,6 +1501,7 @@ input[type="number"] {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 10px;
   font-weight: 700;
   flex-shrink: 0;
@@ -1500,15 +1512,18 @@ input[type="number"] {
   flex-direction: column;
   line-height: 1.15;
   text-align: left;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
 .user-name {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 12px;
   font-weight: 700;
   color: #FFFFFF;
 }
 
 .user-role {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 10px;
   color: #94A3B8;
 }
@@ -1553,12 +1568,14 @@ input[type="number"] {
 }
 
 .dropdown-user-name {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 13px;
   font-weight: 700;
   color: var(--primary-dark);
 }
 
 .dropdown-user-role {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 11px;
   color: var(--text-secondary);
 }
