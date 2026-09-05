@@ -102,23 +102,20 @@ const App = {
       });
     }
 
-    // About & Licenses Modal Trigger inside Dropdown
-    const aboutBtn = document.getElementById('btn-open-about');
-    if (aboutBtn) {
-      aboutBtn.addEventListener('click', () => {
-        if (profileDropdown) {
-          profileDropdown.classList.remove('open');
-          if (profileTrigger) profileTrigger.setAttribute('aria-expanded', 'false');
-        }
-        this.openModal('modal-about-licenses');
-      });
-    }
-
     // Dark Mode Toggle inside Dropdown
     const themeBtn = document.getElementById('btn-toggle-theme');
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {
         this.toggleTheme();
+      });
+    }
+
+    // About & Licenses tab trigger from dropdown
+    const aboutBtn = document.getElementById('btn-open-about-tab');
+    if (aboutBtn) {
+      aboutBtn.addEventListener('click', () => {
+        if (profileDropdown) profileDropdown.classList.remove('open');
+        this.switchTab('about-licenses');
       });
     }
 
