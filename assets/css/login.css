@@ -1,3 +1,6 @@
+@import url('fonts.css');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 /* ==========================================================================
    PT. REKA CIPTA GARAM - LOGIN PAGE STYLESHEET
    Design: Industrial Corporate Navy, Refined Glassmorphism & High-Contrast Typography
@@ -159,7 +162,7 @@ body.login-light-mode .login-bg-pattern {
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 10.5px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
 }
 
@@ -369,7 +372,7 @@ body.login-light-mode .login-alert.error {
 .btn-demo-pill span.sub {
   font-size: 10px;
   color: var(--login-text-sub);
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 400;
 }
 

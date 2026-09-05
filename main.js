@@ -182,6 +182,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
   <meta charset="UTF-8">
   <base href="${baseHref}">
   <title>${defaultFilename}</title>
+  <link rel="stylesheet" href="assets/css/fonts.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     *, *::before, *::after {
