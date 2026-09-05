@@ -336,6 +336,9 @@ const App = {
     closeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const modal = btn.closest('.modal-overlay');
+        if (modal && modal.id === 'modal-user-permissions') {
+          return;
+        }
         if (modal && modal.id !== 'modal-login') {
           modal.classList.remove('active');
         }

@@ -78,6 +78,8 @@ const DEFAULT_USERS = [
 const AuthManager = {
   currentUser: null,
   selectedPermUserId: null,
+  initialPermSnapshot: null,
+  onDiscardCallback: null,
 
   notify(message, type = 'info') {
     if (typeof App !== 'undefined' && App.showToast) {
@@ -474,6 +476,8 @@ const AuthManager = {
       '-'
     );
 
+    this.initialPermSnapshot = JSON.stringify(this.collectPermissionsFromForm());
+
     return { success: true, message: `Hak akses untuk "${target.username}" berhasil disimpan!` };
   },
 
@@ -509,6 +513,16 @@ const AuthManager = {
         <td><span class="role-text ${u.role === 'Administrator' ? 'role-admin' : (u.role === 'Supervisor' ? 'role-supervisor' : 'role-operator')}">${u.role}</span></td>
       `;
       tr.addEventListener('click', () => {
+        if (this.selectedPermUserId === u.id) return;
+        if (this.hasUnsavedChanges()) {
+          this.showUnsavedConfirmModal(() => {
+            this.selectedPermUserId = u.id;
+            document.querySelectorAll('.perm-user-row').forEach(r => r.classList.remove('active-user'));
+            tr.classList.add('active-user');
+            this.loadUserPermissionsToForm(u.id);
+          });
+          return;
+        }
         this.selectedPermUserId = u.id;
         document.querySelectorAll('.perm-user-row').forEach(r => r.classList.remove('active-user'));
         tr.classList.add('active-user');
@@ -566,6 +580,39 @@ const AuthManager = {
 
     const p = user.permissions || defaultP;
     this.applyPermissionsTemplateToForm(p);
+    this.initialPermSnapshot = JSON.stringify(this.collectPermissionsFromForm());
+  },
+
+  hasUnsavedChanges() {
+    if (!this.initialPermSnapshot) return false;
+    return JSON.stringify(this.collectPermissionsFromForm()) !== this.initialPermSnapshot;
+  },
+
+  showUnsavedConfirmModal(onConfirmDiscard) {
+    this.onDiscardCallback = onConfirmDiscard;
+    const modalConfirm = document.getElementById('modal-confirm-unsaved-permissions');
+    if (modalConfirm) modalConfirm.classList.add('active');
+  },
+
+  closeUnsavedConfirmModal() {
+    const modalConfirm = document.getElementById('modal-confirm-unsaved-permissions');
+    if (modalConfirm) modalConfirm.classList.remove('active');
+    this.onDiscardCallback = null;
+  },
+
+  handleClosePermissionsModal() {
+    if (this.hasUnsavedChanges()) {
+      this.showUnsavedConfirmModal(() => {
+        if (this.selectedPermUserId) {
+          this.loadUserPermissionsToForm(this.selectedPermUserId);
+        }
+        const modal = document.getElementById('modal-user-permissions');
+        if (modal) modal.classList.remove('active');
+      });
+    } else {
+      const modal = document.getElementById('modal-user-permissions');
+      if (modal) modal.classList.remove('active');
+    }
   },
 
   collectPermissionsFromForm() {
@@ -635,6 +682,36 @@ const AuthManager = {
     const btnClearAll = document.getElementById('btn-perm-clear-all');
     if (btnClearAll) {
       btnClearAll.addEventListener('click', () => this.setAllPermissions(false));
+    }
+
+    // Close Permissions Modal buttons with unsaved check
+    const btnClosePerm = document.getElementById('btn-close-perm-modal');
+    if (btnClosePerm) {
+      btnClosePerm.addEventListener('click', () => this.handleClosePermissionsModal());
+    }
+    const btnClosePermX = document.getElementById('btn-close-perm-modal-x');
+    if (btnClosePermX) {
+      btnClosePermX.addEventListener('click', () => this.handleClosePermissionsModal());
+    }
+
+    // Unsaved changes confirmation modal handlers
+    const btnCancelUnsaved = document.getElementById('btn-cancel-unsaved-perm');
+    if (btnCancelUnsaved) {
+      btnCancelUnsaved.addEventListener('click', () => this.closeUnsavedConfirmModal());
+    }
+    const btnCloseUnsavedX = document.getElementById('btn-close-unsaved-perm-x');
+    if (btnCloseUnsavedX) {
+      btnCloseUnsavedX.addEventListener('click', () => this.closeUnsavedConfirmModal());
+    }
+    const btnDiscardYes = document.getElementById('btn-confirm-discard-perm-yes');
+    if (btnDiscardYes) {
+      btnDiscardYes.addEventListener('click', () => {
+        const cb = this.onDiscardCallback;
+        this.closeUnsavedConfirmModal();
+        if (typeof cb === 'function') {
+          cb();
+        }
+      });
     }
 
     // Save Permissions

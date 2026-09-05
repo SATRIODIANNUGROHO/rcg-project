@@ -1577,7 +1577,7 @@
     <div class="modal-container" style="max-width: 920px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
       <div class="modal-header">
         <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Hak Akses &amp; Manajemen Pengguna</h3>
-        <button class="modal-close-btn" type="button" aria-label="Tutup Modal">&times;</button>
+        <button class="modal-close-btn" id="btn-close-perm-modal-x" type="button" aria-label="Tutup Modal">&times;</button>
       </div>
 
       <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
@@ -1708,10 +1708,29 @@
       </div>
 
       <div class="modal-footer" style="padding: 12px 16px; justify-content: space-between;">
-        <button class="btn btn-secondary btn-modal-cancel" type="button">Tutup</button>
+        <button id="btn-close-perm-modal" class="btn btn-secondary" type="button">Tutup</button>
         <button id="btn-save-permissions" class="btn btn-primary" type="button" style="justify-content: center;">
           <span>Simpan Hak Akses</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 10b: Konfirmasi Tutup Hak Akses Tanpa Menyimpan -->
+  <div id="modal-confirm-unsaved-permissions" class="modal-overlay" style="z-index: 1100;">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 600;">Konfirmasi Perubahan Hak Akses</h3>
+        <button class="modal-close-btn" id="btn-close-unsaved-perm-x" type="button" aria-label="Tutup Modal">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <p style="margin: 0; line-height: 1.5; color: var(--text-primary);">
+          Terdapat perubahan hak akses yang belum disimpan. Apakah Anda yakin ingin menutup tanpa menyimpan perubahan?
+        </p>
+      </div>
+      <div class="modal-footer" style="padding: 12px 16px;">
+        <button type="button" id="btn-cancel-unsaved-perm" class="btn btn-secondary">Batal</button>
+        <button type="button" id="btn-confirm-discard-perm-yes" class="btn btn-confirm-accent">Ya, Tutup Tanpa Simpan</button>
       </div>
     </div>
   </div>
