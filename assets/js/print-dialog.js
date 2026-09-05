@@ -7,15 +7,15 @@
 const PAPER_FORMATS = {
   A6: {
     label: 'A6 (105 x 148 mm - Standar Tiket Timbang)',
-    previewWidth: '640px',
+    previewWidth: '520px',
     padding: '0',
     fontSizeScale: '1',
     cssPageSize: '105mm 148mm',
-    cssContainerWidth: '97mm'
+    cssContainerWidth: '98mm'
   },
   A5: {
     label: 'A5 (148 x 210 mm)',
-    previewWidth: '690px',
+    previewWidth: '620px',
     padding: '0',
     fontSizeScale: '1',
     cssPageSize: '148mm 210mm',
@@ -31,7 +31,7 @@ const PAPER_FORMATS = {
   },
   Letter: {
     label: 'Letter (8.5 x 11 in)',
-    previewWidth: '770px',
+    previewWidth: '760px',
     padding: '0',
     fontSizeScale: '1',
     cssPageSize: '8.5in 11in',
@@ -39,7 +39,7 @@ const PAPER_FORMATS = {
   },
   NCR_Wartel: {
     label: 'NCR Continuous Sheet 9.5" x 11"',
-    previewWidth: '790px',
+    previewWidth: '780px',
     padding: '0',
     fontSizeScale: '1',
     cssPageSize: '9.5in 11in portrait',
@@ -190,7 +190,7 @@ const PrintManager = {
     const previewContainer = document.getElementById('modal-print-preview-content');
     if (!previewContainer) return;
 
-    const cardStyle = `background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${formatCfg.previewWidth}; box-shadow: 0 4px 16px rgba(0,0,0,0.15); border-radius: 4px; padding: 0; box-sizing: border-box; border: none !important; outline: none !important; transition: max-width 0.25s ease;`;
+    const cardStyle = `background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${formatCfg.previewWidth}; box-shadow: 0 4px 20px rgba(0,0,0,0.18); border-radius: 6px; padding: 0; box-sizing: border-box; border: 1px solid #E2E8F0; overflow: hidden; transition: max-width 0.25s ease;`;
 
     if (typeof this.currentGeneratorFn === 'function') {
       const renderedCards = [];

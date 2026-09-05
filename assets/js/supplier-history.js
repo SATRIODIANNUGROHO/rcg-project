@@ -261,112 +261,112 @@ const SupplierHistoryManager = {
       }
 
       return `
-        <div class="nota-sheet print-supplier-sheet" style="font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; padding: 18px 20px; max-width: 780px; margin: 0 auto; background: #FFFFFF; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'}; box-sizing: border-box; width: 100%;">
+        <div class="nota-sheet print-supplier-sheet" style="font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; padding: 14px 16px; width: 100%; box-sizing: border-box; margin: 0 auto; background: #FFFFFF; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
           <!-- Header Perusahaan -->
-          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #163A5F; padding-bottom: 10px; margin-bottom: 12px; gap: 12px;">
-            <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
-              <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam - Subsidiary Bawang Mas Grup" style="height: 52px; max-height: 52px; max-width: 320px; width: auto; object-fit: contain; display: block;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #163A5F; padding-bottom: 8px; margin-bottom: 10px; gap: 10px;">
+            <div style="display: flex; align-items: center; flex: 1 1 auto; min-width: 0;">
+              <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam - Subsidiary Bawang Mas Grup" style="max-height: 48px; max-width: 100%; width: auto; height: auto; object-fit: contain; display: block;">
             </div>
-            <div style="text-align: right; flex-shrink: 0; white-space: nowrap; margin-left: auto;">
-              <div style="font-size: 12px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 4px 10px; border-radius: 4px; display: inline-block; white-space: nowrap; letter-spacing: 0.02em;">${copyBadgeText}</div>
-              <div style="font-size: 9.5px; font-weight: 700; color: #163A5F; margin-top: 3px; letter-spacing: 0.02em; white-space: nowrap;">[ ${copyReceiverText} ]</div>
-              <div style="font-size: 10.5px; font-family: 'Plus Jakarta Sans', monospace; color: #64748B; margin-top: 2px; white-space: nowrap;">No: <span style="font-weight: 700; color: #0F172A;">${tx.docNo}</span></div>
+            <div style="text-align: right; flex-shrink: 0; white-space: nowrap;">
+              <div style="font-size: 11px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 2px 7px; border-radius: 4px; display: inline-block; white-space: nowrap; line-height: 1.3;">${copyBadgeText}</div>
+              <div style="font-size: 9px; font-weight: 700; color: #163A5F; margin-top: 2px; letter-spacing: 0.02em; white-space: nowrap;">[ ${copyReceiverText} ]</div>
+              <div style="font-size: 9.5px; font-family: monospace; color: #64748B; margin-top: 2px; white-space: nowrap;">No: ${tx.docNo}</div>
             </div>
           </div>
 
           <!-- Metadata Pemasok & Transaksi -->
-          <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; font-size: 11px; margin-bottom: 12px; background: #F8FAFC; padding: 8px 12px; border-radius: 4px; border: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-size: 10.5px; margin-bottom: 10px; background: #F8FAFC; padding: 8px 12px; border-radius: 4px; border: 1px solid #E2E8F0;">
             <div>
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                  <td style="width: 80px; color: #64748B; padding: 2px 0; white-space: nowrap; font-weight: 500;">Nama Pemasok</td>
-                  <td style="width: 10px; text-align: center; color: #64748B; font-weight: 500; padding: 2px 0;">:</td>
-                  <td style="font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${tx.supplier}</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Nama Pemasok</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
+                  <td style="font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px;" title="${tx.supplier}">${tx.supplier}</td>
                 </tr>
                 <tr>
-                  <td style="color: #64748B; padding: 2px 0; white-space: nowrap; font-weight: 500;">Asal Daerah</td>
-                  <td style="width: 10px; text-align: center; color: #64748B; font-weight: 500; padding: 2px 0;">:</td>
-                  <td style="color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Asal Daerah</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
+                  <td style="color: #0F172A; padding: 2px 0; white-space: nowrap; font-weight: 600;">${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
                 </tr>
                 <tr>
-                  <td style="color: #64748B; padding: 2px 0; white-space: nowrap; font-weight: 500;">No. Polisi Truk</td>
-                  <td style="width: 10px; text-align: center; color: #64748B; font-weight: 500; padding: 2px 0;">:</td>
-                  <td style="font-family: 'Plus Jakarta Sans', monospace; font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.plateNo}</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">No. Polisi Truk</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
+                  <td style="font-family: monospace; font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.plateNo}</td>
                 </tr>
               </table>
             </div>
             <div>
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                  <td style="width: 78px; color: #64748B; padding: 2px 0; white-space: nowrap; font-weight: 500;">Tanggal Pasok</td>
-                  <td style="width: 10px; text-align: center; color: #64748B; font-weight: 500; padding: 2px 0;">:</td>
-                  <td style="font-family: 'Plus Jakarta Sans', monospace; font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.date}</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Tanggal Pasok</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
+                  <td style="font-family: monospace; font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.date}</td>
                 </tr>
                 <tr>
-                  <td style="color: #64748B; padding: 2px 0; white-space: nowrap; font-weight: 500;">Waktu In/Out</td>
-                  <td style="width: 10px; text-align: center; color: #64748B; font-weight: 500; padding: 2px 0;">:</td>
-                  <td style="font-family: 'Plus Jakarta Sans', monospace; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.timeIn || '-'} s/d ${tx.timeOut || '-'}</td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Waktu Timbang</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
+                  <td style="font-family: monospace; color: #0F172A; padding: 2px 0; white-space: nowrap; font-size: 9.5px;">${tx.timeIn || '-'} s/d ${tx.timeOut || '-'}</td>
                 </tr>
                 <tr>
-                  <td style="color: #64748B; padding: 2px 0; white-space: nowrap; font-weight: 500;">Status Bayar</td>
-                  <td style="width: 10px; text-align: center; color: #64748B; font-weight: 500; padding: 2px 0;">:</td>
-                  <td style="padding: 2px 0; white-space: nowrap;"><strong style="color: ${tx.paymentStatus === 'Lunas' ? '#16A34A' : '#D97706'};">${tx.paymentStatus === 'Lunas' ? 'Lunas' : 'Belum Lunas'}</strong></td>
+                  <td style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Status Bayar</td>
+                  <td style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
+                  <td style="padding: 2px 0; white-space: nowrap;"><strong style="color: ${tx.paymentStatus === 'Lunas' ? '#16A34A' : '#D97706'}; font-size: 10.5px;">${tx.paymentStatus === 'Lunas' ? 'Lunas' : 'Belum Lunas'}</strong></td>
                 </tr>
               </table>
             </div>
           </div>
 
           <!-- Tabel Rincian Pasokan & Mutu -->
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 12px; border: none;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 10px; border: none;">
             <thead>
               <tr style="background: #163A5F; color: #FFFFFF;">
-                <th style="padding: 6px 8px; text-align: left; border: none; font-size: 10px; white-space: nowrap;">Klasifikasi Mutu</th>
-                <th style="padding: 6px 8px; text-align: right; border: none; font-size: 10px; white-space: nowrap;">Berat Bersih (Kg)</th>
-                <th style="padding: 6px 8px; text-align: right; border: none; font-size: 10px; white-space: nowrap;">Harga Satuan (Rp)</th>
-                <th style="padding: 6px 8px; text-align: right; border: none; font-size: 10px; white-space: nowrap;">Subtotal (Rp)</th>
+                <th style="padding: 5px 6px; text-align: left; border: none; white-space: nowrap;">Klasifikasi Mutu</th>
+                <th style="padding: 5px 6px; text-align: right; border: none; white-space: nowrap;">Berat Bersih (Kg)</th>
+                <th style="padding: 5px 6px; text-align: right; border: none; white-space: nowrap;">Harga Satuan (Rp)</th>
+                <th style="padding: 5px 6px; text-align: right; border: none; white-space: nowrap;">Subtotal (Rp)</th>
               </tr>
             </thead>
             <tbody>
               <tr style="border-bottom: 1px solid #E2E8F0;">
-                <td style="padding: 6px 8px; font-weight: 600; border: none; white-space: nowrap;">Garam K1</td>
-                <td style="padding: 6px 8px; text-align: right; font-family: monospace; border: none; white-space: nowrap;">${(tx.k1Weight || 0).toLocaleString('id-ID')} Kg</td>
-                <td style="padding: 6px 8px; text-align: right; font-family: monospace; border: none; white-space: nowrap;">Rp ${(tx.k1Price || 0).toLocaleString('id-ID')}</td>
-                <td style="padding: 6px 8px; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F; border: none; white-space: nowrap;">Rp ${(tx.k1Total || 0).toLocaleString('id-ID')}</td>
+                <td style="padding: 5px 6px; font-weight: 600; border: none; white-space: nowrap;">Garam K1</td>
+                <td style="padding: 5px 6px; text-align: right; font-family: monospace; border: none; white-space: nowrap;">${(tx.k1Weight || 0).toLocaleString('id-ID')} Kg</td>
+                <td style="padding: 5px 6px; text-align: right; font-family: monospace; border: none; white-space: nowrap;">Rp ${(tx.k1Price || 0).toLocaleString('id-ID')}</td>
+                <td style="padding: 5px 6px; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F; border: none; white-space: nowrap;">Rp ${(tx.k1Total || 0).toLocaleString('id-ID')}</td>
               </tr>
               <tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0;">
-                <td style="padding: 6px 8px; font-weight: 600; border: none; white-space: nowrap;">Garam K2</td>
-                <td style="padding: 6px 8px; text-align: right; font-family: monospace; border: none; white-space: nowrap;">${(tx.k2Weight || 0).toLocaleString('id-ID')} Kg</td>
-                <td style="padding: 6px 8px; text-align: right; border: none; white-space: nowrap;">Rp ${(tx.k2Price || 0).toLocaleString('id-ID')}</td>
-                <td style="padding: 6px 8px; text-align: right; font-family: monospace; font-weight: 700; color: #B45309; border: none; white-space: nowrap;">Rp ${(tx.k2Total || 0).toLocaleString('id-ID')}</td>
+                <td style="padding: 5px 6px; font-weight: 600; border: none; white-space: nowrap;">Garam K2</td>
+                <td style="padding: 5px 6px; text-align: right; font-family: monospace; border: none; white-space: nowrap;">${(tx.k2Weight || 0).toLocaleString('id-ID')} Kg</td>
+                <td style="padding: 5px 6px; text-align: right; border: none; white-space: nowrap;">Rp ${(tx.k2Price || 0).toLocaleString('id-ID')}</td>
+                <td style="padding: 5px 6px; text-align: right; font-family: monospace; font-weight: 700; color: #B45309; border: none; white-space: nowrap;">Rp ${(tx.k2Total || 0).toLocaleString('id-ID')}</td>
               </tr>
               <tr style="background: #EEF2F6; font-weight: 700;">
-                <td style="padding: 7px 8px; border: none; white-space: nowrap; font-size: 11px;">TOTAL PASOKAN BERSIH</td>
-                <td style="padding: 7px 8px; text-align: right; font-family: monospace; font-size: 12px; color: #163A5F; border: none; white-space: nowrap;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')} Kg</td>
-                <td style="padding: 7px 8px; text-align: right; border: none; white-space: nowrap; font-size: 11px;">TOTAL PEMBAYARAN</td>
-                <td style="padding: 7px 8px; text-align: right; font-family: monospace; font-size: 12.5px; color: #163A5F; border: none; white-space: nowrap;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</td>
+                <td style="padding: 6px 8px; border: none; white-space: nowrap;">TOTAL PASOKAN BERSIH</td>
+                <td style="padding: 6px 8px; text-align: right; font-family: monospace; font-size: 11px; color: #163A5F; border: none; white-space: nowrap;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')} Kg</td>
+                <td style="padding: 6px 8px; text-align: right; border: none; white-space: nowrap;">TOTAL PEMBAYARAN</td>
+                <td style="padding: 6px 8px; text-align: right; font-family: monospace; font-size: 12px; color: #163A5F; border: none; white-space: nowrap;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</td>
               </tr>
             </tbody>
           </table>
 
           <!-- Ringkasan Timbangan Teknis -->
-          <div style="font-size: 10px; color: #64748B; margin-bottom: 14px; padding: 5px 8px; background: #F1F5F9; border-radius: 4px; border: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <div style="font-size: 9.5px; color: #64748B; margin-bottom: 12px; padding: 5px 8px; background: #F1F5F9; border-radius: 4px; border: none;">
             Catatan Timbang: Kotor ${(tx.grossWeight || 0).toLocaleString('id-ID')} Kg • Tara ${(tx.tareWeight || 0).toLocaleString('id-ID')} Kg • Muatan ${(tx.netLoadWeight || 0).toLocaleString('id-ID')} Kg • Refraksi ${tx.refractionPercent}% (-${(tx.refractionKg || 0).toLocaleString('id-ID')} Kg)
           </div>
 
           <!-- Tanda Tangan Dua Pihak (Supir & Admin) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: center; font-size: 11px; margin-top: 18px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: center; font-size: 10.5px; margin-top: 14px;">
             <div style="text-align: center;">
-              <div style="color: #64748B; margin-bottom: 36px;">Diserahkan oleh (Pemasok / Supir):</div>
-              <div style="font-weight: 700; border-top: 1px solid #475569; display: inline-block; min-width: 130px; padding-top: 3px; font-size: 10.5px;">( ${tx.driverName || tx.supplier} )</div>
+              <div style="color: #64748B; margin-bottom: 32px;">Diserahkan oleh (Pemasok / Supir):</div>
+              <div style="font-weight: 700; border-top: 1px solid #475569; display: inline-block; min-width: 120px; padding-top: 3px;">( ${tx.driverName || tx.supplier} )</div>
             </div>
             <div style="text-align: center;">
-              <div style="color: #64748B; margin-bottom: 36px;">Admin:</div>
-              <div style="font-weight: 700; border-top: 1px solid #475569; display: inline-block; min-width: 130px; padding-top: 3px; font-size: 10.5px;">( ${tx.weighmasterName || tx.adminName || 'Admin'} )</div>
+              <div style="color: #64748B; margin-bottom: 32px;">Admin:</div>
+              <div style="font-weight: 700; border-top: 1px solid #475569; display: inline-block; min-width: 120px; padding-top: 3px;">( ${tx.weighmasterName || tx.adminName || 'Admin'} )</div>
             </div>
           </div>
 
           <!-- Footer Catatan & Lembar -->
-          <div style="font-size: 9px; color: #64748B; text-align: center; margin-top: 12px; border-top: 1px dashed #CBD5E1; padding-top: 4px;">
+          <div style="font-size: 9px; color: #64748B; text-align: center; margin-top: 10px; border-top: 1px dashed #CBD5E1; padding-top: 3px;">
             ${copyFooterText}
           </div>
         </div>
