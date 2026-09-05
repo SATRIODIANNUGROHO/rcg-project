@@ -600,40 +600,50 @@ const TransactionEngine = {
         </div>
 
         <!-- Metadata Informasi Penimbangan -->
-        <div class="nota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 10px; font-size: 10.5px; background: #F8FAFC; padding: 8px 12px; border-radius: 4px; border: 1px solid #E2E8F0;">
+        <div class="nota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin-bottom: 12px; font-size: 10.5px; background: #F8FAFC; padding: 10px 14px; border-radius: 4px; border: 1px solid #E2E8F0; box-sizing: border-box;">
           <table class="nota-info-table" style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Tanggal</td>
-              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
-              <td class="val" style="font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.date} <span style="font-weight: normal; font-size: 9.5px; color: #64748B; font-family: monospace;">(${tx.timeIn || '-'} s/d ${tx.timeOut || '-'})</span></td>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Tanggal</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.date}</td>
             </tr>
             <tr>
-              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">No. Polisi</td>
-              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
-              <td class="val" style="font-weight: 700; font-family: monospace; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.plateNo}</td>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Waktu Timbang</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="font-family: monospace; color: #0F172A; padding: 2.5px 0; white-space: nowrap; font-size: 10px;">${tx.timeIn || '-'} s/d ${tx.timeOut || '-'} WIB</td>
             </tr>
             <tr>
-              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Pemasok</td>
-              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
-              <td class="val" style="font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px;" title="${tx.supplier}">${tx.supplier}</td>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">No. Polisi</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="font-weight: 700; font-family: monospace; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.plateNo}</td>
+            </tr>
+            <tr>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Pemasok</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;" title="${tx.supplier}">${tx.supplier}</td>
             </tr>
           </table>
 
           <table class="nota-info-table" style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Material</td>
-              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
-              <td class="val" style="font-weight: 700; color: #0F172A; padding: 2px 0; white-space: nowrap;">${tx.material} ${tx.bagCount ? '<span style="font-weight: 500; font-size: 9.5px; color: #64748B;">(' + tx.bagCount + ' Karung)</span>' : ''}</td>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Material</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="font-weight: 700; color: #0F172A; padding: 2.5px 0; white-space: nowrap;">${tx.material}</td>
             </tr>
             <tr>
-              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Asal Garam</td>
-              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
-              <td class="val" style="color: #0F172A; padding: 2px 0; white-space: nowrap; font-weight: 600;">${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Kemasan / Jml</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="color: #0F172A; padding: 2.5px 0; white-space: nowrap; font-weight: 600;">${tx.bagCount ? tx.bagCount + ' Karung' : (tx.material.toLowerCase().includes('curah') ? 'Curah (Kg)' : '-')}</td>
             </tr>
             <tr>
-              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2px 4px 2px 0;">Status Bayar</td>
-              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2px 4px 2px 0;">:</td>
-              <td class="val" style="padding: 2px 0; white-space: nowrap;"><strong style="color: ${isLunas ? '#16A34A' : '#D97706'}; font-size: 10.5px;">${payStatusText}</strong></td>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Asal Garam</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="color: #0F172A; padding: 2.5px 0; white-space: nowrap; font-weight: 600;">${tx.originArea || '-'}, ${tx.originRegion || '-'}</td>
+            </tr>
+            <tr>
+              <td class="label" style="white-space: nowrap; width: 1%; color: #64748B; padding: 2.5px 6px 2.5px 0;">Status Bayar</td>
+              <td class="colon" style="white-space: nowrap; width: 1%; text-align: center; color: #64748B; font-weight: 500; padding: 2.5px 6px 2.5px 0;">:</td>
+              <td class="val" style="padding: 2.5px 0; white-space: nowrap;"><strong style="color: ${isLunas ? '#16A34A' : '#D97706'}; font-size: 10.5px;">${payStatusText}</strong></td>
             </tr>
           </table>
         </div>
