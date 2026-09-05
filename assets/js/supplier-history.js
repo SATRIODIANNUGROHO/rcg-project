@@ -264,13 +264,8 @@ const SupplierHistoryManager = {
         <div class="nota-sheet print-supplier-sheet" style="font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; padding: 22px; max-width: 780px; margin: 0 auto; background: #FFFFFF; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
           <!-- Header Perusahaan -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #163A5F; padding-bottom: 12px; margin-bottom: 14px;">
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <img src="assets/images/RCG.webp" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
-              <div>
-                <div style="font-size: 16px; font-weight: 800; color: #163A5F; letter-spacing: 0.02em;">PT. REKA CIPTA GARAM</div>
-                <div style="font-size: 11px; color: #64748B;">Pabrik Pengolahan &amp; Distribusi Garam Bahan Baku Industri</div>
-                <div style="font-size: 10px; color: #64748B;">Pamekasan - Madura, Jawa Timur | Telp: (0324) 321-RCG</div>
-              </div>
+            <div style="display: flex; align-items: center;">
+              <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam" style="height: 48px; max-width: 270px; object-fit: contain;">
             </div>
             <div style="text-align: right;">
               <div style="font-size: 13px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 3px 8px; border-radius: 4px; display: inline-block;">${copyBadgeText}</div>

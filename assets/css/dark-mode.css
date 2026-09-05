@@ -410,8 +410,7 @@ body.dark-mode .btn-neutral:hover {
 }
 
 body.dark-mode .btn-confirm-accent,
-body.dark-mode .btn-accent,
-body.dark-mode .btn-action-capture {
+body.dark-mode .btn-accent {
   background-color: #D69E2E;
   color: #0F172A;
   border-color: #D69E2E;
@@ -419,11 +418,23 @@ body.dark-mode .btn-action-capture {
 }
 
 body.dark-mode .btn-confirm-accent:hover:not(:disabled),
-body.dark-mode .btn-accent:hover:not(:disabled),
-body.dark-mode .btn-action-capture:hover:not(:disabled) {
+body.dark-mode .btn-accent:hover:not(:disabled) {
   background-color: #ECC94B;
   border-color: #ECC94B;
   color: #0F172A;
+}
+
+body.dark-mode .btn-action-capture {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border-color: #2563EB;
+  font-weight: 700;
+}
+
+body.dark-mode .btn-action-capture:hover:not(:disabled) {
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
+  color: #FFFFFF;
 }
 
 body.dark-mode .btn-outline-danger {

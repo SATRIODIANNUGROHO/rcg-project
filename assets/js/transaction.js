@@ -54,20 +54,36 @@ const TransactionEngine = {
       });
     }
 
-    // Hapus/Reset Weight buttons
+    // Ambil Weight buttons
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
       btnCaptureGross.addEventListener('click', () => {
-        document.getElementById('input-gross-weight').value = 0;
+        const liveWeight = (typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight > 0)
+          ? ScaleEngine.currentWeight
+          : 0;
+        document.getElementById('input-gross-weight').value = liveWeight;
         this.handleCalculation('input-gross-weight');
+        if (liveWeight > 0) {
+          App.showToast(`Berat kotor berhasil diambil: ${liveWeight.toLocaleString('id-ID')} Kg`, 'info');
+        } else {
+          App.showToast('Nilai berat kotor diatur ke 0 Kg', 'info');
+        }
       });
     }
 
     const btnCaptureTare = document.getElementById('btn-capture-tare');
     if (btnCaptureTare) {
       btnCaptureTare.addEventListener('click', () => {
-        document.getElementById('input-tare-weight').value = 0;
+        const liveWeight = (typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight > 0)
+          ? ScaleEngine.currentWeight
+          : 0;
+        document.getElementById('input-tare-weight').value = liveWeight;
         this.handleCalculation('input-tare-weight');
+        if (liveWeight > 0) {
+          App.showToast(`Berat tara berhasil diambil: ${liveWeight.toLocaleString('id-ID')} Kg`, 'info');
+        } else {
+          App.showToast('Nilai berat tara diatur ke 0 Kg', 'info');
+        }
       });
     }
 
@@ -589,13 +605,8 @@ const TransactionEngine = {
       <div class="nota-container" style="background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 20px; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
         <!-- Header Perusahaan (Identik dengan Kop Formulir) -->
         <div class="nota-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #163A5F; padding-bottom: 12px; margin-bottom: 14px;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <img src="assets/images/RCG.webp" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
-            <div>
-              <div style="font-size: 16px; font-weight: 800; color: #163A5F; letter-spacing: 0.02em;">PT. REKA CIPTA GARAM</div>
-              <div style="font-size: 11px; color: #64748B;">Pabrik Pengolahan &amp; Distribusi Garam Bahan Baku Industri</div>
-              <div style="font-size: 10px; color: #64748B;">Pamekasan - Madura, Jawa Timur | Telp: (0324) 321-RCG</div>
-            </div>
+          <div style="display: flex; align-items: center;">
+            <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam" style="height: 48px; max-width: 270px; object-fit: contain;">
           </div>
           <div class="nota-title-box" style="text-align: right;">
             <div style="font-size: 13px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 3px 8px; border-radius: 4px; display: inline-block;">${copyBadgeText}</div>
@@ -649,7 +660,6 @@ const TransactionEngine = {
               <th style="padding: 6px 8px; text-align: right; border: none;">Tara (Tare)</th>
               <th style="padding: 6px 8px; text-align: right; border: none;">Muatan (Bruto)</th>
               <th style="padding: 6px 8px; text-align: center; border: none;">Refraksi (%)</th>
-              <th style="padding: 6px 8px; text-align: right; border: none;">Potongan (Kg)</th>
               <th style="padding: 6px 8px; text-align: right; background: #0F2844; border: none;">BERSIH TOTAL (Kg)</th>
             </tr>
           </thead>
@@ -659,7 +669,6 @@ const TransactionEngine = {
               <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.tareWeight.toLocaleString('id-ID')} Kg</td>
               <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</td>
               <td class="num" style="padding: 6px 8px; text-align: center; font-family: monospace; border: none;">${tx.refractionPercent}%</td>
-              <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; border: none;">${tx.refractionKg.toLocaleString('id-ID')} Kg</td>
               <td class="num" style="padding: 6px 8px; text-align: right; font-family: monospace; font-weight: 800; background: #EEF2F6; color: #163A5F; border: none;">${tx.finalNetWeight.toLocaleString('id-ID')} Kg</td>
             </tr>
           </tbody>

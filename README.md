@@ -36,16 +36,18 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas).
 
 ### 4. Penerbitan Nota Timbang & Formulir Pemasok (PDF & Printer Fisik)
-- **Live Paper Preview**: Pratinjau interaktif tata letak kertas sebelum dicetak ke mesin printer fisik atau diekspor ke PDF.
-- **Pilihan Ukuran Kertas Standar**:
-  - **A6**: Standar tiket nota timbangan ringkas.
-  - **A5**: Format nota timbangan medium.
-  - **A4**: Format laporan dan formulir ukuran penuh.
-  - **Letter**: Format dokumen standar korporat.
-  - **NCR Wartel (9.5" x 11")**: Format kertas kontinu continuous form.
-- **Kop Surat & Logo Resmi**: Header resmi PT. Reka Cipta Garam lengkap dengan logo vektor tersemat, alamat kawasan industri garam Madura, dan nomor kontak.
-- **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap dengan kolom tanda tangan Supir, Petugas Timbang (Weighmaster), dan Administrator.
-- **Ekspor PDF Vektor Bersih**: Hasil unduhan PDF presisi tinggi tanpa border atau margin berlebih (zero-border).
+- **Kop Surat Resmi Beresolusi Tinggi**: Menggunakan kop surat resmi grafis PT. Reka Cipta Garam (`kop surat nota timbang.webp`) yang terpasang seragam pada Nota Timbang dan Formulir Pemasok.
+- **Tabel Berat 5 Kolom Presisi**: Format tabel penimbangan yang ringkas dan informatif dengan 5 kolom esensial: Kotor (Gross), Tara (Tare), Muatan (Bruto), Refraksi (%), dan BERSIH TOTAL (Kg).
+- **Fitur Cetak Dokumen Langsung (Direct Print)**: Tombol "Cetak Dokumen" interaktif yang terpasang di samping tombol "Unduh Dokumen PDF" pada modal pratinjau, memungkinkan operator dan kasir langsung mengirim dokumen ke mesin pencetak fisik tanpa proses manual tambahan.
+- **Adaptive Paper Preview & Output**: Tampilan pratinjau interaktif yang secara dinamis menyesuaikan dimensi piksel, proporsi, margin, dan padding sesuai ukuran kertas yang dipilih pengguna sehingga dokumen tercetak rapi tanpa meluber (zero-overflow).
+- **Dukungan Format Kertas Lengkap**:
+  - **A6 (105 × 148 mm)**: Standar tiket nota timbangan ringkas.
+  - **A5 (148 × 210 mm)**: Format nota timbangan medium setengah HVS.
+  - **A4 (210 × 297 mm)**: Format laporan dan formulir ukuran penuh.
+  - **Letter (8.5" × 11")**: Format dokumen standar korporat.
+  - **NCR Continuous Form (9.5" × 11")**: Format kertas continuous sheet untuk printer dot matrix / wartel.
+- **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap (Asli Pemasok, Arsip Operasional, Kasir & Keuangan) dengan kolom tanda tangan Supir dan Petugas Timbang / Administrator.
+- **Ekspor PDF Vektor Bersih**: Hasil unduhan PDF berbasis isolated offscreen renderer dengan resolusi tajam dan tanpa border berlebih.
 
 ### 5. Riwayat Penimbangan (Transaction History)
 - **Pencarian Cerdas Real-Time**: Pencarian cepat multi-kolom berdasarkan Nomor Dokumen/Tiket, Nomor Polisi Truk, Nama Pemasok, Nama Supir, atau Asal Daerah.
@@ -57,7 +59,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 ### 6. Riwayat Pemasok (Supplier History)
 - **Rekapitulasi Akumulasi Per Pemasok**: Ringkasan data pasokan garam, tonase K1, tonase K2, subtotal, dan grand total per transaksi pemasok.
 - **Searchable Combobox & Sugesti Otomatis**: Fitur pencarian pemasok fleksibel di mana pengguna dapat memilih langsung dari dropdown atau mengetik huruf/nama untuk mendapatkan sugesti atau rekomendasi nama pemasok secara real-time yang tersimpan di basis data.
-- **Cetak Formulir Pemasok**: Penerbitan formulir bukti penyerahan garam khusus pemasok dengan live preview dan multi-copy.
+- **Cetak Formulir Pemasok**: Penerbitan formulir bukti penyerahan garam khusus pemasok dengan kop surat resmi, live preview adaptif, dan multi-copy.
 - **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi pemasok yang tersaring sesuai pemasok terpilih dengan perhitungan otomatis.
 
 ### 7. Dashboard & Analitik Tonase Interaktif
@@ -71,7 +73,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 8. Ekspor Spreadsheet Excel Presisi Tinggi (.xlsx) via ExcelJS
 - **Standar Tata Letak Korporat**: Output berkas Excel yang diformat khusus sesuai standar buku besar pembukuan PT. Reka Cipta Garam.
-- **Filter Lingkup Fleksibel & Autocomplete**: Pemfilteran ekspor berdasarkan tanggal hari ini, tanggal tertentu, rentang tanggal, jenis material garam (Garam Curah / Garam Karung), maupun nama pemasok tertentu (dilengkapi fitur input sugesti pencarian otomatis).
+- **Filter Lingkup Fleksibel & Autocomplete**: Pemfilteran ekspor berdasarkan tanggal hari ini, tanggal tertentu, rentang tanggal, jenis material garam (Garam Curah / Garam Karung), maupun nama pemasok tertentu (dilengkapi fitur dropdown cerdas dan sugesti pencarian otomatis).
 - **Penamaan Berkas Cerdas**: Penamaan berkas otomatis sesuai konteks filter (contoh: `PT_Reka_Cipta_Garam_Rekap_Pemasok_H_Mahmud_2026-09-04.xlsx` atau `PT_Reka_Cipta_Garam_Garam_Curah_2026-09-04.xlsx`).
 - **Header Navy Blue (#0F4C81)**: Judul kolom profesional dengan font tebal putih dan fitur AutoFilter aktif pada seluruh header.
 - **Format Angka & Mata Uang**: Format numerik rapi dengan desimal bobot (`#,##0.0`) dan mata uang Rupiah (`"Rp " #,##0`).
@@ -80,6 +82,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 ### 9. Manajemen Pengguna & Hak Akses Granular (RBAC Matrix)
 - **Panel Manajemen Akun 2-Kolom**: Pengaturan daftar pemakai sistem dengan matriks hak akses granular per modul.
 - **Matriks Hak Akses Modul**: Pengaturan izin Lihat (View), Tambah (Add), Ubah (Edit), dan Hapus (Delete) untuk modul Pemasok, Material, Transaksi, dan Laporan.
+- **Proteksi Perubahan Belum Disimpan**: Dialog konfirmasi otomatis jika pengguna menutup panel hak akses saat ada perubahan pengaturan yang belum tersimpan.
 - **Otoritas Khusus Sistem**:
   - Hak Akses Cetak Ulang Tiket Nota
   - Hak Akses Pengaturan Konfigurasi Sistem
@@ -98,7 +101,8 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 12. Standar Desain Antarmuka Industrial (Design System)
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
-- **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk keterbacaan tinggi.
+- **Tipografi Terpadu (Plus Jakarta Sans)**: Seluruh antarmuka menggunakan keluarga font Plus Jakarta Sans yang terintegrasi secara lokal/offline.
+- **Skema Warna Tombol Aksi**: Tombol aksi pengambilan beban timbangan (Ambil) diseragamkan dalam nuansa warna biru primer industrial yang konsisten.
 - **Ikon Vektor Bersih**: Seluruh ikon antarmuka menggunakan SVG industrial murni tanpa penggunaan emoji.
 
 ---
@@ -190,12 +194,16 @@ RCG/
 │   ├── css/
 │   │   ├── style.css             # Tema utama, tata letak, & komponen
 │   │   ├── dark-mode.css         # Skema warna mode gelap (Design System)
+│   │   ├── fonts.css             # Font Plus Jakarta Sans offline bundle
 │   │   └── print-nota.css        # Format cetak nota tiket timbangan & form supplier
+│   ├── fonts/
+│   │   └── PlusJakartaSans-*.woff2 # Berkas font biner offline
 │   ├── icons/
 │   │   ├── icon.ico              # Ikon Windows Executable resmi (.exe)
 │   │   └── icon.png              # Ikon resolusi tinggi
 │   ├── images/
-│   │   └── RCG.webp              # Logo resmi PT. Reka Cipta Garam
+│   │   ├── RCG.webp              # Logo resmi PT. Reka Cipta Garam
+│   │   └── kop surat nota timbang.webp # Kop surat resmi nota & formulir
 │   ├── vendor/
 │   │   ├── sql-wasm.js           # Mesin SQLite3 WebAssembly Engine (sql.js)
 │   │   ├── sql-wasm.wasm         # Modul biner WebAssembly SQLite 3
@@ -211,7 +219,7 @@ RCG/
 │       ├── custom-datepicker.js  # Komponen kalender pemilih tanggal
 │       ├── custom-timepicker.js  # Komponen pemilih waktu (WIB) kustom
 │       ├── custom-autocomplete.js# Komponen autocomplete daftar pemasok
-│       ├── print-dialog.js       # Dialog live preview cetak & ukuran kertas
+│       ├── print-dialog.js       # Dialog live preview cetak & direct printing
 │       ├── export-excel.js       # Mesin ekspor Excel dengan AutoFilter & AutoSum
 │       ├── transaction.js        # Logika input penimbangan & kalkulasi mutu
 │       ├── history.js            # Riwayat transaksi penimbangan

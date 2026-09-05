@@ -120,15 +120,125 @@ function createWindow() {
 }
 
 // IPC Handlers for desktop integration
-ipcMain.handle('app:print', async (event, options) => {
+ipcMain.handle('app:print', async (event, options = {}) => {
   if (!mainWindow) return false;
   try {
-    mainWindow.webContents.print({
-      silent: false,
-      printBackground: true,
-      ...options
-    });
-    return true;
+    if (options.htmlContent) {
+      const fs = require('fs');
+      let htmlContent = options.htmlContent || '';
+
+      // Convert local logo / kop surat paths to embedded base64 data URLs for 100% reliable rendering
+      const kopFile = path.join(__dirname, 'assets/images/kop surat nota timbang.webp');
+      if (fs.existsSync(kopFile)) {
+        const kopBase64 = `data:image/webp;base64,${fs.readFileSync(kopFile).toString('base64')}`;
+        htmlContent = htmlContent.replace(/src=["'](?:(?:\.\/)?assets\/images\/kop surat nota timbang\.webp|assets\/images\/kop%20surat%20nota%20timbang\.webp)["']/g, `src="${kopBase64}"`);
+      }
+      const logoFile = path.join(__dirname, 'assets/images/RCG.webp');
+      if (fs.existsSync(logoFile)) {
+        const logoBase64 = `data:image/webp;base64,${fs.readFileSync(logoFile).toString('base64')}`;
+        htmlContent = htmlContent.replace(/src=["'](?:(?:\.\/)?assets\/images\/RCG\.webp)["']/g, `src="${logoBase64}"`);
+      }
+
+      let pageSizeCSS = '105mm 148mm';
+      let contentWidth = '98mm';
+
+      if (options.paperSize === 'A6') {
+        pageSizeCSS = '105mm 148mm';
+        contentWidth = '98mm';
+      } else if (options.paperSize === 'A5') {
+        pageSizeCSS = '148mm 210mm';
+        contentWidth = '138mm';
+      } else if (options.paperSize === 'A4') {
+        pageSizeCSS = '210mm 297mm';
+        contentWidth = '190mm';
+      } else if (options.paperSize === 'Letter') {
+        pageSizeCSS = '8.5in 11in';
+        contentWidth = '7.8in';
+      } else if (options.paperSize === 'NCR_Wartel') {
+        pageSizeCSS = '9.5in 11in';
+        contentWidth = '8.8in';
+      }
+
+      const baseHref = `file:///${path.join(__dirname, '/').replace(/\\/g, '/')}`;
+      const printWin = new BrowserWindow({
+        show: false,
+        width: 1024,
+        height: 768,
+        backgroundColor: '#FFFFFF',
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true
+        }
+      });
+
+      const fullDoc = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <base href="${baseHref}">
+  <title>Cetak Dokumen PT RCG</title>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #FFFFFF !important;
+      background-color: #FFFFFF !important;
+      color: #0F172A !important;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    }
+    @page {
+      margin: 0 !important;
+      size: ${pageSizeCSS} portrait;
+    }
+    .nota-container, .nota-sheet {
+      width: ${contentWidth} !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
+      padding: 12px 14px !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: #FFFFFF !important;
+      box-sizing: border-box !important;
+    }
+  </style>
+</head>
+<body style="background: #FFFFFF !important; margin: 0 !important; padding: 0 !important;">
+  ${htmlContent}
+</body>
+</html>`;
+
+      await printWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(fullDoc));
+
+      return new Promise((resolve) => {
+        printWin.webContents.print({
+          silent: false,
+          printBackground: true,
+          color: true
+        }, (success, failureReason) => {
+          printWin.destroy();
+          if (!success && failureReason !== 'cancelled') {
+            console.error('Print error:', failureReason);
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        });
+      });
+    } else {
+      mainWindow.webContents.print({
+        silent: false,
+        printBackground: true,
+        ...options
+      });
+      return true;
+    }
   } catch (error) {
     console.error('Print error:', error);
     return false;
@@ -152,14 +262,39 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     }
 
     let pageSize = 'A4';
-    if (options.paperSize === 'A6') pageSize = 'A6';
+    let pageSizeCSS = '210mm 297mm';
+    let contentWidth = '190mm';
+
+    if (options.paperSize === 'A6') {
+      pageSize = { width: 105000, height: 148000 };
+      pageSizeCSS = '105mm 148mm';
+      contentWidth = '98mm';
+    } else if (options.paperSize === 'A5') {
+      pageSize = 'A5';
+      pageSizeCSS = '148mm 210mm';
+      contentWidth = '138mm';
+    } else if (options.paperSize === 'Letter') {
+      pageSize = 'Letter';
+      pageSizeCSS = '8.5in 11in';
+      contentWidth = '7.8in';
+    } else if (options.paperSize === 'NCR_Wartel') {
+      pageSize = { width: 241300, height: 279400 };
+      pageSizeCSS = '9.5in 11in';
+      contentWidth = '8.8in';
+    }
+
     let htmlContent = options.htmlContent || '';
 
-    // Convert local logo paths to embedded base64 data URLs for 100% reliable rendering
+    // Convert local logo / kop surat paths to embedded base64 data URLs for 100% reliable rendering
+    const kopFile = path.join(__dirname, 'assets/images/kop surat nota timbang.webp');
+    if (fs.existsSync(kopFile)) {
+      const kopBase64 = `data:image/webp;base64,${fs.readFileSync(kopFile).toString('base64')}`;
+      htmlContent = htmlContent.replace(/src=["'](?:(?:\.\/)?assets\/images\/kop surat nota timbang\.webp|assets\/images\/kop%20surat%20nota%20timbang\.webp)["']/g, `src="${kopBase64}"`);
+    }
     const logoFile = path.join(__dirname, 'assets/images/RCG.webp');
     if (fs.existsSync(logoFile)) {
       const logoBase64 = `data:image/webp;base64,${fs.readFileSync(logoFile).toString('base64')}`;
-      htmlContent = htmlContent.replace(/src=["'](?:(?:\.\/)?assets\/images\/RCG\.webp|assets\/images\/RCG\.webp)["']/g, `src="${logoBase64}"`);
+      htmlContent = htmlContent.replace(/src=["'](?:(?:\.\/)?assets\/images\/RCG\.webp)["']/g, `src="${logoBase64}"`);
     }
 
     const baseHref = `file:///${path.join(__dirname, '/').replace(/\\/g, '/')}`;
@@ -184,7 +319,6 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
   <title>${defaultFilename}</title>
   <link rel="stylesheet" href="assets/css/fonts.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     *, *::before, *::after {
       box-sizing: border-box;
       -webkit-print-color-adjust: exact !important;
@@ -203,15 +337,18 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     }
     @page {
       margin: 0 !important;
-      size: ${pageSize} portrait;
+      size: ${pageSizeCSS} portrait;
     }
     .nota-container, .nota-sheet {
+      width: ${contentWidth} !important;
+      max-width: 100% !important;
       margin: 0 auto !important;
-      padding: 16px 20px !important;
+      padding: 12px 14px !important;
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
       background: #FFFFFF !important;
+      box-sizing: border-box !important;
     }
   </style>
 </head>

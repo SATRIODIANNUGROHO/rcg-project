@@ -13,62 +13,82 @@ const PrintManager = {
   currentGeneratorFn: null,
 
   init() {
-    this.bindEvents();
     this.createDynamicStyleElement();
+    this.bindEvents();
+  },
+
+  getPaperConfig(paperVal) {
+    switch (paperVal) {
+      case 'A6':
+        return {
+          cardWidth: '480px',
+          padding: '14px 16px',
+          fontSize: '11px',
+          pageSizeCSS: '105mm 148mm',
+          containerWidth: '98mm'
+        };
+      case 'A5':
+        return {
+          cardWidth: '600px',
+          padding: '18px 20px',
+          fontSize: '12px',
+          pageSizeCSS: '148mm 210mm',
+          containerWidth: '138mm'
+        };
+      case 'A4':
+        return {
+          cardWidth: '740px',
+          padding: '24px 28px',
+          fontSize: '13px',
+          pageSizeCSS: '210mm 297mm',
+          containerWidth: '190mm'
+        };
+      case 'Letter':
+        return {
+          cardWidth: '740px',
+          padding: '24px 28px',
+          fontSize: '13px',
+          pageSizeCSS: '8.5in 11in',
+          containerWidth: '7.8in'
+        };
+      case 'NCR_Wartel':
+        return {
+          cardWidth: '780px',
+          padding: '18px 24px',
+          fontSize: '12px',
+          pageSizeCSS: '9.5in 11in',
+          containerWidth: '8.8in'
+        };
+      default:
+        return {
+          cardWidth: '740px',
+          padding: '20px',
+          fontSize: '12px',
+          pageSizeCSS: 'auto',
+          containerWidth: '100%'
+        };
+    }
   },
 
   bindEvents() {
+    const directPrintBtn = document.getElementById('btn-direct-print-dialog');
+    if (directPrintBtn) {
+      directPrintBtn.addEventListener('click', async () => {
+        await this.directPrint();
+      });
+    }
+
     const confirmBtn = document.getElementById('btn-confirm-print-dialog');
     if (confirmBtn) {
       confirmBtn.addEventListener('click', async () => {
-        const paperSelect = document.getElementById('select-print-paper-size');
-        const paperVal = paperSelect ? paperSelect.value : 'A6';
-
-        const copiesSelect = document.getElementById('select-print-copies');
-        const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
-
-        // Generate full HTML with all requested copies
-        const finalHtml = this.getRenderedHtml(copies);
-
-        // 1. Populate hidden printable area strictly for PDF generation
-        const printableContainer = document.getElementById('printable-nota');
-        if (printableContainer) {
-          printableContainer.innerHTML = finalHtml || '';
-        }
-
-        this.applySelectedPrintSettings();
-
-        // 2. Prepare filename
-        const safeDocNo = (this.currentDocNo || 'RCG').replace(/[/\\?%*:|"<>]/g, '_');
-        const filename = `${this.currentDocType}_${safeDocNo}.pdf`;
-
-        // 3. Close modal preview
-        App.closeModal('modal-print-settings');
-
-        // 4. In Electron: Save directly as crisp vector PDF using dedicated isolated offscreen renderer
-        if (window.electronAPI && typeof window.electronAPI.savePDF === 'function') {
-          App.showToast('Mempersiapkan dokumen PDF...', 'info');
-          const result = await window.electronAPI.savePDF({
-            defaultFilename: filename,
-            paperSize: paperVal,
-            htmlContent: finalHtml
-          });
-
-          if (result && result.success) {
-            App.showToast(`Dokumen PDF berhasil diunduh: ${filename}`, 'success');
-          } else if (result && !result.canceled) {
-            App.showToast(`Gagal mengunduh PDF: ${result.error || 'Terjadi kesalahan'}`, 'danger');
-          }
-        } else {
-          // Web fallback: generate and download genuine PDF document via html2pdf
-          this.downloadWebDocument(filename, finalHtml, paperVal);
-        }
+        await this.downloadPdf();
       });
     }
 
     const paperSelect = document.getElementById('select-print-paper-size');
     if (paperSelect) {
       paperSelect.addEventListener('change', () => {
+        this.refreshPreview();
         this.applySelectedPrintSettings();
       });
     }
@@ -93,6 +113,10 @@ const PrintManager = {
   },
 
   refreshPreview() {
+    const paperSelect = document.getElementById('select-print-paper-size');
+    const paperVal = paperSelect ? paperSelect.value : 'A6';
+    const config = this.getPaperConfig(paperVal);
+
     const copiesSelect = document.getElementById('select-print-copies');
     const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
 
@@ -113,7 +137,7 @@ const PrintManager = {
         renderedCards.push(`
           <div class="preview-sheet-wrapper" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             ${copies > 1 ? `<div style="font-size: 11.5px; font-weight: 600; color: #94A3B8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">— ${copyLabel} —</div>` : ''}
-            <div style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: 740px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); border-radius: 4px; padding: 20px; box-sizing: border-box; border: none !important; outline: none !important;">
+            <div class="preview-paper-card" style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${config.cardWidth}; box-shadow: 0 4px 14px rgba(0,0,0,0.18); border-radius: 4px; padding: ${config.padding}; font-size: ${config.fontSize}; box-sizing: border-box; border: none !important; outline: none !important; transition: all 0.25s ease;">
               ${sheetHtml}
             </div>
           </div>
@@ -122,10 +146,80 @@ const PrintManager = {
       previewContainer.innerHTML = renderedCards.join('');
     } else {
       previewContainer.innerHTML = `
-        <div style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: 740px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); border-radius: 4px; padding: 20px; box-sizing: border-box; border: none !important; outline: none !important;">
+        <div class="preview-paper-card" style="background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${config.cardWidth}; box-shadow: 0 4px 14px rgba(0,0,0,0.18); border-radius: 4px; padding: ${config.padding}; font-size: ${config.fontSize}; box-sizing: border-box; border: none !important; outline: none !important; transition: all 0.25s ease;">
           ${this.currentHtmlContent}
         </div>
       `;
+    }
+  },
+
+  async directPrint() {
+    const paperSelect = document.getElementById('select-print-paper-size');
+    const paperVal = paperSelect ? paperSelect.value : 'A6';
+
+    const copiesSelect = document.getElementById('select-print-copies');
+    const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
+
+    const finalHtml = this.getRenderedHtml(copies);
+
+    const printableContainer = document.getElementById('printable-nota');
+    if (printableContainer) {
+      printableContainer.innerHTML = finalHtml || '';
+    }
+
+    this.applySelectedPrintSettings();
+    App.closeModal('modal-print-settings');
+
+    if (window.electronAPI && typeof window.electronAPI.printNota === 'function') {
+      App.showToast('Membuka dialog pencetakan printer...', 'info');
+      const success = await window.electronAPI.printNota({
+        paperSize: paperVal,
+        htmlContent: finalHtml
+      });
+      if (success) {
+        App.showToast('Proses cetak berhasil dikirim ke printer', 'success');
+      }
+    } else {
+      window.print();
+    }
+  },
+
+  async downloadPdf() {
+    const paperSelect = document.getElementById('select-print-paper-size');
+    const paperVal = paperSelect ? paperSelect.value : 'A6';
+
+    const copiesSelect = document.getElementById('select-print-copies');
+    const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
+
+    const finalHtml = this.getRenderedHtml(copies);
+
+    const printableContainer = document.getElementById('printable-nota');
+    if (printableContainer) {
+      printableContainer.innerHTML = finalHtml || '';
+    }
+
+    this.applySelectedPrintSettings();
+
+    const safeDocNo = (this.currentDocNo || 'RCG').replace(/[/\\?%*:|"<>]/g, '_');
+    const filename = `${this.currentDocType}_${safeDocNo}.pdf`;
+
+    App.closeModal('modal-print-settings');
+
+    if (window.electronAPI && typeof window.electronAPI.savePDF === 'function') {
+      App.showToast('Mempersiapkan dokumen PDF...', 'info');
+      const result = await window.electronAPI.savePDF({
+        defaultFilename: filename,
+        paperSize: paperVal,
+        htmlContent: finalHtml
+      });
+
+      if (result && result.success) {
+        App.showToast(`Dokumen PDF berhasil diunduh: ${filename}`, 'success');
+      } else if (result && !result.canceled) {
+        App.showToast(`Gagal mengunduh PDF: ${result.error || 'Terjadi kesalahan'}`, 'danger');
+      }
+    } else {
+      this.downloadWebDocument(filename, finalHtml, paperVal);
     }
   },
 
@@ -133,20 +227,20 @@ const PrintManager = {
     if (typeof html2pdf !== 'undefined') {
       App.showToast('Menyiapkan file PDF...', 'info');
 
+      const config = this.getPaperConfig(paperSize);
       const tempContainer = document.createElement('div');
       tempContainer.style.background = '#FFFFFF';
       tempContainer.style.backgroundColor = '#FFFFFF';
       tempContainer.style.color = '#0F172A';
       tempContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      tempContainer.style.padding = '0';
-      tempContainer.style.margin = '0';
+      tempContainer.style.padding = config.padding;
+      tempContainer.style.margin = '0 auto';
       tempContainer.style.border = 'none';
       tempContainer.style.outline = 'none';
       tempContainer.style.boxShadow = 'none';
-      tempContainer.style.width = '780px';
+      tempContainer.style.width = config.cardWidth;
       tempContainer.innerHTML = htmlContent;
 
-      // Ensure images inside tempContainer have absolute URLs
       tempContainer.querySelectorAll('img').forEach(img => {
         const rawSrc = img.getAttribute('src');
         if (rawSrc && !rawSrc.startsWith('data:') && !rawSrc.startsWith('http')) {
@@ -157,7 +251,8 @@ const PrintManager = {
       let format = 'a4';
       if (paperSize === 'A6') format = 'a6';
       else if (paperSize === 'A5') format = 'a5';
-      else if (paperSize === 'Letter' || paperSize === 'NCR_Wartel') format = 'letter';
+      else if (paperSize === 'Letter') format = 'letter';
+      else if (paperSize === 'NCR_Wartel') format = [241.3, 279.4];
 
       const opt = {
         margin: 0,
@@ -174,7 +269,6 @@ const PrintManager = {
         App.showToast('Terjadi kendala saat membuat PDF', 'danger');
       });
     } else {
-      // Direct print fallback
       window.print();
     }
   },
@@ -212,55 +306,32 @@ const PrintManager = {
   applySelectedPrintSettings() {
     const paperSelect = document.getElementById('select-print-paper-size');
     const paperVal = paperSelect ? paperSelect.value : 'A6';
-
-    let pageSizeCSS = 'A6 portrait';
-    let containerWidth = '98mm';
-
-    switch (paperVal) {
-      case 'A6':
-        pageSizeCSS = '105mm 148mm';
-        containerWidth = '98mm';
-        break;
-      case 'A5':
-        pageSizeCSS = '148mm 210mm';
-        containerWidth = '138mm';
-        break;
-      case 'A4':
-        pageSizeCSS = '210mm 297mm';
-        containerWidth = '190mm';
-        break;
-      case 'Letter':
-        pageSizeCSS = '8.5in 11in';
-        containerWidth = '7.8in';
-        break;
-      case 'NCR_Wartel':
-        pageSizeCSS = '9.5in 11in portrait';
-        containerWidth = '8.8in';
-        break;
-      default:
-        pageSizeCSS = 'auto';
-        break;
-    }
+    const config = this.getPaperConfig(paperVal);
 
     if (this.dynamicPrintStyleEl) {
       this.dynamicPrintStyleEl.innerHTML = `
         @media print {
           @page {
-            size: ${pageSizeCSS} !important;
-            margin: 4mm !important;
+            size: ${config.pageSizeCSS} portrait !important;
+            margin: 3mm !important;
           }
           #printable-nota {
-            width: ${containerWidth} !important;
+            width: ${config.containerWidth} !important;
+            max-width: 100% !important;
             margin: 0 auto !important;
+            overflow: hidden !important;
           }
           .nota-sheet,
           .nota-container {
             width: 100% !important;
+            max-width: 100% !important;
             box-shadow: none !important;
             border: none !important;
+            box-sizing: border-box !important;
           }
         }
       `;
     }
   }
 };
+
