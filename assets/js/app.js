@@ -110,15 +110,6 @@ const App = {
       });
     }
 
-    // About & Licenses tab trigger from dropdown
-    const aboutBtn = document.getElementById('btn-open-about-tab');
-    if (aboutBtn) {
-      aboutBtn.addEventListener('click', () => {
-        if (profileDropdown) profileDropdown.classList.remove('open');
-        this.switchTab('about-licenses');
-      });
-    }
-
     // Scale Serial & Simulator Modals / Buttons
     const serialBtn = document.getElementById('btn-connect-serial');
     if (serialBtn) {
