@@ -6,42 +6,42 @@
 
 const PAPER_FORMATS = {
   A6: {
-    label: 'A6 (105 x 148 mm)',
-    previewWidth: '440px',
-    padding: '14px 16px',
-    fontSizeScale: '0.92',
+    label: 'A6 (105 x 148 mm - Standar Tiket Timbang)',
+    previewWidth: '640px',
+    padding: '0',
+    fontSizeScale: '1',
     cssPageSize: '105mm 148mm',
     cssContainerWidth: '97mm'
   },
   A5: {
     label: 'A5 (148 x 210 mm)',
-    previewWidth: '580px',
-    padding: '18px 20px',
+    previewWidth: '690px',
+    padding: '0',
     fontSizeScale: '1',
     cssPageSize: '148mm 210mm',
     cssContainerWidth: '138mm'
   },
   A4: {
     label: 'A4 (210 x 297 mm)',
-    previewWidth: '740px',
-    padding: '24px 28px',
-    fontSizeScale: '1.05',
+    previewWidth: '760px',
+    padding: '0',
+    fontSizeScale: '1',
     cssPageSize: '210mm 297mm',
     cssContainerWidth: '190mm'
   },
   Letter: {
     label: 'Letter (8.5 x 11 in)',
-    previewWidth: '750px',
-    padding: '24px 28px',
-    fontSizeScale: '1.05',
+    previewWidth: '770px',
+    padding: '0',
+    fontSizeScale: '1',
     cssPageSize: '8.5in 11in',
     cssContainerWidth: '7.8in'
   },
   NCR_Wartel: {
     label: 'NCR Continuous Sheet 9.5" x 11"',
-    previewWidth: '780px',
-    padding: '24px 28px',
-    fontSizeScale: '1.05',
+    previewWidth: '790px',
+    padding: '0',
+    fontSizeScale: '1',
     cssPageSize: '9.5in 11in portrait',
     cssContainerWidth: '8.8in'
   }
@@ -190,7 +190,7 @@ const PrintManager = {
     const previewContainer = document.getElementById('modal-print-preview-content');
     if (!previewContainer) return;
 
-    const cardStyle = `background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${formatCfg.previewWidth}; box-shadow: 0 1px 4px rgba(0,0,0,0.1); border-radius: 4px; padding: ${formatCfg.padding}; box-sizing: border-box; border: none !important; outline: none !important; transition: max-width 0.25s ease, padding 0.25s ease;`;
+    const cardStyle = `background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${formatCfg.previewWidth}; box-shadow: 0 4px 16px rgba(0,0,0,0.15); border-radius: 4px; padding: 0; box-sizing: border-box; border: none !important; outline: none !important; transition: max-width 0.25s ease;`;
 
     if (typeof this.currentGeneratorFn === 'function') {
       const renderedCards = [];
