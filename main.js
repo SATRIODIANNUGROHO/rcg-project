@@ -240,19 +240,21 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
     }
     @page {
-      margin: 3mm !important;
+      margin: 2mm !important;
       size: ${pageCSS} portrait;
     }
     .nota-container, .nota-sheet {
       width: ${containerWidth} !important;
       max-width: ${containerWidth} !important;
       margin: 0 auto !important;
-      padding: 10px 12px !important;
+      padding: 6px 10px !important;
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
       background: #FFFFFF !important;
       box-sizing: border-box !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }
     table {
       border-collapse: collapse !important;

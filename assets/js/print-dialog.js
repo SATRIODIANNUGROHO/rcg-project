@@ -317,7 +317,7 @@ const PrintManager = {
         @media print {
           @page {
             size: ${formatCfg.cssPageSize} !important;
-            margin: 3mm !important;
+            margin: 2mm !important;
           }
           #printable-nota {
             width: ${formatCfg.cssContainerWidth} !important;
@@ -330,7 +330,9 @@ const PrintManager = {
             max-width: 100% !important;
             box-shadow: none !important;
             border: none !important;
-            padding: 8px 10px !important;
+            padding: 6px 10px !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
           }
         }
       `;
