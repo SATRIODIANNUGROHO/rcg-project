@@ -260,6 +260,9 @@ const SupplierHistoryManager = {
         }
       }
 
+      const isLunas = (tx.paymentStatus && tx.paymentStatus.trim().toLowerCase() === 'lunas');
+      const payStatusText = isLunas ? 'Lunas' : 'Belum Lunas';
+
       return `
         <div class="nota-sheet print-supplier-sheet" style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: #000000; padding: 16px 18px; width: 100%; box-sizing: border-box; margin: 0 auto; background: #FFFFFF; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
           <!-- Header Logo Centered -->
@@ -308,7 +311,7 @@ const SupplierHistoryManager = {
               <div style="font-weight: 700; color: #000000; margin-bottom: 2px;">Waktu Timbang / Status</div>
               <div style="display: flex; justify-content: space-between; color: #000000;">
                 <span>${tx.timeIn || '-'} s/d ${tx.timeOut || '-'}</span>
-                <span style="font-weight: 700;">${tx.paymentStatus || 'Belum Lunas'}</span>
+                <span style="font-weight: 700;">${payStatusText}</span>
               </div>
             </div>
           </div>

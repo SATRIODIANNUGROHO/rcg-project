@@ -699,7 +699,7 @@ const StorageManager = {
               driverName: obj.driver_name,
               weighmasterName: obj.weighmaster_name,
               adminName: obj.admin_name,
-              paymentStatus: obj.payment_status,
+              paymentStatus: (obj.payment_status && obj.payment_status.trim().toLowerCase() === 'lunas') ? 'Lunas' : 'Belum Lunas',
               notes: obj.notes,
               createdAt: obj.created_at,
               updatedAt: obj.updated_at
