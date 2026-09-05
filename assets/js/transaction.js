@@ -590,7 +590,7 @@ const TransactionEngine = {
         <!-- Header Perusahaan (Identik dengan Kop Formulir) -->
         <div class="nota-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #163A5F; padding-bottom: 12px; margin-bottom: 14px;">
           <div style="display: flex; align-items: center;">
-            <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam - Subsidiary Bawang Mas Grup" style="height: 46px; max-width: 320px; object-fit: contain;">
+            <img src="assets/images/kop surat nota timbang.webp" alt="PT Reka Cipta Garam - Subsidiary Bawang Mas Grup" style="height: 64px; max-width: 380px; width: auto; object-fit: contain; display: block;">
           </div>
           <div class="nota-title-box" style="text-align: right;">
             <div style="font-size: 13px; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 3px 8px; border-radius: 4px; display: inline-block;">${copyBadgeText}</div>
