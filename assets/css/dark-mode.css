@@ -641,6 +641,11 @@ body.dark-mode .sim-panel-box {
   border-color: #334155;
 }
 
+body.dark-mode .range-slider {
+  background: #334155;
+  accent-color: #3671c6;
+}
+
 body.dark-mode .sim-panel-box h4 {
   color: #F8FAFC;
 }

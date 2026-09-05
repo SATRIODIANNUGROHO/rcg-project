@@ -2640,10 +2640,12 @@ input[type="number"] {
 
 .range-slider {
   width: 100%;
-  height: 5px;
+  height: 6px;
   background: #CBD5E1;
-  border-radius: 3px;
+  border-radius: 999px;
   outline: none;
+  accent-color: #3671c6;
+  cursor: pointer;
 }
 
 /* Utility Helpers */
