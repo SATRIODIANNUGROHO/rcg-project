@@ -11,7 +11,27 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 ### 1. Basis Data Relasional SQLite Engine (SQLite 3 via sql.js WebAssembly)
 - **Format Database Standar Industri**: Penyimpanan data transaksi penimbangan, akun pengguna, audit log aktivitas, dan pengaturan sistem menggunakan format basis data relasional standar **SQLite 3** murni (`data/rcg_database.sqlite`).
 - **Skema Tabel Relasional**:
-  - `transactions`: Menyimpan data transaksi lengkap (ID, No Dokumen, Tanggal, Jam Masuk/Keluar, Nama Pemasok, No Polisi Truk, Jenis Material, Asal Daerah/Kabupaten/Desa, Berat Kotor, Berat Tara, Berat Muatan, Refraksi, Berat Bersih, Mutu K1, Mutu K2, Harga, Subtotal, Grand Total, Status Pembayaran, Nama Supir, Nama Petugas Timbang/Admin).
+  - `transactions`: Menyimpan data transaksi lengkap:
+    - `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
+    - `doc_no` (TEXT UNIQUE) - Nomor tiket/dokumen timbang resmi
+    - `date` (TEXT) - Tanggal transaksi (YYYY-MM-DD)
+    - `time_in` / `time_out` (TEXT) - Jam penimbangan masuk dan keluar
+    - `supplier` (TEXT) - Nama pemasok garam
+    - `plate_no` (TEXT) - Nomor polisi armada truk
+    - `driver_name` (TEXT) - Nama pengemudi/supir kendaraan
+    - `material` (TEXT) - Jenis garam (Garam Curah / Garam Karung)
+    - `origin_area` / `origin_region` (TEXT) - Asal daerah dan desa/kabupaten
+    - `gross_weight` / `tare_weight` / `net_weight` (REAL) - Berat kotor, tara, dan muatan (Kg)
+    - `refraction_percent` / `refraction_weight` (REAL) - Potongan refraksi persentase dan bobot (Kg)
+    - `final_net_weight` (REAL) - Berat bersih akhir yang diperhitungkan (Kg)
+    - `k1_weight` / `k2_weight` (REAL) - Pembagian tonase mutu Garam K1 dan K2
+    - `k1_price` / `k2_price` (REAL) - Harga satuan per Kg mutu K1 dan K2
+    - `k1_subtotal` / `k2_subtotal` (REAL) - Nilai subtotal per mutu (Rp)
+    - `grand_total` (REAL) - Total nilai pembayaran transaksi (Rp)
+    - `payment_status` (TEXT DEFAULT 'Belum Lunas') - Status pembayaran ('Lunas' / 'Belum Lunas')
+    - `notes` (TEXT) - Catatan operasional
+    - `operator_name` (TEXT) - Petugas timbang / admin penerbit
+    - `created_at` / `updated_at` (TEXT) - Timestamp pembuatan dan pembaruan data
   - `users`: Menyimpan kredensial pengguna, peran (Role), serta matriks izin modular (RBAC).
   - `activity_logs`: Menyimpan jejak audit sistem (timestamp, username, role, aksi, no dokumen, dan alasan/keterangan).
   - `app_settings`: Menyimpan konfigurasi jembatan timbang, printer, toleransi, dan parameter perusahaan.
@@ -93,9 +113,10 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Seluruh transaksi dari pemasok yang sama pada tanggal yang sama secara otomatis digabung dan diakumulasikan menjadi satu baris rekapitulasi.
   - Menampilkan jumlah total transaksi/pengiriman, akumulasi berat muatan, berat tara, berat bersih total, mutu K1, mutu K2, subtotal K1, subtotal K2, dan total pembayaran.
 - **Emblem Status Pembayaran Selaras & Sinkronisasi Massal**:
-  - Tampilan emblem Lunas dan Belum Lunas dibuat identik 100% dengan Riwayat Penimbangan dari dimensi, tipografi, warna palet DESIGN_SYSTEM.md, hingga interaktivitas klik.
-  - Mengklik emblem pada baris rekapitulasi pemasok akan beralih status dan secara otomatis memperbarui status pembayaran seluruh transaksi anggota dalam kelompok pemasok dan tanggal tersebut.
-  - Perubahan status secara instan disinkronkan ke tabel Riwayat Penimbangan, penyimpanan data, dan kartu metrik dashboard tanpa perlu memuat ulang halaman.
+  - Tampilan emblem **Lunas** (`badge-success`, Emerald `#22C55E`) dan **Belum Lunas** (`badge-warning`, Amber `#F59E0B`) dibuat identik 100% dengan Riwayat Penimbangan dari dimensi (tinggi 26px, padding 0 10px, border 1px solid, font 11px tebal 600), tipografi, warna palet DESIGN_SYSTEM.md, hingga interaktivitas klik role-based.
+  - Mengklik emblem pada baris rekapitulasi pemasok (`SupplierHistoryManager.togglePaymentStatus()`) akan beralih status dan secara otomatis memperbarui status pembayaran seluruh transaksi anggota dalam kelompok pemasok dan tanggal tersebut.
+  - Perubahan status secara instan disinkronkan ke tabel Riwayat Penimbangan, penyimpanan data SQLite, dan kartu metrik dashboard tanpa perlu memuat ulang halaman.
+  - Pengguna tanpa wewenang (Operator) memiliki akses *Read-Only* dengan opacity 0.9 dan tooltip penjelas hak akses.
 - **Format Dokumen Selaras dengan Riwayat Penimbangan**:
   - Dokumen cetak rekapitulasi harian pemasok menggunakan format dokumen **Nota Timbang A6** resmi yang sama persis dengan modul Riwayat Penimbangan (lengkap dengan kop surat, rincian bobot, rincian mutu garam, box total pembayaran, dan tanda tangan).
 - **Tampilan Tabel Proporsional & Responsif**:
@@ -151,7 +172,9 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 | Lihat Activity Log & Jejak Audit Sistem | Ya | Ya | Tidak |
 | Konfigurasi Parameter Jembatan Timbang & Margin | Ya | Tidak | Tidak |
 | Manajemen Akun Pengguna & Hak Akses RBAC | Ya | Tidak | Tidak |
-| Pencadangan (Backup) & Reset Basis Data | Ya | Tidak | Tidak |
+| Unduh Cadangan Basis Data (.sqlite / .json) | Ya | Tidak | Tidak |
+| Impor & Pemulihan Basis Data (.sqlite) | Ya | Tidak | Tidak |
+| Reset & Penghapusan Basis Data (Danger Zone) | Ya | Tidak | Tidak |
 
 ### 11. Audit Trail & Activity Log
 - **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar Satuan / Massal, Reset Database) tercatat otomatis di tabel `activity_logs`.
