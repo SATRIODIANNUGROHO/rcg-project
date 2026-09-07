@@ -2042,6 +2042,8 @@ input[type="number"] {
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-tight);
   background: var(--bg-surface);
@@ -2100,10 +2102,13 @@ input[type="number"] {
 }
 
 /* Multi-column Supplier History Table Enhancements */
+#section-riwayat-pemasok .data-table,
 #section-supplier-history .data-table {
-  min-width: 980px;
+  min-width: 860px;
+  width: 100%;
 }
 
+#section-riwayat-pemasok .data-table thead th,
 #section-supplier-history .data-table thead th {
   padding: 8px 6px;
   font-size: 11.5px;
@@ -2111,21 +2116,33 @@ input[type="number"] {
   white-space: nowrap;
 }
 
+#section-riwayat-pemasok .data-table tbody td,
 #section-supplier-history .data-table tbody td {
   padding: 6px 6px;
   font-size: 12px;
 }
 
+#section-riwayat-pemasok .data-table .num-cell,
 #section-supplier-history .data-table .num-cell {
   font-size: 11.5px;
   padding: 6px 6px;
 }
 
+#section-riwayat-pemasok .data-table .actions-cell,
 #section-supplier-history .data-table .actions-cell {
   padding: 6px 8px;
-  width: 105px;
-  min-width: 105px;
+  width: 80px;
+  min-width: 80px;
   text-align: center;
+  white-space: nowrap;
+}
+
+#section-riwayat-pemasok .data-table .actions-cell .btn-table-action,
+#section-supplier-history .data-table .actions-cell .btn-table-action {
+  min-width: 58px;
+  height: 26px;
+  padding: 0 10px;
+  font-size: 11px;
 }
 
 /* Table Toolbar / Controls */

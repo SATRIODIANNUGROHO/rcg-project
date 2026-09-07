@@ -2,7 +2,7 @@
 
 Sistem Informasi Penimbangan Truk Garam Industri modern berbasis **Electron Desktop & Web Application** untuk **PT. Reka Cipta Garam**.
 
-Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232, kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang dan formulir pemasok (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (mm/cm), rekapitulasi riwayat supplier, analitik tonase interaktif, tab informasi sistem & lisensi pihak ketiga, serta manajemen basis data relasional SQLite.
+Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232, kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (satuan mm dan cm), rekapitulasi riwayat pemasok terakumulasi harian, analitik tonase interaktif, serta manajemen basis data relasional SQLite.
 
 ---
 
@@ -12,7 +12,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Format Database Standar Industri**: Penyimpanan data transaksi penimbangan, akun pengguna, audit log aktivitas, dan pengaturan sistem menggunakan format basis data relasional standar **SQLite 3** murni (`data/rcg_database.sqlite`).
 - **Skema Tabel Relasional**:
   - `transactions`: Menyimpan data transaksi lengkap (ID, No Dokumen, Tanggal, Jam Masuk/Keluar, Nama Pemasok, No Polisi Truk, Jenis Material, Asal Daerah/Kabupaten/Desa, Berat Kotor, Berat Tara, Berat Muatan, Refraksi, Berat Bersih, Mutu K1, Mutu K2, Harga, Subtotal, Grand Total, Status Pembayaran, Nama Supir, Nama Petugas Timbang/Admin).
-  - `users`: Menyimpan kredensial pengguna, peran (Role), serta izin granular modular (RBAC).
+  - `users`: Menyimpan kredensial pengguna, peran (Role), serta matriks izin modular (RBAC).
   - `activity_logs`: Menyimpan jejak audit sistem (timestamp, username, role, aksi, no dokumen, dan alasan/keterangan).
   - `app_settings`: Menyimpan konfigurasi jembatan timbang, printer, toleransi, dan parameter perusahaan.
 - **Indeks Performa Tinggi**: Dilengkapi indeks sekunder untuk pencarian dan pemfilteran instan tanpa latensi (`idx_tx_date`, `idx_tx_supplier`, `idx_tx_docno`, `idx_logs_time`).
@@ -33,7 +33,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **Garam K1 (Kualitas Super)**: Mutu utama garam putih bersih dengan harga acuan standar Rp 1.250/Kg.
   - **Garam K2 (Kualitas Standar)**: Mutu kedua dengan harga acuan standar Rp 1.050/Kg.
 - **Kalkulasi Nilai Pembayaran**: Perhitungan otomatis subtotal K1, subtotal K2, dan Grand Total Rupiah.
-- **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas).
+- **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan terproteksi.
 
 ### 4. Penerbitan Nota Timbang, Pengaturan Margin In-App, & Ekspor PDF
 - **Pengaturan Margin In-App Fleksibel (mm / cm)**:
@@ -42,7 +42,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **Input Margin Granular**: Pengaturan batas margin per sisi (Atas/Top, Bawah/Bottom, Kiri/Left, Kanan/Right) untuk kebutuhan pencetakan presisi.
   - **Live Dynamic Preview**: Pratinjau dokumen di layar menyesuaikan margin dan padding secara langsung saat pengaturan diubah.
 - **Kop Surat & Header Resmi Gambar**: Header resmi PT. Reka Cipta Garam menggunakan berkas gambar kop surat resmi (`kop surat nota timbang.webp`) lengkap dengan identitas korporat Subsidiary Bawang Mas Grup.
-- **Tabel Nota Timbang Ringkas & Rapi**: Tampilan dokumen fokus, bersih, bebas teks terpotong, dan menyajikan Berat Muatan, Mutu Garam K1, Mutu Garam K2, dan Subtotal secara proporsional.
+- **Tabel Nota Timbang Ringkas & Rapi**: Tampilan dokumen fokus, bersih, bebas teks terpotong, menyajikan rincian bobot dua kolom, rincian mutu K1 & K2 dua kolom, dan kotak aksen total pembayaran.
 - **Format Asal Material Terpadu**: Penyajian nama wilayah dan desa (contoh: `Pamekasan - Majungan`) yang tertata rapi tanpa celah pemisah teks ekstrem.
 - **Fitur Cetak Langsung (Direct Print)**: Tombol "Cetak Dokumen" yang mengirim dokumen langsung ke antrean mesin printer fisik sistem dengan aturan `@page` margin otomatis.
 - **Pilihan Ukuran Kertas Standar**:
@@ -51,8 +51,8 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **A4 (210 x 297 mm)**: Format laporan dan formulir ukuran penuh.
   - **Letter (8.5" x 11")**: Format dokumen standar korporat.
   - **NCR Continuous Sheet (9.5" x 11")**: Format kertas continuous form untuk printer dot matrix dan NCR.
-- **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap dengan kolom tanda tangan Supir, Petugas Timbang (Weighmaster), dan Administrator.
-- **Ekspor PDF Vektor Bersih**: Hasil unduhan PDF presisi tinggi tanpa distorsi, tidak membeku (no freezing), dan pas dalam 1 halaman.
+- **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap dengan kolom tanda tangan Supir Kendaraan dan Petugas Timbang / Admin.
+- **Ekspor PDF Vektor Bersih**: Hasil unduhan PDF presisi tinggi berbasis offscreen renderer Electron tanpa distorsi, tidak membeku (no freezing), dan pas dalam 1 halaman.
 
 ### 5. Formulir Input Penimbangan & Tombol Ambil Bobot
 - **Tombol Ambil Bobot**: Tombol pada kolom Berat Kotor (Gross) dan Berat Tara menggunakan label "Ambil" dengan warna aksen biru standar `#3671c6`.
@@ -62,14 +62,21 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Pencarian Cerdas Real-Time**: Pencarian cepat multi-kolom berdasarkan Nomor Dokumen/Tiket, Nomor Polisi Truk, Nama Pemasok, Nama Supir, atau Asal Daerah.
 - **Filter Jenis Material Garam**: Pemfilteran transaksi berdasarkan jenis material garam (Semua Jenis Garam, Garam Curah, Garam Karung) yang tersinkronisasi langsung dengan modal dan berkas Excel.
 - **Filter Rentang Tanggal**: Opsi pemfilteran tanggal harian, mingguan, bulanan, atau rentang kustom.
-- **Pengelolaan Transaksi**: Menu aksi per baris transaksi untuk melihat detail lengkap, mengubah data transaksi, mencetak ulang tiket timbang, atau menghapus transaksi.
+- **Pengelolaan Transaksi**: Menu aksi per baris transaksi untuk melihat detail lengkap, mengubah data transaksi, mencetak ulang tiket timbang, atau menghapus transaksi (sesuai hak akses role).
 - **Pengurutan & Paginasi**: Pengurutan data Terbaru / Terlama serta pilihan ukuran halaman (10, 25, 50 baris).
 
-### 7. Riwayat Pemasok (Supplier History)
-- **Rekapitulasi Akumulasi Per Pemasok**: Ringkasan data pasokan garam, tonase K1, tonase K2, subtotal, dan grand total per transaksi pemasok.
-- **Searchable Combobox & Sugesti Otomatis**: Fitur pencarian pemasok fleksibel di mana pengguna dapat memilih langsung dari dropdown atau mengetik huruf/nama untuk mendapatkan sugesti atau rekomendasi nama pemasok secara real-time yang tersimpan di basis data.
-- **Cetak Formulir Pemasok**: Penerbitan formulir bukti penyerahan garam khusus pemasok dengan live preview dan multi-copy.
-- **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi pemasok yang tersaring sesuai pemasok terpilih dengan perhitungan otomatis.
+### 7. Riwayat Pemasok (Supplier History) Terintegrasi
+- **Aturan Grouping / Akumulasi Transaksi Harian**:
+  - Satu baris tabel merepresentasikan 1 pemasok pada 1 tanggal pengiriman.
+  - Seluruh transaksi dari pemasok yang sama pada tanggal yang sama secara otomatis digabung dan diakumulasikan menjadi satu baris rekapitulasi.
+  - Menampilkan jumlah total transaksi/pengiriman, akumulasi berat muatan, berat tara, berat bersih total, mutu K1, mutu K2, subtotal K1, subtotal K2, dan total pembayaran.
+- **Format Dokumen Selaras dengan Riwayat Penimbangan**:
+  - Dokumen cetak rekapitulasi harian pemasok menggunakan format dokumen **Nota Timbang A6** resmi yang sama persis dengan modul Riwayat Penimbangan (lengkap dengan kop surat, rincian bobot, rincian mutu garam, box total pembayaran, dan tanda tangan).
+- **Tampilan Tabel Proporsional & Responsif**:
+  - Kolom tabel tertata rapi (Tanggal, Nama Pemasok, Transaksi, Netto, K1, K2, Subtotal K1, Subtotal K2, Total Bayar, Status, Aksi).
+  - Tombol aksi berlabel "Cetak" seragam dengan tombol di Riwayat Penimbangan, bebas dari kebocoran layout atau teks terpotong.
+- **Searchable Combobox & Sugesti Otomatis**: Fitur filter pemasok fleksibel di mana pengguna dapat memilih langsung dari dropdown atau mengetik huruf/nama untuk mendapatkan rekomendasi nama pemasok secara real-time.
+- **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi data pemasok yang tersaring sesuai pemasok dan tanggal terpilih.
 
 ### 8. Dashboard & Analitik Tonase Interaktif
 - **Kartu Ringkasan Metrik**: Total Berat Bersih Periode, Total Nilai Pembayaran Periode, dan Rata-rata Tonase per Transaksi.
@@ -77,7 +84,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Pie Chart Mutu Garam**: Komposisi perbandingan tonase Garam K1 terhadap Garam K2.
 - **Double Donut Chart Sebaran Wilayah (Hierarchical Sunburst)**:
   - **Cincin Bagian Dalam (Inner Ring)**: Sebaran tonase berdasarkan Kabupaten di Madura (Sampang, Pamekasan, Sumenep).
-  - **Cincin Bagian Luar (Outer Ring)**: Sebaran detail per Desa/Kecamatan asal garam yang posisinya terkelompok secara harmonis tepat di bawah busur Kabupaten masing-masing.
+  - **Cincin Bagian Luar (Outer Ring)**: Sebaran detail per Desa/Kecamatan asal garam yang posisinya terkelompok tepat di bawah busur Kabupaten masing-masing.
   - **Cascaded Legend Toggling**: Menekan nama Kabupaten pada legenda akan otomatis menyembunyikan atau menampilkan irisan Kabupaten tersebut beserta seluruh Desa anakannya.
 
 ### 9. Ekspor Spreadsheet Excel Presisi Tinggi (.xlsx) via ExcelJS
@@ -88,35 +95,28 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Format Angka & Mata Uang**: Format numerik rapi dengan desimal bobot (`#,##0.0`) dan mata uang Rupiah (`"Rp " #,##0`).
 - **Baris Total Pale Gold (#FFF2CC)**: Baris ringkasan di bagian bawah yang dilengkapi formula otomatis AutoSum `=SUM()`.
 
-### 10. Manajemen Pengguna & Hak Akses Granular (RBAC Matrix)
+### 10. Manajemen Pengguna & Hak Akses Berbasis Peran (RBAC)
 - **Panel Manajemen Akun 2-Kolom**: Pengaturan daftar pemakai sistem dengan matriks hak akses granular per modul.
 - **Matriks Hak Akses Modul**: Pengaturan izin Lihat (View), Tambah (Add), Ubah (Edit), dan Hapus (Delete) untuk modul Pemasok, Material, Transaksi, dan Laporan.
 - **Otoritas Khusus Sistem**:
   - Hak Akses Cetak Ulang Tiket Nota
+  - Hak Akses Pengubahan Status Pembayaran (Lunas / Belum Lunas)
   - Hak Akses Pengaturan Konfigurasi Sistem
   - Hak Akses Kelola Pengguna & Hak Akses
   - Hak Akses Pencadangan & Reset Database
 - **Aksi Pengguna**: Tambah Pengguna Baru, Ubah Kata Sandi, Hapus Pengguna, serta tombol cepat Pilih Semua dan Kosongkan Semua.
 - **Proteksi Perubahan Belum Disimpan**: Dialog konfirmasi otomatis saat tombol Tutup ditekan jika ada perubahan hak akses yang belum disimpan.
 
-### 11. Tab Navigasi "About & Licenses" (Tentang Sistem & Lisensi)
-- **Tab Halaman Penuh**: Diletakkan di sebelah kanan *Backup & Manajemen Data* pada bilah navigasi utama.
-- **Hero Identity Card**: Menampilkan identitas resmi sistem, logo RCG dengan latar belakang transparan adaptif mode gelap/terang, dan deskripsi sistem.
-- **Entitas & Arsitektur Sistem**: Menampilkan informasi Perusahaan Pemilik (PT. Reka Cipta Garam), Induk Perusahaan (Bawang Mas Grup), Lokasi Operasional (Pamekasan, Madura), Arsitektur Sistem (Local-First Native Hybrid Electron + SQLite), dan Nomor Rilis v8.0.0.
-- **Tim Kontributor (Credits)**: Penghargaan resmi untuk tim Software Engineering, UI/UX Design, Quality Assurance & Operasional Pabrik, Keuangan & Audit, serta Manajemen Bawang Mas Grup.
-- **Atribusi Lisensi Pihak Ketiga**: Tinjauan lisensi open-source berformat grid horizontal rapi (Electron, SQLite, Chart.js, SheetJS, jsPDF, dan Font Plus Jakarta Sans).
-- **Pemberitahuan Hak Cipta**: Ringkasan hak cipta resmi dan perlindungan kekayaan intelektual perangkat lunak.
+### 11. Audit Trail & Activity Log
+- **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar, Reset Database) tercatat otomatis di tabel `activity_logs`.
+- **Validasi Alasan Wajib**: Setiap tindakan sensitif (seperti penghapusan atau reset data) mewajibkan input alasan tertulis sebelum dieksekusi demi kepatuhan audit.
 
-### 12. Audit Trail & Activity Log
-- **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Reset Database) tercatat otomatis di tabel `activity_logs`.
-- **Validasi Alasan Wajib**: Setiap tindakan penghapusan atau reset data mewajibkan input alasan tertulis sebelum dieksekusi demi kepatuhan audit.
-
-### 13. Pencadangan Data, Pemulihan, & Proteksi Zona Bahaya
+### 12. Pencadangan Data, Pemulihan, & Proteksi Zona Bahaya
 - **Dukungan Ganda Format Cadangan**: Mendukung format database biner SQLite (`.sqlite`) dan berkas log JSON (`.json`).
 - **Slot Pemulihan Auto-Backup**: Penyimpanan otomatis slot cadangan lokal terakhir yang dapat dipulihkan sewaktu-waktu.
 - **Zona Bahaya (Reset Data)**: Opsi penghapusan seluruh data transaksi dengan proteksi konfirmasi ganda, input alasan wajib, dan pencatatan audit log permanen.
 
-### 14. Standar Desain Antarmuka Industrial (Design System)
+### 13. Standar Desain Antarmuka Industrial (Design System)
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
 - **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk keterbacaan tinggi.
 - **Ikon Vektor Bersih**: Seluruh ikon antarmuka menggunakan SVG industrial murni tanpa penggunaan emoji.
@@ -129,9 +129,9 @@ Sistem menyediakan 3 akun bawaan untuk berbagai tingkat kewenangan operasional:
 
 | Username | Password | Peran (Role) | Hak Akses & Tanggung Jawab |
 | :--- | :--- | :--- | :--- |
-| **admin** | `admin123` | **Administrator** | Akses penuh ke seluruh sistem: Dashboard, Input Timbang, Riwayat Penimbangan, Riwayat Pemasok, Activity Log, Hak Akses Pengguna, Konfigurasi Sistem, About & Licenses, dan Backup Basis Data. |
-| **operator** | `operator123` | **Operator** | Akses operasional harian: Input Penimbangan Truk, Cetak Tiket Timbang, Riwayat Penimbangan, Riwayat Pemasok, dan About & Licenses. |
-| **supervisor** | `supervisor123` | **Supervisor** | Akses pengawasan & audit: Monitoring Dashboard & Analitik Tonase, Tinjau Riwayat Penimbangan & Pemasok, Cetak Ulang Dokumen, Ekspor Laporan Excel (Read-Only), dan About & Licenses. |
+| **admin** | `admin123` | **Administrator** | Akses penuh ke seluruh sistem: Dashboard, Input Penimbangan, Riwayat Penimbangan, Riwayat Pemasok, Activity Log, Hak Akses Pengguna, Konfigurasi Sistem, dan Backup Basis Data. |
+| **operator** | `operator123` | **Operator** | Akses operasional harian: Input Penimbangan Truk, Cetak Tiket Timbang, Riwayat Penimbangan, dan Riwayat Pemasok. |
+| **supervisor** | `supervisor123` | **Supervisor** | Akses pengawasan & audit: Monitoring Dashboard & Analitik Tonase, Tinjau Riwayat Penimbangan & Pemasok, Cetak Ulang Dokumen, dan Ekspor Laporan Excel (Read-Only). |
 
 ---
 
@@ -139,7 +139,7 @@ Sistem menyediakan 3 akun bawaan untuk berbagai tingkat kewenangan operasional:
 
 ### Cara 1: Menjalankan Aplikasi Desktop (Electron)
 1. Buka folder utama proyek ini.
-2. Klik ganda file:
+2. Klik ganda berkas:
    - **`run-app.bat`**
 3. Jendela aplikasi desktop akan terbuka dan siap digunakan.
 
@@ -210,7 +210,7 @@ RCG/
 │   ├── css/
 │   │   ├── style.css             # Tema utama, tata letak, & komponen
 │   │   ├── dark-mode.css         # Skema warna mode gelap (Design System)
-│   │   └── print-nota.css        # Format cetak nota tiket timbangan & form supplier
+│   │   └── print-nota.css        # Format cetak nota tiket timbangan
 │   ├── icons/
 │   │   ├── icon.ico              # Ikon Windows Executable resmi (.exe)
 │   │   └── icon.png              # Ikon resolusi tinggi
@@ -236,7 +236,7 @@ RCG/
 │       ├── export-excel.js       # Mesin ekspor Excel dengan AutoFilter & AutoSum
 │       ├── transaction.js        # Logika input penimbangan & kalkulasi mutu
 │       ├── history.js            # Riwayat transaksi penimbangan
-│       ├── supplier-history.js   # Riwayat pemasok & cetak form supplier
+│       ├── supplier-history.js   # Riwayat pemasok terakumulasi & cetak nota pemasok
 │       ├── analytics.js          # Double Donut Chart & statistik mingguan
 │       └── app.js                # Pengendali utama alur aplikasi
 ├── scripts/

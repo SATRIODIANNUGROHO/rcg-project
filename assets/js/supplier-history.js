@@ -361,9 +361,8 @@ const SupplierHistoryManager = {
           </span>
         </td>
         <td class="actions-cell text-center" style="white-space: nowrap;">
-          <button class="btn btn-table-action action-print" style="padding: 4px 8px; font-weight: 600; font-size: 11px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" title="Cetak Formulir Rekapitulasi Harian Pemasok" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-            <span>Cetak Rekap</span>
+          <button class="btn btn-table-action action-print" style="height: 26px; padding: 0 10px; font-weight: 600; font-size: 11px; white-space: nowrap;" title="Cetak Nota Timbang" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
+            Cetak
           </button>
         </td>
       `;
@@ -404,8 +403,8 @@ const SupplierHistoryManager = {
   },
 
   /**
-   * Print official Daily Supplier Recap Document
-   * Generates Formulir Rekapitulasi Harian Pemasok with member transaction details
+   * Print official Supplier Weighing Note / Document
+   * Formatted IDENTICALLY to 'Riwayat Penimbangan' (Nota Timbang A6)
    */
   printDailySummary(encodedKey) {
     const key = decodeURIComponent(encodedKey);
@@ -420,57 +419,67 @@ const SupplierHistoryManager = {
     }
 
     const generatorFn = (copyNumber, totalCopies) => {
-      let copyBadgeText = 'FORMULIR REKAPITULASI HARIAN PEMASOK';
+      let copyBadgeText = 'NOTA TIMBANG';
       let copyReceiverText = 'LEMBAR UTAMA (ASLI)';
-      let copyFooterText = '* Dokumen ini merupakan bukti sah rekapitulasi penimbangan garam harian PT. Reka Cipta Garam.';
+      let copyFooterText = '* Dokumen ini merupakan bukti sah penerimaan & penimbangan garam PT. Reka Cipta Garam.';
 
       if (totalCopies === 2) {
         if (copyNumber === 1) {
+          copyBadgeText = 'NOTA TIMBANG (ASLI)';
           copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
-          copyFooterText = '* Lembar 1: Untuk Pemasok / Pengemudi sebagai bukti penyerahan garam.';
+          copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
         } else {
+          copyBadgeText = 'NOTA TIMBANG (ARSIP)';
           copyReceiverText = 'LEMBAR 2: ARSIP KANTOR / KEUANGAN';
-          copyFooterText = '* Lembar 2: Untuk Arsip Kantor & Verifikasi Pembayaran PT. Reka Cipta Garam.';
+          copyFooterText = '* Lembar 2: Untuk Arsip Kantor & Pembukuan Keuangan PT. RCG.';
         }
       } else if (totalCopies === 3) {
         if (copyNumber === 1) {
+          copyBadgeText = 'NOTA TIMBANG (ASLI)';
           copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
-          copyFooterText = '* Lembar 1: Untuk Pemasok / Pengemudi sebagai bukti penyerahan garam.';
+          copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
         } else if (copyNumber === 2) {
-          copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & OPERASIONAL';
-          copyFooterText = '* Lembar 2: Untuk Arsip Bagian Timbangan & Operasional Pabrik.';
+          copyBadgeText = 'NOTA TIMBANG (LAPANGAN)';
+          copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & LAPANGAN';
+          copyFooterText = '* Lembar 2: Untuk Arsip Bagian Timbangan & Lapangan.';
         } else {
+          copyBadgeText = 'NOTA TIMBANG (LEMBAR 3)';
           copyReceiverText = 'LEMBAR 3: KASIR & KEUANGAN';
-          copyFooterText = '* Lembar 3: Untuk Kasir & Pembukuan Keuangan.';
+          copyFooterText = '* Lembar 3: Untuk Kasir & Verifikasi Pembayaran.';
         }
       }
 
-      // Build Transaction Rows
-      const txRowsHtml = group.transactions.map((tx, idx) => {
-        const isTxLunas = (tx.paymentStatus && tx.paymentStatus.trim().toLowerCase() === 'lunas');
-        const payStatusStr = isTxLunas ? 'Lunas' : 'Belum';
-        const payColor = isTxLunas ? '#16A34A' : '#D97706';
+      const firstTx = group.transactions[0] || {};
+      const lastTx = group.transactions[group.transactions.length - 1] || firstTx;
 
-        return `
-          <tr style="border-bottom: 1px solid #E2E8F0; font-size: 8.5px;">
-            <td style="padding: 3px 2px; text-align: center; border: 1px solid #CBD5E1;">${idx + 1}</td>
-            <td style="padding: 3px 3px; font-family: monospace; font-weight: 700; border: 1px solid #CBD5E1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.docNo || '-'}">${tx.docNo || '-'}</td>
-            <td style="padding: 3px 3px; font-family: monospace; text-align: center; border: 1px solid #CBD5E1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.plateNo || '-'}</td>
-            <td style="padding: 3px 3px; border: 1px solid #CBD5E1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.driverName || '-'}">${tx.driverName || '-'}</td>
-            <td style="padding: 3px 2px; text-align: center; border: 1px solid #CBD5E1; white-space: nowrap;">${tx.timeIn || '-'}${tx.timeOut ? ' - ' + tx.timeOut : ''}</td>
-            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.netLoadWeight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.tareWeight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 3px; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.k1Weight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.k2Weight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 3px; text-align: right; font-family: monospace; font-weight: 700; color: #0F172A; border: 1px solid #CBD5E1; white-space: nowrap;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 2px; text-align: center; font-weight: 700; color: ${payColor}; border: 1px solid #CBD5E1; white-space: nowrap;">${payStatusStr}</td>
-          </tr>
-        `;
-      }).join('');
+      const plateDisplay = group.plateNosSummary !== '-'
+        ? group.plateNosSummary
+        : (group.txCount > 1 ? `${group.txCount} Kendaraan` : (firstTx.plateNo || '-'));
+
+      const docNoDisplay = group.docNos.length === 1
+        ? group.docNos[0]
+        : (group.docNos[0] ? `${group.docNos[0]} (+${group.docNos.length - 1})` : `NOTA-${group.date}`);
+
+      const driverDisplay = group.driversSummary !== '-'
+        ? group.driversSummary
+        : (firstTx.driverName || group.supplier || 'SUPIR');
+
+      const adminDisplay = firstTx.adminName || firstTx.weighmasterName || 'ADMIN';
+
+      const timeInDisplay = firstTx.timeIn ? `${firstTx.timeIn} WIB` : '-';
+      const timeOutDisplay = lastTx.timeOut ? `${lastTx.timeOut} WIB` : (firstTx.timeOut ? `${firstTx.timeOut} WIB` : '-');
+
+      const avgK1Price = group.k1Weight > 0 ? Math.round(group.k1Total / group.k1Weight) : (firstTx.k1Price || 0);
+      const avgK2Price = group.k2Weight > 0 ? Math.round(group.k2Total / group.k2Weight) : (firstTx.k2Price || 0);
+
+      const refractionDisplay = group.transactions.length === 1
+        ? `${firstTx.refractionPercent || 0}%`
+        : (group.netLoadWeight > 0
+            ? `${(((group.netLoadWeight - group.finalNetWeight) / group.netLoadWeight) * 100).toFixed(1)}%`
+            : '0%');
 
       return `
-        <div class="nota-sheet print-supplier-sheet" style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: #0F172A; padding: 8px 14px; width: 100%; box-sizing: border-box; margin: 0 auto; background: #FFFFFF; border: none !important; outline: none !important; box-shadow: none !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'}; page-break-inside: avoid !important; break-inside: avoid !important;">
+        <div class="nota-container" style="background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 6px 14px; border: none !important; outline: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%; page-break-inside: avoid !important; break-inside: avoid !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
           <!-- Header Logo Centered -->
           <div style="text-align: center; margin-bottom: 6px;">
             <img src="assets/images/kop surat nota timbang.webp" alt="PT REKA CIPTA GARAM - Subsidiary Bawang Mas Grup" style="max-height: 42px; max-width: 100%; width: auto; height: auto; object-fit: contain; display: inline-block;">
@@ -482,136 +491,125 @@ const SupplierHistoryManager = {
           <!-- Title -->
           <div style="text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; color: #163A5F;">
             ${copyBadgeText}
-            ${totalCopies > 1 ? `<div style="font-size: 9px; font-weight: 700; color: #64748B; margin-top: 2px; letter-spacing: 0.04em;">[ ${copyReceiverText} ]</div>` : ''}
+            ${totalCopies > 1 ? `<div style="font-size: 9px; font-weight: 700; color: #64748B; margin-top: 1px; letter-spacing: 0.03em;">[ ${copyReceiverText} ]</div>` : ''}
           </div>
 
           <!-- Metadata Section (2 Columns) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; font-size: 9.5px; margin-bottom: 6px; line-height: 1.3; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 6px 10px; border-radius: 4px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; font-size: 10px; margin-bottom: 2px; line-height: 1.25;">
             <div>
-              <div style="display: flex; margin-bottom: 2px;">
-                <span style="width: 120px; color: #475569; font-weight: 600;">Nama Pemasok:</span>
-                <span style="font-weight: 800; color: #0F172A; text-transform: uppercase;">${group.supplier}</span>
-              </div>
-              <div style="display: flex; margin-bottom: 2px;">
-                <span style="width: 120px; color: #475569; font-weight: 600;">Tanggal Pengiriman:</span>
-                <span style="font-weight: 700; color: #0F172A; font-family: monospace;">${group.date}</span>
-              </div>
-              <div style="display: flex;">
-                <span style="width: 120px; color: #475569; font-weight: 600;">Asal Daerah / Wilayah:</span>
-                <span style="font-weight: 600; color: #0F172A;">${group.originSummary}</span>
-              </div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Tanggal</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px;">${group.date}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Polisi</div>
+              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.plateNosSummary}">${plateDisplay}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Material</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.materialsSummary}">${group.materialsSummary}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Masuk</div>
+              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px;">${timeInDisplay}</div>
             </div>
 
             <div>
-              <div style="display: flex; margin-bottom: 2px;">
-                <span style="width: 120px; color: #475569; font-weight: 600;">Total Pengiriman (Rit):</span>
-                <span style="font-weight: 800; color: #163A5F;">${group.txCount} Transaksi / Rit</span>
-              </div>
-              <div style="display: flex; margin-bottom: 2px;">
-                <span style="width: 120px; color: #475569; font-weight: 600;">Material Pasokan:</span>
-                <span style="font-weight: 600; color: #0F172A;">${group.materialsSummary}</span>
-              </div>
-              <div style="display: flex;">
-                <span style="width: 120px; color: #475569; font-weight: 600;">Status Pembayaran:</span>
-                <span style="font-weight: 800; color: ${group.unpaidCount === 0 ? '#16A34A' : (group.lunasCount > 0 ? '#D97706' : '#DC2626')};">${group.paymentStatus}</span>
-              </div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Dok</div>
+              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.docNos.join(', ')}">${docNoDisplay}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Nama Pemasok</div>
+              <div style="color: #0F172A; font-weight: 700; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Asal Material</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.originSummary}">${group.originSummary}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Keluar</div>
+              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px;">${timeOutDisplay}</div>
             </div>
           </div>
 
-          <!-- Highlight Metric Cards (4 Columns) -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px;">
-            <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 4px; padding: 4px 6px; text-align: center;">
-              <div style="font-size: 8px; color: #1E40AF; font-weight: 700; text-transform: uppercase;">Total Tonase Bersih</div>
-              <div style="font-size: 11px; font-weight: 800; color: #1E3A8A; font-family: monospace; margin-top: 1px;">${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
+          <!-- Dashed Divider 1 -->
+          <div style="border-top: 1px dashed #94A3B8; margin: 4px 0;"></div>
+
+          <!-- Weight Section (2 Columns) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; font-size: 10px; margin-bottom: 2px; line-height: 1.25;">
+            <div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Kotor (Gross)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.grossWeight || 0).toLocaleString('id-ID')} Kg</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Muatan (Bruto)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.netLoadWeight || 0).toLocaleString('id-ID')} Kg</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih Total (Kg)</div>
+              <div style="color: #163A5F; font-weight: 800; font-family: monospace;">${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
             </div>
-            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; padding: 4px 6px; text-align: center;">
-              <div style="font-size: 8px; color: #166534; font-weight: 700; text-transform: uppercase;">Mutu K1 (Subtotal)</div>
-              <div style="font-size: 11px; font-weight: 800; color: #14532D; font-family: monospace; margin-top: 1px;">Rp ${(group.k1Total || 0).toLocaleString('id-ID')}</div>
-              <div style="font-size: 7.5px; color: #166534; font-weight: 600;">${(group.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
-            </div>
-            <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 4px; padding: 4px 6px; text-align: center;">
-              <div style="font-size: 8px; color: #92400E; font-weight: 700; text-transform: uppercase;">Mutu K2 (Subtotal)</div>
-              <div style="font-size: 11px; font-weight: 800; color: #78350F; font-family: monospace; margin-top: 1px;">Rp ${(group.k2Total || 0).toLocaleString('id-ID')}</div>
-              <div style="font-size: 7.5px; color: #92400E; font-weight: 600;">${(group.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
-            </div>
-            <div style="background: #163A5F; border: 1px solid #163A5F; border-radius: 4px; padding: 4px 6px; text-align: center; color: #FFFFFF;">
-              <div style="font-size: 8px; color: #E2E8F0; font-weight: 700; text-transform: uppercase;">Total Pembayaran</div>
-              <div style="font-size: 11.5px; font-weight: 800; color: #FFFFFF; font-family: monospace; margin-top: 1px;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</div>
+
+            <div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Tara (Tare)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.tareWeight || 0).toLocaleString('id-ID')} Kg</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Refraksi (%)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace;">${refractionDisplay}</div>
             </div>
           </div>
 
-          <!-- Section Label -->
-          <div style="font-size: 9.5px; font-weight: 800; color: #163A5F; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.03em;">
-            Rincian Pengiriman Pemasok (${group.txCount} Transaksi / Surat Jalan)
+          <!-- Dashed Divider 2 -->
+          <div style="border-top: 1px dashed #94A3B8; margin: 4px 0;"></div>
+
+          <!-- Quality & Price Section (2 Columns) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; font-size: 10px; margin-bottom: 2px; line-height: 1.25;">
+            <div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih K1 (Kg)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih K2 (Kg)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total K1 (Rp)</div>
+              <div style="color: #163A5F; font-weight: 700; font-family: monospace;">Rp ${(group.k1Total || 0).toLocaleString('id-ID')}</div>
+            </div>
+
+            <div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Harga K1 / Kg (Rp)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">Rp ${(avgK1Price || 0).toLocaleString('id-ID')}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Harga K2 / Kg (Rp)</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">Rp ${(avgK2Price || 0).toLocaleString('id-ID')}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total K2 (Rp)</div>
+              <div style="color: #B45309; font-weight: 700; font-family: monospace;">Rp ${(group.k2Total || 0).toLocaleString('id-ID')}</div>
+            </div>
           </div>
 
-          <!-- Table of Shipments Breakdown -->
-          <div style="width: 100%; margin-bottom: 8px; box-sizing: border-box;">
-            <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 8.5px; border: 1px solid #CBD5E1;">
-              <thead>
-                <tr style="background: #163A5F; color: #FFFFFF; font-weight: 700; text-align: center;">
-                  <th style="padding: 4px 2px; border: 1px solid #CBD5E1; width: 3.5%;">No</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 14%;">No. Dokumen</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 9.5%;">No. Polisi</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 11%;">Supir</th>
-                  <th style="padding: 4px 2px; border: 1px solid #CBD5E1; width: 8.5%;">Waktu</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 8%;">Bruto (Kg)</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 7.5%;">Tara (Kg)</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 8.5%;">Netto (Kg)</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 7.5%;">K1 (Kg)</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 7%;">K2 (Kg)</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 12.5%;">Total (Rp)</th>
-                  <th style="padding: 4px 2px; border: 1px solid #CBD5E1; width: 6.5%;">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${txRowsHtml}
-              </tbody>
-              <tfoot>
-                <tr style="background: #F1F5F9; font-weight: 800; font-size: 8.5px; border-top: 2px solid #163A5F;">
-                  <td colspan="5" style="padding: 4px 6px; text-align: center; border: 1px solid #CBD5E1; letter-spacing: 0.03em;">
-                    TOTAL REKAPITULASI (${group.txCount} PENGIRIMAN)
-                  </td>
-                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.netLoadWeight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.tareWeight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; font-weight: 800; color: #163A5F; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.finalNetWeight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.k1Weight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.k2Weight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; font-weight: 800; color: #163A5F; border: 1px solid #CBD5E1; white-space: nowrap;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px 2px; text-align: center; font-size: 8px; border: 1px solid #CBD5E1;">-</td>
-                </tr>
-              </tfoot>
-            </table>
+          <!-- Total Keseluruhan (Thematic Accent Box) -->
+          <div style="margin-top: 5px; background: #F8FAFC; border-left: 3px solid #163A5F; border-top: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0; padding: 4px 8px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+            <span style="font-weight: 800; font-size: 9.5px; color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL KESELURUHAN:</span>
+            <span style="font-weight: 800; font-size: 11.5px; color: #163A5F; font-family: monospace;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</span>
           </div>
 
-          <!-- Signatures (3 Columns) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center; margin-top: 10px; font-size: 9px;">
+          <!-- Signatures -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 12px; font-size: 9.5px;">
             <div>
-              <div style="color: #64748B; margin-bottom: 24px;">Pemasok / Pengemudi</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; padding-top: 2px;">( ${group.supplier} )</div>
+              <div style="color: #64748B; margin-bottom: 22px;">Supir Kendaraan</div>
+              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 100px; padding-top: 2px;">( ${driverDisplay} )</div>
             </div>
             <div>
-              <div style="color: #64748B; margin-bottom: 24px;">Bagian Timbangan</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; padding-top: 2px;">( TIMBANGAN )</div>
-            </div>
-            <div>
-              <div style="color: #64748B; margin-bottom: 24px;">Kasir / Keuangan</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; padding-top: 2px;">( KEUANGAN )</div>
+              <div style="color: #64748B; margin-bottom: 22px;">Petugas / Admin</div>
+              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 100px; padding-top: 2px;">( ${adminDisplay} )</div>
             </div>
           </div>
 
           <!-- Footer Note -->
-          <div style="font-size: 7.5px; color: #64748B; text-align: center; margin-top: 8px; border-top: 1px dotted #CBD5E1; padding-top: 2px;">
-            ${copyFooterText}
-          </div>
+          ${totalCopies > 1 ? `
+            <div style="font-size: 8px; color: #64748B; text-align: center; margin-top: 8px; border-top: 1px dotted #CBD5E1; padding-top: 2px;">
+              ${copyFooterText}
+            </div>
+          ` : ''}
         </div>
       `;
     };
 
-    const docIdentifier = `REKAP-${group.supplier.replace(/[^a-zA-Z0-9]/g, '_')}-${group.date}`;
+    const docIdentifier = group.docNos[0] || `NOTA-${group.supplier.replace(/[^a-zA-Z0-9]/g, '_')}-${group.date}`;
 
     if (typeof PrintManager !== 'undefined') {
-      PrintManager.openPrintDialog('Pratinjau Cetak Rekapitulasi Harian Pemasok', generatorFn, docIdentifier, 'Rekap_Pemasok', 'A4');
+      PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, docIdentifier, 'Nota_Timbang', 'A6');
     } else {
       const container = document.getElementById('printable-nota');
       if (container) container.innerHTML = generatorFn(1, 1);
