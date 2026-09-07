@@ -2,7 +2,7 @@
 
 Sistem Informasi Penimbangan Truk Garam Industri modern berbasis **Electron Desktop & Web Application** untuk **PT. Reka Cipta Garam**.
 
-Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232 / USB (dengan deteksi port COM fisik otomatis dan pengurai multi-protokol indikator), kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (satuan mm dan cm), dialog cetak dan ekspor berdimensi lapang bebas kebocoran tata letak, penanganan multi-transaksi adaptif pada pratinjau dan dokumen hasil cetak, rekapitulasi riwayat pemasok terakumulasi harian dengan emblem status pembayaran interaktif terintegrasi, analitik tonase interaktif, serta manajemen basis data relasional SQLite.
+Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232 / USB (dengan deteksi port COM fisik otomatis dan pengurai multi-protokol indikator), kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), penanganan cetak multi-transaksi adaptif, pengaturan margin in-app fleksibel (satuan mm dan cm), dialog cetak lapang (980px), rekapitulasi riwayat pemasok terakumulasi harian dengan emblem status pembayaran interaktif, analitik tonase interaktif, kontrol akses berbasis peran (RBAC), serta manajemen basis data relasional SQLite.
 
 ---
 
@@ -45,13 +45,13 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **Garam K1 (Kualitas Super)**: Mutu utama garam putih bersih dengan harga acuan standar Rp 1.250/Kg.
   - **Garam K2 (Kualitas Standar)**: Mutu kedua dengan harga acuan standar Rp 1.050/Kg.
 - **Kalkulasi Nilai Pembayaran**: Perhitungan otomatis subtotal K1, subtotal K2, dan Grand Total Rupiah.
-- **Status Pembayaran Terproteksi**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan berbasis RBAC serta visualisasi emblem berstandar DESIGN_SYSTEM.md.
+- **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan terproteksi.
 
 ### 4. Penerbitan Nota Timbang, Pengaturan Margin In-App, & Ekspor PDF
-- **Dialog Cetak Lapang & Proporsional (Lebar 980px)**: Modal pengaturan pratinjau cetak (`#modal-print-settings`) dirancang dengan lebar 980px dan tata letak dua kolom yang lega, mencegah desakan kontrol dan teks.
-- **Penanganan Banyak Transaksi Tanpa Distorsi Layout**:
-  - Tata letak dokumen pratinjau dan hasil unduhan PDF mampu menangani transaksi dalam jumlah banyak (misalnya akumulasi puluhan nomor polisi truk).
-  - Bagian penting dokumen (No. Dokumen, Nama Pemasok, Asal Material, Waktu Keluar) tetap tampil lengkap, jelas, dan proporsional tanpa risiko teks terpotong atau tertutup.
+- **Dialog Cetak Lapang & Proporsional (Lebar 980px)**: Modal pengaturan pratinjau cetak (`#modal-print-settings`) dirancang dengan lebar 980px dan tata letak dua kolom yang lega, mencegah desakan teks dan kebocoran tata letak kontrol.
+- **Penanganan Transaksi Banyak & Nomor Polisi Multipel**:
+  - Tata letak dokumen pratinjau dan hasil unduhan PDF mampu mengakomodasi banyak nomor polisi dan rincian muatan sekaligus secara rapi.
+  - Bagian penting dokumen (No. Dokumen, Nama Pemasok, Asal Material, Waktu Keluar) pada kolom kanan tetap tampil lengkap, jelas, dan proporsional tanpa risiko teks terpotong atau tertutup.
   - Pembagian baris dan tinggi baris tabel menyesuaikan muatan konten secara dinamis (adaptive height).
 - **Pengaturan Margin In-App Fleksibel (mm / cm)**:
   - **Preset Margin Instan**: Standar (5 mm / 0.5 cm), Sempit (2 mm / 0.2 cm), Sedang (8 mm / 0.8 cm), Lebar (12 mm / 1.2 cm), dan Kustom.
@@ -80,8 +80,8 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Filter Jenis Material Garam**: Pemfilteran transaksi berdasarkan jenis material garam (Semua Jenis Garam, Garam Curah, Garam Karung) yang tersinkronisasi langsung dengan modal dan berkas Excel.
 - **Filter Rentang Tanggal**: Opsi pemfilteran tanggal harian, mingguan, bulanan, atau rentang kustom.
 - **Emblem Status Pembayaran Interaktif**:
-  - Menampilkan status **Lunas** (`badge-success`, Emerald `#22C55E`) dan **Belum Lunas** (`badge-warning`, Amber `#F59E0B`).
-  - Diformat sebagai elemen tombol dengan tinggi 26px, padding 0 10px, font 11px tebal 600, dan border 1px solid sesuai DESIGN_SYSTEM.md.
+  - Menampilkan status **Lunas** (`badge-success`, Emerald `#22C55E`) dan **Belum Lunas** (`badge-warning`, Amber `#F59E0B`) sesuai standar DESIGN_SYSTEM.md.
+  - Diformat sebagai elemen tombol dengan tinggi 26px, padding 0 10px, font 11px tebal 600, dan border 1px solid.
   - Pengguna dengan wewenang (Administrator dan Supervisor) dapat langsung mengklik emblem untuk beralih status secara langsung, disertai pencatatan audit log otomatis.
   - Untuk Operator, emblem tampil dalam mode baca saja (Read-Only) dengan tooltip penjelas.
 - **Pengelolaan Transaksi**: Menu aksi per baris transaksi untuk melihat detail lengkap, mengubah data transaksi, mencetak ulang tiket timbang, atau menghapus transaksi (sesuai hak akses role).
@@ -169,14 +169,15 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Warning (`#F59E0B`): Status Belum Lunas, Peringatan Sistem, Pending.
   - Error (`#EF4444`): Gagal, Galat, Tindakan Destruktif.
   - Info (`#38BDF8`): Informasi Sistem, Panduan.
-- **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk teks antarmuka dan font monospace untuk angka numerik, no dokumen, dan nilai bobot.
+  - Primary Blue (`#3671c6`): Aksi Utama, Tombol Ambil Bobot, Header Dokumen.
+- **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk teks antarmuka dan font monospace untuk angka numerik, nomor dokumen, dan nilai bobot.
 - **Ikon Vektor Bersih**: Seluruh ikon antarmuka menggunakan SVG industrial murni tanpa penggunaan emoji.
 
 ---
 
 ## Daftar Pengguna & Hak Akses Bawaan (Default Login)
 
-Sistem menyediakan 3 akun bawaan untuk berbagai tingkat kewenangan operasional. Antarmuka login menerapkan alur otentikasi standar industri yang aman dan terproteksi:
+Sistem menyediakan 3 akun bawaan untuk berbagai tingkat kewenangan operasional. Antarmuka login menerapkan alur otentikasi standar industri yang aman dan terproteksi (kredensial langsung tanpa tombol pintas demo):
 
 | Username | Password | Peran (Role) | Hak Akses & Tanggung Jawab |
 | :--- | :--- | :--- | :--- |
