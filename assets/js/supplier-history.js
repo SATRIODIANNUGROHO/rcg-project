@@ -320,44 +320,48 @@ const SupplierHistoryManager = {
     paginated.forEach((group) => {
       const tr = document.createElement('tr');
 
+      // Truncate origin summary to prevent extremely tall rows
+      const rawOrigin = group.originSummary !== '-'
+        ? group.originSummary
+        : (group.plateNosSummary !== '-' ? 'No. Pol: ' + group.plateNosSummary : 'Pemasok Terdaftar');
+      const originDisplay = rawOrigin.length > 40 ? rawOrigin.substring(0, 38) + '...' : rawOrigin;
+
       tr.innerHTML = `
-        <td class="mono-num font-weight-bold" style="white-space: nowrap;">${group.date}</td>
-        <td>
-          <div style="font-weight: 700; color: var(--text-primary); font-size: 13.5px;">${group.supplier}</div>
-          <div class="text-small text-secondary" style="font-size: 11px; margin-top: 2px;">
-            ${group.originSummary !== '-' ? group.originSummary : (group.plateNosSummary !== '-' ? 'No. Pol: ' + group.plateNosSummary : 'Pemasok Terdaftar')}
-          </div>
+        <td class="mono-num" style="white-space: nowrap; font-weight: 600;">${group.date}</td>
+        <td style="max-width: 200px;">
+          <div style="font-weight: 700; color: var(--text-primary); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
+          <div class="text-small text-secondary" style="font-size: 11px; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rawOrigin}">${originDisplay}</div>
         </td>
         <td class="text-center" style="white-space: nowrap;">
-          <span class="badge badge-info" style="font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px; letter-spacing: 0.02em;">
+          <span class="badge badge-info" style="white-space: nowrap;">
             ${group.txCount} Transaksi
           </span>
         </td>
-        <td class="num-cell mono-num" style="font-weight: 700; color: var(--primary);">
+        <td class="num-cell mono-num" style="font-weight: 700; color: var(--primary); white-space: nowrap;">
           ${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg
         </td>
-        <td class="num-cell mono-num" style="color: var(--primary); font-weight: 600;">
+        <td class="num-cell mono-num" style="color: var(--primary); font-weight: 600; white-space: nowrap;">
           ${(group.k1Weight || 0).toLocaleString('id-ID')} Kg
         </td>
-        <td class="num-cell mono-num" style="color: var(--accent-gold); font-weight: 600;">
+        <td class="num-cell mono-num" style="color: var(--accent-gold); font-weight: 600; white-space: nowrap;">
           ${(group.k2Weight || 0).toLocaleString('id-ID')} Kg
         </td>
-        <td class="num-cell mono-num" style="color: var(--primary);">
+        <td class="num-cell mono-num" style="color: var(--primary); white-space: nowrap;">
           Rp ${(group.k1Total || 0).toLocaleString('id-ID')}
         </td>
-        <td class="num-cell mono-num" style="color: var(--accent-gold);">
+        <td class="num-cell mono-num" style="color: var(--accent-gold); white-space: nowrap;">
           Rp ${(group.k2Total || 0).toLocaleString('id-ID')}
         </td>
-        <td class="num-cell mono-num" style="font-weight: 800; color: var(--primary-dark); font-size: 13.5px;">
+        <td class="num-cell mono-num" style="font-weight: 800; color: var(--primary-dark); white-space: nowrap;">
           Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}
         </td>
         <td class="text-center" style="white-space: nowrap;">
-          <span class="badge ${group.statusBadgeClass}" style="font-weight: 600; font-size: 11px; padding: 4px 8px; border-radius: 6px;">
+          <span class="badge ${group.statusBadgeClass}" style="white-space: nowrap;">
             ${group.paymentStatus}
           </span>
         </td>
-        <td class="text-center" style="white-space: nowrap;">
-          <button class="btn btn-table-action action-print" style="padding: 4px 10px; font-weight: 600; font-size: 11.5px;" title="Cetak Formulir Rekapitulasi Harian Pemasok" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
+        <td class="actions-cell">
+          <button class="btn btn-table-action action-print" style="white-space: nowrap;" title="Cetak Formulir Rekapitulasi Harian Pemasok" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
             Cetak Rekap
           </button>
         </td>
