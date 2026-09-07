@@ -1,6 +1,6 @@
 /**
  * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
- * Module: Interactive Print Settings, Paper Formats & Preview Dialog
+ * Module: Interactive Print Settings, Paper Formats, In-App Margin Filter & Live Preview Dialog
  * Supports A6, A5, A4, Letter, and NCR Wartel 9.5" x 11" Continuous Sheet
  */
 
@@ -47,6 +47,14 @@ const PAPER_FORMATS = {
   }
 };
 
+const MARGIN_PRESETS = {
+  default: { label: 'Standar (5 mm / 0.5 cm)', mm: 5, cm: 0.5 },
+  narrow:  { label: 'Sempit (2 mm / 0.2 cm)', mm: 2, cm: 0.2 },
+  medium:  { label: 'Sedang (8 mm / 0.8 cm)', mm: 8, cm: 0.8 },
+  wide:    { label: 'Lebar (12 mm / 1.2 cm)', mm: 12, cm: 1.2 },
+  custom:  { label: 'Kustom (Atur Manual)', mm: 5, cm: 0.5 }
+};
+
 const PrintManager = {
   activePrintCallback: null,
   dynamicPrintStyleEl: null,
@@ -55,9 +63,97 @@ const PrintManager = {
   currentDocType: 'Dokumen',
   currentGeneratorFn: null,
 
+  marginState: {
+    preset: 'default',
+    unit: 'mm',
+    top: 5,
+    bottom: 5,
+    left: 5,
+    right: 5
+  },
+
   init() {
     this.bindEvents();
     this.createDynamicStyleElement();
+    this.updateMarginControlsUI();
+  },
+
+  getMarginValues() {
+    const unit = this.marginState.unit || 'mm';
+    const top = Math.max(0, Number(this.marginState.top) || 0);
+    const bottom = Math.max(0, Number(this.marginState.bottom) || 0);
+    const left = Math.max(0, Number(this.marginState.left) || 0);
+    const right = Math.max(0, Number(this.marginState.right) || 0);
+    const factorToMm = (unit === 'cm') ? 10 : 1;
+
+    return {
+      preset: this.marginState.preset,
+      unit: unit,
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      topMm: top * factorToMm,
+      bottomMm: bottom * factorToMm,
+      leftMm: left * factorToMm,
+      rightMm: right * factorToMm,
+      cssString: `${top}${unit} ${right}${unit} ${bottom}${unit} ${left}${unit}`
+    };
+  },
+
+  updateMarginControlsUI() {
+    const labelBadge = document.getElementById('label-current-margin-val');
+    const panelCustom = document.getElementById('panel-custom-margins');
+    const unitLabel = document.getElementById('custom-margin-unit-label');
+    const presetSelect = document.getElementById('select-print-margin-preset');
+    const unitSelect = document.getElementById('select-print-margin-unit');
+
+    const topInput = document.getElementById('input-margin-top');
+    const bottomInput = document.getElementById('input-margin-bottom');
+    const leftInput = document.getElementById('input-margin-left');
+    const rightInput = document.getElementById('input-margin-right');
+
+    const { top, bottom, left, right, unit, preset } = this.marginState;
+
+    if (presetSelect && presetSelect.value !== preset) {
+      presetSelect.value = preset;
+    }
+    if (unitSelect && unitSelect.value !== unit) {
+      unitSelect.value = unit;
+    }
+
+    if (labelBadge) {
+      if (top === bottom && top === left && top === right) {
+        labelBadge.textContent = `${top} ${unit}`;
+      } else {
+        labelBadge.textContent = `T:${top} B:${bottom} L:${left} R:${right} ${unit}`;
+      }
+    }
+
+    if (unitLabel) {
+      unitLabel.textContent = unit;
+    }
+
+    if (panelCustom) {
+      panelCustom.style.display = (preset === 'custom') ? 'block' : 'none';
+    }
+
+    // Configure inputs step, min, and max based on unit
+    const stepVal = (unit === 'cm') ? '0.1' : '0.5';
+    const maxVal = (unit === 'cm') ? '5' : '50';
+
+    [topInput, bottomInput, leftInput, rightInput].forEach(inp => {
+      if (inp) {
+        inp.setAttribute('step', stepVal);
+        inp.setAttribute('max', maxVal);
+        inp.setAttribute('min', '0');
+      }
+    });
+
+    if (topInput) topInput.value = top;
+    if (bottomInput) bottomInput.value = bottom;
+    if (leftInput) leftInput.value = left;
+    if (rightInput) rightInput.value = right;
   },
 
   bindEvents() {
@@ -73,6 +169,7 @@ const PrintManager = {
 
         // Generate full HTML with all requested copies
         const finalHtml = this.getRenderedHtml(copies);
+        const marginValues = this.getMarginValues();
 
         // Populate hidden printable area strictly for PDF generation
         const printableContainer = document.getElementById('printable-nota');
@@ -95,7 +192,8 @@ const PrintManager = {
           const result = await window.electronAPI.savePDF({
             defaultFilename: filename,
             paperSize: paperVal,
-            htmlContent: finalHtml
+            htmlContent: finalHtml,
+            margins: marginValues
           });
 
           if (result && result.success) {
@@ -105,7 +203,7 @@ const PrintManager = {
           }
         } else {
           // Web fallback: generate and download genuine PDF document via html2pdf
-          this.downloadWebDocument(filename, finalHtml, paperVal);
+          this.downloadWebDocument(filename, finalHtml, paperVal, marginValues);
         }
       });
     }
@@ -166,6 +264,86 @@ const PrintManager = {
         this.refreshPreview();
       });
     }
+
+    // 5. Margin Preset Select Event
+    const marginPresetSelect = document.getElementById('select-print-margin-preset');
+    if (marginPresetSelect) {
+      marginPresetSelect.addEventListener('change', () => {
+        const selectedPreset = marginPresetSelect.value;
+        this.marginState.preset = selectedPreset;
+
+        if (selectedPreset !== 'custom') {
+          const cfg = MARGIN_PRESETS[selectedPreset] || MARGIN_PRESETS.default;
+          const val = cfg[this.marginState.unit] || 5;
+          this.marginState.top = val;
+          this.marginState.bottom = val;
+          this.marginState.left = val;
+          this.marginState.right = val;
+        }
+
+        this.updateMarginControlsUI();
+        this.refreshPreview();
+        this.applySelectedPrintSettings();
+      });
+    }
+
+    // 6. Margin Unit Select Event (mm <-> cm)
+    const marginUnitSelect = document.getElementById('select-print-margin-unit');
+    if (marginUnitSelect) {
+      marginUnitSelect.addEventListener('change', () => {
+        const prevUnit = this.marginState.unit;
+        const newUnit = marginUnitSelect.value;
+        if (prevUnit === newUnit) return;
+
+        this.marginState.unit = newUnit;
+
+        if (this.marginState.preset !== 'custom') {
+          const cfg = MARGIN_PRESETS[this.marginState.preset] || MARGIN_PRESETS.default;
+          const val = cfg[newUnit] || (newUnit === 'cm' ? 0.5 : 5);
+          this.marginState.top = val;
+          this.marginState.bottom = val;
+          this.marginState.left = val;
+          this.marginState.right = val;
+        } else {
+          // Convert custom values
+          const factor = (newUnit === 'cm') ? 0.1 : 10;
+          this.marginState.top = Math.round(this.marginState.top * factor * 10) / 10;
+          this.marginState.bottom = Math.round(this.marginState.bottom * factor * 10) / 10;
+          this.marginState.left = Math.round(this.marginState.left * factor * 10) / 10;
+          this.marginState.right = Math.round(this.marginState.right * factor * 10) / 10;
+        }
+
+        this.updateMarginControlsUI();
+        this.refreshPreview();
+        this.applySelectedPrintSettings();
+      });
+    }
+
+    // 7. Custom Margin Inputs (Top, Bottom, Left, Right)
+    const handleCustomInputChange = () => {
+      const topInp = document.getElementById('input-margin-top');
+      const botInp = document.getElementById('input-margin-bottom');
+      const leftInp = document.getElementById('input-margin-left');
+      const rightInp = document.getElementById('input-margin-right');
+
+      this.marginState.preset = 'custom';
+      this.marginState.top = topInp ? Math.max(0, parseFloat(topInp.value) || 0) : 0;
+      this.marginState.bottom = botInp ? Math.max(0, parseFloat(botInp.value) || 0) : 0;
+      this.marginState.left = leftInp ? Math.max(0, parseFloat(leftInp.value) || 0) : 0;
+      this.marginState.right = rightInp ? Math.max(0, parseFloat(rightInp.value) || 0) : 0;
+
+      this.updateMarginControlsUI();
+      this.refreshPreview();
+      this.applySelectedPrintSettings();
+    };
+
+    ['input-margin-top', 'input-margin-bottom', 'input-margin-left', 'input-margin-right'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', handleCustomInputChange);
+        el.addEventListener('change', handleCustomInputChange);
+      }
+    });
   },
 
   getRenderedHtml(copies = 1) {
@@ -190,7 +368,8 @@ const PrintManager = {
     const previewContainer = document.getElementById('modal-print-preview-content');
     if (!previewContainer) return;
 
-    const cardStyle = `background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${formatCfg.previewWidth}; box-shadow: 0 4px 20px rgba(0,0,0,0.18); border-radius: 6px; padding: 0; box-sizing: border-box; border: 1px solid #E2E8F0; overflow: hidden; transition: max-width 0.25s ease;`;
+    const margin = this.getMarginValues();
+    const cardStyle = `background: #FFFFFF; color: #0F172A; width: 100%; max-width: ${formatCfg.previewWidth}; box-shadow: 0 4px 20px rgba(0,0,0,0.18); border-radius: 6px; padding: ${margin.cssString}; box-sizing: border-box; border: 1px solid #E2E8F0; overflow: hidden; transition: max-width 0.25s ease, padding 0.15s ease;`;
 
     if (typeof this.currentGeneratorFn === 'function') {
       const renderedCards = [];
@@ -224,18 +403,19 @@ const PrintManager = {
     }
   },
 
-  downloadWebDocument(filename, htmlContent, paperSize = 'a4') {
+  downloadWebDocument(filename, htmlContent, paperSize = 'a4', margins = null) {
     if (typeof html2pdf !== 'undefined') {
       App.showToast('Menyiapkan file PDF...', 'info');
 
       const formatCfg = PAPER_FORMATS[paperSize] || PAPER_FORMATS.A6;
+      const marginValues = margins || this.getMarginValues();
 
       const tempContainer = document.createElement('div');
       tempContainer.style.background = '#FFFFFF';
       tempContainer.style.backgroundColor = '#FFFFFF';
       tempContainer.style.color = '#0F172A';
       tempContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      tempContainer.style.padding = '0';
+      tempContainer.style.padding = marginValues.cssString;
       tempContainer.style.margin = '0 auto';
       tempContainer.style.border = 'none';
       tempContainer.style.outline = 'none';
@@ -243,6 +423,11 @@ const PrintManager = {
       tempContainer.style.width = formatCfg.previewWidth || '520px';
       tempContainer.style.boxSizing = 'border-box';
       tempContainer.innerHTML = htmlContent;
+
+      // Ensure all inner containers have reset padding to prevent double-padding
+      tempContainer.querySelectorAll('.nota-container, .nota-sheet').forEach(el => {
+        el.style.setProperty('padding', '0', 'important');
+      });
 
       // Ensure images inside tempContainer have absolute URLs
       tempContainer.querySelectorAll('img').forEach(img => {
@@ -258,7 +443,7 @@ const PrintManager = {
       else if (paperSize === 'Letter' || paperSize === 'NCR_Wartel') format = 'letter';
 
       const opt = {
-        margin: [3, 3, 3, 3],
+        margin: [0, 0, 0, 0],
         filename: filename.endsWith('.pdf') ? filename : `${filename}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#FFFFFF' },
@@ -302,6 +487,7 @@ const PrintManager = {
       titleEl.textContent = title;
     }
 
+    this.updateMarginControlsUI();
     this.refreshPreview();
     this.applySelectedPrintSettings();
     App.openModal('modal-print-settings');
@@ -311,17 +497,18 @@ const PrintManager = {
     const paperSelect = document.getElementById('select-print-paper-size');
     const paperVal = paperSelect ? paperSelect.value : 'A6';
     const formatCfg = PAPER_FORMATS[paperVal] || PAPER_FORMATS.A6;
+    const margin = this.getMarginValues();
 
     if (this.dynamicPrintStyleEl) {
       this.dynamicPrintStyleEl.innerHTML = `
         @media print {
           @page {
             size: ${formatCfg.cssPageSize} !important;
-            margin: 2mm !important;
+            margin: ${margin.cssString} !important;
           }
           #printable-nota {
-            width: ${formatCfg.cssContainerWidth} !important;
-            max-width: ${formatCfg.cssContainerWidth} !important;
+            width: 100% !important;
+            max-width: 100% !important;
             margin: 0 auto !important;
           }
           .nota-sheet,
@@ -330,7 +517,7 @@ const PrintManager = {
             max-width: 100% !important;
             box-shadow: none !important;
             border: none !important;
-            padding: 6px 10px !important;
+            padding: 0 !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
           }
@@ -339,4 +526,5 @@ const PrintManager = {
     }
   }
 };
+
 

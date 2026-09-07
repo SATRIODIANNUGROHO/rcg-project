@@ -662,10 +662,7 @@ const TransactionEngine = {
             <div style="color: #0F172A; font-weight: 700; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.supplier}</div>
 
             <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Asal Material</div>
-            <div style="display: flex; justify-content: space-between; color: #0F172A; font-weight: 600; margin-bottom: 4px;">
-              <span>${tx.originRegion || '-'}</span>
-              <span>${tx.originArea || ''}</span>
-            </div>
+            <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px;">${tx.originRegion || '-'}${tx.originArea ? ' - ' + tx.originArea : ''}</div>
 
             <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Keluar</div>
             <div style="color: #0F172A; font-weight: 500; font-size: 9.5px;">${tx.timeOut ? tx.timeOut + ' WIB' : '-'}</div>

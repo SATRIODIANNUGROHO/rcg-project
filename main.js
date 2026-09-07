@@ -214,6 +214,14 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       }
     });
 
+    const marginObj = options.margins || {};
+    const marginUnit = marginObj.unit || 'mm';
+    const marginTop = (marginObj.top !== undefined && marginObj.top !== null) ? marginObj.top : 5;
+    const marginBottom = (marginObj.bottom !== undefined && marginObj.bottom !== null) ? marginObj.bottom : 5;
+    const marginLeft = (marginObj.left !== undefined && marginObj.left !== null) ? marginObj.left : 5;
+    const marginRight = (marginObj.right !== undefined && marginObj.right !== null) ? marginObj.right : 5;
+    const pageMarginCss = `${marginTop}${marginUnit} ${marginRight}${marginUnit} ${marginBottom}${marginUnit} ${marginLeft}${marginUnit}`;
+
     const fullDoc = `<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -240,14 +248,14 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
     }
     @page {
-      margin: 2mm !important;
+      margin: ${pageMarginCss} !important;
       size: ${pageCSS} portrait;
     }
     .nota-container, .nota-sheet {
-      width: ${containerWidth} !important;
-      max-width: ${containerWidth} !important;
+      width: 100% !important;
+      max-width: 100% !important;
       margin: 0 auto !important;
-      padding: 6px 10px !important;
+      padding: 0 !important;
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
