@@ -521,7 +521,26 @@ body.dark-mode .badge-neutral {
 body.dark-mode .table-responsive {
   border-color: #334155;
   background: #16243A;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.dark-mode .table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+body.dark-mode .table-responsive::-webkit-scrollbar-track {
+  background: #0F172A;
+}
+
+body.dark-mode .table-responsive::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+body.dark-mode .table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
 
 body.dark-mode .data-table thead th {

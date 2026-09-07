@@ -755,7 +755,7 @@ const TransactionEngine = {
     const generatorFn = (copyNumber, totalCopies) => this.generateNotaHtml(tx, copyNumber, totalCopies);
 
     if (typeof PrintManager !== 'undefined') {
-      PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang');
+      PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang', 'A6');
     } else {
       const container = document.getElementById('printable-nota');
       if (container) container.innerHTML = generatorFn(1, 1);

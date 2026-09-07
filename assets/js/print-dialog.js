@@ -470,7 +470,7 @@ const PrintManager = {
     }
   },
 
-  openPrintDialog(title, contentOrGenerator, docNo = '', docType = 'Dokumen') {
+  openPrintDialog(title, contentOrGenerator, docNo = '', docType = 'Dokumen', defaultPaperSize = null) {
     if (typeof contentOrGenerator === 'function') {
       this.currentGeneratorFn = contentOrGenerator;
       this.currentHtmlContent = '';
@@ -485,6 +485,13 @@ const PrintManager = {
     const titleEl = document.getElementById('modal-print-title');
     if (titleEl && title) {
       titleEl.textContent = title;
+    }
+
+    if (defaultPaperSize) {
+      const paperSelect = document.getElementById('select-print-paper-size');
+      if (paperSelect) {
+        paperSelect.value = defaultPaperSize;
+      }
     }
 
     this.updateMarginControlsUI();

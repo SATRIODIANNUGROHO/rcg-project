@@ -320,20 +320,20 @@ const SupplierHistoryManager = {
     paginated.forEach((group) => {
       const tr = document.createElement('tr');
 
-      // Truncate origin summary to prevent extremely tall rows
+      // Truncate origin summary to prevent extremely tall rows while keeping full text accessible via tooltip
       const rawOrigin = group.originSummary !== '-'
         ? group.originSummary
         : (group.plateNosSummary !== '-' ? 'No. Pol: ' + group.plateNosSummary : 'Pemasok Terdaftar');
-      const originDisplay = rawOrigin.length > 40 ? rawOrigin.substring(0, 38) + '...' : rawOrigin;
+      const originDisplay = rawOrigin.length > 32 ? rawOrigin.substring(0, 30) + '...' : rawOrigin;
 
       tr.innerHTML = `
-        <td class="mono-num" style="white-space: nowrap; font-weight: 600;">${group.date}</td>
-        <td style="max-width: 200px;">
+        <td class="mono-num text-center" style="white-space: nowrap; font-weight: 600;">${group.date}</td>
+        <td style="max-width: 170px;">
           <div style="font-weight: 700; color: var(--text-primary); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
-          <div class="text-small text-secondary" style="font-size: 11px; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rawOrigin}">${originDisplay}</div>
+          <div class="text-small text-secondary" style="font-size: 11px; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rawOrigin}">${originDisplay}</div>
         </td>
         <td class="text-center" style="white-space: nowrap;">
-          <span class="badge badge-info" style="white-space: nowrap;">
+          <span class="badge badge-info" style="font-weight: 700; font-size: 11px; padding: 3px 7px; border-radius: 5px; letter-spacing: 0.02em;">
             ${group.txCount} Transaksi
           </span>
         </td>
@@ -352,17 +352,18 @@ const SupplierHistoryManager = {
         <td class="num-cell mono-num" style="color: var(--accent-gold); white-space: nowrap;">
           Rp ${(group.k2Total || 0).toLocaleString('id-ID')}
         </td>
-        <td class="num-cell mono-num" style="font-weight: 800; color: var(--primary-dark); white-space: nowrap;">
+        <td class="num-cell mono-num" style="font-weight: 800; color: var(--primary-dark); font-size: 12.5px; white-space: nowrap;">
           Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}
         </td>
         <td class="text-center" style="white-space: nowrap;">
-          <span class="badge ${group.statusBadgeClass}" style="white-space: nowrap;">
+          <span class="badge ${group.statusBadgeClass}" style="font-weight: 600; font-size: 11px; padding: 3px 8px; border-radius: 5px; white-space: nowrap;">
             ${group.paymentStatus}
           </span>
         </td>
-        <td class="actions-cell">
-          <button class="btn btn-table-action action-print" style="white-space: nowrap;" title="Cetak Formulir Rekapitulasi Harian Pemasok" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
-            Cetak Rekap
+        <td class="actions-cell text-center" style="white-space: nowrap;">
+          <button class="btn btn-table-action action-print" style="padding: 4px 8px; font-weight: 600; font-size: 11px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" title="Cetak Formulir Rekapitulasi Harian Pemasok" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Cetak Rekap</span>
           </button>
         </td>
       `;
@@ -452,18 +453,18 @@ const SupplierHistoryManager = {
 
         return `
           <tr style="border-bottom: 1px solid #E2E8F0; font-size: 8.5px;">
-            <td style="padding: 3px 4px; text-align: center; border: 1px solid #CBD5E1;">${idx + 1}</td>
-            <td style="padding: 3px 4px; font-family: monospace; font-weight: 700; border: 1px solid #CBD5E1;">${tx.docNo || '-'}</td>
-            <td style="padding: 3px 4px; font-family: monospace; text-align: center; border: 1px solid #CBD5E1;">${tx.plateNo || '-'}</td>
-            <td style="padding: 3px 4px; border: 1px solid #CBD5E1;">${tx.driverName || '-'}</td>
-            <td style="padding: 3px 4px; text-align: center; border: 1px solid #CBD5E1;">${tx.timeIn || '-'}${tx.timeOut ? ' - ' + tx.timeOut : ''}</td>
-            <td style="padding: 3px 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(tx.netLoadWeight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(tx.tareWeight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 4px; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F; border: 1px solid #CBD5E1;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(tx.k1Weight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(tx.k2Weight || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 4px; text-align: right; font-family: monospace; font-weight: 700; color: #0F172A; border: 1px solid #CBD5E1;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</td>
-            <td style="padding: 3px 4px; text-align: center; font-weight: 700; color: ${payColor}; border: 1px solid #CBD5E1;">${payStatusStr}</td>
+            <td style="padding: 3px 2px; text-align: center; border: 1px solid #CBD5E1;">${idx + 1}</td>
+            <td style="padding: 3px 3px; font-family: monospace; font-weight: 700; border: 1px solid #CBD5E1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.docNo || '-'}">${tx.docNo || '-'}</td>
+            <td style="padding: 3px 3px; font-family: monospace; text-align: center; border: 1px solid #CBD5E1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.plateNo || '-'}</td>
+            <td style="padding: 3px 3px; border: 1px solid #CBD5E1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.driverName || '-'}">${tx.driverName || '-'}</td>
+            <td style="padding: 3px 2px; text-align: center; border: 1px solid #CBD5E1; white-space: nowrap;">${tx.timeIn || '-'}${tx.timeOut ? ' - ' + tx.timeOut : ''}</td>
+            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.netLoadWeight || 0).toLocaleString('id-ID')}</td>
+            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.tareWeight || 0).toLocaleString('id-ID')}</td>
+            <td style="padding: 3px 3px; text-align: right; font-family: monospace; font-weight: 700; color: #163A5F; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')}</td>
+            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.k1Weight || 0).toLocaleString('id-ID')}</td>
+            <td style="padding: 3px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(tx.k2Weight || 0).toLocaleString('id-ID')}</td>
+            <td style="padding: 3px 3px; text-align: right; font-family: monospace; font-weight: 700; color: #0F172A; border: 1px solid #CBD5E1; white-space: nowrap;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</td>
+            <td style="padding: 3px 2px; text-align: center; font-weight: 700; color: ${payColor}; border: 1px solid #CBD5E1; white-space: nowrap;">${payStatusStr}</td>
           </tr>
         `;
       }).join('');
@@ -545,22 +546,22 @@ const SupplierHistoryManager = {
           </div>
 
           <!-- Table of Shipments Breakdown -->
-          <div style="width: 100%; overflow-x: auto; margin-bottom: 8px;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 8.5px; border: 1px solid #CBD5E1;">
+          <div style="width: 100%; margin-bottom: 8px; box-sizing: border-box;">
+            <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 8.5px; border: 1px solid #CBD5E1;">
               <thead>
                 <tr style="background: #163A5F; color: #FFFFFF; font-weight: 700; text-align: center;">
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 20px;">No</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 85px;">No. Dokumen</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 65px;">No. Polisi</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 75px;">Supir</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 65px;">Waktu</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 55px;">Bruto (Kg)</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 50px;">Tara (Kg)</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 60px;">Netto (Kg)</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 50px;">K1 (Kg)</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 50px;">K2 (Kg)</th>
-                  <th style="padding: 4px 4px; border: 1px solid #CBD5E1; width: 75px;">Total (Rp)</th>
-                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 45px;">Status</th>
+                  <th style="padding: 4px 2px; border: 1px solid #CBD5E1; width: 3.5%;">No</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 14%;">No. Dokumen</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 9.5%;">No. Polisi</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 11%;">Supir</th>
+                  <th style="padding: 4px 2px; border: 1px solid #CBD5E1; width: 8.5%;">Waktu</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 8%;">Bruto (Kg)</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 7.5%;">Tara (Kg)</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 8.5%;">Netto (Kg)</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 7.5%;">K1 (Kg)</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 7%;">K2 (Kg)</th>
+                  <th style="padding: 4px 3px; border: 1px solid #CBD5E1; width: 12.5%;">Total (Rp)</th>
+                  <th style="padding: 4px 2px; border: 1px solid #CBD5E1; width: 6.5%;">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -571,13 +572,13 @@ const SupplierHistoryManager = {
                   <td colspan="5" style="padding: 4px 6px; text-align: center; border: 1px solid #CBD5E1; letter-spacing: 0.03em;">
                     TOTAL REKAPITULASI (${group.txCount} PENGIRIMAN)
                   </td>
-                  <td style="padding: 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(group.netLoadWeight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(group.tareWeight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px; text-align: right; font-family: monospace; font-weight: 800; color: #163A5F; border: 1px solid #CBD5E1;">${(group.finalNetWeight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(group.k1Weight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1;">${(group.k2Weight || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px; text-align: right; font-family: monospace; font-weight: 800; color: #163A5F; border: 1px solid #CBD5E1;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</td>
-                  <td style="padding: 4px; text-align: center; font-size: 8px; border: 1px solid #CBD5E1;">-</td>
+                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.netLoadWeight || 0).toLocaleString('id-ID')}</td>
+                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.tareWeight || 0).toLocaleString('id-ID')}</td>
+                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; font-weight: 800; color: #163A5F; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.finalNetWeight || 0).toLocaleString('id-ID')}</td>
+                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.k1Weight || 0).toLocaleString('id-ID')}</td>
+                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; border: 1px solid #CBD5E1; white-space: nowrap;">${(group.k2Weight || 0).toLocaleString('id-ID')}</td>
+                  <td style="padding: 4px 3px; text-align: right; font-family: monospace; font-weight: 800; color: #163A5F; border: 1px solid #CBD5E1; white-space: nowrap;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</td>
+                  <td style="padding: 4px 2px; text-align: center; font-size: 8px; border: 1px solid #CBD5E1;">-</td>
                 </tr>
               </tfoot>
             </table>
@@ -610,7 +611,7 @@ const SupplierHistoryManager = {
     const docIdentifier = `REKAP-${group.supplier.replace(/[^a-zA-Z0-9]/g, '_')}-${group.date}`;
 
     if (typeof PrintManager !== 'undefined') {
-      PrintManager.openPrintDialog('Pratinjau Cetak Rekapitulasi Harian Pemasok', generatorFn, docIdentifier, 'Rekap_Pemasok');
+      PrintManager.openPrintDialog('Pratinjau Cetak Rekapitulasi Harian Pemasok', generatorFn, docIdentifier, 'Rekap_Pemasok', 'A4');
     } else {
       const container = document.getElementById('printable-nota');
       if (container) container.innerHTML = generatorFn(1, 1);
