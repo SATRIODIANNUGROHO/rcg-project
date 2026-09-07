@@ -452,19 +452,56 @@ const SupplierHistoryManager = {
       const firstTx = group.transactions[0] || {};
       const lastTx = group.transactions[group.transactions.length - 1] || firstTx;
 
-      const plateDisplay = group.plateNosSummary !== '-'
-        ? group.plateNosSummary
-        : (group.txCount > 1 ? `${group.txCount} Kendaraan` : (firstTx.plateNo || '-'));
+      // Extract unique lists
+      const plateArray = Array.from(group.plateNos || []).filter(Boolean);
+      const plateSummaryFull = plateArray.join(', ') || '-';
+      let plateDisplay = '-';
+      if (plateArray.length === 1) {
+        plateDisplay = plateArray[0];
+      } else if (plateArray.length === 2) {
+        plateDisplay = plateArray.join(', ');
+      } else if (plateArray.length > 2) {
+        plateDisplay = `${plateArray[0]} (+${plateArray.length - 1})`;
+      } else {
+        plateDisplay = group.txCount > 1 ? `${group.txCount} Kendaraan` : (firstTx.plateNo || '-');
+      }
 
-      const docNoDisplay = group.docNos.length === 1
-        ? group.docNos[0]
-        : (group.docNos[0] ? `${group.docNos[0]} (+${group.docNos.length - 1})` : `NOTA-${group.date}`);
+      const docArray = Array.from(group.docNos || []).filter(Boolean);
+      const docSummaryFull = docArray.join(', ') || '-';
+      const docNoDisplay = docArray.length === 1
+        ? docArray[0]
+        : (docArray[0] ? `${docArray[0]} (+${docArray.length - 1})` : `NOTA-${group.date}`);
 
-      const driverDisplay = group.driversSummary !== '-'
-        ? group.driversSummary
-        : (firstTx.driverName || group.supplier || 'SUPIR');
+      const materialArray = Array.from(group.materials || []).filter(Boolean);
+      const materialsSummaryFull = materialArray.join(', ') || (group.materialsSummary || 'GARAM');
+      let materialDisplay = 'GARAM';
+      if (materialArray.length === 1) {
+        materialDisplay = materialArray[0];
+      } else if (materialArray.length === 2) {
+        materialDisplay = materialArray.join(', ');
+      } else if (materialArray.length > 2) {
+        materialDisplay = `${materialArray[0]} (+${materialArray.length - 1})`;
+      } else if (group.materialsSummary && group.materialsSummary !== '-') {
+        materialDisplay = group.materialsSummary;
+      }
+
+      const driverArray = Array.from(group.drivers || []).filter(Boolean);
+      const driverSummaryFull = driverArray.join(', ') || '-';
+      let driverDisplay = 'SUPIR';
+      if (driverArray.length === 1) {
+        driverDisplay = driverArray[0];
+      } else if (driverArray.length === 2) {
+        driverDisplay = driverArray.join(', ');
+      } else if (driverArray.length > 2) {
+        driverDisplay = `${driverArray[0]} dkk.`;
+      } else if (firstTx.driverName) {
+        driverDisplay = firstTx.driverName;
+      }
 
       const adminDisplay = firstTx.adminName || firstTx.weighmasterName || 'ADMIN';
+
+      const originSummaryFull = group.originSummary || '-';
+      let originDisplay = originSummaryFull;
 
       const timeInDisplay = firstTx.timeIn ? `${firstTx.timeIn} WIB` : '-';
       const timeOutDisplay = lastTx.timeOut ? `${lastTx.timeOut} WIB` : (firstTx.timeOut ? `${firstTx.timeOut} WIB` : '-');
@@ -494,87 +531,87 @@ const SupplierHistoryManager = {
             ${totalCopies > 1 ? `<div style="font-size: 9px; font-weight: 700; color: #64748B; margin-top: 1px; letter-spacing: 0.03em;">[ ${copyReceiverText} ]</div>` : ''}
           </div>
 
-          <!-- Metadata Section (2 Columns) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; font-size: 10px; margin-bottom: 2px; line-height: 1.25;">
-            <div>
+          <!-- Metadata Section (2 Columns with resilient 50/50 minmax) -->
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
+            <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Tanggal</div>
-              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px;">${group.date}</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.date}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Polisi</div>
-              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.plateNosSummary}">${plateDisplay}</div>
+              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${plateSummaryFull} (${plateArray.length} Kendaraan)">${plateDisplay}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Material</div>
-              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.materialsSummary}">${group.materialsSummary}</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${materialsSummaryFull}">${materialDisplay}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Masuk</div>
-              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px;">${timeInDisplay}</div>
+              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeInDisplay}</div>
             </div>
 
-            <div>
+            <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Dok</div>
-              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.docNos.join(', ')}">${docNoDisplay}</div>
+              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${docSummaryFull}">${docNoDisplay}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Nama Pemasok</div>
               <div style="color: #0F172A; font-weight: 700; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Asal Material</div>
-              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.originSummary}">${group.originSummary}</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${originSummaryFull}">${originDisplay}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Keluar</div>
-              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px;">${timeOutDisplay}</div>
+              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeOutDisplay}</div>
             </div>
           </div>
 
           <!-- Dashed Divider 1 -->
           <div style="border-top: 1px dashed #94A3B8; margin: 4px 0;"></div>
 
-          <!-- Weight Section (2 Columns) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; font-size: 10px; margin-bottom: 2px; line-height: 1.25;">
-            <div>
+          <!-- Weight Section (2 Columns with resilient 50/50 minmax) -->
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
+            <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Kotor (Gross)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.grossWeight || 0).toLocaleString('id-ID')} Kg</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.grossWeight || 0).toLocaleString('id-ID')} Kg</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Muatan (Bruto)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.netLoadWeight || 0).toLocaleString('id-ID')} Kg</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.netLoadWeight || 0).toLocaleString('id-ID')} Kg</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih Total (Kg)</div>
-              <div style="color: #163A5F; font-weight: 800; font-family: monospace;">${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
+              <div style="color: #163A5F; font-weight: 800; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
             </div>
 
-            <div>
+            <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Tara (Tare)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.tareWeight || 0).toLocaleString('id-ID')} Kg</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.tareWeight || 0).toLocaleString('id-ID')} Kg</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Refraksi (%)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace;">${refractionDisplay}</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${refractionDisplay}</div>
             </div>
           </div>
 
           <!-- Dashed Divider 2 -->
           <div style="border-top: 1px dashed #94A3B8; margin: 4px 0;"></div>
 
-          <!-- Quality & Price Section (2 Columns) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; font-size: 10px; margin-bottom: 2px; line-height: 1.25;">
-            <div>
+          <!-- Quality & Price Section (2 Columns with resilient 50/50 minmax) -->
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
+            <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih K1 (Kg)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih K2 (Kg)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">${(group.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total K1 (Rp)</div>
-              <div style="color: #163A5F; font-weight: 700; font-family: monospace;">Rp ${(group.k1Total || 0).toLocaleString('id-ID')}</div>
+              <div style="color: #163A5F; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(group.k1Total || 0).toLocaleString('id-ID')}</div>
             </div>
 
-            <div>
+            <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Harga K1 / Kg (Rp)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">Rp ${(avgK1Price || 0).toLocaleString('id-ID')}</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(avgK1Price || 0).toLocaleString('id-ID')}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Harga K2 / Kg (Rp)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px;">Rp ${(avgK2Price || 0).toLocaleString('id-ID')}</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(avgK2Price || 0).toLocaleString('id-ID')}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total K2 (Rp)</div>
-              <div style="color: #B45309; font-weight: 700; font-family: monospace;">Rp ${(group.k2Total || 0).toLocaleString('id-ID')}</div>
+              <div style="color: #B45309; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(group.k2Total || 0).toLocaleString('id-ID')}</div>
             </div>
           </div>
 
@@ -584,15 +621,15 @@ const SupplierHistoryManager = {
             <span style="font-weight: 800; font-size: 11.5px; color: #163A5F; font-family: monospace;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</span>
           </div>
 
-          <!-- Signatures -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 12px; font-size: 9.5px;">
-            <div>
+          <!-- Signatures (2 Columns with resilient 50/50 minmax) -->
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); text-align: center; margin-top: 12px; font-size: 9.5px; width: 100%; box-sizing: border-box;">
+            <div style="min-width: 0; overflow: hidden; padding: 0 4px;">
               <div style="color: #64748B; margin-bottom: 22px;">Supir Kendaraan</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 100px; padding-top: 2px;">( ${driverDisplay} )</div>
+              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;" title="${driverSummaryFull}">( ${driverDisplay} )</div>
             </div>
-            <div>
+            <div style="min-width: 0; overflow: hidden; padding: 0 4px;">
               <div style="color: #64748B; margin-bottom: 22px;">Petugas / Admin</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 100px; padding-top: 2px;">( ${adminDisplay} )</div>
+              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;">( ${adminDisplay} )</div>
             </div>
           </div>
 
