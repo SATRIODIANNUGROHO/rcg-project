@@ -430,11 +430,211 @@ const ExportExcelManager = {
         wb.creator = 'PT. Reka Cipta Garam';
         wb.created = new Date();
 
-        const ws = wb.addWorksheet('Rekapitulasi Pemasok', {
+        // 1. Group transactions by (Supplier + Date)
+        const groupMap = new Map();
+        txs.forEach(t => {
+          const supp = (t.supplier || '').trim() || 'Pemasok Umum';
+          const date = (t.date || '').trim() || '-';
+          const key = `${supp.toLowerCase()}|||${date}`;
+          if (!groupMap.has(key)) {
+            groupMap.set(key, {
+              supplier: supp,
+              date: date,
+              txCount: 0,
+              grossWeight: 0,
+              tareWeight: 0,
+              netLoadWeight: 0,
+              finalNetWeight: 0,
+              k1Weight: 0,
+              k2Weight: 0,
+              k1Total: 0,
+              k2Total: 0,
+              grandTotal: 0,
+              originRegions: new Set(),
+              originAreas: new Set(),
+              lunasCount: 0,
+              unpaidCount: 0,
+              transactions: []
+            });
+          }
+          const g = groupMap.get(key);
+          g.txCount += 1;
+          g.grossWeight += Number(t.grossWeight) || 0;
+          g.tareWeight += Number(t.tareWeight) || 0;
+          g.netLoadWeight += Number(t.netLoadWeight) || 0;
+          g.finalNetWeight += Number(t.finalNetWeight) || 0;
+          g.k1Weight += Number(t.k1Weight) || 0;
+          g.k2Weight += Number(t.k2Weight) || 0;
+          g.k1Total += Number(t.k1Total) || 0;
+          g.k2Total += Number(t.k2Total) || 0;
+          g.grandTotal += Number(t.grandTotal) || 0;
+          if (t.originRegion) g.originRegions.add(t.originRegion.trim());
+          if (t.originArea) g.originAreas.add(t.originArea.trim());
+          const isLunas = (t.paymentStatus && t.paymentStatus.trim().toLowerCase() === 'lunas');
+          if (isLunas) g.lunasCount++; else g.unpaidCount++;
+          g.transactions.push(t);
+        });
+
+        const groups = Array.from(groupMap.values()).map(g => {
+          let status = 'Belum Lunas';
+          if (g.unpaidCount === 0 && g.lunasCount > 0) status = 'Lunas';
+          else if (g.lunasCount > 0 && g.unpaidCount > 0) status = `Sebagian (${g.lunasCount}/${g.txCount} Lunas)`;
+
+          const originParts = [];
+          if (g.originRegions.size > 0) originParts.push(Array.from(g.originRegions).join(', '));
+          if (g.originAreas.size > 0) originParts.push(Array.from(g.originAreas).join(', '));
+
+          return {
+            ...g,
+            originSummary: originParts.join(' - ') || '-',
+            status: status
+          };
+        });
+
+        // 2. Worksheet 1: Rekap Harian Pemasok
+        const wsGroup = wb.addWorksheet('Rekap Harian Pemasok', {
           views: [{ showGridLines: true }]
         });
 
-        ws.columns = [
+        wsGroup.columns = [
+          { header: 'No', key: 'no', width: 6 },
+          { header: 'Tanggal', key: 'date', width: 14 },
+          { header: 'Nama Pemasok', key: 'supplier', width: 25 },
+          { header: 'Asal Wilayah', key: 'origin', width: 24 },
+          { header: 'Jml Transaksi', key: 'txCount', width: 14 },
+          { header: 'Total Bersih (Kg)', key: 'finalNet', width: 18 },
+          { header: 'Mutu K1 (Kg)', key: 'k1Weight', width: 16 },
+          { header: 'Subtotal K1 (Rp)', key: 'k1Total', width: 18 },
+          { header: 'Mutu K2 (Kg)', key: 'k2Weight', width: 16 },
+          { header: 'Subtotal K2 (Rp)', key: 'k2Total', width: 18 },
+          { header: 'TOTAL PEMBAYARAN', key: 'grandTotal', width: 22 },
+          { header: 'Status Pembayaran', key: 'status', width: 18 }
+        ];
+
+        // Header style
+        const styleHeaderRow = (ws, colCount) => {
+          const headerRow = ws.getRow(1);
+          headerRow.height = 26;
+          headerRow.eachCell((cell) => {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FF0F4C81' }
+            };
+            cell.font = {
+              name: 'Calibri',
+              size: 11,
+              bold: true,
+              color: { argb: 'FFFFFFFF' }
+            };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.border = {
+              top: { style: 'thin', color: { argb: 'FF0F4C81' } },
+              left: { style: 'thin', color: { argb: 'FF0F4C81' } },
+              bottom: { style: 'thin', color: { argb: 'FF0F4C81' } },
+              right: { style: 'thin', color: { argb: 'FF0F4C81' } }
+            };
+          });
+        };
+
+        styleHeaderRow(wsGroup, 12);
+
+        const thinBorder = {
+          top: { style: 'thin', color: { argb: 'FFD9D9D9' } },
+          left: { style: 'thin', color: { argb: 'FFD9D9D9' } },
+          bottom: { style: 'thin', color: { argb: 'FFD9D9D9' } },
+          right: { style: 'thin', color: { argb: 'FFD9D9D9' } }
+        };
+
+        groups.forEach((g, index) => {
+          const rowData = [
+            index + 1,
+            this.formatDateToSlash(g.date),
+            g.supplier,
+            g.originSummary,
+            g.txCount,
+            g.finalNetWeight,
+            g.k1Weight,
+            g.k1Total,
+            g.k2Weight,
+            g.k2Total,
+            g.grandTotal,
+            g.status
+          ];
+
+          const addedRow = wsGroup.addRow(rowData);
+          addedRow.height = 20;
+
+          addedRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+            cell.font = { name: 'Calibri', size: 11, color: { argb: 'FF000000' } };
+            cell.border = thinBorder;
+
+            if ([6, 7, 9].includes(colNumber)) {
+              cell.numFmt = '#,##0.0';
+              cell.alignment = { vertical: 'middle', horizontal: 'right' };
+            } else if ([8, 10, 11].includes(colNumber)) {
+              cell.numFmt = '"Rp " #,##0';
+              cell.alignment = { vertical: 'middle', horizontal: 'right' };
+            } else if ([1, 2, 5, 12].includes(colNumber)) {
+              cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            } else {
+              cell.alignment = { vertical: 'middle', horizontal: 'left' };
+            }
+          });
+        });
+
+        wsGroup.autoFilter = 'A1:L1';
+
+        // Total Row for wsGroup
+        const lastGroupRow = wsGroup.rowCount;
+        const totalGroupRowIndex = lastGroupRow + 1;
+        const totalGroupRow = wsGroup.getRow(totalGroupRowIndex);
+        totalGroupRow.height = 22;
+
+        totalGroupRow.getCell(1).value = 'TOTAL';
+        totalGroupRow.getCell(5).value = { formula: `SUM(E2:E${lastGroupRow})` };
+        totalGroupRow.getCell(6).value = { formula: `SUM(F2:F${lastGroupRow})` };
+        totalGroupRow.getCell(7).value = { formula: `SUM(G2:G${lastGroupRow})` };
+        totalGroupRow.getCell(8).value = { formula: `SUM(H2:H${lastGroupRow})` };
+        totalGroupRow.getCell(9).value = { formula: `SUM(I2:I${lastGroupRow})` };
+        totalGroupRow.getCell(10).value = { formula: `SUM(J2:J${lastGroupRow})` };
+        totalGroupRow.getCell(11).value = { formula: `SUM(K2:K${lastGroupRow})` };
+
+        for (let c = 1; c <= 12; c++) {
+          const cell = totalGroupRow.getCell(c);
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFFF2CC' }
+          };
+          cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF000000' } };
+          cell.border = {
+            top: { style: 'thin', color: { argb: 'FFB0B0B0' } },
+            bottom: { style: 'double', color: { argb: 'FF000000' } },
+            left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+            right: { style: 'thin', color: { argb: 'FFE0E0E0' } }
+          };
+
+          if ([6, 7, 9].includes(c)) {
+            cell.numFmt = '#,##0.0';
+            cell.alignment = { vertical: 'middle', horizontal: 'right' };
+          } else if ([5].includes(c)) {
+            cell.numFmt = '#,##0';
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          } else if ([8, 10, 11].includes(c)) {
+            cell.numFmt = '"Rp " #,##0';
+            cell.alignment = { vertical: 'middle', horizontal: 'right' };
+          } else if (c === 1) {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          }
+        }
+
+        // 3. Worksheet 2: Rincian Pengiriman Pemasok
+        const wsDetail = wb.addWorksheet('Rincian Transaksi', {
+          views: [{ showGridLines: true }]
+        });
+
+        wsDetail.columns = [
           { header: 'No', key: 'no', width: 6 },
           { header: 'Tanggal', key: 'date', width: 14 },
           { header: 'No Dokumen', key: 'docNo', width: 18 },
@@ -452,36 +652,7 @@ const ExportExcelManager = {
           { header: 'Status Pembayaran', key: 'status', width: 18 }
         ];
 
-        // Style Header Row
-        const headerRow = ws.getRow(1);
-        headerRow.height = 26;
-        headerRow.eachCell((cell) => {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FF0F4C81' }
-          };
-          cell.font = {
-            name: 'Calibri',
-            size: 11,
-            bold: true,
-            color: { argb: 'FFFFFFFF' }
-          };
-          cell.alignment = { vertical: 'middle', horizontal: 'center' };
-          cell.border = {
-            top: { style: 'thin', color: { argb: 'FF0F4C81' } },
-            left: { style: 'thin', color: { argb: 'FF0F4C81' } },
-            bottom: { style: 'thin', color: { argb: 'FF0F4C81' } },
-            right: { style: 'thin', color: { argb: 'FF0F4C81' } }
-          };
-        });
-
-        const thinBorder = {
-          top: { style: 'thin', color: { argb: 'FFD9D9D9' } },
-          left: { style: 'thin', color: { argb: 'FFD9D9D9' } },
-          bottom: { style: 'thin', color: { argb: 'FFD9D9D9' } },
-          right: { style: 'thin', color: { argb: 'FFD9D9D9' } }
-        };
+        styleHeaderRow(wsDetail, 15);
 
         txs.forEach((t, index) => {
           const rowData = [
@@ -502,7 +673,7 @@ const ExportExcelManager = {
             t.paymentStatus || 'Lunas'
           ];
 
-          const addedRow = ws.addRow(rowData);
+          const addedRow = wsDetail.addRow(rowData);
           addedRow.height = 20;
 
           addedRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
@@ -526,24 +697,22 @@ const ExportExcelManager = {
           });
         });
 
-        // AutoFilter on Header Row
-        ws.autoFilter = 'A1:O1';
+        wsDetail.autoFilter = 'A1:O1';
 
-        // Total Row
-        const lastDataRowIndex = ws.rowCount;
-        const totalRowIndex = lastDataRowIndex + 1;
-        const totalRow = ws.getRow(totalRowIndex);
-        totalRow.height = 22;
+        const lastDetailRow = wsDetail.rowCount;
+        const totalDetailRowIndex = lastDetailRow + 1;
+        const totalDetailRow = wsDetail.getRow(totalDetailRowIndex);
+        totalDetailRow.height = 22;
 
-        totalRow.getCell(1).value = 'TOTAL';
-        totalRow.getCell(8).value = { formula: `SUM(H2:H${lastDataRowIndex})` };
-        totalRow.getCell(10).value = { formula: `SUM(J2:J${lastDataRowIndex})` };
-        totalRow.getCell(11).value = { formula: `SUM(K2:K${lastDataRowIndex})` };
-        totalRow.getCell(13).value = { formula: `SUM(M2:M${lastDataRowIndex})` };
-        totalRow.getCell(14).value = { formula: `SUM(N2:N${lastDataRowIndex})` };
+        totalDetailRow.getCell(1).value = 'TOTAL';
+        totalDetailRow.getCell(8).value = { formula: `SUM(H2:H${lastDetailRow})` };
+        totalDetailRow.getCell(10).value = { formula: `SUM(J2:J${lastDetailRow})` };
+        totalDetailRow.getCell(11).value = { formula: `SUM(K2:K${lastDetailRow})` };
+        totalDetailRow.getCell(13).value = { formula: `SUM(M2:M${lastDetailRow})` };
+        totalDetailRow.getCell(14).value = { formula: `SUM(N2:N${lastDetailRow})` };
 
         for (let c = 1; c <= 15; c++) {
-          const cell = totalRow.getCell(c);
+          const cell = totalDetailRow.getCell(c);
           cell.fill = {
             type: 'pattern',
             pattern: 'solid',
@@ -581,7 +750,7 @@ const ExportExcelManager = {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(downloadUrl);
 
-        App.showToast(`Berhasil mengekspor ${txs.length} data pemasok ke Excel!`, 'success');
+        App.showToast(`Berhasil mengekspor ${groups.length} rekap pemasok (${txs.length} transaksi) ke Excel!`, 'success');
         return;
       } catch (err) {
         console.error('ExcelJS Supplier Export Error:', err);
