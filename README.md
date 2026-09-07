@@ -2,7 +2,7 @@
 
 Sistem Informasi Penimbangan Truk Garam Industri modern berbasis **Electron Desktop & Web Application** untuk **PT. Reka Cipta Garam**.
 
-Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232 / USB (dengan deteksi port COM fisik otomatis dan pengurai multi-protokol indikator), kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (satuan mm dan cm), dialog cetak dan ekspor berdimensi lapang bebas kebocoran tata letak, rekapitulasi riwayat pemasok terakumulasi harian, analitik tonase interaktif, serta manajemen basis data relasional SQLite.
+Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232 / USB (dengan deteksi port COM fisik otomatis dan pengurai multi-protokol indikator), kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (satuan mm dan cm), dialog cetak dan ekspor berdimensi lapang bebas kebocoran tata letak, penanganan multi-transaksi adaptif pada pratinjau dan dokumen hasil cetak, rekapitulasi riwayat pemasok terakumulasi harian dengan emblem status pembayaran interaktif terintegrasi, analitik tonase interaktif, serta manajemen basis data relasional SQLite.
 
 ---
 
@@ -45,10 +45,14 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **Garam K1 (Kualitas Super)**: Mutu utama garam putih bersih dengan harga acuan standar Rp 1.250/Kg.
   - **Garam K2 (Kualitas Standar)**: Mutu kedua dengan harga acuan standar Rp 1.050/Kg.
 - **Kalkulasi Nilai Pembayaran**: Perhitungan otomatis subtotal K1, subtotal K2, dan Grand Total Rupiah.
-- **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan terproteksi.
+- **Status Pembayaran Terproteksi**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan berbasis RBAC serta visualisasi emblem berstandar DESIGN_SYSTEM.md.
 
 ### 4. Penerbitan Nota Timbang, Pengaturan Margin In-App, & Ekspor PDF
-- **Dialog Cetak Lapang & Proporsional (Lebar 980px)**: Modal pengaturan pratinjau cetak (`#modal-print-settings`) dirancang dengan lebar 980px dan tata letak dua kolom yang lega, mencegah desakan teks dan kebocoran tata letak kontrol.
+- **Dialog Cetak Lapang & Proporsional (Lebar 980px)**: Modal pengaturan pratinjau cetak (`#modal-print-settings`) dirancang dengan lebar 980px dan tata letak dua kolom yang lega, mencegah desakan kontrol dan teks.
+- **Penanganan Banyak Transaksi Tanpa Distorsi Layout**:
+  - Tata letak dokumen pratinjau dan hasil unduhan PDF mampu menangani transaksi dalam jumlah banyak (misalnya akumulasi puluhan nomor polisi truk).
+  - Bagian penting dokumen (No. Dokumen, Nama Pemasok, Asal Material, Waktu Keluar) tetap tampil lengkap, jelas, dan proporsional tanpa risiko teks terpotong atau tertutup.
+  - Pembagian baris dan tinggi baris tabel menyesuaikan muatan konten secara dinamis (adaptive height).
 - **Pengaturan Margin In-App Fleksibel (mm / cm)**:
   - **Preset Margin Instan**: Standar (5 mm / 0.5 cm), Sempit (2 mm / 0.2 cm), Sedang (8 mm / 0.8 cm), Lebar (12 mm / 1.2 cm), dan Kustom.
   - **Pemilih Satuan Terintegrasi**: Pilihan satuan Milimeter (`mm`) atau Sentimeter (`cm`) dengan konversi nilai otomatis.
@@ -75,6 +79,11 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Pencarian Cerdas Real-Time**: Pencarian cepat multi-kolom berdasarkan Nomor Dokumen/Tiket, Nomor Polisi Truk, Nama Pemasok, Nama Supir, atau Asal Daerah.
 - **Filter Jenis Material Garam**: Pemfilteran transaksi berdasarkan jenis material garam (Semua Jenis Garam, Garam Curah, Garam Karung) yang tersinkronisasi langsung dengan modal dan berkas Excel.
 - **Filter Rentang Tanggal**: Opsi pemfilteran tanggal harian, mingguan, bulanan, atau rentang kustom.
+- **Emblem Status Pembayaran Interaktif**:
+  - Menampilkan status **Lunas** (`badge-success`, Emerald `#22C55E`) dan **Belum Lunas** (`badge-warning`, Amber `#F59E0B`).
+  - Diformat sebagai elemen tombol dengan tinggi 26px, padding 0 10px, font 11px tebal 600, dan border 1px solid sesuai DESIGN_SYSTEM.md.
+  - Pengguna dengan wewenang (Administrator dan Supervisor) dapat langsung mengklik emblem untuk beralih status secara langsung, disertai pencatatan audit log otomatis.
+  - Untuk Operator, emblem tampil dalam mode baca saja (Read-Only) dengan tooltip penjelas.
 - **Pengelolaan Transaksi**: Menu aksi per baris transaksi untuk melihat detail lengkap, mengubah data transaksi, mencetak ulang tiket timbang, atau menghapus transaksi (sesuai hak akses role).
 - **Pengurutan & Paginasi**: Pengurutan data Terbaru / Terlama serta pilihan ukuran halaman (10, 25, 50 baris).
 
@@ -83,6 +92,10 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Satu baris tabel merepresentasikan 1 pemasok pada 1 tanggal pengiriman.
   - Seluruh transaksi dari pemasok yang sama pada tanggal yang sama secara otomatis digabung dan diakumulasikan menjadi satu baris rekapitulasi.
   - Menampilkan jumlah total transaksi/pengiriman, akumulasi berat muatan, berat tara, berat bersih total, mutu K1, mutu K2, subtotal K1, subtotal K2, dan total pembayaran.
+- **Emblem Status Pembayaran Selaras & Sinkronisasi Massal**:
+  - Tampilan emblem Lunas dan Belum Lunas dibuat identik 100% dengan Riwayat Penimbangan dari dimensi, tipografi, warna palet DESIGN_SYSTEM.md, hingga interaktivitas klik.
+  - Mengklik emblem pada baris rekapitulasi pemasok akan beralih status dan secara otomatis memperbarui status pembayaran seluruh transaksi anggota dalam kelompok pemasok dan tanggal tersebut.
+  - Perubahan status secara instan disinkronkan ke tabel Riwayat Penimbangan, penyimpanan data, dan kartu metrik dashboard tanpa perlu memuat ulang halaman.
 - **Format Dokumen Selaras dengan Riwayat Penimbangan**:
   - Dokumen cetak rekapitulasi harian pemasok menggunakan format dokumen **Nota Timbang A6** resmi yang sama persis dengan modul Riwayat Penimbangan (lengkap dengan kop surat, rincian bobot, rincian mutu garam, box total pembayaran, dan tanda tangan).
 - **Tampilan Tabel Proporsional & Responsif**:
@@ -122,8 +135,26 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Aksi Pengguna**: Tambah Pengguna Baru, Ubah Kata Sandi, Hapus Pengguna, serta tombol cepat Pilih Semua dan Kosongkan Semua.
 - **Proteksi Perubahan Belum Disimpan**: Dialog konfirmasi otomatis saat tombol Tutup ditekan jika ada perubahan hak akses yang belum disimpan.
 
+#### Matriks Hak Akses Berdasarkan Peran (Role Permission Matrix)
+
+| Fitur / Modul Operasional | Administrator | Supervisor | Operator |
+| :--- | :---: | :---: | :---: |
+| Input Penimbangan & Ambil Bobot Timbangan | Ya | Ya | Ya |
+| Penerbitan & Cetak Nota Timbang Awal | Ya | Ya | Ya |
+| Akses Dashboard & Analitik Tonase | Ya | Ya | Ya |
+| Lihat Riwayat Penimbangan & Riwayat Pemasok | Ya | Ya | Ya |
+| Ubah Status Pembayaran (Lunas / Belum Lunas) | Ya | Ya | Tidak (Read-Only) |
+| Cetak Ulang Nota Timbang (Reprint) | Ya | Ya | Tidak |
+| Ekspor Laporan Excel & Unduh PDF | Ya | Ya | Ya |
+| Ubah (Edit) Data Transaksi | Ya | Tidak | Tidak |
+| Hapus (Delete) Transaksi Penimbangan | Ya | Tidak | Tidak |
+| Lihat Activity Log & Jejak Audit Sistem | Ya | Ya | Tidak |
+| Konfigurasi Parameter Jembatan Timbang & Margin | Ya | Tidak | Tidak |
+| Manajemen Akun Pengguna & Hak Akses RBAC | Ya | Tidak | Tidak |
+| Pencadangan (Backup) & Reset Basis Data | Ya | Tidak | Tidak |
+
 ### 11. Audit Trail & Activity Log
-- **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar, Reset Database) tercatat otomatis di tabel `activity_logs`.
+- **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar Satuan / Massal, Reset Database) tercatat otomatis di tabel `activity_logs`.
 - **Validasi Alasan Wajib**: Setiap tindakan sensitif (seperti penghapusan atau reset data) mewajibkan input alasan tertulis sebelum dieksekusi demi kepatuhan audit.
 
 ### 12. Pencadangan Data, Pemulihan, & Proteksi Zona Bahaya
@@ -133,20 +164,25 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 13. Standar Desain Antarmuka Industrial (Design System)
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
-- **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk keterbacaan tinggi.
+- **Palet Warna Status Terpadu**:
+  - Success (`#22C55E`): Status Lunas, Indikator Aktif, Simpan Berhasil.
+  - Warning (`#F59E0B`): Status Belum Lunas, Peringatan Sistem, Pending.
+  - Error (`#EF4444`): Gagal, Galat, Tindakan Destruktif.
+  - Info (`#38BDF8`): Informasi Sistem, Panduan.
+- **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk teks antarmuka dan font monospace untuk angka numerik, no dokumen, dan nilai bobot.
 - **Ikon Vektor Bersih**: Seluruh ikon antarmuka menggunakan SVG industrial murni tanpa penggunaan emoji.
 
 ---
 
 ## Daftar Pengguna & Hak Akses Bawaan (Default Login)
 
-Sistem menyediakan 3 akun bawaan untuk berbagai tingkat kewenangan operasional:
+Sistem menyediakan 3 akun bawaan untuk berbagai tingkat kewenangan operasional. Antarmuka login menerapkan alur otentikasi standar industri yang aman dan terproteksi:
 
 | Username | Password | Peran (Role) | Hak Akses & Tanggung Jawab |
 | :--- | :--- | :--- | :--- |
 | **admin** | `admin123` | **Administrator** | Akses penuh ke seluruh sistem: Dashboard, Input Penimbangan, Riwayat Penimbangan, Riwayat Pemasok, Activity Log, Hak Akses Pengguna, Konfigurasi Sistem, dan Backup Basis Data. |
-| **operator** | `operator123` | **Operator** | Akses operasional harian: Input Penimbangan Truk, Cetak Tiket Timbang, Riwayat Penimbangan, dan Riwayat Pemasok. |
-| **supervisor** | `supervisor123` | **Supervisor** | Akses pengawasan & audit: Monitoring Dashboard & Analitik Tonase, Tinjau Riwayat Penimbangan & Pemasok, Cetak Ulang Dokumen, dan Ekspor Laporan Excel (Read-Only). |
+| **operator** | `operator123` | **Operator** | Akses operasional harian: Input Penimbangan Truk, Cetak Tiket Timbang Awal, Lihat Riwayat Penimbangan, dan Riwayat Pemasok. |
+| **supervisor** | `supervisor123` | **Supervisor** | Akses pengawasan & audit: Monitoring Dashboard & Analitik Tonase, Tinjau Riwayat Penimbangan & Pemasok, Ubah Status Pembayaran, Cetak Ulang Dokumen, dan Ekspor Laporan Excel / PDF. |
 
 ---
 

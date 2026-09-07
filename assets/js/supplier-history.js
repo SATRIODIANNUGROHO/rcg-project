@@ -208,7 +208,7 @@ const SupplierHistoryManager = {
     // Convert map to array and format summaries
     let groups = Array.from(groupMap.values()).map(g => {
       let paymentStatus = 'Belum Lunas';
-      let statusBadgeClass = 'badge-danger';
+      let statusBadgeClass = 'badge-warning';
 
       if (g.unpaidCount === 0 && g.lunasCount > 0) {
         paymentStatus = 'Lunas';
@@ -317,6 +317,8 @@ const SupplierHistoryManager = {
       return;
     }
 
+    const canChangePay = typeof AuthManager !== 'undefined' ? AuthManager.canChangePaymentStatus() : true;
+
     paginated.forEach((group) => {
       const tr = document.createElement('tr');
 
@@ -356,9 +358,9 @@ const SupplierHistoryManager = {
           Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}
         </td>
         <td class="text-center" style="white-space: nowrap;">
-          <span class="badge ${group.statusBadgeClass}" style="font-weight: 600; font-size: 11px; padding: 3px 8px; border-radius: 5px; white-space: nowrap;">
+          <button class="badge ${group.statusBadgeClass}" style="${canChangePay ? 'cursor: pointer;' : 'cursor: default; opacity: 0.9;'} border: 1px solid; height: 26px; padding: 0 10px; font-weight: 600; white-space: nowrap; font-size: 11px;" ${canChangePay ? `onclick="SupplierHistoryManager.togglePaymentStatus('${encodeURIComponent(group.key)}')"` : ''} title="${canChangePay ? 'Klik untuk mengubah status pembayaran' : 'Status Pembayaran (Read-Only)'}">
             ${group.paymentStatus}
-          </span>
+          </button>
         </td>
         <td class="actions-cell text-center" style="white-space: nowrap;">
           <button class="btn btn-table-action action-print" style="height: 26px; padding: 0 10px; font-weight: 600; font-size: 11px; white-space: nowrap;" title="Cetak Nota Timbang" onclick="SupplierHistoryManager.printDailySummary('${encodeURIComponent(group.key)}')">
@@ -651,6 +653,45 @@ const SupplierHistoryManager = {
       const container = document.getElementById('printable-nota');
       if (container) container.innerHTML = generatorFn(1, 1);
       window.print();
+    }
+  },
+
+  /**
+   * Toggle payment status for an aggregated supplier group (all member transactions)
+   */
+  togglePaymentStatus(encodedKey) {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.canChangePaymentStatus()) {
+      App.showToast('Akun Anda tidak memiliki hak akses untuk mengubah status pembayaran transaksi!', 'warning');
+      return;
+    }
+    const key = decodeURIComponent(encodedKey);
+    const groups = this.getGroupedData();
+    const group = groups.find(g => g.key === key);
+    if (!group || !group.transactions || group.transactions.length === 0) return;
+
+    // Toggle: if currently all are Lunas, switch to Belum Lunas; otherwise switch all to Lunas
+    const isAllLunas = (group.unpaidCount === 0 && group.lunasCount > 0);
+    const newStatus = isAllLunas ? 'Belum Lunas' : 'Lunas';
+
+    group.transactions.forEach(tx => {
+      tx.paymentStatus = newStatus;
+      StorageManager.saveTransaction(tx);
+    });
+
+    StorageManager.addLog(
+      AuthManager.getCurrentUser().username,
+      AuthManager.getCurrentUser().role,
+      `Ubah Status Bayar Pemasok ${group.supplier} (${group.date}) -> ${newStatus} (${group.transactions.length} Transaksi)`,
+      group.docNos[0] || '-'
+    );
+
+    App.showToast(`Status pembayaran pemasok ${group.supplier} (${group.date}) diubah menjadi ${newStatus}.`, 'success');
+    this.render();
+    if (typeof HistoryManager !== 'undefined' && typeof HistoryManager.render === 'function') {
+      HistoryManager.render();
+    }
+    if (typeof App !== 'undefined' && typeof App.updateDashboard === 'function') {
+      App.updateDashboard();
     }
   },
 
