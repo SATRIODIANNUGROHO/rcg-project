@@ -3349,14 +3349,16 @@ input[type="range"] {
    ========================================================================== */
 .print-toolbar-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.3fr;
-  gap: 12px;
+  grid-template-columns: 1fr 1fr 1.35fr;
+  gap: 16px;
   margin-bottom: 14px;
   background: var(--bg-surface-alt);
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-radius: var(--radius-tight);
   border: 1px solid var(--border-color);
   align-items: end;
+  position: relative;
+  z-index: 25;
 }
 
 @media (max-width: 768px) {
@@ -3375,15 +3377,17 @@ input[type="range"] {
 
 .custom-margin-panel {
   background: var(--bg-surface-alt);
-  padding: 10px 14px;
+  padding: 12px 18px;
   border-radius: var(--radius-tight);
   border: 1px dashed var(--primary-border);
   margin-bottom: 14px;
+  position: relative;
+  z-index: 10;
 }
 
 .print-preview-viewport {
   background: #070D19;
-  padding: 24px 20px 48px 20px;
+  padding: 24px 24px 48px 24px;
   border-radius: var(--radius-tight);
   border: 1px solid #1E293B !important;
   overflow-y: auto;

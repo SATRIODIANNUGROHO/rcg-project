@@ -1522,34 +1522,80 @@
 
   <!-- Modal 3: Serial Port Connection Setting -->
   <div id="modal-serial-connect" class="modal-overlay">
-    <div class="modal-container">
+    <div class="modal-container" style="max-width: 540px; width: 95%;">
       <div class="modal-header">
         <h3>Hubungkan Indikator Timbangan Serial</h3>
         <button class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
         <p class="text-secondary text-small mb-3">
-          Sistem akan mendeteksi Port COM (RS232 / USB Serial Converter) yang terhubung ke indikator timbangan jembatan truk (A12E, CAS, Toledo, dsb).
+          Sistem akan mendeteksi Port COM (RS232 / USB Serial Converter) yang terhubung ke indikator timbangan jembatan truk (Yaohua A12E, CAS, Toledo, dsb).
         </p>
 
-        <div class="form-group">
-          <label class="form-label">Baud Rate Serial</label>
-          <select id="serial-baud-rate" class="form-select mono">
-            <option value="9600" selected>9600 bps (Standar Industri)</option>
-            <option value="4800">4800 bps</option>
-            <option value="19200">19200 bps</option>
-            <option value="115200">115200 bps</option>
+        <!-- Port Detection Status Banner -->
+        <div id="serial-port-status-banner" style="background: var(--bg-surface-alt); border: 1px solid var(--border-color); border-radius: var(--radius-tight); padding: 10px 14px; margin-bottom: 14px; font-size: 11.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+          <div id="serial-port-status-text" style="color: var(--text-secondary);">
+            Memeriksa ketersediaan Port COM...
+          </div>
+          <button type="button" id="btn-refresh-serial-ports" class="btn btn-secondary btn-sm" style="height: 28px; padding: 0 10px; font-size: 11px; white-space: nowrap;">
+            Pindai Ulang
+          </button>
+        </div>
+
+        <!-- Port COM Selection -->
+        <div class="form-group mb-3">
+          <label class="form-label" for="serial-port-select">Pilih Port COM Serial</label>
+          <select id="serial-port-select" class="form-select mono">
+            <option value="">-- Deteksi Otomatis / Pemilih Browser --</option>
           </select>
         </div>
 
-        <div class="form-group">
+        <!-- Row: Baud Rate & Protocol -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div class="form-group mb-0">
+            <label class="form-label" for="serial-baud-rate">Baud Rate Serial</label>
+            <select id="serial-baud-rate" class="form-select mono">
+              <option value="9600" selected>9600 bps (Standar)</option>
+              <option value="4800">4800 bps</option>
+              <option value="2400">2400 bps</option>
+              <option value="1200">1200 bps</option>
+              <option value="19200">19200 bps</option>
+              <option value="115200">115200 bps</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-0">
+            <label class="form-label" for="serial-protocol-select">Protokol Indikator</label>
+            <select id="serial-protocol-select" class="form-select">
+              <option value="auto" selected>Otomatis (A12E / CAS / Toledo)</option>
+              <option value="yaohua">Yaohua XK3190-A12E / A9</option>
+              <option value="cas">CAS CI-Series (CI-1560A)</option>
+              <option value="toledo">Mettler Toledo / 8142</option>
+              <option value="generic">Format ASCII Generik</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Data Bits / Parity / Stop Bits -->
+        <div class="form-group mb-3">
           <label class="form-label">Data Bits / Parity / Stop Bits</label>
-          <input type="text" class="form-control mono" value="8 - None - 1" readonly>
+          <input type="text" class="form-control mono" value="8 Data Bits - No Parity - 1 Stop Bit" readonly style="font-size: 11.5px;">
+        </div>
+
+        <!-- Live Raw Data Stream Monitor -->
+        <div class="form-group mb-0">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Monitor Aliran Data Masuk (Raw Stream)</span>
+            <span id="serial-stream-status-tag" class="text-secondary" style="font-size: 10.5px;">Menunggu data...</span>
+          </label>
+          <div style="background: #070D19; border: 1px solid #1E293B; border-radius: 6px; padding: 10px 12px; font-family: var(--font-mono); font-size: 11.5px; color: #38BDF8; min-height: 48px; max-height: 80px; overflow-y: auto; word-break: break-all;">
+            <div id="serial-raw-stream-display" style="opacity: 0.85;">[Port belum terhubung - Klik 'Hubungkan Serial' di bawah]</div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary btn-modal-cancel">Batal</button>
-        <button id="btn-confirm-serial-connect" class="btn btn-primary">Pilih Port &amp; Hubungkan</button>
+        <button id="btn-confirm-serial-connect" class="btn btn-primary">Hubungkan Port Serial</button>
       </div>
     </div>
   </div>
@@ -1635,7 +1681,7 @@
 
   <!-- Modal 8: Export Excel Data Scope Selector -->
   <div id="modal-export-excel" class="modal-overlay">
-    <div class="modal-container" style="max-width: 480px;">
+    <div class="modal-container" style="max-width: 540px; width: 95%;">
       <div class="modal-header">
         <h3 id="export-modal-title">Export to Excel (.xlsx)</h3>
         <button class="modal-close-btn">&times;</button>
@@ -1716,13 +1762,13 @@
 
   <!-- Modal 9: Print Settings & Interactive Document Preview Modal -->
   <div id="modal-print-settings" class="modal-overlay">
-    <div class="modal-container" style="max-width: 860px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-container" style="max-width: 980px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
       <div class="modal-header">
         <h3 id="modal-print-title" style="margin: 0; font-size: 17px;">Pratinjau &amp; Pengaturan Cetak Dokumen</h3>
         <button class="modal-close-btn">&times;</button>
       </div>
       
-      <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+      <div class="modal-body" style="padding: 18px 20px; overflow-y: auto; flex: 1;">
         <!-- Toolbar Pengaturan Cetak & Margin In-App -->
         <div class="print-toolbar-grid">
           <div class="form-group mb-0">
@@ -1772,21 +1818,21 @@
             <span style="font-size: 11.5px; font-weight: 700; color: var(--text-primary);">Atur Nilai Margin In-App Per Sisi:</span>
             <span style="font-size: 10.5px; color: var(--text-secondary);">Satuan: <strong id="custom-margin-unit-label" style="color: var(--primary); font-weight: 700;">mm</strong></span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
             <div>
-              <label class="form-label" for="input-margin-top" style="font-size: 10.5px; margin-bottom: 2px;">Atas (Top)</label>
+              <label class="form-label" for="input-margin-top" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Atas (Top)</label>
               <input type="number" id="input-margin-top" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
             </div>
             <div>
-              <label class="form-label" for="input-margin-bottom" style="font-size: 10.5px; margin-bottom: 2px;">Bawah (Bottom)</label>
+              <label class="form-label" for="input-margin-bottom" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Bawah (Bottom)</label>
               <input type="number" id="input-margin-bottom" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
             </div>
             <div>
-              <label class="form-label" for="input-margin-left" style="font-size: 10.5px; margin-bottom: 2px;">Kiri (Left)</label>
+              <label class="form-label" for="input-margin-left" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Kiri (Left)</label>
               <input type="number" id="input-margin-left" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
             </div>
             <div>
-              <label class="form-label" for="input-margin-right" style="font-size: 10.5px; margin-bottom: 2px;">Kanan (Right)</label>
+              <label class="form-label" for="input-margin-right" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Kanan (Right)</label>
               <input type="number" id="input-margin-right" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
             </div>
           </div>
@@ -1794,7 +1840,7 @@
 
         <!-- Box Pratinjau Lembar Fisik Dokumen (Live Preview Viewport) -->
         <div class="print-preview-viewport">
-          <div id="modal-print-preview-content" style="width: 100%; max-width: 740px; display: flex; flex-direction: column; gap: 24px; padding-bottom: 16px;">
+          <div id="modal-print-preview-content" style="width: 100%; max-width: 860px; display: flex; flex-direction: column; gap: 24px; padding-bottom: 16px;">
             <!-- Live rendered paper content -->
           </div>
         </div>

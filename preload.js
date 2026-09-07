@@ -9,6 +9,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   dbSaveFile: (binaryBuffer) => ipcRenderer.invoke('db:save-file', binaryBuffer),
   dbExportFile: (binaryBuffer, defaultName) => ipcRenderer.invoke('db:export-file', binaryBuffer, defaultName),
   dbImportFile: () => ipcRenderer.invoke('db:import-file'),
-  dbGetPath: () => ipcRenderer.invoke('db:get-path')
+  dbGetPath: () => ipcRenderer.invoke('db:get-path'),
+  getSystemSerialPorts: () => ipcRenderer.invoke('serial:get-ports'),
+  setTargetSerialPort: (portName) => ipcRenderer.invoke('serial:set-target-port', portName),
+  onSerialPortAdded: (callback) => ipcRenderer.on('serial:port-added', (e, port) => callback(port)),
+  onSerialPortRemoved: (callback) => ipcRenderer.on('serial:port-removed', (e, port) => callback(port))
 });
 

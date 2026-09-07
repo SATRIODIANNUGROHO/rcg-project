@@ -118,6 +118,18 @@ const App = {
           ScaleEngine.disconnectSerial();
         } else {
           this.openModal('modal-serial-connect');
+          if (typeof ScaleEngine.refreshPortListUI === 'function') {
+            ScaleEngine.refreshPortListUI();
+          }
+        }
+      });
+    }
+
+    const btnRefreshPorts = document.getElementById('btn-refresh-serial-ports');
+    if (btnRefreshPorts) {
+      btnRefreshPorts.addEventListener('click', () => {
+        if (typeof ScaleEngine.refreshPortListUI === 'function') {
+          ScaleEngine.refreshPortListUI();
         }
       });
     }
@@ -125,9 +137,14 @@ const App = {
     const confirmSerialConnect = document.getElementById('btn-confirm-serial-connect');
     if (confirmSerialConnect) {
       confirmSerialConnect.addEventListener('click', () => {
-        const baud = document.getElementById('serial-baud-rate').value;
+        const baud = document.getElementById('serial-baud-rate') ? document.getElementById('serial-baud-rate').value : 9600;
+        const portSelect = document.getElementById('serial-port-select');
+        const portName = portSelect ? portSelect.value : '';
+        const protocolSelect = document.getElementById('serial-protocol-select');
+        const protocol = protocolSelect ? protocolSelect.value : 'auto';
+
         this.closeModal('modal-serial-connect');
-        ScaleEngine.connectSerial(baud);
+        ScaleEngine.connectSerial(baud, portName, protocol);
       });
     }
 

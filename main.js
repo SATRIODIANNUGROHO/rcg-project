@@ -59,8 +59,39 @@ function createWindow() {
     }
   });
 
-  // Handle Serial Permissions in Electron
-  mainWindow.webContents.session.setPermissionCheckHandler((webContents, permission, requestingOrigin) => {
+  // Handle Serial Permissions and Hardware Port Routing in Electron
+  let targetSerialPortName = null;
+
+  ipcMain.handle('serial:set-target-port', (event, portName) => {
+    targetSerialPortName = portName ? portName.trim().toUpperCase() : null;
+    return true;
+  });
+
+  ipcMain.handle('serial:get-ports', async () => {
+    return new Promise((resolve) => {
+      const { exec } = require('child_process');
+      exec('reg query HKLM\\HARDWARE\\DEVICEMAP\\SERIALCOMM', (err, stdout) => {
+        if (err || !stdout) {
+          return resolve([]);
+        }
+        const ports = [];
+        const lines = stdout.split('\n');
+        for (const line of lines) {
+          const match = line.match(/\s+REG_SZ\s+(COM\d+)/i);
+          if (match) {
+            const portName = match[1].toUpperCase();
+            ports.push({
+              portName: portName,
+              displayName: `Port Serial (${portName})`
+            });
+          }
+        }
+        resolve(ports);
+      });
+    });
+  });
+
+  mainWindow.webContents.session.setPermissionCheckHandler((webContents, permission) => {
     if (permission === 'serial') {
       return true;
     }
@@ -77,9 +108,31 @@ function createWindow() {
   mainWindow.webContents.session.on('select-serial-port', (event, portList, webContents, callback) => {
     event.preventDefault();
     if (portList && portList.length > 0) {
+      if (targetSerialPortName) {
+        const matched = portList.find(p => 
+          (p.portName && p.portName.toUpperCase() === targetSerialPortName) ||
+          (p.displayName && p.displayName.toUpperCase().includes(targetSerialPortName))
+        );
+        if (matched) {
+          callback(matched.portId);
+          return;
+        }
+      }
       callback(portList[0].portId);
     } else {
       callback('');
+    }
+  });
+
+  mainWindow.webContents.session.on('serial-port-added', (event, port) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('serial:port-added', port);
+    }
+  });
+
+  mainWindow.webContents.session.on('serial-port-removed', (event, port) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('serial:port-removed', port);
     }
   });
 

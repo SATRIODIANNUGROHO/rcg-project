@@ -2,7 +2,7 @@
 
 Sistem Informasi Penimbangan Truk Garam Industri modern berbasis **Electron Desktop & Web Application** untuk **PT. Reka Cipta Garam**.
 
-Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232, kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (satuan mm dan cm), rekapitulasi riwayat pemasok terakumulasi harian, analitik tonase interaktif, serta manajemen basis data relasional SQLite.
+Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator timbang, dan manajemen dalam mencatat transaksi penimbangan kendaraan truk garam, integrasi langsung dengan indikator jembatan timbang serial RS-232 / USB (dengan deteksi port COM fisik otomatis dan pengurai multi-protokol indikator), kalkulasi refraksi otomatis dan pembagian mutu garam (Garam K1 & Garam K2), penerbitan tiket timbang resmi (PDF vektor presisi tinggi), pengaturan margin in-app fleksibel (satuan mm dan cm), dialog cetak dan ekspor berdimensi lapang bebas kebocoran tata letak, rekapitulasi riwayat pemasok terakumulasi harian, analitik tonase interaktif, serta manajemen basis data relasional SQLite.
 
 ---
 
@@ -21,10 +21,22 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Auto-Migration Cerdas**: Mekanisme migrasi otomatis yang mengonversi data legacy dari format JSON / localStorage ke tabel relasional SQLite tanpa risiko kehilangan data (zero data loss).
 - **Diagnostik Interaktif**: Dukungan perintah konsol `StorageManager.getEngineInfo()` dan `StorageManager.query(sql)` untuk pemantauan performa dan eksekusi kueri langsung.
 
-### 2. Integrasi Jembatan Timbang & Simulator Interaktif
-- **Koneksi Serial RS-232 / USB**: Terhubung langsung ke indikator timbangan jembatan truk menggunakan Web Serial API dengan konfigurasi Baud Rate fleksibel (1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 bps; standar 9600 bps).
-- **Panel Simulator Timbangan**: Simulator terpasang untuk pengujian fungsional dan pelatihan operator timbang dengan visualisasi nilai Berat Kotor (Gross), Berat Tara, dan Berat Muatan Bersih secara real-time.
-- **Indikator Kestabilan**: Deteksi kestabilan pembacaan beban timbangan (STABIL / GERAK) sebelum data dikunci ke dalam formulir.
+### 2. Integrasi Perangkat Keras Jembatan Timbang & Simulator Interaktif
+- **Deteksi Port COM Fisik Otomatis (Windows Registry)**: Sistem secara cerdas membaca langsung daftar port serial aktif pada sistem operasi Windows melalui query Registry `HKLM\HARDWARE\DEVICEMAP\SERIALCOMM` via proses utama Electron. Pengguna tidak perlu menebak nomor COM port secara manual.
+- **Pemilihan Port Fleksibel**: Dropdown pemilihan port COM dengan tombol "Pindai Ulang" dan badge status kesiapan perangkat.
+- **Pengikatan Port Terarah (Targeted Port Binding)**: Penanganan event `session.on('select-serial-port')` yang mengunci port yang dipilih oleh pengguna secara instan tanpa dialog sistem tambahan.
+- **Deteksi Hotplug Dinamis (Auto Hotplug Detection)**: Pendeteksian otomatis kabel converter USB-to-RS232 saat dicolokkan (`serial-port-added`) atau dicabut (`serial-port-removed`) dengan pembaruan daftar port secara real-time.
+- **Pengurai Multi-Protokol Indikator Timbangan (Multi-Protocol Parser)**:
+  - **Yaohua XK3190-A12E**: Protokol kontinu dengan pembacaan paket terbalik `=DDDDDD` (contoh: `=005610` dibalik menjadi `016500` menghasilkan bobot 16.500 Kg).
+  - **CAS CI-Series (CI-1500A, CI-1560A, CI-2001A)**: Format paket standar `ST,GS,+016500kg\r\n` atau `US,GS,...` dengan deteksi status kestabilan `ST` (Stabil) dan `US` (Bergerak / Tidak Stabil).
+  - **Toledo / Mettler Toledo**: Format transmisi kontinu ASCII standar industri jembatan timbang.
+  - **Generic ASCII**: Penguraian otomatis nilai numerik bertanda dengan satuan kilogram (`kg`), ton (`t`), atau gram (`g`).
+- **Penanganan Pembatas Baris Universal**: Mendukung pembagian paket data berdasarkan Carriage Return (`\r` / `0x0D`) dan Newline (`\n` / `0x0A`) menggunakan regex `/[\r\n]+/` sehingga kompatibel dengan seluruh indikator timbangan truk di Indonesia.
+- **Monitor Data Mentah Real-Time (Live Raw Stream Monitor)**: Terminal visual mini di dalam modal koneksi serial yang menampilkan byte mentah yang diterima dari indikator, penanda waktu (timestamp), dan hasil parsing bobot terkini.
+- **Penanganan Pemutusan Kabel Aman (Safe Disconnection Handling)**: Menangani pencabutan kabel fisik saat penimbangan berlangsung secara aman tanpa membuat aplikasi macet (freeze) atau crash, serta mereset status UI menjadi terputus secara otomatis.
+- **Baud Rate Fleksibel**: Pilihan kecepatan komunikasi data mulai dari 1200, 2400, 4800, 9600, 19200, 38400, 57600, hingga 115200 bps (standar industri: 9600 bps).
+- **Panel Simulator Timbangan Terintegrasi**: Simulator terpasang untuk pengujian fungsional dan pelatihan operator timbang dengan visualisasi nilai Berat Kotor (Gross), Berat Tara, dan Berat Muatan Bersih secara real-time.
+- **Injeksi Data Pengujian**: Dukungan metode pengujian `ScaleEngine.injectTestData()` untuk simulasi data paket indikator Yaohua, CAS, dan Toledo secara programatik.
 
 ### 3. Kalkulasi Mutu Garam & Refraksi Otomatis
 - **Perhitungan Berat Muatan**: Kalkulasi otomatis selisih Berat Kotor (Gross) dan Berat Tara Kendaraan.
@@ -36,6 +48,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan terproteksi.
 
 ### 4. Penerbitan Nota Timbang, Pengaturan Margin In-App, & Ekspor PDF
+- **Dialog Cetak Lapang & Proporsional (Lebar 980px)**: Modal pengaturan pratinjau cetak (`#modal-print-settings`) dirancang dengan lebar 980px dan tata letak dua kolom yang lega, mencegah desakan teks dan kebocoran tata letak kontrol.
 - **Pengaturan Margin In-App Fleksibel (mm / cm)**:
   - **Preset Margin Instan**: Standar (5 mm / 0.5 cm), Sempit (2 mm / 0.2 cm), Sedang (8 mm / 0.8 cm), Lebar (12 mm / 1.2 cm), dan Kustom.
   - **Pemilih Satuan Terintegrasi**: Pilihan satuan Milimeter (`mm`) atau Sentimeter (`cm`) dengan konversi nilai otomatis.
@@ -74,6 +87,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Dokumen cetak rekapitulasi harian pemasok menggunakan format dokumen **Nota Timbang A6** resmi yang sama persis dengan modul Riwayat Penimbangan (lengkap dengan kop surat, rincian bobot, rincian mutu garam, box total pembayaran, dan tanda tangan).
 - **Tampilan Tabel Proporsional & Responsif**:
   - Kolom tabel tertata rapi (Tanggal, Nama Pemasok, Transaksi, Netto, K1, K2, Subtotal K1, Subtotal K2, Total Bayar, Status, Aksi).
+  - Kolom asal daerah dilengkapi pemotongan teks otomatis (truncation) dengan tooltip nama lengkap untuk mencegah teks meluap.
   - Tombol aksi berlabel "Cetak" seragam dengan tombol di Riwayat Penimbangan, bebas dari kebocoran layout atau teks terpotong.
 - **Searchable Combobox & Sugesti Otomatis**: Fitur filter pemasok fleksibel di mana pengguna dapat memilih langsung dari dropdown atau mengetik huruf/nama untuk mendapatkan rekomendasi nama pemasok secara real-time.
 - **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi data pemasok yang tersaring sesuai pemasok dan tanggal terpilih.
@@ -88,6 +102,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **Cascaded Legend Toggling**: Menekan nama Kabupaten pada legenda akan otomatis menyembunyikan atau menampilkan irisan Kabupaten tersebut beserta seluruh Desa anakannya.
 
 ### 9. Ekspor Spreadsheet Excel Presisi Tinggi (.xlsx) via ExcelJS
+- **Modal Ekspor Berdimensi Lapang (Lebar 540px)**: Modal ekspor Excel (`#modal-export-excel`) memberikan ruang yang cukup bagi pemilihan rentang tanggal dan filter spesifik tanpa layout bertumpuk.
 - **Standar Tata Letak Korporat**: Output berkas Excel yang diformat khusus sesuai standar buku besar pembukuan PT. Reka Cipta Garam.
 - **Filter Lingkup Fleksibel & Autocomplete**: Pemfilteran ekspor berdasarkan tanggal hari ini, tanggal tertentu, rentang tanggal, jenis material garam (Garam Curah / Garam Karung), maupun nama pemasok tertentu (dilengkapi fitur input sugesti pencarian otomatis).
 - **Penamaan Berkas Cerdas**: Penamaan berkas otomatis sesuai konteks filter (contoh: `PT_Reka_Cipta_Garam_Rekap_Pemasok_H_Mahmud_2026-09-04.xlsx` atau `PT_Reka_Cipta_Garam_Garam_Curah_2026-09-04.xlsx`).
@@ -173,32 +188,53 @@ Untuk membuat berkas installer mandiri Windows:
 1. Jalankan berkas batch:
    - **`build-exe.bat`**
    *(atau jalankan perintah `npm run dist` pada terminal)*
-2. Berkas hasil kompilasi akan tersimpan di dalam folder **`dist/`**:
+2. Skrip build secara otomatis akan mematikan proses aplikasi yang masih berjalan terlebih dahulu (`taskkill /F /IM "RCG Salt Weighing System.exe" /T` dan `electron.exe`) guna mencegah galat file locking EBUSY.
+3. Berkas hasil kompilasi akan tersimpan di dalam folder **`dist/`**:
    - **`dist/RCG Salt Weighing System Setup 8.0.0.exe`** (Installer Setup Windows)
    - **`dist/RCG Salt Weighing System 8.0.0.exe`** (Versi Portable Standalone)
    - **`dist/win-unpacked/RCG Salt Weighing System.exe`** (Versi Unpacked)
 
 ---
 
-## Panduan Verifikasi Basis Data SQLite
+## Panduan Pengujian & Diagnostik Sistem
 
-Untuk memastikan dan memverifikasi integritas mesin SQLite:
+### 1. Uji Pengurai Protokol Indikator Timbangan (Scale Parser Unit Test)
+Untuk memastikan ketepatan penguraian data transmisi indikator timbangan:
+```bash
+node scripts/test-scale-parser.js
+```
+Skrip ini memverifikasi 6 skenario penguraian paket data:
+- Indikator Yaohua XK3190-A12E (paket terbalik `=005610\r` -> 16.500 Kg)
+- Indikator CAS Stabil (`ST,GS,+016500kg\r\n` -> 16.500 Kg, Stabil)
+- Indikator CAS Tidak Stabil (`US,GS,+016480kg\r\n` -> 16.480 Kg, Tidak Stabil)
+- Indikator CAS Net Weight (`ST,NT,+008250kg\r\n` -> 8.250 Kg, Stabil)
+- Indikator Toledo Generic ASCII (`  12450 kg\r` -> 12.450 Kg, Stabil)
+- Generic Signed Number (`+25000\n` -> 25.000 Kg, Stabil)
 
-1. **Uji Mesin via Terminal**:
-   ```bash
-   node scripts/test-sqlite-engine.js
-   ```
-2. **Uji Diagnostik via Console Browser/Electron (Tekan F12 atau Ctrl+Shift+I)**:
-   ```javascript
-   // Melihat status engine dan ukuran database
-   StorageManager.getEngineInfo();
+### 2. Uji Integritas Basis Data SQLite
+Untuk memastikan integritas mesin SQLite WebAssembly:
+```bash
+node scripts/test-sqlite-engine.js
+```
 
-   // Menjalankan query SQL langsung
-   StorageManager.query("SELECT doc_no, supplier, grand_total, payment_status FROM transactions");
-   ```
-3. **Pemeriksaan File Biner**:
-   - Unduh berkas melalui menu *Backup & Manajemen Data -> Unduh Basis Data (.sqlite)*.
-   - Buka berkas `.sqlite` menggunakan aplikasi DB Browser for SQLite atau DBeaver.
+### 3. Uji Diagnostik via Console Browser/Electron (Tekan F12 atau Ctrl+Shift+I)
+```javascript
+// Melihat status engine dan ukuran database
+StorageManager.getEngineInfo();
+
+// Menjalankan query SQL langsung
+StorageManager.query("SELECT doc_no, supplier, grand_total, payment_status FROM transactions");
+
+// Menguji simulator indikator Yaohua A12E dengan data terbalik
+ScaleEngine.injectTestData("=005610\r");
+
+// Menguji simulator indikator CAS
+ScaleEngine.injectTestData("ST,GS,+016500kg\r\n");
+```
+
+### 4. Pemeriksaan Berkas Biner SQLite
+- Unduh berkas melalui menu *Backup & Manajemen Data -> Unduh Basis Data (.sqlite)*.
+- Buka berkas `.sqlite` menggunakan aplikasi DB Browser for SQLite atau DBeaver.
 
 ---
 
@@ -206,6 +242,9 @@ Untuk memastikan dan memverifikasi integritas mesin SQLite:
 
 ```text
 RCG/
+├── .agents/
+│   └── rules/
+│       └── build-exe-rule.md     # Aturan otomatis taskkill sebelum build .exe
 ├── assets/
 │   ├── css/
 │   │   ├── style.css             # Tema utama, tata letak, & komponen
@@ -241,6 +280,7 @@ RCG/
 │       └── app.js                # Pengendali utama alur aplikasi
 ├── scripts/
 │   ├── generate-icons.js         # Generator otomatis ikon multi-resolusi
+│   ├── test-scale-parser.js      # Skrip uji unit protokol indikator timbangan serial
 │   └── test-sqlite-engine.js     # Skrip verifikasi & uji diagnostik SQLite Engine
 ├── DESIGN_SYSTEM.md              # Dokumen acuan resmi desain antarmuka RCG
 ├── index.html                    # Halaman Dashboard & Operasional Utama
