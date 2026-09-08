@@ -63,6 +63,25 @@ body.dark-mode {
   scrollbar-color: #334155 transparent;
 }
 
+/* ==========================================================================
+   Text Selection & Highlight Styling (Dark Mode)
+   ========================================================================== */
+html.dark-mode ::selection,
+body.dark-mode ::selection,
+html.dark-mode *::selection,
+body.dark-mode *::selection {
+  background-color: #d69e2e !important;
+  color: #ffffff !important;
+}
+
+html.dark-mode ::-moz-selection,
+body.dark-mode ::-moz-selection,
+html.dark-mode *::-moz-selection,
+body.dark-mode *::-moz-selection {
+  background-color: #d69e2e !important;
+  color: #ffffff !important;
+}
+
 /* Custom Scrollbar in Dark Mode */
 body.dark-mode *::-webkit-scrollbar-thumb {
   background-color: #334155;
@@ -1010,4 +1029,18 @@ body.dark-mode .perm-checkbox-label {
 body.dark-mode #perm-matrix-container input[type="checkbox"],
 body.dark-mode .perm-matrix-table input[type="checkbox"] {
   accent-color: #3671C6;
+}
+
+body.dark-mode .about-credit-link,
+html.dark-mode .about-credit-link {
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+}
+
+body.dark-mode .about-credit-link:hover,
+html.dark-mode .about-credit-link:hover,
+body.dark-mode .about-credit-link:focus,
+html.dark-mode .about-credit-link:focus {
+  color: #FFFFFF !important;
+  text-decoration: none !important;
 }

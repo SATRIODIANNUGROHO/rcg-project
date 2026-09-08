@@ -187,14 +187,20 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 13. Standar Desain Antarmuka Industrial (Design System)
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
+- **Kustomisasi Text Selection & Highlight**:
+  - **Dark Mode**: Background seleksi kursor berwarna `#D69E2E` (Warm Gold) dan teks `#FFFFFF`.
+  - **Light Mode**: Background seleksi kursor berwarna `#3671C6` (Primary Blue) dan teks `#FFFFFF`.
 - **Palet Warna Status Terpadu**:
   - Success (`#22C55E`): Status Lunas, Indikator Aktif, Simpan Berhasil.
   - Warning (`#F59E0B`): Status Belum Lunas, Peringatan Sistem, Pending.
   - Error (`#EF4444`): Gagal, Galat, Tindakan Destruktif.
   - Info (`#38BDF8`): Informasi Sistem, Panduan.
-  - Primary Blue (`#3671c6`): Aksi Utama, Tombol Ambil Bobot, Header Dokumen.
+  - Primary Blue (`#3671C6`): Aksi Utama, Tombol Ambil Bobot, Header Dokumen.
 - **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk teks antarmuka dan font monospace untuk angka numerik, nomor dokumen, dan nilai bobot.
 - **Ikon Vektor Bersih**: Seluruh ikon antarmuka menggunakan SVG industrial murni tanpa penggunaan emoji.
+- **Modul Tentang Sistem & Lisensi**:
+  - Penyajian identitas entitas pengembang, legalitas kepemilikan PT. Reka Cipta Garam, dan atribusi lisensi open-source pihak ketiga (Electron, SQLite, Chart.js, SheetJS, html2pdf, Plus Jakarta Sans).
+  - Tautan profil GitHub tim pengembang yang terproteksi dengan penanganan pembukaan peramban eksternal bawaan via `shell.openExternal`.
 
 ---
 
@@ -352,6 +358,14 @@ RCG/
 ├── run-app.bat                   # Jalan pintas menjalankan aplikasi
 └── build-exe.bat                 # Jalan pintas mem-build file .exe
 ```
+
+---
+
+## Tim Pengembang & Kontributor
+
+- **Software Engineering & UI/UX Design**: [Satrio Dian Nugroho](https://github.com/SATRIODIANNUGROHO)
+- **Quality Assurance & Keuangan**: [M. Thufail Mahfudh](https://github.com/peenkyourbae)
+- **Entitas Pemilik**: PT. Reka Cipta Garam (Subsidiary Bawang Mas Grup)
 
 ---
 

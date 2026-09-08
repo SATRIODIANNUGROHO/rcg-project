@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getSystemSerialPorts: () => ipcRenderer.invoke('serial:get-ports'),
   setTargetSerialPort: (portName) => ipcRenderer.invoke('serial:set-target-port', portName),
   onSerialPortAdded: (callback) => ipcRenderer.on('serial:port-added', (e, port) => callback(port)),
-  onSerialPortRemoved: (callback) => ipcRenderer.on('serial:port-removed', (e, port) => callback(port))
+  onSerialPortRemoved: (callback) => ipcRenderer.on('serial:port-removed', (e, port) => callback(port)),
+  openExternal: (url) => ipcRenderer.invoke('app:open-external', url)
 });
 

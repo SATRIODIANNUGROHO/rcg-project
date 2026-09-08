@@ -1121,13 +1121,7 @@
         <!-- Card 1: Entitas & Arsitektur Sistem -->
         <div class="card" style="display: flex; flex-direction: column;">
           <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding: 10px 14px;">
-            <h3 class="card-title" style="font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-              <span>1. Entitas &amp; Arsitektur Sistem</span>
-            </h3>
+            <h3 class="card-title" style="font-size: 13.5px;">1. Entitas &amp; Arsitektur Sistem</h3>
           </div>
           <div class="card-body" style="padding: 10px 14px; flex: 1;">
             <div class="about-info-list">
@@ -1158,30 +1152,33 @@
         <!-- Card 2: Credits & Tim Kontributor -->
         <div class="card" style="display: flex; flex-direction: column;">
           <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding: 10px 14px;">
-            <h3 class="card-title" style="font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-              <span>2. Tim Kontributor (Credits)</span>
-            </h3>
+            <h3 class="card-title" style="font-size: 13.5px;">2. Tim Kontributor (Credits)</h3>
           </div>
           <div class="card-body" style="padding: 10px 14px; flex: 1;">
             <div class="about-info-list">
               <div class="about-info-row">
                 <span class="about-info-label">Software Engineering</span>
-                <span class="about-info-val">Tim Pengembang Sistem RCG</span>
+                <span class="about-info-val">
+                  <a href="https://github.com/SATRIODIANNUGROHO" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/SATRIODIANNUGROHO'); }">Satrio Dian Nugroho</a>
+                </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">UI/UX &amp; Nota Standar</span>
-                <span class="about-info-val">Tim Desain Antarmuka Tiket</span>
+                <span class="about-info-val">
+                  <a href="https://github.com/SATRIODIANNUGROHO" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/SATRIODIANNUGROHO'); }">Satrio Dian Nugroho</a>
+                </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">Quality Assurance &amp; Ops</span>
-                <span class="about-info-val">Bagian Timbangan &amp; Lapangan</span>
+                <span class="about-info-val">
+                  <a href="https://github.com/peenkyourbae" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/peenkyourbae'); }">M. Thufail Mahfudh</a>
+                </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">Keuangan &amp; Audit</span>
-                <span class="about-info-val">Divisi Kasir &amp; Akuntansi RCG</span>
+                <span class="about-info-val">
+                  <a href="https://github.com/peenkyourbae" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/peenkyourbae'); }">M. Thufail Mahfudh</a>
+                </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">Apresiasi Khusus</span>
@@ -1196,16 +1193,7 @@
       <!-- Card 3: Lisensi Perangkat Lunak Pihak Ketiga (Full Width Pill Grid) -->
       <div class="card">
         <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding: 10px 14px;">
-          <h3 class="card-title" style="font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            <span>3. Lisensi Pihak Ketiga (Third-Party Open-Source Licenses)</span>
-          </h3>
+          <h3 class="card-title" style="font-size: 13.5px;">3. Lisensi Pihak Ketiga (Third-Party Open-Source Licenses)</h3>
         </div>
         <div class="card-body" style="padding: 10px 14px;">
           <div class="license-pill-grid">

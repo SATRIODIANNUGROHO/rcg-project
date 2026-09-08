@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -136,6 +136,22 @@ function createWindow() {
     }
   });
 
+  // Handle external links opening in default browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url && (url.startsWith('http:') || url.startsWith('https:'))) {
+      shell.openExternal(url);
+      return { action: 'deny' };
+    }
+    return { action: 'allow' };
+  });
+
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (url && (url.startsWith('http:') || url.startsWith('https:'))) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  });
+
   mainWindow.loadFile(path.join(__dirname, 'login.html'));
 
   let hasTransitioned = false;
@@ -198,6 +214,19 @@ ipcMain.handle('app:print', async (event, options = {}) => {
     console.error('Print error:', error);
     return false;
   }
+});
+
+ipcMain.handle('app:open-external', async (event, url) => {
+  if (url && (url.startsWith('https://') || url.startsWith('http://'))) {
+    try {
+      await shell.openExternal(url);
+      return true;
+    } catch (err) {
+      console.error('Failed to open external url:', err);
+      return false;
+    }
+  }
+  return false;
 });
 
 ipcMain.handle('app:save-pdf', async (event, options = {}) => {

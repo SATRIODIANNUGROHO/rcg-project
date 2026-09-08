@@ -118,6 +118,19 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ==========================================================================
+   Text Selection & Highlight Styling (Light Mode)
+   ========================================================================== */
+::selection {
+  background-color: #3671c6;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #3671c6;
+  color: #ffffff;
+}
+
 html, body, button, input, select, textarea, optgroup {
   font-family: var(--font-primary);
 }
@@ -3292,6 +3305,20 @@ input[type="range"] {
   color: var(--text-primary);
   font-weight: 600;
   text-align: right;
+}
+
+.about-credit-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.about-credit-link:hover,
+.about-credit-link:focus,
+.about-credit-link:active {
+  color: inherit;
+  text-decoration: none;
 }
 
 .license-pill-grid {

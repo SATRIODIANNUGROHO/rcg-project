@@ -33,6 +33,10 @@ Pendekatan: **Dark Professional / Industrial Dashboard**.
 - Warna status hijau, kuning, dan merah **hanya** dipakai untuk status atau feedback, bukan dekorasi bebas.
 - Text utama wajib memiliki kontras tinggi (`#F5F7FA`).
 
+### Text Selection & Highlight
+- **Light Mode**: Background `#3671C6`, Text `#FFFFFF`
+- **Dark Mode**: Background `#D69E2E`, Text `#FFFFFF`
+
 ---
 
 ## 2. Typography
