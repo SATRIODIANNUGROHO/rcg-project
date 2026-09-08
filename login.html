@@ -17,6 +17,80 @@
   <link rel="stylesheet" href="assets/css/dark-mode.css">
 
   <style>
+    :root {
+      /* Login Design Tokens - Light Mode */
+      --login-input-bg: #F8FAFC;              /* Light surface for subtle separation from white card */
+      --login-input-hover-bg: #F1F5F9;
+      --login-input-focus-bg: #FFFFFF;        /* Crisp white active lift on focus */
+      --login-input-border: #CBD5E1;          /* Defined neutral slate border */
+      --login-input-hover-border: #94A3B8;
+      --login-input-text: #0F172A;            /* High contrast dark text */
+      --login-input-placeholder: #94A3B8;     /* Muted secondary gray */
+      --login-label-color: #1E293B;           /* Readable bold dark label */
+      --login-eye-color: #64748B;             /* Neutral eye toggle icon */
+      --login-eye-hover-color: #2563B8;
+      --login-eye-hover-bg: rgba(37, 99, 184, 0.08);
+      --login-remember-color: #475569;        /* Muted label */
+      --login-remember-hover: #0F172A;
+      --login-focus-ring: 0 0 0 3px rgba(37, 99, 184, 0.22);
+      --login-focus-border: #2563B8;
+      --login-caret: #2563B8;
+    }
+
+    html.dark-mode,
+    body.dark-mode {
+      /* Login Design Tokens - Dark Mode */
+      --login-input-bg: #0F172A;              /* Deeper slate dark for clear contrast against card */
+      --login-input-hover-bg: #131E33;
+      --login-input-focus-bg: #111D31;        /* Focused subtle lift */
+      --login-input-border: #334155;          /* Muted dark blue-gray border */
+      --login-input-hover-border: #475569;
+      --login-input-text: #F8FAFC;            /* Clean bright white text */
+      --login-input-placeholder: #64748B;     /* Muted slate gray */
+      --login-label-color: #E2E8F0;           /* Clean visible label */
+      --login-eye-color: #94A3B8;             /* Eye toggle icon */
+      --login-eye-hover-color: #38BDF8;
+      --login-eye-hover-bg: rgba(56, 189, 248, 0.12);
+      --login-remember-color: #94A3B8;        /* Muted label */
+      --login-remember-hover: #F1F5F9;
+      --login-focus-ring: 0 0 0 3px rgba(54, 113, 198, 0.35);
+      --login-focus-border: #3671C6;
+      --login-caret: #38BDF8;
+    }
+
+    /* Text Highlight Selection */
+    ::selection {
+      background-color: #3671C6;
+      color: #FFFFFF;
+    }
+
+    html.dark-mode ::selection,
+    body.dark-mode ::selection,
+    html.dark-mode *::selection,
+    body.dark-mode *::selection {
+      background-color: #D69E2E;
+      color: #FFFFFF;
+    }
+
+    /* Universal Smooth Transition for Theme Switch */
+    body,
+    .login-box,
+    .login-header-bar,
+    .login-header-bar h3,
+    .login-content,
+    .login-company-title,
+    .login-system-sub,
+    .login-box .form-control,
+    .form-label,
+    .login-remember-label,
+    .password-toggle-btn,
+    .login-footer-copy,
+    .login-about-card,
+    #btn-login-theme,
+    #btn-login-submit {
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -127,6 +201,172 @@
       border: 1px solid var(--color-danger-border);
     }
 
+    html.dark-mode .login-error-box,
+    body.dark-mode .login-error-box {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #FCA5A5;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    /* Form Components */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--login-label-color);
+      margin-bottom: 6px;
+      display: block;
+      letter-spacing: -0.01em;
+    }
+
+    .login-box .form-control {
+      height: 42px;
+      padding: 0 14px;
+      font-family: var(--font-primary);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--login-input-text);
+      background-color: var(--login-input-bg);
+      border: 1px solid var(--login-input-border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      caret-color: var(--login-caret);
+    }
+
+    .login-box .form-control:hover:not(:disabled) {
+      background-color: var(--login-input-hover-bg);
+      border-color: var(--login-input-hover-border);
+    }
+
+    .login-box .form-control:focus {
+      background-color: var(--login-input-focus-bg);
+      border-color: var(--login-focus-border);
+      box-shadow: var(--login-focus-ring);
+    }
+
+    .login-box .form-control::placeholder {
+      color: var(--login-input-placeholder);
+      opacity: 1;
+      font-weight: 400;
+    }
+
+    .login-password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .login-password-wrapper .form-control {
+      padding-right: 42px;
+    }
+
+    .password-toggle-btn {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--login-eye-color);
+      border-radius: var(--radius-tight);
+      outline: none;
+    }
+
+    .password-toggle-btn:hover {
+      color: var(--login-eye-hover-color);
+      background-color: var(--login-eye-hover-bg);
+    }
+
+    .password-toggle-btn:focus-visible {
+      outline: 2px solid var(--login-focus-border);
+      outline-offset: 1px;
+    }
+
+    .password-toggle-btn.is-active {
+      color: var(--login-focus-border);
+    }
+
+    .login-remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0 20px;
+    }
+
+    .login-remember-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--login-remember-color);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .login-remember-label:hover {
+      color: var(--login-remember-hover);
+    }
+
+    .login-remember-checkbox {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--primary);
+      border-radius: 3px;
+    }
+
+    .login-remember-checkbox:focus-visible {
+      outline: 2px solid var(--login-focus-border);
+      outline-offset: 2px;
+    }
+
+    #btn-login-submit {
+      height: 42px;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    #btn-login-submit:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+      box-shadow: var(--shadow-hover);
+    }
+
+    #btn-login-submit:active:not(:disabled) {
+      background-color: var(--primary-active);
+      transform: translateY(1px);
+    }
+
+    #btn-login-submit:focus-visible {
+      outline: none;
+      box-shadow: var(--login-focus-ring);
+    }
+
+    #btn-login-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
 
     .login-footer-copy {
       margin-top: 20px;
@@ -215,21 +455,21 @@
 
         <div class="form-group">
           <label class="form-label" for="input-password">Password</label>
-          <div style="position: relative; display: flex; align-items: center;">
+          <div class="login-password-wrapper">
             <input 
               type="password" 
               id="input-password" 
               class="form-control" 
               placeholder="Masukkan kata sandi" 
-              style="padding-right: 38px;"
               required
             >
             <button 
               type="button" 
               id="btn-toggle-password" 
-              style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); border-radius: var(--radius-tight); transition: var(--transition);"
+              class="password-toggle-btn"
               title="Tampilkan/Sembunyikan Kata Sandi"
               aria-label="Tampilkan atau sembunyikan kata sandi"
+              aria-pressed="false"
             >
               <!-- Eye Open SVG (Clean 24x24 stroke-width: 2, matches all application icons) -->
               <svg id="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -245,14 +485,14 @@
           </div>
         </div>
 
-        <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px 0 18px;">
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer;">
-            <input type="checkbox" id="check-remember" checked>
+        <div class="login-remember-row">
+          <label class="login-remember-label" for="check-remember">
+            <input type="checkbox" id="check-remember" class="login-remember-checkbox" checked>
             <span>Remember Me</span>
           </label>
         </div>
 
-        <button type="submit" id="btn-login-submit" class="btn btn-primary w-100" style="height: 40px;">
+        <button type="submit" id="btn-login-submit" class="btn btn-primary w-100">
           Masuk ke Aplikasi
         </button>
       </form>
@@ -323,7 +563,8 @@
           inputPassword.type = isCurrentlyPassword ? 'text' : 'password';
           if (iconEyeOpen) iconEyeOpen.style.display = isCurrentlyPassword ? 'none' : 'block';
           if (iconEyeClosed) iconEyeClosed.style.display = isCurrentlyPassword ? 'block' : 'none';
-          btnTogglePw.style.color = isCurrentlyPassword ? 'var(--primary)' : 'var(--text-secondary)';
+          btnTogglePw.classList.toggle('is-active', !isCurrentlyPassword);
+          btnTogglePw.setAttribute('aria-pressed', !isCurrentlyPassword);
           inputPassword.focus();
         });
       }
@@ -339,7 +580,12 @@
       updateThemeLabel();
 
       if (btnTheme) {
-        btnTheme.addEventListener('click', () => {
+        btnTheme.addEventListener('click', (e) => {
+          e.preventDefault();
+          const activeEl = document.activeElement;
+          const selectionStart = activeEl && activeEl.selectionStart;
+          const selectionEnd = activeEl && activeEl.selectionEnd;
+
           const isDark = document.body.classList.toggle('dark-mode');
           document.documentElement.classList.toggle('dark-mode', isDark);
           const currentSettings = JSON.parse(localStorage.getItem('rcg_settings_v75') || '{}');
@@ -347,6 +593,14 @@
           localStorage.setItem('rcg_settings_v75', JSON.stringify(currentSettings));
           localStorage.setItem('rcg_settings_v7', JSON.stringify(currentSettings));
           updateThemeLabel();
+
+          // Retain focus & caret position if user was in an input field
+          if (activeEl && (activeEl === inputUsername || activeEl === inputPassword)) {
+            activeEl.focus();
+            if (typeof selectionStart === 'number' && typeof selectionEnd === 'number') {
+              activeEl.setSelectionRange(selectionStart, selectionEnd);
+            }
+          }
         });
       }
 
