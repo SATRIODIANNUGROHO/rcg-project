@@ -3233,9 +3233,8 @@ input[type="range"] {
    About & Licenses Section (Clean, Modern, Compact Aesthetics)
    ========================================================================== */
 .about-hero-banner {
-  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(22, 58, 95, 0.12) 100%);
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-left: 4px solid var(--primary);
   border-radius: var(--radius-card);
   padding: 16px 20px;
   display: flex;
