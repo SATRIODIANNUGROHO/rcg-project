@@ -154,6 +154,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Baris Total Pale Gold (#FFF2CC)**: Baris ringkasan di bagian bawah yang dilengkapi formula otomatis AutoSum `=SUM()`.
 
 ### 10. Manajemen Pengguna & Hak Akses Berbasis Peran (RBAC)
+- **Akses Terintegrasi di Dropdown Profil**: Akses pengelolaan hak akses dan pengguna diposisikan secara aman dan terpusat di menu dropdown Profil Administrator ("Hak Akses & Pemakai"), menjaga kebersihan dan kerapian antarmuka dashboard utama.
 - **Panel Manajemen Akun 2-Kolom**: Pengaturan daftar pemakai sistem dengan matriks hak akses granular per modul.
 - **Matriks Hak Akses Modul**: Pengaturan izin Lihat (View), Tambah (Add), Ubah (Edit), dan Hapus (Delete) untuk modul Pemasok, Material, Transaksi, dan Laporan.
 - **Otoritas Khusus Sistem**:

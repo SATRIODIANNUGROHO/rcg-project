@@ -124,6 +124,21 @@
             <span class="menu-item-text">Profil Saya</span>
           </button>
 
+          <div class="dropdown-divider admin-only"></div>
+
+          <!-- Permissions & User Management Trigger (Administrator Only) -->
+          <button class="dropdown-menu-item admin-only" id="btn-open-permissions-manager" type="button">
+            <span class="menu-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </span>
+            <span class="menu-item-text">Hak Akses &amp; Pemakai</span>
+          </button>
+
           <div class="dropdown-divider"></div>
 
           <!-- Theme Mode Switch Item -->
@@ -1056,23 +1071,6 @@
             <div style="margin-top: auto;">
               <button id="btn-clear-all-data" class="btn btn-confirm-accent w-100" style="justify-content: center;">
                 <span>Hapus Semua Data</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Permissions & Roles Card -->
-        <div class="card" style="display: flex; flex-direction: column; height: 100%;">
-          <div class="card-header">
-            <h3 class="card-title">4. Hak Akses &amp; Manajemen Pemakai</h3>
-          </div>
-          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-            <p class="text-secondary text-small mb-3">
-              Kelola daftar pemakai sistem, tambahkan akun baru, ubah kata sandi, dan atur matriks kewenangan hak akses secara terperinci.
-            </p>
-            <div style="margin-top: auto;">
-              <button id="btn-open-permissions-manager" class="btn btn-primary w-100" style="justify-content: center;">
-                <span>Buka Hak Akses Pengguna</span>
               </button>
             </div>
           </div>

@@ -482,6 +482,18 @@ const AuthManager = {
   },
 
   openPermissionsModal() {
+    if (!this.isAdmin()) {
+      this.notify('Akun Anda tidak memiliki hak akses untuk mengelola pengguna dan hak akses sistem!', 'warning');
+      return;
+    }
+
+    const profileDropdown = document.getElementById('profile-dropdown-wrapper');
+    if (profileDropdown) {
+      profileDropdown.classList.remove('open');
+      const profileTrigger = document.getElementById('btn-profile-trigger');
+      if (profileTrigger) profileTrigger.setAttribute('aria-expanded', 'false');
+    }
+
     const modal = document.getElementById('modal-user-permissions');
     if (!modal) return;
 
@@ -660,7 +672,7 @@ const AuthManager = {
   },
 
   bindPermissionsEvents() {
-    // Open Permissions Modal button from Backup/Data section
+    // Open Permissions Modal button from Profile Dropdown / Navigation
     const btnOpenPerm = document.getElementById('btn-open-permissions-manager');
     if (btnOpenPerm) {
       btnOpenPerm.addEventListener('click', () => this.openPermissionsModal());
