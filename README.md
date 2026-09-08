@@ -117,8 +117,17 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Mengklik emblem pada baris rekapitulasi pemasok (`SupplierHistoryManager.togglePaymentStatus()`) akan beralih status dan secara otomatis memperbarui status pembayaran seluruh transaksi anggota dalam kelompok pemasok dan tanggal tersebut.
   - Perubahan status secara instan disinkronkan ke tabel Riwayat Penimbangan, penyimpanan data SQLite, dan kartu metrik dashboard tanpa perlu memuat ulang halaman.
   - Pengguna tanpa wewenang (Operator) memiliki akses *Read-Only* dengan opacity 0.9 dan tooltip penjelas hak akses.
-- **Format Dokumen Selaras dengan Riwayat Penimbangan**:
-  - Dokumen cetak rekapitulasi harian pemasok menggunakan format dokumen **Nota Timbang A6** resmi yang sama persis dengan modul Riwayat Penimbangan (lengkap dengan kop surat, rincian bobot, rincian mutu garam, box total pembayaran, dan tanda tangan).
+- **Cetak Rekapitulasi Harian Pemasok (Daily Supplier Recap Print)**:
+  - **Prinsip 1 Baris Rekap = 1 Halaman Cetak**: Berapa pun jumlah transaksi pemasok pada hari tersebut (misalnya 9 kali transaksi atau lebih), sistem merangkum seluruh transaksi ke dalam tepat 1 halaman dokumen tanpa menghasilkan multi-halaman yang tidak perlu.
+  - **Integritas Data Transaksi Terjaga**: Seluruh transaksi penimbangan individual tetap tersimpan utuh dan mandiri di dalam basis data relasional SQLite.
+  - **Kelengkapan Informasi Dokumen Rekap**:
+    - **Header & Identitas**: Menampilkan logo resmi PT. Reka Cipta Garam (`kop surat nota timbang.webp`) dan judul dokumen `REKAPITULASI PEMASOK` (dilengkapi penanda salinan Asli, Arsip Kantor/Keuangan, dan Lapangan).
+    - **Identitas Pemasok & Periode**: Nama pemasok ditampilkan jelas dan tanggal pengiriman diformat lengkap dalam bahasa Indonesia (contoh: `30 Agustus 2026`).
+    - **Jumlah Transaksi Eksplisit**: Menyajikan jumlah pengiriman harian secara transparan (contoh: `9 kali (9 Transaksi)`).
+    - **Total Garam (Netto)**: Akumulasi bobot bersih garam harian ditampilkan dengan label tegas `Total Garam (Netto)` dalam satuan Kg.
+    - **Total Pembayaran**: Total nilai pembayaran ditampilkan pada kotak aksen tematik (`TOTAL PEMBAYARAN: Rp XX.XXX.XXX`).
+    - **Rincian Armada & Operasional**: Menampilkan rangkuman Nomor Polisi armada truk, Nomor Dokumen Rekap, Asal Material, dan rentang jam operasional (masuk s/d keluar).
+    - **Sign Box Khusus Pemasok**: Bagian tanda tangan dirancang khusus untuk hubungan transaksi pemasok, terdiri dari kolom **Pemasok** di sisi kiri dan kolom **Penjaga Timbangan** di sisi kanan (berbeda dengan dokumen penimbangan sopir).
 - **Tampilan Tabel Proporsional & Responsif**:
   - Kolom tabel tertata rapi (Tanggal, Nama Pemasok, Transaksi, Netto, K1, K2, Subtotal K1, Subtotal K2, Total Bayar, Status, Aksi).
   - Kolom asal daerah dilengkapi pemotongan teks otomatis (truncation) dengan tooltip nama lengkap untuk mencegah teks meluap.
@@ -363,8 +372,10 @@ RCG/
 
 ## Tim Pengembang & Kontributor
 
-- **Software Engineering & UI/UX Design**: [Satrio Dian Nugroho](https://github.com/SATRIODIANNUGROHO)
-- **Quality Assurance & Keuangan**: [M. Thufail Mahfudh](https://github.com/peenkyourbae)
+- **Software Engineering**: [Satrio Dian Nugroho](https://github.com/SATRIODIANNUGROHO)
+- **UI/UX & Nota Standar**: [Satrio Dian Nugroho](https://github.com/SATRIODIANNUGROHO)
+- **Quality Assurance & Ops**: [M. Thufail Mahfudh](https://github.com/peenkyourbae)
+- **Keuangan & Audit**: [M. Thufail Mahfudh](https://github.com/peenkyourbae)
 - **Entitas Pemilik**: PT. Reka Cipta Garam (Subsidiary Bawang Mas Grup)
 
 ---

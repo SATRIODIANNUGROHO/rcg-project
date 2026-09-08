@@ -421,31 +421,31 @@ const SupplierHistoryManager = {
     }
 
     const generatorFn = (copyNumber, totalCopies) => {
-      let copyBadgeText = 'NOTA TIMBANG';
-      let copyReceiverText = 'LEMBAR UTAMA (ASLI)';
-      let copyFooterText = '* Dokumen ini merupakan bukti sah penerimaan & penimbangan garam PT. Reka Cipta Garam.';
+      let copyBadgeText = 'REKAPITULASI PEMASOK';
+      let copyReceiverText = 'LEMBAR REKAP HARIAN';
+      let copyFooterText = '* Dokumen ini merupakan bukti rekapitulasi sah penerimaan garam harian PT. Reka Cipta Garam.';
 
       if (totalCopies === 2) {
         if (copyNumber === 1) {
-          copyBadgeText = 'NOTA TIMBANG (ASLI)';
-          copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
-          copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
+          copyBadgeText = 'REKAPITULASI PEMASOK (ASLI)';
+          copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK)';
+          copyFooterText = '* Lembar 1: Untuk Pemasok sebagai bukti rekapitulasi penerimaan harian.';
         } else {
-          copyBadgeText = 'NOTA TIMBANG (ARSIP)';
+          copyBadgeText = 'REKAPITULASI PEMASOK (ARSIP)';
           copyReceiverText = 'LEMBAR 2: ARSIP KANTOR / KEUANGAN';
           copyFooterText = '* Lembar 2: Untuk Arsip Kantor & Pembukuan Keuangan PT. RCG.';
         }
       } else if (totalCopies === 3) {
         if (copyNumber === 1) {
-          copyBadgeText = 'NOTA TIMBANG (ASLI)';
-          copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK / SUPIR)';
-          copyFooterText = '* Lembar 1: Untuk Pemasok / Supir sebagai bukti penerimaan.';
+          copyBadgeText = 'REKAPITULASI PEMASOK (ASLI)';
+          copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK)';
+          copyFooterText = '* Lembar 1: Untuk Pemasok sebagai bukti rekapitulasi penerimaan harian.';
         } else if (copyNumber === 2) {
-          copyBadgeText = 'NOTA TIMBANG (LAPANGAN)';
+          copyBadgeText = 'REKAPITULASI PEMASOK (LAPANGAN)';
           copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & LAPANGAN';
           copyFooterText = '* Lembar 2: Untuk Arsip Bagian Timbangan & Lapangan.';
         } else {
-          copyBadgeText = 'NOTA TIMBANG (LEMBAR 3)';
+          copyBadgeText = 'REKAPITULASI PEMASOK (LEMBAR 3)';
           copyReceiverText = 'LEMBAR 3: KASIR & KEUANGAN';
           copyFooterText = '* Lembar 3: Untuk Kasir & Verifikasi Pembayaran.';
         }
@@ -453,6 +453,21 @@ const SupplierHistoryManager = {
 
       const firstTx = group.transactions[0] || {};
       const lastTx = group.transactions[group.transactions.length - 1] || firstTx;
+
+      // Format Indonesian date (e.g. 30 Agustus 2026)
+      let formattedDate = group.date || '-';
+      if (group.date && group.date.includes('-')) {
+        const parts = group.date.split('-');
+        if (parts.length === 3) {
+          const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+          const d = parseInt(parts[2], 10);
+          const m = parseInt(parts[1], 10) - 1;
+          const y = parts[0];
+          if (months[m]) {
+            formattedDate = `${d} ${months[m]} ${y}`;
+          }
+        }
+      }
 
       // Extract unique lists
       const plateArray = Array.from(group.plateNos || []).filter(Boolean);
@@ -472,7 +487,7 @@ const SupplierHistoryManager = {
       const docSummaryFull = docArray.join(', ') || '-';
       const docNoDisplay = docArray.length === 1
         ? docArray[0]
-        : (docArray[0] ? `${docArray[0]} (+${docArray.length - 1})` : `NOTA-${group.date}`);
+        : (docArray[0] ? `${docArray[0]} (+${docArray.length - 1})` : `REKAP-${group.date}`);
 
       const materialArray = Array.from(group.materials || []).filter(Boolean);
       const materialsSummaryFull = materialArray.join(', ') || (group.materialsSummary || 'GARAM');
@@ -487,20 +502,7 @@ const SupplierHistoryManager = {
         materialDisplay = group.materialsSummary;
       }
 
-      const driverArray = Array.from(group.drivers || []).filter(Boolean);
-      const driverSummaryFull = driverArray.join(', ') || '-';
-      let driverDisplay = 'SUPIR';
-      if (driverArray.length === 1) {
-        driverDisplay = driverArray[0];
-      } else if (driverArray.length === 2) {
-        driverDisplay = driverArray.join(', ');
-      } else if (driverArray.length > 2) {
-        driverDisplay = `${driverArray[0]} dkk.`;
-      } else if (firstTx.driverName) {
-        driverDisplay = firstTx.driverName;
-      }
-
-      const adminDisplay = firstTx.adminName || firstTx.weighmasterName || 'ADMIN';
+      const adminDisplay = firstTx.weighmasterName || firstTx.adminName || 'PETUGAS TIMBANG';
 
       const originSummaryFull = group.originSummary || '-';
       let originDisplay = originSummaryFull;
@@ -537,30 +539,30 @@ const SupplierHistoryManager = {
           <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
             <div style="min-width: 0; overflow: hidden;">
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Tanggal</div>
-              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.date}</div>
+              <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.date}">${formattedDate}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Jumlah Transaksi</div>
+              <div style="color: #163A5F; font-weight: 800; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.txCount} kali (${group.txCount} Transaksi)</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Polisi</div>
               <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${plateSummaryFull} (${plateArray.length} Kendaraan)">${plateDisplay}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Material</div>
               <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${materialsSummaryFull}">${materialDisplay}</div>
-
-              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Masuk</div>
-              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeInDisplay}</div>
             </div>
 
             <div style="min-width: 0; overflow: hidden;">
-              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Dok</div>
-              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${docSummaryFull}">${docNoDisplay}</div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Pemasok</div>
+              <div style="color: #0F172A; font-weight: 800; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
 
-              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Nama Pemasok</div>
-              <div style="color: #0F172A; font-weight: 700; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Dok Rekap</div>
+              <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${docSummaryFull}">${docNoDisplay}</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Asal Material</div>
               <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${originSummaryFull}">${originDisplay}</div>
 
-              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Keluar</div>
-              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeOutDisplay}</div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Waktu Operasional</div>
+              <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeInDisplay} s/d ${timeOutDisplay}</div>
             </div>
           </div>
 
@@ -576,7 +578,7 @@ const SupplierHistoryManager = {
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Muatan (Bruto)</div>
               <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.netLoadWeight || 0).toLocaleString('id-ID')} Kg</div>
 
-              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih Total (Kg)</div>
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total Garam (Netto)</div>
               <div style="color: #163A5F; font-weight: 800; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
             </div>
 
@@ -585,7 +587,10 @@ const SupplierHistoryManager = {
               <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.tareWeight || 0).toLocaleString('id-ID')} Kg</div>
 
               <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Refraksi (%)</div>
-              <div style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${refractionDisplay}</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${refractionDisplay}</div>
+
+              <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Jumlah Muatan</div>
+              <div style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.bagCount > 0 ? `${group.bagCount.toLocaleString('id-ID')} Karung` : `${group.txCount} Rit / Truk`}</div>
             </div>
           </div>
 
@@ -619,19 +624,19 @@ const SupplierHistoryManager = {
 
           <!-- Total Keseluruhan (Thematic Accent Box) -->
           <div style="margin-top: 5px; background: #F8FAFC; border-left: 3px solid #163A5F; border-top: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0; padding: 4px 8px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
-            <span style="font-weight: 800; font-size: 9.5px; color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL KESELURUHAN:</span>
+            <span style="font-weight: 800; font-size: 9.5px; color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL PEMBAYARAN:</span>
             <span style="font-weight: 800; font-size: 11.5px; color: #163A5F; font-family: monospace;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</span>
           </div>
 
-          <!-- Signatures (2 Columns with resilient 50/50 minmax) -->
+          <!-- Signatures (Special Sign Box for Riwayat Pemasok: Pemasok + Penjaga Timbangan) -->
           <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); text-align: center; margin-top: 12px; font-size: 9.5px; width: 100%; box-sizing: border-box;">
             <div style="min-width: 0; overflow: hidden; padding: 0 4px;">
-              <div style="color: #64748B; margin-bottom: 22px;">Supir Kendaraan</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;" title="${driverSummaryFull}">( ${driverDisplay} )</div>
+              <div style="color: #64748B; margin-bottom: 22px;">Pemasok</div>
+              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 100px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;" title="${group.supplier}">( ${group.supplier} )</div>
             </div>
             <div style="min-width: 0; overflow: hidden; padding: 0 4px;">
-              <div style="color: #64748B; margin-bottom: 22px;">Petugas / Admin</div>
-              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;">( ${adminDisplay} )</div>
+              <div style="color: #64748B; margin-bottom: 22px;">Penjaga Timbangan</div>
+              <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 100px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;" title="${adminDisplay}">( ${adminDisplay} )</div>
             </div>
           </div>
 
@@ -645,10 +650,10 @@ const SupplierHistoryManager = {
       `;
     };
 
-    const docIdentifier = group.docNos[0] || `NOTA-${group.supplier.replace(/[^a-zA-Z0-9]/g, '_')}-${group.date}`;
+    const docIdentifier = `REKAP-${group.supplier.replace(/[^a-zA-Z0-9]/g, '_')}-${group.date}`;
 
     if (typeof PrintManager !== 'undefined') {
-      PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, docIdentifier, 'Nota_Timbang', 'A6');
+      PrintManager.openPrintDialog('Pratinjau Cetak Rekapitulasi Pemasok', generatorFn, docIdentifier, 'Rekap_Pemasok', 'A6');
     } else {
       const container = document.getElementById('printable-nota');
       if (container) container.innerHTML = generatorFn(1, 1);
