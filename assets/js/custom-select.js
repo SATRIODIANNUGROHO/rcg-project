@@ -85,12 +85,17 @@ const CustomSelectManager = {
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
       const isAlreadyOpen = wrapper.classList.contains('open');
-      document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open').forEach(w => {
+      document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open, .custom-combobox.open, .custom-autocomplete-container.open').forEach(w => {
         if (w !== wrapper) {
           w.classList.remove('open', 'open-upward');
           this.elevateAncestors(w, false);
+          const inp = w.querySelector('input');
+          if (inp) inp.setAttribute('aria-expanded', 'false');
         }
       });
+      if (typeof CustomAutocomplete !== 'undefined' && CustomAutocomplete.closeAll) {
+        CustomAutocomplete.closeAll();
+      }
 
       if (!isAlreadyOpen) {
         // Smart Collision-Aware Positioning (Flip upward if limited bottom space)

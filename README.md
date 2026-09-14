@@ -142,7 +142,12 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Kolom tabel tertata rapi (Tanggal, Nama Pemasok, Transaksi, Netto, K1, K2, Subtotal K1, Subtotal K2, Total Bayar, Status, Aksi).
   - Kolom asal daerah dilengkapi pemotongan teks otomatis (truncation) dengan tooltip nama lengkap untuk mencegah teks meluap.
   - Tombol aksi berlabel "Cetak" seragam dengan tombol di Riwayat Penimbangan, bebas dari kebocoran layout atau teks terpotong.
-- **Searchable Combobox & Sugesti Otomatis**: Fitur filter pemasok fleksibel di mana pengguna dapat memilih langsung dari dropdown atau mengetik huruf/nama untuk mendapatkan rekomendasi nama pemasok secara real-time.
+- **Searchable Combobox & Sugesti Otomatis dengan Event Handling Presisi**:
+  - Fitur filter pemasok fleksibel yang memadukan input teks pencarian dan dropdown mengambang, mendukung pemilihan langsung dari menu opsi atau pengetikan kata kunci dengan penyorotan teks (*highlight match*) secara real-time.
+  - **Penutupan Menu Instan Saat Pemilihan Opsi**: Saat suatu opsi berhasil dipilih (`onSelect` / `onClick`), state `open` dan kelas `.open-upward` seketika diubah menjadi false (`closeDropdown()`) dengan isolasi flag proteksi event agar pemanggilan event `input` atau `change` tidak memicu pembukaan kembali menu secara tak terduga.
+  - **Deteksi Interaksi Luar & Perpindahan Fokus Global**: Dilengkapi pendengar event berfase tangkap (*capture phase*) untuk `pointerdown`, `click`, dan `focusin` di tingkat dokumen sehingga menu tertutup otomatis saat pengguna beralih mengetik pada kolom pencarian tabel (`#supplier-history-search`), mengubah filter tanggal/urutan, atau mengklik area lain di luar pembungkus komponen.
+  - **Sinkronisasi Pembukaan Terarah**: Menu opsi hanya terbuka jika input menerima fokus pengguna secara sah atau tombol panah chevron diklik secara sengaja (dengan penanganan `e.preventDefault()` pada `mousedown` untuk mencegah konflik `blur`/`focus`).
+  - **Proteksi Re-render Bersih**: Metode penyegaran (`refresh()`) hanya memperbarui daftar item jika dropdown berstatus aktif terbuka dan input sedang difokuskan, menjaga menu tetap tertutup rapi saat data tabel diperbarui.
 - **Export Excel Khusus Pemasok**: Ekspor spreadsheet rekapitulasi data pemasok yang tersaring sesuai pemasok dan tanggal terpilih.
 
 ### 8. Dashboard & Analitik Tonase Interaktif
@@ -212,6 +217,11 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - **Dynamic Stacking Context Elevation (`elevateAncestors`)**: Mengatasi konflik pelapisan z-index antar baris formulir bertingkat (seperti baris "Jenis Material Garam" dan "Kabupaten Asal Garam"). Saat dropdown dibuka, rantai kontainer leluhur dinaikkan secara dinamis ke `z-index: 1050; position: relative;` dan menu opsi melayang di lapisan teratas (`position: absolute; z-index: 100000;`), mencegah opsi dropdown tertutup oleh input field baris berikutnya.
   - **Smart Boundary & Collision-Aware Positioning**: Menu opsi otomatis mendeteksi batas bawah viewport dan membalik posisi ke atas (`open-upward`) jika ruang bawah terbatas, serta menyesuaikan posisi horizontal agar tidak terpotong tepi layar atau kontainer modal.
   - **Penanganan Overflow Aman**: Arsitektur kontainer form dioptimalkan agar tidak ada `overflow: hidden` yang memotong tampilan daftar opsi saat dibuka.
+- **Komponen Searchable Combobox & Autocomplete**:
+  - Arsitektur komponen input pencarian berbasis dropdown terpadu pada formulir transaksi (`input-supplier`), riwayat pemasok (`supplier-history-combobox`), dan modal ekspor Excel (`export-supplier-combobox`).
+  - **Capture-Phase Global Interaction Listener**: Pendaftaran event global `pointerdown`, `click`, dan `focusin` dengan mode `useCapture: true` pada dokumen, memastikan deteksi klik luar (*click-outside*) dan perpindahan fokus tidak terblokir oleh `stopPropagation()` pada komponen atau kontrol turunan lainnya.
+  - **Harmonisasi Penutupan Antarkomponen**: Saat sebuah custom dropdown atau combobox dibuka, sistem secara terpadu menutup seluruh dropdown mengambang lainnya (`CustomSelectManager.closeAll()` dan `CustomAutocomplete.closeAll()`), mencegah terjadinya tumpukan menu visual yang menutupi konten tabel.
+  - **Penanganan Aksesibilitas & Orientasi Dinamis**: Dukungan atribut ARIA (`role="combobox"`, `role="listbox"`, `aria-expanded`) serta deteksi tabrakan batas viewport bawah yang membalikkan posisi menu ke atas (`open-upward`) secara otomatis jika ruang bawah terbatas.
 - **Kustomisasi Text Selection & Highlight**:
   - **Dark Mode**: Background seleksi kursor berwarna `#D69E2E` (Warm Gold) dan teks `#FFFFFF`.
   - **Light Mode**: Background seleksi kursor berwarna `#3671C6` (Primary Blue) dan teks `#FFFFFF`.
@@ -361,7 +371,7 @@ RCG/
 │       ├── custom-select.js      # Dropdown menu kustom dengan smart boundary
 │       ├── custom-datepicker.js  # Komponen kalender pemilih tanggal
 │       ├── custom-timepicker.js  # Komponen pemilih waktu (WIB) kustom
-│       ├── custom-autocomplete.js# Komponen autocomplete daftar pemasok
+│       ├── custom-autocomplete.js# Komponen autocomplete & searchable combobox terpadu
 │       ├── print-dialog.js       # Dialog live preview cetak, margin filter, & ukuran kertas
 │       ├── export-excel.js       # Mesin ekspor Excel dengan AutoFilter & AutoSum
 │       ├── transaction.js        # Logika input penimbangan & kalkulasi mutu

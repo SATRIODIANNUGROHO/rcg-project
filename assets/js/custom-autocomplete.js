@@ -1,10 +1,24 @@
 /**
  * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
- * Module: Custom Autocomplete Component
- * Replaces native unstyled datalist popups with sleek corporate theme dropdowns
+ * Module: Custom Autocomplete & Combobox Component
+ * Provides searchable dropdowns and corporate-themed selection widgets
  */
 
 const CustomAutocomplete = {
+  activeInstances: new Set(),
+  _globalEventsBound: false,
+
+  registerInstance(inst) {
+    if (!this.activeInstances) this.activeInstances = new Set();
+    this.activeInstances.add(inst);
+  },
+
+  unregisterInstance(inst) {
+    if (this.activeInstances) {
+      this.activeInstances.delete(inst);
+    }
+  },
+
   init() {
     this.enhanceAll();
     this.bindGlobalEvents();
@@ -26,7 +40,7 @@ const CustomAutocomplete = {
 
     if (datalist) {
       options = Array.from(datalist.querySelectorAll('option')).map(opt => opt.value || opt.textContent).filter(Boolean);
-      // Remove list attribute so browser default ugly black box doesn't pop up
+      // Remove list attribute so browser default datalist doesn't pop up
       input.removeAttribute('list');
     }
 
@@ -79,6 +93,37 @@ const CustomAutocomplete = {
     wrapper.appendChild(menu);
 
     let activeIndex = -1;
+    let isOpen = false;
+    let isSelecting = false;
+
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('role', 'listbox');
+
+    const closeDropdown = () => {
+      isOpen = false;
+      wrapper.classList.remove('open', 'open-upward');
+      input.setAttribute('aria-expanded', 'false');
+      activeIndex = -1;
+      menu.querySelectorAll('.custom-autocomplete-item.active').forEach(el => el.classList.remove('active'));
+    };
+
+    const selectOption = (optText) => {
+      isSelecting = true;
+      input.value = optText;
+      closeDropdown();
+
+      // Dispatch change & input events safely
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+
+      // Strictly ensure menu stays closed after event dispatch
+      closeDropdown();
+      setTimeout(() => {
+        isSelecting = false;
+      }, 60);
+    };
 
     const renderMenu = (filterText = '') => {
       menu.innerHTML = '';
@@ -96,26 +141,37 @@ const CustomAutocomplete = {
       }
 
       const allOptions = Array.from(optionSet).sort((a, b) => a.localeCompare(b, 'id', { sensitivity: 'base' }));
-
-      const cleanQuery = filterText.toLowerCase().trim();
+      const cleanQuery = (filterText || '').toLowerCase().trim();
       const filtered = allOptions.filter(opt => opt.toLowerCase().includes(cleanQuery));
 
       if (filtered.length === 0) {
-        wrapper.classList.remove('open');
+        closeDropdown();
         return;
       }
 
-      filtered.forEach((optText, idx) => {
+      // Close all other dropdowns
+      document.querySelectorAll('.custom-combobox.open, .custom-autocomplete-container.open, .custom-select-container.open, .user-profile-dropdown.open').forEach(c => {
+        if (c !== wrapper) {
+          c.classList.remove('open', 'open-upward');
+          const inp = c.querySelector('input');
+          if (inp) inp.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      filtered.forEach((optText) => {
         const item = document.createElement('div');
         item.className = 'custom-autocomplete-item';
+        item.setAttribute('role', 'option');
         item.textContent = optText;
 
         item.addEventListener('mousedown', (e) => {
           e.preventDefault();
-          input.value = optText;
-          wrapper.classList.remove('open');
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-          input.dispatchEvent(new Event('change', { bubbles: true }));
+          selectOption(optText);
+        });
+
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectOption(optText);
         });
 
         menu.appendChild(item);
@@ -133,21 +189,40 @@ const CustomAutocomplete = {
         wrapper.classList.remove('open-upward');
       }
 
+      isOpen = true;
       wrapper.classList.add('open');
+      input.setAttribute('aria-expanded', 'true');
     };
 
     // Events
     input.addEventListener('focus', () => {
-      renderMenu(input.value);
+      if (!isSelecting) {
+        renderMenu(input.value);
+      }
+    });
+
+    input.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!isOpen && !isSelecting) {
+        renderMenu(input.value);
+      }
     });
 
     input.addEventListener('input', () => {
-      renderMenu(input.value);
+      if (!isSelecting) {
+        renderMenu(input.value);
+      }
     });
 
     input.addEventListener('keydown', (e) => {
       const items = menu.querySelectorAll('.custom-autocomplete-item');
-      if (!items.length || !wrapper.classList.contains('open')) return;
+      if (!items.length || !isOpen) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          renderMenu(input.value);
+        }
+        return;
+      }
 
       if (e.key === 'ArrowDown') {
         e.preventDefault();
@@ -160,22 +235,31 @@ const CustomAutocomplete = {
       } else if (e.key === 'Enter') {
         if (activeIndex >= 0 && items[activeIndex]) {
           e.preventDefault();
-          input.value = items[activeIndex].textContent;
-          wrapper.classList.remove('open', 'open-upward');
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-          input.dispatchEvent(new Event('change', { bubbles: true }));
+          selectOption(items[activeIndex].textContent);
         }
       } else if (e.key === 'Escape') {
-        wrapper.classList.remove('open', 'open-upward');
+        e.preventDefault();
+        closeDropdown();
+      } else if (e.key === 'Tab') {
+        closeDropdown();
       }
     });
 
     input.addEventListener('blur', () => {
-      // Delay closing so mousedown on item can trigger
       setTimeout(() => {
-        wrapper.classList.remove('open', 'open-upward');
-      }, 180);
+        if (!wrapper.contains(document.activeElement)) {
+          closeDropdown();
+        }
+      }, 150);
     });
+
+    const instance = {
+      close: () => closeDropdown(),
+      getContainer: () => wrapper,
+      getInput: () => input,
+      isOpen: () => isOpen
+    };
+    this.registerInstance(instance);
   },
 
   createSupplierCombobox(config = {}) {
@@ -199,6 +283,13 @@ const CustomAutocomplete = {
 
     let selectedValue = initialValue || '';
     let activeIndex = -1;
+    let isOpen = false;
+    let isSelecting = false;
+
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('role', 'listbox');
 
     const getSuppliers = () => {
       const defaultPresets = [
@@ -227,6 +318,51 @@ const CustomAutocomplete = {
       return text.replace(regex, '<span class="highlight-match">$1</span>');
     };
 
+    const closeDropdown = () => {
+      isOpen = false;
+      container.classList.remove('open', 'open-upward');
+      input.setAttribute('aria-expanded', 'false');
+      activeIndex = -1;
+      menu.querySelectorAll('.custom-combobox-item.active').forEach(el => el.classList.remove('active'));
+    };
+
+    const selectSupplier = (supplier) => {
+      isSelecting = true;
+      selectedValue = supplier ? supplier.trim() : '';
+      input.value = selectedValue;
+
+      // 1. Immediately close the dropdown
+      closeDropdown();
+
+      // 2. Invoke callback
+      try {
+        onSelect(selectedValue);
+      } catch (err) {
+        console.error('onSelect callback error:', err);
+      }
+
+      // 3. Keep selecting flag briefly to suppress subsequent input/blur cascades
+      setTimeout(() => {
+        isSelecting = false;
+      }, 60);
+    };
+
+    const openDropdown = (forceAll = false) => {
+      // Close all other dropdowns
+      document.querySelectorAll('.custom-combobox.open, .custom-autocomplete-container.open, .custom-select-container.open, .user-profile-dropdown.open').forEach(c => {
+        if (c !== container) {
+          c.classList.remove('open', 'open-upward');
+          const inp = c.querySelector('input');
+          if (inp) inp.setAttribute('aria-expanded', 'false');
+          if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+            CustomSelectManager.elevateAncestors(c, false);
+          }
+        }
+      });
+
+      renderMenu(input.value, forceAll);
+    };
+
     const renderMenu = (query = '', forceAll = false) => {
       menu.innerHTML = '';
       activeIndex = -1;
@@ -238,12 +374,20 @@ const CustomAutocomplete = {
       if (isSemuaMatch) {
         const itemAll = document.createElement('div');
         itemAll.className = `custom-combobox-item special-all ${!selectedValue ? 'selected' : ''}`;
+        itemAll.setAttribute('role', 'option');
+        itemAll.setAttribute('aria-selected', !selectedValue ? 'true' : 'false');
         itemAll.innerHTML = `<span>Semua Pemasok</span>`;
-        
+
         itemAll.addEventListener('mousedown', (e) => {
           e.preventDefault();
           selectSupplier('');
         });
+
+        itemAll.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectSupplier('');
+        });
+
         menu.appendChild(itemAll);
       }
 
@@ -262,12 +406,20 @@ const CustomAutocomplete = {
           const isSel = selectedValue && selectedValue.toLowerCase() === s.toLowerCase();
           const item = document.createElement('div');
           item.className = `custom-combobox-item ${isSel ? 'selected' : ''}`;
+          item.setAttribute('role', 'option');
+          item.setAttribute('aria-selected', isSel ? 'true' : 'false');
           item.innerHTML = `<span>${highlightMatch(s, forceAll ? '' : cleanQuery)}</span>`;
-          
+
           item.addEventListener('mousedown', (e) => {
             e.preventDefault();
             selectSupplier(s);
           });
+
+          item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectSupplier(s);
+          });
+
           menu.appendChild(item);
         });
       }
@@ -284,53 +436,62 @@ const CustomAutocomplete = {
         container.classList.remove('open-upward');
       }
 
+      isOpen = true;
       container.classList.add('open');
-    };
-
-    const selectSupplier = (supplier) => {
-      selectedValue = supplier ? supplier.trim() : '';
-      input.value = selectedValue;
-      container.classList.remove('open', 'open-upward');
-      onSelect(selectedValue);
-    };
-
-    const openDropdown = (forceAll = true) => {
-      document.querySelectorAll('.custom-combobox.open, .custom-autocomplete-container.open').forEach(c => {
-        if (c !== container) c.classList.remove('open', 'open-upward');
-      });
-      renderMenu(input.value, forceAll);
-    };
-
-    const closeDropdown = () => {
-      container.classList.remove('open', 'open-upward');
+      input.setAttribute('aria-expanded', 'true');
     };
 
     // Events
     input.addEventListener('focus', () => {
-      openDropdown(false);
+      if (!isSelecting) {
+        openDropdown(false);
+      }
+    });
+
+    input.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!isOpen && !isSelecting) {
+        openDropdown(false);
+      }
     });
 
     input.addEventListener('input', (e) => {
+      if (isSelecting) return;
       const val = e.target.value;
-      renderMenu(val, false);
       selectedValue = val.trim();
-      onInput(selectedValue);
+      openDropdown(false);
+      try {
+        onInput(selectedValue);
+      } catch (err) {
+        console.error('onInput error:', err);
+      }
     });
 
     input.addEventListener('change', () => {
+      if (isSelecting) return;
       const val = input.value.trim();
       if (!val || val.toLowerCase() === 'semua pemasok') {
         selectSupplier('');
       } else {
         selectedValue = val;
-        onSelect(selectedValue);
+        closeDropdown();
+        try {
+          onSelect(selectedValue);
+        } catch (err) {
+          console.error('onSelect error:', err);
+        }
       }
     });
 
     if (chevronBtn) {
+      chevronBtn.addEventListener('mousedown', (e) => {
+        // Prevent chevron click from stealing input focus and firing unexpected blur events
+        e.preventDefault();
+      });
+
       chevronBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (container.classList.contains('open')) {
+        if (isOpen) {
           closeDropdown();
         } else {
           openDropdown(true);
@@ -341,8 +502,9 @@ const CustomAutocomplete = {
 
     input.addEventListener('keydown', (e) => {
       const items = menu.querySelectorAll('.custom-combobox-item');
-      if (!items.length || !container.classList.contains('open')) {
-        if (e.key === 'ArrowDown' || e.key === 'Enter') {
+      if (!items.length || !isOpen) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
           openDropdown(true);
         }
         return;
@@ -359,35 +521,48 @@ const CustomAutocomplete = {
       } else if (e.key === 'Enter') {
         e.preventDefault();
         if (activeIndex >= 0 && items[activeIndex]) {
-          items[activeIndex].dispatchEvent(new MouseEvent('mousedown'));
+          items[activeIndex].dispatchEvent(new MouseEvent('click'));
         } else if (items.length > 0) {
-          items[0].dispatchEvent(new MouseEvent('mousedown'));
+          items[0].dispatchEvent(new MouseEvent('click'));
         }
       } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDropdown();
+      } else if (e.key === 'Tab') {
         closeDropdown();
       }
     });
 
     input.addEventListener('blur', () => {
       setTimeout(() => {
-        closeDropdown();
-      }, 200);
+        if (!container.contains(document.activeElement)) {
+          closeDropdown();
+        }
+      }, 150);
     });
 
-    return {
+    const instance = {
       setValue: (val) => {
         selectedValue = val ? val.trim() : '';
         input.value = selectedValue;
+        closeDropdown();
       },
       getValue: () => selectedValue,
       open: () => openDropdown(true),
       close: () => closeDropdown(),
       refresh: () => {
-        if (container.classList.contains('open')) {
+        // Strictly only refresh if open AND input is actively focused
+        if (isOpen && document.activeElement === input) {
           renderMenu(input.value, false);
         }
-      }
+      },
+      getContainer: () => container,
+      getInput: () => input,
+      isOpen: () => isOpen
     };
+
+    this.registerInstance(instance);
+    return instance;
   },
 
   updateActiveItem(items, index) {
@@ -401,11 +576,88 @@ const CustomAutocomplete = {
     });
   },
 
+  closeAll() {
+    document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => {
+      w.classList.remove('open', 'open-upward');
+      const inp = w.querySelector('input');
+      if (inp) inp.setAttribute('aria-expanded', 'false');
+    });
+
+    if (this.activeInstances) {
+      this.activeInstances.forEach(inst => {
+        if (inst && typeof inst.close === 'function') {
+          inst.close();
+        }
+      });
+    }
+  },
+
   bindGlobalEvents() {
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.custom-autocomplete-container') && !e.target.closest('.custom-combobox')) {
-        document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => w.classList.remove('open'));
+    if (this._globalEventsBound) return;
+    this._globalEventsBound = true;
+
+    // 1. Outside pointer interaction detection using capture phase
+    // Capture phase ensures stopPropagation() from child elements cannot swallow outside detection
+    const handleOutsideInteraction = (e) => {
+      const activeContainer = e.target.closest('.custom-autocomplete-container, .custom-combobox');
+
+      document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => {
+        if (w !== activeContainer) {
+          w.classList.remove('open', 'open-upward');
+          const inp = w.querySelector('input');
+          if (inp) inp.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      if (this.activeInstances) {
+        this.activeInstances.forEach(inst => {
+          if (inst && inst.getContainer) {
+            const c = inst.getContainer();
+            if (c !== activeContainer && typeof inst.close === 'function') {
+              inst.close();
+            }
+          }
+        });
       }
+    };
+
+    document.addEventListener('pointerdown', handleOutsideInteraction, true);
+    document.addEventListener('click', handleOutsideInteraction, true);
+
+    // 2. Focus change detection: when user switches focus to another input or button (e.g. #supplier-history-search)
+    document.addEventListener('focusin', (e) => {
+      const activeContainer = e.target.closest('.custom-autocomplete-container, .custom-combobox');
+
+      document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => {
+        if (w !== activeContainer) {
+          w.classList.remove('open', 'open-upward');
+          const inp = w.querySelector('input');
+          if (inp) inp.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      if (this.activeInstances) {
+        this.activeInstances.forEach(inst => {
+          if (inst && inst.getContainer) {
+            const c = inst.getContainer();
+            if (c !== activeContainer && typeof inst.close === 'function') {
+              inst.close();
+            }
+          }
+        });
+      }
+    }, true);
+
+    // 3. Escape key listener to dismiss all dropdown menus
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeAll();
+      }
+    });
+
+    // 4. Window blur listener
+    window.addEventListener('blur', () => {
+      this.closeAll();
     });
   }
 };

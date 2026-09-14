@@ -52,7 +52,15 @@ const SupplierHistoryManager = {
       searchInput.addEventListener('input', (e) => {
         this.searchQuery = e.target.value.toLowerCase().trim();
         this.currentPage = 1;
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
         this.render();
+      });
+      searchInput.addEventListener('focus', () => {
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
       });
     }
 
@@ -65,6 +73,7 @@ const SupplierHistoryManager = {
         if (searchInput) searchInput.value = '';
         if (this.combobox) {
           this.combobox.setValue('');
+          this.combobox.close();
         } else {
           const suppInput = document.getElementById('supplier-history-supplier-input');
           if (suppInput) suppInput.value = '';
@@ -81,6 +90,9 @@ const SupplierHistoryManager = {
       dateFilter.addEventListener('change', (e) => {
         this.selectedDate = e.target.value;
         this.currentPage = 1;
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
         this.render();
       });
     }
@@ -89,6 +101,9 @@ const SupplierHistoryManager = {
     if (sortSelect) {
       sortSelect.addEventListener('change', (e) => {
         this.sortOrder = e.target.value;
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
         this.render();
       });
     }
@@ -98,6 +113,9 @@ const SupplierHistoryManager = {
       pageSizeSelect.addEventListener('change', (e) => {
         this.pageSize = parseInt(e.target.value, 10) || 10;
         this.currentPage = 1;
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
         this.render();
       });
     }
@@ -105,6 +123,9 @@ const SupplierHistoryManager = {
     const prevBtn = document.getElementById('supplier-history-prev-page');
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
         if (this.currentPage > 1) {
           this.currentPage--;
           this.render();
@@ -115,6 +136,9 @@ const SupplierHistoryManager = {
     const nextBtn = document.getElementById('supplier-history-next-page');
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
+        if (this.combobox && this.combobox.close) {
+          this.combobox.close();
+        }
         this.currentPage++;
         this.render();
       });
