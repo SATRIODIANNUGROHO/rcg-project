@@ -67,37 +67,37 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Kalkulasi Nilai Pembayaran**: Perhitungan otomatis subtotal K1, subtotal K2, dan Grand Total Rupiah.
 - **Status Pembayaran**: Pencatatan status transaksi (Lunas / Belum Lunas) dengan hak akses pengubahan terproteksi.
 
-### 4. Penerbitan Nota Timbang, Pengaturan Margin In-App, & Ekspor PDF
-- **Dialog Cetak Lapang & Proporsional (Lebar 980px)**: Modal pengaturan pratinjau cetak (`#modal-print-settings`) dirancang dengan lebar 980px dan tata letak dua kolom yang lega, mencegah desakan teks dan kebocoran tata letak kontrol.
-- **Penanganan Transaksi Banyak & Nomor Polisi Multipel**:
-  - Tata letak dokumen pratinjau dan hasil unduhan PDF mampu mengakomodasi banyak nomor polisi dan rincian muatan sekaligus secara rapi.
-  - Bagian penting dokumen (No. Dokumen, Nama Pemasok, Asal Material, Waktu Keluar) pada kolom kanan tetap tampil lengkap, jelas, dan proporsional tanpa risiko teks terpotong atau tertutup.
-  - Pembagian baris dan tinggi baris tabel menyesuaikan muatan konten secara dinamis (adaptive height).
-- **Pengaturan Margin In-App Fleksibel (mm / cm)**:
+### 4. Arsitektur Modal Cetak Kustom Dua Panel (Two-Panel Custom Print Modal) & Pratinjau PDF Native
+- **Arsitektur Dua Panel (Two-Panel Custom Print Modal)**:
+  - Antarmuka cetak kustom (`#modal-print-settings`) memisahkan fungsi kontrol konfigurasi dan visualisasi dokumen ke dalam dua panel mandiri guna mengatasi keterbatasan dialog print bawaan Windows/Chromium ("This app doesn't support print preview") dan masalah dimensional pada printer dot-matrix.
+  - **Panel Kanan (Live WYSIWYG Native PDF Preview)**: Memanfaatkan elemen frame terisolasi (`#print-pdf-preview-iframe`) berbasis Blob URL untuk me-render dokumen PDF secara native dengan dukungan plugin Chromium PDF Viewer (`plugins: true`). Dimensi kertas, orientasi, dan margin dokumen tampil 100% presisi (*what-you-see-is-what-you-get*) tanpa distorsi CSS rendering.
+  - **Panel Kiri (Sidebar Pengaturan Cetak & Kontrol Perangkat)**: Panel kontrol selebar 340px yang mengelola pemilihan printer fisik, format kertas, orientasi, salinan (rangkap), preset margin dokumen, margin kustom granular, serta tombol aksi pencetakan langsung dan unduh PDF.
+- **Deteksi Printer Fisik Terpasang (Physical Printer Discovery)**:
+  - Menarik daftar printer aktif dari sistem operasi Windows secara dinamis melalui kanal IPC main process Electron menggunakan API `webContents.getPrintersAsync()`.
+  - Dilengkapi tombol "Pindai" ulang, penanda printer default sistem, dan badge status ketersediaan printer (`badge-success`, `badge-warning`, atau `badge-info`).
+- **Pencetakan Latar Belakang Langsung (Direct Silent Print)**:
+  - Tombol "Cetak ke Printer" mengeksekusi pencetakan latar belakang (*silent print*) langsung ke printer fisik yang dipilih melalui API Electron `webContents.print` tanpa memunculkan dialog sistem operasi lagi.
+  - Pemetaan ukuran kertas kustom ke spesifikasi mikron baku (`{ width: number, height: number }`) seperti Continuous Form NCR (241.300 × 279.400 mikron) dan A6 (105.000 × 148.000 mikron) untuk mencegah kegagalan antrean cetak driver printer dot-matrix.
+- **Pilihan Ukuran Kertas Fleksibel**:
+  - **NCR Continuous Sheet 9.5" × 11"**: Format kertas continuous form standar printer dot-matrix (241 × 279 mm).
+  - **A4 (210 × 297 mm)**: Format laporan dokumen ukuran penuh.
+  - **A5 (148 × 210 mm)**: Format nota medium.
+  - **A6 (105 × 148 mm)**: Standar tiket nota timbangan ringkas.
+  - **Letter (8.5" × 11")**: Format dokumen korporat standar.
+- **Penguncian Otomatis Orientasi Continuous Form (Auto-Lock Portrait)**:
+  - Pemilihan format kertas NCR Continuous Form secara otomatis mengunci orientasi ke **Portrait (Tegak)** dan menonaktifkan pemilihan orientasi horizontal.
+  - Menjamin alur cetak selaras dengan arah pergerakan fisik traktor printer dot-matrix, mencegah terpotongnya baris data atau distorsi ukuran font akibat rotasi buatan.
+- **Pengaturan Margin Dokumen Granular (mm / cm)**:
   - **Preset Margin Instan**: Standar (5 mm / 0.5 cm), Sempit (2 mm / 0.2 cm), Sedang (8 mm / 0.8 cm), Lebar (12 mm / 1.2 cm), dan Kustom.
-  - **Pemilih Satuan Terintegrasi**: Pilihan satuan Milimeter (`mm`) atau Sentimeter (`cm`) dengan konversi nilai otomatis.
-  - **Input Margin Granular**: Pengaturan batas margin per sisi (Atas/Top, Bawah/Bottom, Kiri/Left, Kanan/Right) untuk kebutuhan pencetakan presisi.
-  - **Live Dynamic Preview**: Pratinjau dokumen di layar menyesuaikan margin dan padding secara langsung saat pengaturan diubah.
-- **Kop Surat & Header Resmi Gambar**: Header resmi PT. Reka Cipta Garam menggunakan berkas gambar kop surat resmi (`kop surat nota timbang.webp`) lengkap dengan identitas korporat Subsidiary Bawang Mas Grup.
-- **Tabel Nota Timbang Ringkas & Rapi**: Tampilan dokumen fokus, bersih, bebas teks terpotong, menyajikan rincian bobot dua kolom, rincian mutu K1 & K2 dua kolom, dan kotak aksen total pembayaran.
-- **Format Asal Material Terpadu**: Penyajian nama wilayah dan desa (contoh: `Pamekasan - Majungan`) yang tertata rapi tanpa celah pemisah teks ekstrem.
-- **Persistensi & Sinkronisasi Dua Arah Ukuran Kertas**:
-  - Preferensi ukuran kertas pengguna disimpan otomatis di penyimpanan lokal browser/desktop (`localStorage: rcg_print_paper_size`).
-  - Sinkronisasi dua arah instan antara label visual dropdown kustom, nilai elemen `<select>`, kartu dokumen pratinjau di layar, dan dynamic stylesheet print rule (`@page`). Ketika dialog cetak dibuka kembali, pilihan kertas terakhir selalu tersinkronisasi 100% tanpa desinkronisasi atau reset sepihak ke format default.
-- **Fitur Cetak Langsung (Direct Print) & Integrasi Driver Printer Fisik**:
-  - Tombol "Cetak Dokumen" mengeksekusi pencetakan langsung ke printer fisik (termasuk printer dot-matrix seperti Epson LQ-310).
-  - Pemetaan ukuran kertas kustom ke API Electron (`webContents.print`) menggunakan format objek mikron baku (`{ width: number, height: number }`) untuk format non-standar, mencegah eksepsi `Unsupported pageSize: NCR_Wartel` yang dapat menghentikan antrean cetak.
-- **Pilihan Ukuran Kertas Standar & Kustom**:
-  - **A6 (105 x 148 mm)**: Standar tiket nota timbangan ringkas 1 halaman (dipetakan ke 105.000 x 148.000 mikron).
-  - **A5 (148 x 210 mm)**: Format nota timbangan medium.
-  - **A4 (210 x 297 mm)**: Format laporan dan formulir ukuran penuh.
-  - **Letter (8.5" x 11")**: Format dokumen standar korporat.
-  - **NCR Continuous Sheet (9.5" x 11")**: Format continuous form untuk printer dot-matrix (241.300 x 279.400 mikron).
-- **Orientasi Native Portrait untuk Kertas Continuous Form**:
-  - Pencetakan pada kertas continuous form (NCR 9.5" x 11") dikonfigurasi secara native portrait (`landscape: false`) sesuai arah fisik traktor kertas printer dot-matrix.
-  - Menghindari pemotongan kertas akibat ketidakcocokan orientasi dan menghindari distorsi ukuran font akibat pemutaran rotasi buatan -90 derajat, sehingga hasil cetak tetap tajam, simetris, dan terbaca sempurna.
-- **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap dengan kolom tanda tangan Supir Kendaraan dan Petugas Timbang / Admin.
-- **Ekspor PDF Vektor Bersih**: Hasil unduhan PDF presisi tinggi berbasis offscreen renderer Electron tanpa distorsi, tidak membeku (no freezing), dan pas dalam 1 halaman.
+  - **Pemilih Satuan Terintegrasi**: Pilihan satuan Milimeter (`mm`) atau Sentimeter (`cm`) dengan konversi nilai instan.
+  - **Input Margin Granular Per Sisi**: Penyetelan bebas batas margin Atas (Top), Bawah (Bottom), Kiri (Left), dan Kanan (Right).
+- **Sinkronisasi Header Bar & Badge Informasi Lembar**:
+  - Panel pratinjau dilengkapi bar informasi yang menampilkan spesifikasi ukuran kertas aktif, orientasi aktual, jumlah rangkap yang dipilih, serta indikator status "PDF Native WYSIWYG".
+- **Manajemen Memori Blob URL Bersih**:
+  - Sistem secara ketat mengeksekusi `URL.revokeObjectURL()` setiap kali pratinjau baru dibuat atau ketika modal ditutup (`cleanup()`), menjamin zero memory leaks pada sesi operasional penimbangan yang panjang.
+- **Kop Surat & Header Resmi Gambar**: Header dokumen resmi PT. Reka Cipta Garam menggunakan berkas kop surat resmi bertaraf korporat (`kop surat nota timbang.webp`) lengkap dengan logo Subsidiary Bawang Mas Grup.
+- **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap dengan label tematik (Lembar Utama, Arsip Kantor/Keuangan, Bagian Lapangan) serta kolom tanda tangan Supir dan Petugas Timbang.
+- **Ekspor PDF Vektor Bersih**: Unduhan dokumen PDF presisi tinggi berbasis isolated offscreen renderer Electron tanpa distorsi tata letak.
 
 ### 5. Formulir Input Penimbangan & Tombol Ambil Bobot
 - **Tombol Ambil Bobot (Gross & Tare)**: Tombol aksi pada kolom Berat Kotor (Gross) dan Berat Tara menggunakan label "Ambil" dengan warna aksen biru standar `#3671c6`.

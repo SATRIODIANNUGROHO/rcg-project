@@ -1055,3 +1055,49 @@ html.dark-mode .about-credit-link:focus {
   color: #FFFFFF !important;
   text-decoration: none !important;
 }
+
+/* ==========================================================================
+   Two-Panel Custom Print Modal Dark Mode Overrides
+   ========================================================================== */
+body.dark-mode .print-modal-container {
+  background: #16243A;
+  border-color: #334155;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .print-modal-sidebar {
+  background: #16243A;
+  border-right-color: #334155;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .print-sidebar-actions {
+  border-top-color: #334155 !important;
+}
+
+body.dark-mode .custom-margin-panel {
+  background: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-mode .print-modal-preview-panel {
+  background: #0B1120;
+}
+
+body.dark-mode .print-preview-header-bar {
+  background: #0B132B;
+  border-bottom-color: #1E293B;
+}
+
+body.dark-mode .print-preview-viewport {
+  background: #070D19;
+}
+
+body.dark-mode .print-pdf-native-frame {
+  background: #0F172A;
+}
+
+body.dark-mode .print-pdf-loading-overlay {
+  background: rgba(11, 17, 32, 0.88);
+}
+

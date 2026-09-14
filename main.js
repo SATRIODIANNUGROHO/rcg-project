@@ -55,7 +55,8 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
-      enableBlinkFeatures: 'Serial'
+      enableBlinkFeatures: 'Serial',
+      plugins: true
     }
   });
 
@@ -188,60 +189,195 @@ function createWindow() {
   });
 }
 
-ipcMain.handle('app:print', async (event, options = {}) => {
-  if (!mainWindow) return false;
+ipcMain.handle('app:get-printers', async () => {
+  if (!mainWindow) return [];
   try {
-    const { pageSize: requestedPaperSize, landscape: requestedLandscape, ...cleanOptions } = options;
+    const printers = await mainWindow.webContents.getPrintersAsync();
+    return printers || [];
+  } catch (err) {
+    console.error('Failed to get system printers:', err);
+    return [];
+  }
+});
 
-    // Standard paper format mapping for Chromium WebContents.print:
-    // Chromium supports standard string enums: 'A3', 'A4', 'A5', 'Legal', 'Letter', 'Tabloid'
-    // Any custom paper size (like A6 or NCR Continuous Form 9.5" x 11") MUST be an object
-    // { width: number, height: number } in microns (1 mm = 1,000 microns; 1 inch = 25,400 microns).
+ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
+  if (!mainWindow) return { success: false, error: 'Window not found' };
+  try {
+    const { 
+      paperSize = 'NCR_Wartel', 
+      landscape = false, 
+      margins = {}, 
+      htmlContent = '' 
+    } = options;
+
+    let pageSize = 'A4';
+    let pageCSS = '210mm 297mm';
+
+    if (paperSize === 'A6') {
+      pageSize = { width: 105 / 25.4, height: 148 / 25.4 };
+      pageCSS = '105mm 148mm';
+    } else if (paperSize === 'A5') {
+      pageSize = 'A5';
+      pageCSS = '148mm 210mm';
+    } else if (paperSize === 'Letter') {
+      pageSize = 'Letter';
+      pageCSS = '8.5in 11in';
+    } else if (paperSize === 'NCR_Wartel' || paperSize === 'NCR' || paperSize === 'Continuous') {
+      pageSize = { width: 9.5, height: 11.0 };
+      pageCSS = '9.5in 11in';
+    }
+
+    const marginUnit = margins.unit || 'mm';
+    const marginTop = (margins.top !== undefined && margins.top !== null) ? margins.top : 5;
+    const marginBottom = (margins.bottom !== undefined && margins.bottom !== null) ? margins.bottom : 5;
+    const marginLeft = (margins.left !== undefined && margins.left !== null) ? margins.left : 5;
+    const marginRight = (margins.right !== undefined && margins.right !== null) ? margins.right : 5;
+    const pageMarginCss = `${marginTop}${marginUnit} ${marginRight}${marginUnit} ${marginBottom}${marginUnit} ${marginLeft}${marginUnit}`;
+
+    let processedHtml = htmlContent;
+    const logoFile = path.join(__dirname, 'assets/images/RCG.webp');
+    if (fs.existsSync(logoFile)) {
+      const logoBase64 = `data:image/webp;base64,${fs.readFileSync(logoFile).toString('base64')}`;
+      processedHtml = processedHtml.replace(/src=["'](?:(?:\.\/)?assets\/images\/RCG\.webp|assets\/images\/RCG\.webp)["']/g, `src="${logoBase64}"`);
+    }
+    const kopFile = path.join(__dirname, 'assets/images/kop surat nota timbang.webp');
+    if (fs.existsSync(kopFile)) {
+      const kopBase64 = `data:image/webp;base64,${fs.readFileSync(kopFile).toString('base64')}`;
+      processedHtml = processedHtml.replace(/src=["'](?:(?:\.\/)?assets\/images\/kop\s*surat\s*nota\s*timbang\.webp|assets\/images\/kop%20surat%20nota%20timbang\.webp)["']/g, `src="${kopBase64}"`);
+    }
+
+    const baseHref = `file:///${path.join(__dirname, '/').replace(/\\/g, '/')}`;
+    const fullDoc = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <base href="${baseHref}">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #FFFFFF !important;
+      background-color: #FFFFFF !important;
+      color: #0F172A !important;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
+    }
+    @page {
+      margin: ${pageMarginCss} !important;
+      size: ${pageCSS} ${landscape ? 'landscape' : 'portrait'};
+    }
+    .nota-container, .nota-sheet {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      background: #FFFFFF !important;
+      box-sizing: border-box !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    table {
+      border-collapse: collapse !important;
+    }
+  </style>
+</head>
+<body style="background: #FFFFFF !important; margin: 0 !important; padding: 0 !important;">
+  ${processedHtml}
+</body>
+</html>`;
+
+    const previewWin = new BrowserWindow({
+      show: false,
+      width: 1200,
+      height: 900,
+      backgroundColor: '#FFFFFF',
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true
+      }
+    });
+
+    await previewWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(fullDoc));
+    await previewWin.webContents.executeJavaScript('document.fonts.ready');
+    await new Promise(r => setTimeout(r, 200));
+
+    const pdfBuffer = await previewWin.webContents.printToPDF({
+      printBackground: true,
+      pageSize: pageSize,
+      landscape: landscape || false,
+      margins: { top: 0, bottom: 0, left: 0, right: 0 }
+    });
+
+    previewWin.destroy();
+    return { success: true, data: pdfBuffer };
+  } catch (err) {
+    console.error('PDF preview generation error:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('app:print', async (event, options = {}) => {
+  if (!mainWindow) return { success: false, error: 'Window not found' };
+  try {
+    const { 
+      pageSize: requestedPaperSize, 
+      landscape: requestedLandscape, 
+      deviceName: targetDevice,
+      silent = true,
+      copies = 1,
+      ...cleanOptions 
+    } = options;
+
     let finalPageSize = 'A4';
-    let isLandscape = false;
+    let isLandscape = Boolean(requestedLandscape);
 
     if (requestedPaperSize === 'A6') {
-      // 105 mm x 148 mm in microns
       finalPageSize = { width: 105000, height: 148000 };
-      isLandscape = false;
     } else if (requestedPaperSize === 'A5') {
       finalPageSize = 'A5';
-      isLandscape = false;
     } else if (requestedPaperSize === 'Letter') {
       finalPageSize = 'Letter';
-      isLandscape = false;
     } else if (requestedPaperSize === 'NCR_Wartel' || requestedPaperSize === 'NCR' || requestedPaperSize === 'Continuous') {
-      // Continuous form NCR 9.5" x 11" in microns:
-      // Width: 9.5 in * 25,400 = 241,300 microns
-      // Height: 11.0 in * 25,400 = 279,400 microns
-      // Physical tractor feed on dot-matrix printers moves vertically (portrait).
       finalPageSize = { width: 241300, height: 279400 };
       isLandscape = false;
     } else if (typeof requestedPaperSize === 'object' && requestedPaperSize !== null && requestedPaperSize.width && requestedPaperSize.height) {
       finalPageSize = requestedPaperSize;
-      isLandscape = Boolean(requestedLandscape);
     } else if (typeof requestedPaperSize === 'string' && ['A3', 'A4', 'A5', 'Legal', 'Letter', 'Tabloid'].includes(requestedPaperSize)) {
       finalPageSize = requestedPaperSize;
-      isLandscape = Boolean(requestedLandscape);
     }
 
     const printSettings = {
-      silent: false,
+      silent: silent,
       printBackground: true,
       ...cleanOptions,
       pageSize: finalPageSize,
-      landscape: isLandscape
+      landscape: isLandscape,
+      copies: Math.max(1, parseInt(copies, 10) || 1)
     };
 
-    mainWindow.webContents.print(printSettings, (success, failureReason) => {
-      if (!success && failureReason) {
-        console.warn('Direct print callback notification:', failureReason);
-      }
+    if (targetDevice) {
+      printSettings.deviceName = targetDevice;
+    }
+
+    return new Promise((resolve) => {
+      mainWindow.webContents.print(printSettings, (success, failureReason) => {
+        if (!success && failureReason) {
+          console.warn('Direct silent print failure notification:', failureReason);
+          resolve({ success: false, error: failureReason });
+        } else {
+          resolve({ success: true });
+        }
+      });
     });
-    return true;
   } catch (error) {
     console.error('Print error:', error);
-    return false;
+    return { success: false, error: error.message };
   }
 });
 
@@ -360,7 +496,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     }
     @page {
       margin: ${pageMarginCss} !important;
-      size: ${pageCSS} portrait;
+      size: ${pageCSS} ${options.landscape ? 'landscape' : 'portrait'};
     }
     .nota-container, .nota-sheet {
       width: 100% !important;

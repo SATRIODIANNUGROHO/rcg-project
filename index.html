@@ -1747,39 +1747,83 @@
   </div>
 
   <!-- Modal 9: Print Settings & Interactive Document Preview Modal -->
+  <!-- Modal 9: Two-Panel Custom Print Modal with Native PDF Preview -->
   <div id="modal-print-settings" class="modal-overlay">
-    <div class="modal-container" style="max-width: 980px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-container print-modal-container">
       <div class="modal-header">
-        <h3 id="modal-print-title" style="margin: 0; font-size: 17px;">Pratinjau &amp; Pengaturan Cetak Dokumen</h3>
-        <button class="modal-close-btn">&times;</button>
+        <h3 id="modal-print-title" style="margin: 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Pratinjau &amp; Pengaturan Cetak Dokumen</span>
+        </h3>
+        <button class="modal-close-btn" aria-label="Tutup Modal">&times;</button>
       </div>
       
-      <div class="modal-body" style="padding: 18px 20px; overflow-y: auto; flex: 1;">
-        <!-- Toolbar Pengaturan Cetak & Margin In-App -->
-        <div class="print-toolbar-grid">
-          <div class="form-group mb-0">
-            <label class="form-label" for="select-print-paper-size" style="font-size: 11.5px; font-weight: 600; margin-bottom: 4px;">Ukuran Kertas</label>
-            <select id="select-print-paper-size" class="form-select form-control-sm">
-              <option value="A6" selected>A6 (105 × 148 mm - Standar)</option>
-              <option value="A5">A5 (148 × 210 mm)</option>
-              <option value="A4">A4 (210 × 297 mm)</option>
-              <option value="Letter">Letter (8.5 × 11 inch)</option>
-              <option value="NCR_Wartel">NCR Continuous 9.5" × 11"</option>
-            </select>
-          </div>
-
-          <div class="form-group mb-0">
-            <label class="form-label" for="select-print-copies" style="font-size: 11.5px; font-weight: 600; margin-bottom: 4px;">Jumlah Rangkap</label>
-            <select id="select-print-copies" class="form-select form-control-sm">
-              <option value="1" selected>1 Rangkap (Lembar Utama)</option>
-              <option value="2">2 Rangkap (Asli + Arsip)</option>
-              <option value="3">3 Rangkap (Supir + Timbang + Kasir)</option>
-            </select>
-          </div>
-
+      <div class="modal-body print-modal-body">
+        <!-- Panel Kiri: Sidebar Pengaturan & Kontrol Cetak (340px) -->
+        <div class="print-modal-sidebar">
+          <!-- Target Printer Fisik -->
           <div class="form-group mb-0">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <label class="form-label mb-0" for="select-print-margin-preset" style="font-size: 11.5px; font-weight: 600;">Margin Dokumen</label>
+              <label class="form-label mb-0" for="select-print-target-device" style="font-size: 11.5px; font-weight: 700;">Printer Target</label>
+              <button type="button" id="btn-refresh-printers" class="btn btn-secondary btn-sm" style="height: 22px; padding: 0 6px; font-size: 10px; gap: 4px;" title="Pindai Ulang Printer Terpasang">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                <span>Pindai</span>
+              </button>
+            </div>
+            <select id="select-print-target-device" class="form-select form-control-sm" style="width: 100%;">
+              <option value="">Printer Sistem (Default Driver)</option>
+            </select>
+            <div style="margin-top: 4px; display: flex; align-items: center; justify-content: space-between;">
+              <span id="badge-printer-status" class="badge badge-info" style="font-size: 10px; padding: 2px 6px;">Mencari printer...</span>
+              <span id="text-printer-default-hint" style="font-size: 10px; color: var(--text-secondary);">Direct Silent Print</span>
+            </div>
+          </div>
+
+          <!-- Ukuran Kertas -->
+          <div class="form-group mb-0">
+            <label class="form-label" for="select-print-paper-size" style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Format Kertas</label>
+            <select id="select-print-paper-size" class="form-select form-control-sm" style="width: 100%;">
+              <option value="NCR_Wartel" selected>NCR Continuous 9.5" × 11"</option>
+              <option value="A4">A4 (210 × 297 mm)</option>
+              <option value="A5">A5 (148 × 210 mm)</option>
+              <option value="A6">A6 (105 × 148 mm)</option>
+              <option value="Letter">Letter (8.5 × 11 inch)</option>
+            </select>
+          </div>
+
+          <!-- Orientasi Halaman -->
+          <div class="form-group mb-0">
+            <label class="form-label" for="select-print-orientation" style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Orientasi Halaman</label>
+            <select id="select-print-orientation" class="form-select form-control-sm" style="width: 100%;">
+              <option value="portrait" selected>Portrait (Tegak - Traktor Vertikal)</option>
+              <option value="landscape">Landscape (Mendatar)</option>
+            </select>
+            <small id="text-ncr-orientation-hint" style="font-size: 10px; color: var(--text-secondary); margin-top: 3px; display: block;">
+              Format NCR otomatis dikunci ke Portrait agar selaras dengan traktor dot-matrix.
+            </small>
+          </div>
+
+          <!-- Jumlah Rangkap -->
+          <div class="form-group mb-0">
+            <label class="form-label" for="select-print-copies" style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Jumlah Salinan (Rangkap)</label>
+            <select id="select-print-copies" class="form-select form-control-sm" style="width: 100%;">
+              <option value="1" selected>1 Rangkap (Lembar Utama)</option>
+              <option value="2">2 Rangkap (Asli + Arsip)</option>
+              <option value="3">3 Rangkap (Asli + Kantor + Supir)</option>
+            </select>
+          </div>
+
+          <!-- Preset Margin -->
+          <div class="form-group mb-0">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <label class="form-label mb-0" for="select-print-margin-preset" style="font-size: 11.5px; font-weight: 700;">Margin Dokumen</label>
               <span id="label-current-margin-val" class="badge badge-primary mono-num" style="font-size: 10px; padding: 2px 7px; font-weight: 700;">5 mm</span>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -1790,59 +1834,90 @@
                 <option value="wide">Lebar (12 mm / 1.2 cm)</option>
                 <option value="custom">Kustom (Atur Manual)...</option>
               </select>
-              <select id="select-print-margin-unit" class="form-select form-control-sm" style="width: 82px; min-width: 82px; font-weight: 700; text-align: center; padding-left: 10px; padding-right: 22px;" title="Pilih Satuan Margin">
+              <select id="select-print-margin-unit" class="form-select form-control-sm" style="width: 82px; min-width: 82px; font-weight: 700; text-align: center;" title="Pilih Satuan Margin">
                 <option value="mm" selected>mm</option>
                 <option value="cm">cm</option>
               </select>
             </div>
           </div>
+
+          <!-- Panel Input Margin Kustom (Tampil saat opsi Kustom dipilih) -->
+          <div id="panel-custom-margins" class="custom-margin-panel" style="display: none; padding: 10px 12px; margin-bottom: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-primary);">Margin Per Sisi:</span>
+              <span style="font-size: 10px; color: var(--text-secondary);">Satuan: <strong id="custom-margin-unit-label" style="color: var(--primary); font-weight: 700;">mm</strong></span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+              <div>
+                <label class="form-label" for="input-margin-top" style="font-size: 10.5px; margin-bottom: 2px;">Atas (Top)</label>
+                <input type="number" id="input-margin-top" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+              </div>
+              <div>
+                <label class="form-label" for="input-margin-bottom" style="font-size: 10.5px; margin-bottom: 2px;">Bawah (Bottom)</label>
+                <input type="number" id="input-margin-bottom" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+              </div>
+              <div>
+                <label class="form-label" for="input-margin-left" style="font-size: 10.5px; margin-bottom: 2px;">Kiri (Left)</label>
+                <input type="number" id="input-margin-left" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+              </div>
+              <div>
+                <label class="form-label" for="input-margin-right" style="font-size: 10.5px; margin-bottom: 2px;">Kanan (Right)</label>
+                <input type="number" id="input-margin-right" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Aksi Cetak di Bagian Bawah Panel Kiri -->
+          <div class="print-sidebar-actions" style="margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+            <button id="btn-direct-print-dialog" class="btn btn-primary" type="button" style="justify-content: center; font-weight: 700; padding: 10px 14px; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Cetak ke Printer</span>
+            </button>
+            <button id="btn-confirm-print-dialog" class="btn btn-secondary" type="button" style="justify-content: center; gap: 6px; font-weight: 600;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Unduh Dokumen PDF</span>
+            </button>
+            <button class="btn btn-secondary btn-modal-cancel" type="button" style="justify-content: center;">Batal</button>
+          </div>
         </div>
 
-        <!-- Panel Input Margin Kustom (Tampil saat opsi Kustom dipilih) -->
-        <div id="panel-custom-margins" class="custom-margin-panel" style="display: none;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <span style="font-size: 11.5px; font-weight: 700; color: var(--text-primary);">Atur Nilai Margin In-App Per Sisi:</span>
-            <span style="font-size: 10.5px; color: var(--text-secondary);">Satuan: <strong id="custom-margin-unit-label" style="color: var(--primary); font-weight: 700;">mm</strong></span>
+        <!-- Panel Kanan: Live WYSIWYG Native PDF Preview Panel -->
+        <div class="print-modal-preview-panel">
+          <!-- Bar Informasi Pratinjau -->
+          <div class="print-preview-header-bar">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.04em;">Pratinjau Lembar:</span>
+              <span id="badge-preview-paper-spec" class="badge badge-primary mono-num" style="font-size: 10.5px; padding: 2px 8px;">NCR Continuous 9.5" × 11" (Portrait - 241 × 279 mm)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span id="badge-preview-copies-count" class="badge badge-secondary mono-num" style="font-size: 10px;">1 Rangkap</span>
+              <span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">PDF Native WYSIWYG</span>
+            </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-            <div>
-              <label class="form-label" for="input-margin-top" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Atas (Top)</label>
-              <input type="number" id="input-margin-top" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+
+          <!-- Area Native PDF Viewer Embed / Iframe Berbasis Blob URL -->
+          <div class="print-preview-viewport" style="padding: 0; position: relative; height: 100%; min-height: 480px;">
+            <!-- Loading Indicator Overlay -->
+            <div id="print-pdf-loading-indicator" class="print-pdf-loading-overlay" style="display: none;">
+              <div class="spinner" style="width: 26px; height: 26px; border-width: 3px;"></div>
+              <span style="font-size: 12px; font-weight: 600; color: #E2E8F0;">Merender Dokumen PDF Native...</span>
             </div>
-            <div>
-              <label class="form-label" for="input-margin-bottom" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Bawah (Bottom)</label>
-              <input type="number" id="input-margin-bottom" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
-            </div>
-            <div>
-              <label class="form-label" for="input-margin-left" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Kiri (Left)</label>
-              <input type="number" id="input-margin-left" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
-            </div>
-            <div>
-              <label class="form-label" for="input-margin-right" style="font-size: 11px; margin-bottom: 3px; font-weight: 600;">Kanan (Right)</label>
-              <input type="number" id="input-margin-right" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
-            </div>
+
+            <!-- Native PDF iframe element with blob URL -->
+            <iframe id="print-pdf-preview-iframe" class="print-pdf-native-frame" src="about:blank" style="width: 100%; height: 100%; border: none; min-height: 520px; background: #1E293B;" title="Pratinjau PDF Native"></iframe>
+
+            <!-- Hidden container for live HTML generation & fallback -->
+            <div id="modal-print-preview-content" style="display: none;"></div>
           </div>
         </div>
-
-        <!-- Box Pratinjau Lembar Fisik Dokumen (Live Preview Viewport) -->
-        <div class="print-preview-viewport">
-          <div id="modal-print-preview-content" style="width: 100%; max-width: 860px; display: flex; flex-direction: column; gap: 24px; padding-bottom: 16px;">
-            <!-- Live rendered paper content -->
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer" style="padding: 12px 16px; display: flex; justify-content: flex-end; gap: 8px;">
-        <button class="btn btn-secondary btn-modal-cancel" type="button">Batal</button>
-        <button id="btn-direct-print-dialog" class="btn btn-secondary" type="button" style="justify-content: center;">Cetak Dokumen</button>
-        <button id="btn-confirm-print-dialog" class="btn btn-primary" type="button" style="justify-content: center; gap: 6px;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <span>Unduh Dokumen PDF</span>
-        </button>
       </div>
     </div>
   </div>
@@ -2123,6 +2198,7 @@
   <script src="assets/js/custom-datepicker.js"></script>
   <script src="assets/js/custom-timepicker.js"></script>
   <script src="assets/js/custom-autocomplete.js"></script>
+  <script src="assets/js/html2pdf.bundle.min.js"></script>
   <script src="assets/js/print-dialog.js"></script>
   <script src="assets/js/export-excel.js"></script>
   <script src="assets/js/transaction.js"></script>

@@ -622,6 +622,9 @@ const App = {
     if (modal) {
       modal.classList.remove('active');
     }
+    if (modalId === 'modal-print-settings' && typeof PrintManager !== 'undefined' && typeof PrintManager.cleanup === 'function') {
+      PrintManager.cleanup();
+    }
   },
 
   showToast(message, type = 'info') {

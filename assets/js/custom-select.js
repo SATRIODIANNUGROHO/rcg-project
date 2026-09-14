@@ -181,7 +181,7 @@ const CustomSelectManager = {
     if (!container) return;
     let cur = container.parentElement;
     while (cur && cur !== document.body && cur !== document.documentElement) {
-      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('print-toolbar-grid')) {
+      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('print-toolbar-grid') || cur.classList.contains('print-modal-sidebar')) {
         if (isElevate) {
           cur.classList.add('has-dropdown-open');
           cur.style.position = 'relative';
