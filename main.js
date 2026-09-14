@@ -188,26 +188,55 @@ function createWindow() {
   });
 }
 
-// IPC Handlers for desktop integration
 ipcMain.handle('app:print', async (event, options = {}) => {
   if (!mainWindow) return false;
   try {
-    let pageSize = { width: 210000, height: 297000 };
-    if (options.pageSize === 'A6') {
-      pageSize = { width: 105000, height: 148000 };
-    } else if (options.pageSize === 'A5') {
-      pageSize = { width: 148000, height: 210000 };
-    } else if (options.pageSize === 'Letter') {
-      pageSize = { width: 215900, height: 279400 };
-    } else if (options.pageSize === 'NCR_Wartel') {
-      pageSize = { width: 241300, height: 279400 };
+    const { pageSize: requestedPaperSize, landscape: requestedLandscape, ...cleanOptions } = options;
+
+    // Standard paper format mapping for Chromium WebContents.print:
+    // Chromium supports standard string enums: 'A3', 'A4', 'A5', 'Legal', 'Letter', 'Tabloid'
+    // Any custom paper size (like A6 or NCR Continuous Form 9.5" x 11") MUST be an object
+    // { width: number, height: number } in microns (1 mm = 1,000 microns; 1 inch = 25,400 microns).
+    let finalPageSize = 'A4';
+    let isLandscape = false;
+
+    if (requestedPaperSize === 'A6') {
+      // 105 mm x 148 mm in microns
+      finalPageSize = { width: 105000, height: 148000 };
+      isLandscape = false;
+    } else if (requestedPaperSize === 'A5') {
+      finalPageSize = 'A5';
+      isLandscape = false;
+    } else if (requestedPaperSize === 'Letter') {
+      finalPageSize = 'Letter';
+      isLandscape = false;
+    } else if (requestedPaperSize === 'NCR_Wartel' || requestedPaperSize === 'NCR' || requestedPaperSize === 'Continuous') {
+      // Continuous form NCR 9.5" x 11" in microns:
+      // Width: 9.5 in * 25,400 = 241,300 microns
+      // Height: 11.0 in * 25,400 = 279,400 microns
+      // Physical tractor feed on dot-matrix printers moves vertically (portrait).
+      finalPageSize = { width: 241300, height: 279400 };
+      isLandscape = false;
+    } else if (typeof requestedPaperSize === 'object' && requestedPaperSize !== null && requestedPaperSize.width && requestedPaperSize.height) {
+      finalPageSize = requestedPaperSize;
+      isLandscape = Boolean(requestedLandscape);
+    } else if (typeof requestedPaperSize === 'string' && ['A3', 'A4', 'A5', 'Legal', 'Letter', 'Tabloid'].includes(requestedPaperSize)) {
+      finalPageSize = requestedPaperSize;
+      isLandscape = Boolean(requestedLandscape);
     }
 
-    mainWindow.webContents.print({
+    const printSettings = {
       silent: false,
       printBackground: true,
-      pageSize: pageSize,
-      ...options
+      ...cleanOptions,
+      pageSize: finalPageSize,
+      landscape: isLandscape
+    };
+
+    mainWindow.webContents.print(printSettings, (success, failureReason) => {
+      if (!success && failureReason) {
+        console.warn('Direct print callback notification:', failureReason);
+      }
     });
     return true;
   } catch (error) {

@@ -458,7 +458,20 @@ textarea.form-control {
 }
 
 .custom-select-container.open {
-  z-index: 1050;
+  position: relative !important;
+  z-index: 10000 !important;
+}
+
+.form-group:has(.custom-select-container.open),
+.form-row:has(.custom-select-container.open),
+.section-block:has(.custom-select-container.open),
+.card:has(.custom-select-container.open),
+.form-group.has-dropdown-open,
+.form-row.has-dropdown-open,
+.section-block.has-dropdown-open,
+.card.has-dropdown-open {
+  position: relative !important;
+  z-index: 1050 !important;
 }
 
 .custom-select-trigger {
@@ -515,7 +528,7 @@ textarea.form-control {
 }
 
 .custom-select-menu {
-  position: absolute;
+  position: absolute !important;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
@@ -523,22 +536,22 @@ textarea.form-control {
   width: 100%;
   max-width: none;
   max-height: 280px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   overscroll-behavior: contain;
   background: #FFFFFF;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
   padding: 6px;
   display: none;
-  z-index: 9999;
+  z-index: 100000 !important;
   animation: fadeInDown 0.12s ease-out;
   box-sizing: border-box;
 }
 
 .custom-select-container.open .custom-select-menu {
-  display: block;
+  display: block !important;
 }
 
 .custom-select-option {
@@ -1284,7 +1297,8 @@ input[type="number"] {
 .custom-select-container.open,
 .custom-combobox.open,
 .custom-autocomplete-container.open {
-  z-index: 1050;
+  position: relative !important;
+  z-index: 10000 !important;
 }
 
 .form-row {

@@ -81,19 +81,29 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Kop Surat & Header Resmi Gambar**: Header resmi PT. Reka Cipta Garam menggunakan berkas gambar kop surat resmi (`kop surat nota timbang.webp`) lengkap dengan identitas korporat Subsidiary Bawang Mas Grup.
 - **Tabel Nota Timbang Ringkas & Rapi**: Tampilan dokumen fokus, bersih, bebas teks terpotong, menyajikan rincian bobot dua kolom, rincian mutu K1 & K2 dua kolom, dan kotak aksen total pembayaran.
 - **Format Asal Material Terpadu**: Penyajian nama wilayah dan desa (contoh: `Pamekasan - Majungan`) yang tertata rapi tanpa celah pemisah teks ekstrem.
-- **Fitur Cetak Langsung (Direct Print)**: Tombol "Cetak Dokumen" yang mengirim dokumen langsung ke antrean mesin printer fisik sistem dengan aturan `@page` margin otomatis.
-- **Pilihan Ukuran Kertas Standar**:
-  - **A6 (105 x 148 mm)**: Standar tiket nota timbangan ringkas 1 halaman.
+- **Persistensi & Sinkronisasi Dua Arah Ukuran Kertas**:
+  - Preferensi ukuran kertas pengguna disimpan otomatis di penyimpanan lokal browser/desktop (`localStorage: rcg_print_paper_size`).
+  - Sinkronisasi dua arah instan antara label visual dropdown kustom, nilai elemen `<select>`, kartu dokumen pratinjau di layar, dan dynamic stylesheet print rule (`@page`). Ketika dialog cetak dibuka kembali, pilihan kertas terakhir selalu tersinkronisasi 100% tanpa desinkronisasi atau reset sepihak ke format default.
+- **Fitur Cetak Langsung (Direct Print) & Integrasi Driver Printer Fisik**:
+  - Tombol "Cetak Dokumen" mengeksekusi pencetakan langsung ke printer fisik (termasuk printer dot-matrix seperti Epson LQ-310).
+  - Pemetaan ukuran kertas kustom ke API Electron (`webContents.print`) menggunakan format objek mikron baku (`{ width: number, height: number }`) untuk format non-standar, mencegah eksepsi `Unsupported pageSize: NCR_Wartel` yang dapat menghentikan antrean cetak.
+- **Pilihan Ukuran Kertas Standar & Kustom**:
+  - **A6 (105 x 148 mm)**: Standar tiket nota timbangan ringkas 1 halaman (dipetakan ke 105.000 x 148.000 mikron).
   - **A5 (148 x 210 mm)**: Format nota timbangan medium.
   - **A4 (210 x 297 mm)**: Format laporan dan formulir ukuran penuh.
   - **Letter (8.5" x 11")**: Format dokumen standar korporat.
-  - **NCR Continuous Sheet (9.5" x 11")**: Format kertas continuous form untuk printer dot matrix dan NCR.
+  - **NCR Continuous Sheet (9.5" x 11")**: Format continuous form untuk printer dot-matrix (241.300 x 279.400 mikron).
+- **Orientasi Native Portrait untuk Kertas Continuous Form**:
+  - Pencetakan pada kertas continuous form (NCR 9.5" x 11") dikonfigurasi secara native portrait (`landscape: false`) sesuai arah fisik traktor kertas printer dot-matrix.
+  - Menghindari pemotongan kertas akibat ketidakcocokan orientasi dan menghindari distorsi ukuran font akibat pemutaran rotasi buatan -90 derajat, sehingga hasil cetak tetap tajam, simetris, dan terbaca sempurna.
 - **Pilihan Rangkap & Tanda Tangan**: Pilihan cetak 1x, 2x, atau 3x rangkap dengan kolom tanda tangan Supir Kendaraan dan Petugas Timbang / Admin.
 - **Ekspor PDF Vektor Bersih**: Hasil unduhan PDF presisi tinggi berbasis offscreen renderer Electron tanpa distorsi, tidak membeku (no freezing), dan pas dalam 1 halaman.
 
 ### 5. Formulir Input Penimbangan & Tombol Ambil Bobot
-- **Tombol Ambil Bobot**: Tombol pada kolom Berat Kotor (Gross) dan Berat Tara menggunakan label "Ambil" dengan warna aksen biru standar `#3671c6`.
-- **Integrasi Cepat Simulator & Timbangan**: Penangkapan nilai bobot aktif langsung ke field input dengan verifikasi kestabilan.
+- **Tombol Ambil Bobot (Gross & Tare)**: Tombol aksi pada kolom Berat Kotor (Gross) dan Berat Tara menggunakan label "Ambil" dengan warna aksen biru standar `#3671c6`.
+- **Integrasi Langsung Indikator & Sensor Timbangan**: Tombol "Ambil" mengeksekusi fungsi penangkap bobot live (`ScaleEngine.getCurrentWeight()`) yang membaca nilai aktual dari indikator timbangan serial (COM port/simulator).
+- **Pengisian Cepat & Auto-Kalkulasi**: Nilai bobot aktif langsung dituliskan ke dalam input field terkait (`#input-gross-weight` atau `#input-tare-weight`), secara otomatis memicu kalkulasi turunan (Berat Muatan Bruto, Refraksi Kg, Berat Bersih Akhir, Pembagian Mutu K1/K2, Subtotal, dan Grand Total), serta memunculkan notifikasi toast informatif kepada operator.
+- **Dukungan Satuan Dinamis**: Penyesuaian otomatis satuan muatan (Kg untuk Garam Curah, Karung untuk Garam Karung) pada form transaksi.
 
 ### 6. Riwayat Penimbangan (Transaction History)
 - **Pencarian Cerdas Real-Time**: Pencarian cepat multi-kolom berdasarkan Nomor Dokumen/Tiket, Nomor Polisi Truk, Nama Pemasok, Nama Supir, atau Asal Daerah.
@@ -197,6 +207,11 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 
 ### 13. Standar Desain Antarmuka Industrial (Design System)
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
+- **Komponen Floating Dropdown Universal (Custom Select Component)**:
+  - Seluruh elemen `<select>` formulir dikonversi menjadi custom floating dropdown yang elegan dengan trigger berstatus aktif.
+  - **Dynamic Stacking Context Elevation (`elevateAncestors`)**: Mengatasi konflik pelapisan z-index antar baris formulir bertingkat (seperti baris "Jenis Material Garam" dan "Kabupaten Asal Garam"). Saat dropdown dibuka, rantai kontainer leluhur dinaikkan secara dinamis ke `z-index: 1050; position: relative;` dan menu opsi melayang di lapisan teratas (`position: absolute; z-index: 100000;`), mencegah opsi dropdown tertutup oleh input field baris berikutnya.
+  - **Smart Boundary & Collision-Aware Positioning**: Menu opsi otomatis mendeteksi batas bawah viewport dan membalik posisi ke atas (`open-upward`) jika ruang bawah terbatas, serta menyesuaikan posisi horizontal agar tidak terpotong tepi layar atau kontainer modal.
+  - **Penanganan Overflow Aman**: Arsitektur kontainer form dioptimalkan agar tidak ada `overflow: hidden` yang memotong tampilan daftar opsi saat dibuka.
 - **Kustomisasi Text Selection & Highlight**:
   - **Dark Mode**: Background seleksi kursor berwarna `#D69E2E` (Warm Gold) dan teks `#FFFFFF`.
   - **Light Mode**: Background seleksi kursor berwarna `#3671C6` (Primary Blue) dan teks `#FFFFFF`.

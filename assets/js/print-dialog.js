@@ -76,6 +76,16 @@ const PrintManager = {
     this.bindEvents();
     this.createDynamicStyleElement();
     this.updateMarginControlsUI();
+    const paperSelect = document.getElementById('select-print-paper-size');
+    if (paperSelect) {
+      const savedPaperSize = localStorage.getItem('rcg_print_paper_size');
+      if (savedPaperSize) {
+        paperSelect.value = savedPaperSize;
+        if (typeof CustomSelectManager !== 'undefined' && typeof CustomSelectManager.sync === 'function') {
+          CustomSelectManager.sync(paperSelect);
+        }
+      }
+    }
   },
 
   getMarginValues() {
@@ -248,10 +258,17 @@ const PrintManager = {
       });
     }
 
-    // 3. Paper Size Change -> update preview and dynamic print style
+    // 3. Paper Size Change -> update preview, dynamic print style, and persist choice
     const paperSelect = document.getElementById('select-print-paper-size');
     if (paperSelect) {
       paperSelect.addEventListener('change', () => {
+        const val = paperSelect.value;
+        try {
+          localStorage.setItem('rcg_print_paper_size', val);
+        } catch (e) {}
+        if (typeof CustomSelectManager !== 'undefined' && typeof CustomSelectManager.sync === 'function') {
+          CustomSelectManager.sync(paperSelect);
+        }
         this.refreshPreview();
         this.applySelectedPrintSettings();
       });
@@ -487,10 +504,14 @@ const PrintManager = {
       titleEl.textContent = title;
     }
 
-    if (defaultPaperSize) {
-      const paperSelect = document.getElementById('select-print-paper-size');
-      if (paperSelect) {
-        paperSelect.value = defaultPaperSize;
+    // Determine and synchronize active paper size
+    const paperSelect = document.getElementById('select-print-paper-size');
+    if (paperSelect) {
+      const savedPaperSize = localStorage.getItem('rcg_print_paper_size');
+      const targetSize = savedPaperSize || defaultPaperSize || paperSelect.value || 'A6';
+      paperSelect.value = targetSize;
+      if (typeof CustomSelectManager !== 'undefined' && typeof CustomSelectManager.sync === 'function') {
+        CustomSelectManager.sync(paperSelect);
       }
     }
 

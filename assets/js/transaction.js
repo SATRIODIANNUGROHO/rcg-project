@@ -54,20 +54,40 @@ const TransactionEngine = {
       });
     }
 
-    // Hapus/Reset Weight buttons
+    // Ambil Bobot Timbangan (Gross & Tare) dari ScaleEngine (COM Port / Simulator)
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
       btnCaptureGross.addEventListener('click', () => {
-        document.getElementById('input-gross-weight').value = 0;
-        this.handleCalculation('input-gross-weight');
+        const currentWeight = (typeof ScaleEngine !== 'undefined' && typeof ScaleEngine.getCurrentWeight === 'function') 
+          ? ScaleEngine.getCurrentWeight() 
+          : ((typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight) ? ScaleEngine.currentWeight : 0);
+        
+        const grossInput = document.getElementById('input-gross-weight');
+        if (grossInput) {
+          grossInput.value = currentWeight;
+          this.handleCalculation('input-gross-weight');
+          if (typeof App !== 'undefined' && App.showToast) {
+            App.showToast(`Berat kotor berhasil diambil: ${currentWeight.toLocaleString('id-ID')} Kg`, 'info');
+          }
+        }
       });
     }
 
     const btnCaptureTare = document.getElementById('btn-capture-tare');
     if (btnCaptureTare) {
       btnCaptureTare.addEventListener('click', () => {
-        document.getElementById('input-tare-weight').value = 0;
-        this.handleCalculation('input-tare-weight');
+        const currentWeight = (typeof ScaleEngine !== 'undefined' && typeof ScaleEngine.getCurrentWeight === 'function') 
+          ? ScaleEngine.getCurrentWeight() 
+          : ((typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight) ? ScaleEngine.currentWeight : 0);
+        
+        const tareInput = document.getElementById('input-tare-weight');
+        if (tareInput) {
+          tareInput.value = currentWeight;
+          this.handleCalculation('input-tare-weight');
+          if (typeof App !== 'undefined' && App.showToast) {
+            App.showToast(`Berat tara berhasil diambil: ${currentWeight.toLocaleString('id-ID')} Kg`, 'info');
+          }
+        }
       });
     }
 

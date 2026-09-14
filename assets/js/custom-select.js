@@ -88,12 +88,10 @@ const CustomSelectManager = {
       document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open').forEach(w => {
         if (w !== wrapper) {
           w.classList.remove('open', 'open-upward');
-          const parentBlock = w.closest('.section-block, .form-row, .card, .form-group');
-          if (parentBlock) parentBlock.style.zIndex = '';
+          this.elevateAncestors(w, false);
         }
       });
 
-      const parentBlock = wrapper.closest('.section-block, .form-row, .card, .form-group');
       if (!isAlreadyOpen) {
         // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
         const triggerRect = trigger.getBoundingClientRect();
@@ -108,7 +106,7 @@ const CustomSelectManager = {
         }
 
         wrapper.classList.add('open');
-        if (parentBlock) parentBlock.style.zIndex = '500';
+        this.elevateAncestors(wrapper, true);
 
         // Smart screen & container boundary positioning (prevent right edge overflow/clipping)
         menu.style.left = '0';
@@ -126,7 +124,7 @@ const CustomSelectManager = {
         });
       } else {
         wrapper.classList.remove('open', 'open-upward');
-        if (parentBlock) parentBlock.style.zIndex = '';
+        this.elevateAncestors(wrapper, false);
       }
     });
 
@@ -163,8 +161,7 @@ const CustomSelectManager = {
         const wrapper = trigger.closest('.custom-select-container');
         if (wrapper) {
           wrapper.classList.remove('open', 'open-upward');
-          const parentBlock = wrapper.closest('.section-block, .form-row, .card');
-          if (parentBlock) parentBlock.style.zIndex = '';
+          CustomSelectManager.elevateAncestors(wrapper, false);
         }
 
         // Dispatch change event to original select
@@ -172,6 +169,34 @@ const CustomSelectManager = {
       });
 
       menu.appendChild(optItem);
+    });
+  },
+
+  elevateAncestors(container, isElevate) {
+    if (!container) return;
+    let cur = container.parentElement;
+    while (cur && cur !== document.body && cur !== document.documentElement) {
+      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('print-toolbar-grid')) {
+        if (isElevate) {
+          cur.classList.add('has-dropdown-open');
+          cur.style.position = 'relative';
+          cur.style.zIndex = '1050';
+        } else {
+          if (!cur.querySelector('.custom-select-container.open')) {
+            cur.classList.remove('has-dropdown-open');
+            cur.style.position = '';
+            cur.style.zIndex = '';
+          }
+        }
+      }
+      cur = cur.parentElement;
+    }
+  },
+
+  closeAll() {
+    document.querySelectorAll('.custom-select-container.open').forEach(w => {
+      w.classList.remove('open', 'open-upward');
+      this.elevateAncestors(w, false);
     });
   },
 
@@ -201,21 +226,14 @@ const CustomSelectManager = {
   bindGlobalEvents() {
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.custom-select-container')) {
-        document.querySelectorAll('.custom-select-container.open').forEach(w => {
-          w.classList.remove('open');
-          const parentBlock = w.closest('.section-block, .form-row, .card');
-          if (parentBlock) parentBlock.style.zIndex = '';
-        });
+        this.closeAll();
       }
     });
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open').forEach(w => {
-          w.classList.remove('open');
-          const parentBlock = w.closest('.section-block, .form-row, .card');
-          if (parentBlock) parentBlock.style.zIndex = '';
-        });
+        this.closeAll();
+        document.querySelectorAll('.user-profile-dropdown.open').forEach(w => w.classList.remove('open'));
       }
     });
   }

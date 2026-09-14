@@ -59,6 +59,10 @@ const ScaleEngine = {
     return 'DISCONNECTED';
   },
 
+  getCurrentWeight() {
+    return Math.max(0, parseInt(this.currentWeight, 10) || 0);
+  },
+
   // =========================================================================
   // HARDWARE PORT DISCOVERY & UI POPULATION
   // =========================================================================
