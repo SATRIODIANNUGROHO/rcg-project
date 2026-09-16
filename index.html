@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,8 @@
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -43,7 +45,7 @@
 
   <!-- Immediate Theme & Auth Pre-loader (Zero FOUC) -->
   <script>
-    (function() {
+    (function () {
       try {
         var auth = localStorage.getItem('rcg_auth_session_v75');
         if (!auth) {
@@ -53,10 +55,11 @@
         if (s && JSON.parse(s).darkMode) {
           document.documentElement.classList.add('dark-mode');
         }
-      } catch(e) {}
+      } catch (e) { }
     })();
   </script>
 </head>
+
 <body>
   <script>
     if (document.documentElement.classList.contains('dark-mode')) {
@@ -70,8 +73,10 @@
   <header class="app-header">
     <div class="brand-section">
       <!-- Mobile Hamburger Toggle Button (Visible on <= 768px) -->
-      <button id="btn-mobile-nav-toggle" class="btn-mobile-nav" type="button" aria-label="Buka Menu Navigasi" title="Navigasi Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <button id="btn-mobile-nav-toggle" class="btn-mobile-nav" type="button" aria-label="Buka Menu Navigasi"
+        title="Navigasi Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -93,13 +98,15 @@
 
       <!-- User Profile Dropdown Menu Container -->
       <div class="user-profile-dropdown" id="profile-dropdown-wrapper">
-        <button class="user-profile-trigger" id="btn-profile-trigger" type="button" aria-haspopup="true" aria-expanded="false" title="Menu Pengguna">
+        <button class="user-profile-trigger" id="btn-profile-trigger" type="button" aria-haspopup="true"
+          aria-expanded="false" title="Menu Pengguna">
           <span class="user-avatar" id="user-avatar-text">AD</span>
           <div class="user-meta">
             <span class="user-name" id="user-display-name">admin</span>
             <span class="user-role" id="user-display-role">Administrator</span>
           </div>
-          <svg class="dropdown-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="dropdown-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </button>
@@ -110,13 +117,14 @@
             <div class="dropdown-user-name" id="menu-user-name">admin</div>
             <div class="dropdown-user-role" id="menu-user-role">Administrator RCG</div>
           </div>
-          
+
           <div class="dropdown-divider"></div>
 
           <!-- Profile Modal Trigger -->
           <button class="dropdown-menu-item" id="btn-open-profile" type="button">
             <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
@@ -129,7 +137,8 @@
           <!-- Permissions & User Management Trigger (Administrator Only) -->
           <button class="dropdown-menu-item admin-only" id="btn-open-permissions-manager" type="button">
             <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -144,7 +153,8 @@
           <!-- Theme Mode Switch Item -->
           <button class="dropdown-menu-item" id="btn-toggle-theme" type="button">
             <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
                 <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -164,7 +174,8 @@
           <!-- Logout Item -->
           <button class="dropdown-menu-item item-danger" id="btn-header-logout" type="button">
             <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -247,7 +258,8 @@
         <span class="badge badge-gold" id="sim-live-badge">16.500 Kg (STABIL)</span>
       </h4>
       <p class="sim-desc-text">
-        Gunakan slider atau tombol preset untuk menguji input timbangan truk garam secara instan tanpa indikator hardware fisik:
+        Gunakan slider atau tombol preset untuk menguji input timbangan truk garam secara instan tanpa indikator
+        hardware fisik:
       </p>
 
       <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
@@ -276,7 +288,13 @@
           <div class="stat-card-header">
             <span class="stat-label">TOTAL TRANSAKSI</span>
             <div class="stat-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
             </div>
           </div>
           <div class="stat-main-val mono-num" id="stat-total-tx">0</div>
@@ -290,7 +308,10 @@
           <div class="stat-card-header">
             <span class="stat-label">TOTAL BERAT BERSIH</span>
             <div class="stat-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
             </div>
           </div>
           <div class="stat-main-val mono-num" id="stat-total-net">0 Kg</div>
@@ -305,7 +326,10 @@
           <div class="stat-card-header">
             <span class="stat-label">TOTAL PEMBAYARAN</span>
             <div class="stat-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
             </div>
           </div>
           <div class="stat-main-val mono-num" id="stat-total-pay">Rp 0</div>
@@ -320,7 +344,12 @@
           <div class="stat-card-header">
             <span class="stat-label">TRANSAKSI HARI INI</span>
             <div class="stat-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
             </div>
           </div>
           <div class="stat-main-val mono-num" id="stat-today-tx" style="font-size: 20px;">0 Transaksi Hari Ini</div>
@@ -357,8 +386,10 @@
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             <!-- 1. Berat Bersih Periode -->
             <div style="border-right: 1px solid var(--border-color); padding-right: 14px;">
-              <div class="text-small text-secondary" style="font-weight: 700; letter-spacing: 0.04em; margin-bottom: 4px;">BERAT BERSIH PERIODE</div>
-              <div class="text-display mono-num" id="period-net-weight" style="color: var(--primary); font-size: 28px;">0 Kg</div>
+              <div class="text-small text-secondary"
+                style="font-weight: 700; letter-spacing: 0.04em; margin-bottom: 4px;">BERAT BERSIH PERIODE</div>
+              <div class="text-display mono-num" id="period-net-weight" style="color: var(--primary); font-size: 28px;">
+                0 Kg</div>
               <div class="text-secondary text-small" id="period-net-sub" style="margin-top: 4px;">
                 Total berat bersih hari ini • 0 transaksi
               </div>
@@ -366,8 +397,10 @@
 
             <!-- 2. Pembayaran Periode -->
             <div>
-              <div class="text-small text-secondary" style="font-weight: 700; letter-spacing: 0.04em; margin-bottom: 4px;">PEMBAYARAN PERIODE</div>
-              <div class="text-display mono-num" id="period-payment-total" style="color: var(--primary-dark); font-size: 28px;">Rp 0</div>
+              <div class="text-small text-secondary"
+                style="font-weight: 700; letter-spacing: 0.04em; margin-bottom: 4px;">PEMBAYARAN PERIODE</div>
+              <div class="text-display mono-num" id="period-payment-total"
+                style="color: var(--primary-dark); font-size: 28px;">Rp 0</div>
               <div class="text-secondary text-small" id="period-payment-sub" style="margin-top: 4px;">
                 Total nilai pembayaran periode • 0 transaksi
               </div>
@@ -401,11 +434,13 @@
             </div>
             <div class="mini-stat-item">
               <div class="title">PEMBAYARAN LUNAS</div>
-              <div id="stat-pay-lunas" class="value" style="color: var(--color-success); font-size: 13px;">0 TRX (Rp 0)</div>
+              <div id="stat-pay-lunas" class="value" style="color: var(--color-success); font-size: 13px;">0 TRX (Rp 0)
+              </div>
             </div>
             <div class="mini-stat-item">
               <div class="title">PEMBAYARAN BELUM LUNAS</div>
-              <div id="stat-pay-belum-lunas" class="value stat-val-pending" style="color: #D69E2E; font-size: 13px;">0 TRX (Rp 0)</div>
+              <div id="stat-pay-belum-lunas" class="value stat-val-pending" style="color: #D69E2E; font-size: 13px;">0
+                TRX (Rp 0)</div>
             </div>
           </div>
         </div>
@@ -420,9 +455,11 @@
               <h3 class="card-title">Grafik Transaksi per Minggu</h3>
               <div class="d-flex align-center gap-8">
                 <span class="text-small text-secondary" style="font-weight: 500;">Minggu:</span>
-                <input type="number" id="chart-week-start" class="form-control mono text-center" value="1" min="1" max="10" style="width: 52px;">
+                <input type="number" id="chart-week-start" class="form-control mono text-center" value="1" min="1"
+                  max="10" style="width: 52px;">
                 <span class="text-small text-secondary">s/d</span>
-                <input type="number" id="chart-week-end" class="form-control mono text-center" value="6" min="1" max="10" style="width: 52px;">
+                <input type="number" id="chart-week-end" class="form-control mono text-center" value="6" min="1"
+                  max="10" style="width: 52px;">
                 <button id="btn-filter-week-chart" class="btn btn-primary">Tampilkan</button>
               </div>
             </div>
@@ -521,12 +558,14 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">No. Polisi Kendaraan <span class="required">*</span></label>
-                <input type="text" id="input-plate-no" class="form-control mono" placeholder="Contoh: M 8234 UA" style="text-transform: uppercase;">
+                <input type="text" id="input-plate-no" class="form-control mono" placeholder="Contoh: M 8234 UA"
+                  style="text-transform: uppercase;">
               </div>
 
               <div class="form-group">
                 <label class="form-label">Nama Pemasok / Supplier <span class="required">*</span></label>
-                <input type="text" id="input-supplier" class="form-control" list="supplier-presets" placeholder="Pilih atau ketik nama pemasok">
+                <input type="text" id="input-supplier" class="form-control" list="supplier-presets"
+                  placeholder="Pilih atau ketik nama pemasok">
                 <datalist id="supplier-presets">
                   <option value="Andi">
                   <option value="Baihaqi">
@@ -606,11 +645,13 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Nama Supir</label>
-                <input type="text" id="input-driver-name" class="form-control" placeholder="ISMAIL" style="text-transform: uppercase;">
+                <input type="text" id="input-driver-name" class="form-control" placeholder="ISMAIL"
+                  style="text-transform: uppercase;">
               </div>
               <div class="form-group">
                 <label class="form-label">Nama Admin (Petugas Timbang)</label>
-                <input type="text" id="input-weighmaster" class="form-control" placeholder="AFIF" style="text-transform: uppercase;">
+                <input type="text" id="input-weighmaster" class="form-control" placeholder="AFIF"
+                  style="text-transform: uppercase;">
               </div>
             </div>
 
@@ -644,7 +685,8 @@
                   <input type="number" id="input-gross-weight" class="form-control mono" min="0" value="0">
                   <span class="unit-tag">Kg</span>
                 </div>
-                <button type="button" id="btn-capture-gross" class="btn btn-action-capture" title="Ambil nilai berat kotor dari timbangan aktif">
+                <button type="button" id="btn-capture-gross" class="btn btn-action-capture"
+                  title="Ambil nilai berat kotor dari timbangan aktif">
                   Ambil
                 </button>
               </div>
@@ -658,7 +700,8 @@
                   <input type="number" id="input-tare-weight" class="form-control mono" min="0" value="0">
                   <span class="unit-tag">Kg</span>
                 </div>
-                <button type="button" id="btn-capture-tare" class="btn btn-action-capture" title="Ambil nilai berat tara dari timbangan aktif">
+                <button type="button" id="btn-capture-tare" class="btn btn-action-capture"
+                  title="Ambil nilai berat tara dari timbangan aktif">
                   Ambil
                 </button>
               </div>
@@ -678,7 +721,8 @@
               <div class="form-group">
                 <label class="form-label">Refraksi (%)</label>
                 <div class="input-unit">
-                  <input type="number" id="input-refraction-percent" class="form-control mono" step="0.5" min="0" max="50" value="5.0">
+                  <input type="number" id="input-refraction-percent" class="form-control mono" step="0.5" min="0"
+                    max="50" value="10.0">
                   <span class="unit-tag">%</span>
                 </div>
               </div>
@@ -696,7 +740,8 @@
             <div class="form-group">
               <label class="form-label" style="font-weight: 700; color: var(--primary);">BERAT BERSIH TOTAL (Kg)</label>
               <div class="input-unit">
-                <input type="text" id="input-final-net" class="form-control mono" readonly value="0" style="font-size: 16px; font-weight: 700; color: var(--primary-dark); background: var(--primary-light);">
+                <input type="text" id="input-final-net" class="form-control mono" readonly value="0"
+                  style="font-size: 16px; font-weight: 700; color: var(--primary-dark); background: var(--primary-light);">
                 <span class="unit-tag">Kg</span>
               </div>
             </div>
@@ -784,7 +829,8 @@
       <!-- Toolbar Pencarian & Filter -->
       <div class="table-toolbar">
         <div class="search-box">
-          <input type="text" id="history-search-input" class="form-control" placeholder="Cari Material, Tanggal, Supplier, No. Polisi, No. Dok...">
+          <input type="text" id="history-search-input" class="form-control"
+            placeholder="Cari Material, Tanggal, Supplier, No. Polisi, No. Dok...">
           <button id="history-reset-search" class="btn btn-secondary">Reset</button>
         </div>
 
@@ -849,13 +895,21 @@
       <div class="pagination-area">
         <div id="history-page-indicator" class="page-indicator">Halaman 1 / 1</div>
         <div class="pagination-controls">
-          <button id="history-prev-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Sebelumnya">
-            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+          <button id="history-prev-page" class="btn btn-secondary btn-sm" disabled
+            style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Sebelumnya">
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor">
+              <path
+                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
             <span>Prev</span>
           </button>
-          <button id="history-next-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Berikutnya">
+          <button id="history-next-page" class="btn btn-secondary btn-sm" disabled
+            style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Berikutnya">
             <span>Next</span>
-            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor">
+              <path
+                d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
+            </svg>
           </button>
         </div>
       </div>
@@ -869,7 +923,8 @@
       <div class="d-flex align-center justify-between mb-3 flex-wrap gap-12">
         <div>
           <h2 class="section-title">Riwayat Pemasok / Supplier</h2>
-          <p class="text-secondary text-small">Rekapitulasi transaksi penimbangan per pemasok dan cetak formulir supplier</p>
+          <p class="text-secondary text-small">Rekapitulasi transaksi penimbangan per pemasok dan cetak formulir
+            supplier</p>
         </div>
         <div class="d-flex gap-8 align-center flex-wrap">
           <button id="btn-export-supplier-excel" class="btn btn-primary">
@@ -881,7 +936,8 @@
       <!-- Toolbar Filter & Search Pemasok -->
       <div class="table-toolbar">
         <div class="search-box">
-          <input type="text" id="supplier-history-search" class="form-control" placeholder="Cari nama pemasok, no. dokumen, dll...">
+          <input type="text" id="supplier-history-search" class="form-control"
+            placeholder="Cari nama pemasok, no. dokumen, dll...">
           <button id="supplier-history-reset-search" class="btn btn-secondary" title="Reset Pencarian">
             Reset
           </button>
@@ -892,9 +948,14 @@
           <div class="d-flex align-center gap-6">
             <span class="text-small text-secondary">Pemasok:</span>
             <div class="custom-combobox" id="supplier-history-combobox" style="min-width: 200px;">
-              <input type="text" id="supplier-history-supplier-input" class="form-control" placeholder="Semua Pemasok" autocomplete="off" style="height: 38px;">
-              <button type="button" class="combobox-chevron-btn" id="supplier-history-combobox-btn" title="Pilih Pemasok" tabindex="-1">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              <input type="text" id="supplier-history-supplier-input" class="form-control" placeholder="Semua Pemasok"
+                autocomplete="off" style="height: 38px;">
+              <button type="button" class="combobox-chevron-btn" id="supplier-history-combobox-btn"
+                title="Pilih Pemasok" tabindex="-1">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
               </button>
               <div id="supplier-history-combobox-menu" class="dropdown-menu-card custom-combobox-menu"></div>
             </div>
@@ -903,7 +964,8 @@
           <!-- Filter Tanggal -->
           <div class="d-flex align-center gap-6">
             <span class="text-small text-secondary">Tanggal:</span>
-            <input type="date" id="supplier-history-date-filter" class="form-control mono" style="height: 38px; width: 140px;">
+            <input type="date" id="supplier-history-date-filter" class="form-control mono"
+              style="height: 38px; width: 140px;">
           </div>
 
           <!-- Urutan -->
@@ -955,13 +1017,21 @@
       <div class="pagination-area">
         <div id="supplier-history-page-indicator" class="page-indicator">Halaman 1 / 1</div>
         <div class="pagination-controls">
-          <button id="supplier-history-prev-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Sebelumnya">
-            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+          <button id="supplier-history-prev-page" class="btn btn-secondary btn-sm" disabled
+            style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Sebelumnya">
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor">
+              <path
+                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
             <span>Prev</span>
           </button>
-          <button id="supplier-history-next-page" class="btn btn-secondary btn-sm" disabled style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Berikutnya">
+          <button id="supplier-history-next-page" class="btn btn-secondary btn-sm" disabled
+            style="display: inline-flex; align-items: center; gap: 6px;" title="Halaman Berikutnya">
             <span>Next</span>
-            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 448 512" fill="currentColor">
+              <path
+                d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
+            </svg>
           </button>
         </div>
       </div>
@@ -975,7 +1045,8 @@
       <div class="d-flex align-center justify-between mb-3">
         <div>
           <h2 class="section-title">Activity Log</h2>
-          <p class="text-secondary text-small">Pencatatan audit seluruh aktivitas pengguna (Login, Transaksi, Edit, Hapus, Alasan)</p>
+          <p class="text-secondary text-small">Pencatatan audit seluruh aktivitas pengguna (Login, Transaksi, Edit,
+            Hapus, Alasan)</p>
         </div>
         <button id="btn-clear-logs" class="btn btn-confirm-accent admin-only">
           Hapus Activity Log
@@ -1008,21 +1079,26 @@
     <section id="section-backup-restore" class="view-section admin-only">
       <div class="mb-3">
         <h2 class="section-title">Backup &amp; Manajemen Data</h2>
-        <p class="text-secondary text-small">Fitur pemeliharaan basis data, export-import, dan auto backup sistem timbangan</p>
+        <p class="text-secondary text-small">Fitur pemeliharaan basis data, export-import, dan auto backup sistem
+          timbangan</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; align-items: stretch;">
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; align-items: stretch;">
         <!-- Export & Backup Card -->
         <div class="card" style="display: flex; flex-direction: column; height: 100%;">
           <div class="card-header">
             <h3 class="card-title">1. Export &amp; Cadangkan Data</h3>
           </div>
-          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+          <div class="card-body"
+            style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
             <p class="text-secondary text-small mb-3">
-              Unduh cadangan data transaksi, activity log, dan konfigurasi aplikasi dalam basis data SQLite murni (.sqlite) atau format file JSON.
+              Unduh cadangan data transaksi, activity log, dan konfigurasi aplikasi dalam basis data SQLite murni
+              (.sqlite) atau format file JSON.
             </p>
             <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-              <button id="btn-export-sqlite" class="btn btn-primary w-100" style="justify-content: center;" title="Unduh file database SQLite binary asli">
+              <button id="btn-export-sqlite" class="btn btn-primary w-100" style="justify-content: center;"
+                title="Unduh file database SQLite binary asli">
                 <span>Unduh Database SQLite (.sqlite)</span>
               </button>
               <button id="btn-export-json" class="btn btn-secondary w-100" style="justify-content: center;">
@@ -1037,21 +1113,28 @@
           <div class="card-header">
             <h3 class="card-title">2. Pulihkan &amp; Impor Data</h3>
           </div>
-          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+          <div class="card-body"
+            style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
             <p class="text-secondary text-small mb-3">
-              Impor berkas database SQLite (.sqlite), cadangan JSON, atau pulihkan data dari slot auto-backup lokal otomatis terakhir.
+              Impor berkas database SQLite (.sqlite), cadangan JSON, atau pulihkan data dari slot auto-backup lokal
+              otomatis terakhir.
             </p>
             <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-              <label class="btn btn-primary w-100" style="margin: 0; cursor: pointer; justify-content: center;" title="Impor database SQLite (.sqlite / .db)">
+              <label class="btn btn-primary w-100" style="margin: 0; cursor: pointer; justify-content: center;"
+                title="Impor database SQLite (.sqlite / .db)">
                 <span>Impor Database SQLite (.sqlite)</span>
                 <input type="file" id="input-import-sqlite" accept=".sqlite,.db,.sqlite3" style="display: none;">
               </label>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <label class="btn btn-secondary" style="margin: 0; cursor: pointer; justify-content: center; padding: 6px 8px; font-size: 12px; white-space: nowrap;" title="Impor file cadangan JSON">
+                <label class="btn btn-secondary"
+                  style="margin: 0; cursor: pointer; justify-content: center; padding: 6px 8px; font-size: 12px; white-space: nowrap;"
+                  title="Impor file cadangan JSON">
                   <span>Import Log (.json)</span>
                   <input type="file" id="input-import-json" accept=".json" style="display: none;">
                 </label>
-                <button id="btn-restore-auto-backup" class="btn btn-secondary" style="justify-content: center; padding: 6px 8px; font-size: 12px; white-space: nowrap;" title="Pulihkan data dari slot auto-backup lokal">
+                <button id="btn-restore-auto-backup" class="btn btn-secondary"
+                  style="justify-content: center; padding: 6px 8px; font-size: 12px; white-space: nowrap;"
+                  title="Pulihkan data dari slot auto-backup lokal">
                   <span>Restore Backup</span>
                 </button>
               </div>
@@ -1064,9 +1147,11 @@
           <div class="card-header">
             <h3 class="card-title">3. Zona Bahaya (Reset Data)</h3>
           </div>
-          <div class="card-body" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+          <div class="card-body"
+            style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
             <p class="text-secondary text-small mb-3">
-              Menghapus seluruh rekaman data transaksi penimbangan secara permanen. Pastikan Anda telah melakukan export backup sebelum mengeksekusi tindakan ini.
+              Menghapus seluruh rekaman data transaksi penimbangan secara permanen. Pastikan Anda telah melakukan export
+              backup sebelum mengeksekusi tindakan ini.
             </p>
             <div style="margin-top: auto;">
               <button id="btn-clear-all-data" class="btn btn-confirm-accent w-100" style="justify-content: center;">
@@ -1086,35 +1171,46 @@
       <div class="d-flex align-center justify-between mb-3">
         <div>
           <h2 class="section-title">Tentang Sistem &amp; Lisensi</h2>
-          <p class="text-secondary text-small">Informasi resmi identitas perangkat lunak, tim pengembang, atribusi lisensi pihak ketiga, dan hak cipta PT. Reka Cipta Garam</p>
+          <p class="text-secondary text-small">Informasi resmi identitas perangkat lunak, tim pengembang, atribusi
+            lisensi pihak ketiga, dan hak cipta PT. Reka Cipta Garam</p>
         </div>
         <div class="d-flex gap-8 align-center">
-          <span class="badge badge-info" style="font-size: 11.5px; padding: 4px 12px; font-weight: 700;">Version 8.0.0</span>
-          <span class="badge badge-success" style="font-size: 11.5px; padding: 4px 12px; font-weight: 700;">Production Build</span>
+          <span class="badge badge-info" style="font-size: 11.5px; padding: 4px 12px; font-weight: 700;">Version
+            8.0.0</span>
+          <span class="badge badge-success" style="font-size: 11.5px; padding: 4px 12px; font-weight: 700;">Production
+            Build</span>
         </div>
       </div>
 
       <!-- Hero Identity Banner -->
       <div class="about-hero-banner">
         <div class="about-logo-wrapper">
-          <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" style="width: 100%; height: 100%; object-fit: contain;">
+          <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam"
+            style="width: 100%; height: 100%; object-fit: contain;">
         </div>
         <div style="flex: 1; min-width: 260px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 2px;">
-            <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.01em;">RCG Salt Weighing System</h3>
-            <span class="badge badge-primary" style="font-size: 10.5px; padding: 2px 8px; font-weight: 700;">Desktop &amp; Web Edition</span>
+            <h3
+              style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.01em;">
+              RCG Salt Weighing System</h3>
+            <span class="badge badge-primary" style="font-size: 10.5px; padding: 2px 8px; font-weight: 700;">Desktop
+              &amp; Web Edition</span>
           </div>
           <div style="font-size: 12.5px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">
-            PT. REKA CIPTA GARAM &bull; <span style="color: var(--text-secondary); font-weight: 600;">Subsidiary Bawang Mas Grup</span>
+            PT. REKA CIPTA GARAM &bull; <span style="color: var(--text-secondary); font-weight: 600;">Subsidiary Bawang
+              Mas Grup</span>
           </div>
           <p style="margin: 0; font-size: 12px; color: var(--text-secondary); line-height: 1.45; max-width: 860px;">
-            Sistem Penimbangan Garam dan Manajemen Transaksi Berbasis Desktop Terintegrasi yang dirancang khusus untuk memenuhi standar operasional penimbangan, klasifikasi mutu Garam K1 &amp; K2, pencetakan tiket timbang standar A6 / Continuous NCR, audit jejak aktivitas, serta ekspor akuntansi pabrik dan pergudangan.
+            Sistem Penimbangan Garam dan Manajemen Transaksi Berbasis Desktop Terintegrasi yang dirancang khusus untuk
+            memenuhi standar operasional penimbangan, klasifikasi mutu Garam K1 &amp; K2, pencetakan tiket timbang
+            standar A6 / Continuous NCR, audit jejak aktivitas, serta ekspor akuntansi pabrik dan pergudangan.
           </p>
         </div>
       </div>
 
       <!-- 2-Column Info Cards Grid -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; margin-bottom: 14px;">
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; margin-bottom: 14px;">
 
         <!-- Card 1: Entitas & Arsitektur Sistem -->
         <div class="card" style="display: flex; flex-direction: column;">
@@ -1157,25 +1253,37 @@
               <div class="about-info-row">
                 <span class="about-info-label">Software Engineering</span>
                 <span class="about-info-val">
-                  <a href="https://github.com/SATRIODIANNUGROHO" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/SATRIODIANNUGROHO'); }">Satrio Dian Nugroho</a>
+                  <a href="https://github.com/SATRIODIANNUGROHO" target="_blank" rel="noopener noreferrer"
+                    class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;"
+                    onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/SATRIODIANNUGROHO'); }">Satrio
+                    Dian Nugroho</a>
                 </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">UI/UX &amp; Nota Standar</span>
                 <span class="about-info-val">
-                  <a href="https://github.com/SATRIODIANNUGROHO" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/SATRIODIANNUGROHO'); }">Satrio Dian Nugroho</a>
+                  <a href="https://github.com/SATRIODIANNUGROHO" target="_blank" rel="noopener noreferrer"
+                    class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;"
+                    onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/SATRIODIANNUGROHO'); }">Satrio
+                    Dian Nugroho</a>
                 </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">Quality Assurance &amp; Ops</span>
                 <span class="about-info-val">
-                  <a href="https://github.com/peenkyourbae" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/peenkyourbae'); }">M. Thufail Mahfudh</a>
+                  <a href="https://github.com/peenkyourbae" target="_blank" rel="noopener noreferrer"
+                    class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;"
+                    onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/peenkyourbae'); }">M.
+                    Thufail Mahfudh</a>
                 </span>
               </div>
               <div class="about-info-row">
                 <span class="about-info-label">Keuangan &amp; Audit</span>
                 <span class="about-info-val">
-                  <a href="https://github.com/peenkyourbae" target="_blank" rel="noopener noreferrer" class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;" onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/peenkyourbae'); }">M. Thufail Mahfudh</a>
+                  <a href="https://github.com/peenkyourbae" target="_blank" rel="noopener noreferrer"
+                    class="about-credit-link" style="color: inherit; text-decoration: none; cursor: pointer;"
+                    onclick="if (window.electronAPI && window.electronAPI.openExternal) { event.preventDefault(); window.electronAPI.openExternal('https://github.com/peenkyourbae'); }">M.
+                    Thufail Mahfudh</a>
                 </span>
               </div>
               <div class="about-info-row">
@@ -1191,7 +1299,8 @@
       <!-- Card 3: Lisensi Perangkat Lunak Pihak Ketiga (Full Width Pill Grid) -->
       <div class="card">
         <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding: 10px 14px;">
-          <h3 class="card-title" style="font-size: 13.5px;">3. Lisensi Pihak Ketiga (Third-Party Open-Source Licenses)</h3>
+          <h3 class="card-title" style="font-size: 13.5px;">3. Lisensi Pihak Ketiga (Third-Party Open-Source Licenses)
+          </h3>
         </div>
         <div class="card-body" style="padding: 10px 14px;">
           <div class="license-pill-grid">
@@ -1270,7 +1379,8 @@
       <!-- Profile Sub-Navigation Tabs (Clean SVG Icons, Zero Emojis) -->
       <div class="profile-tabs-header">
         <button class="profile-tab-btn active" data-profile-tab="personal-info" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
@@ -1278,7 +1388,8 @@
         </button>
 
         <button class="profile-tab-btn" data-profile-tab="edit-profile" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
           </svg>
@@ -1286,7 +1397,8 @@
         </button>
 
         <button class="profile-tab-btn" data-profile-tab="change-password" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
@@ -1294,7 +1406,8 @@
         </button>
 
         <button class="profile-tab-btn" data-profile-tab="my-activities" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
@@ -1327,7 +1440,8 @@
             </div>
             <div class="profile-info-item">
               <div class="info-label">Status Akun</div>
-              <div class="info-val" style="color: var(--color-success); font-weight: 600;">Aktif &amp; Terverifikasi</div>
+              <div class="info-val" style="color: var(--color-success); font-weight: 600;">Aktif &amp; Terverifikasi
+              </div>
             </div>
             <div class="profile-info-item">
               <div class="info-label">Tanggal Dibuat</div>
@@ -1386,9 +1500,15 @@
             <div class="form-group">
               <label class="form-label" for="input-curr-pw">Kata Sandi Saat Ini</label>
               <div style="position: relative; display: flex; align-items: center;">
-                <input type="password" id="input-curr-pw" class="form-control" placeholder="Masukkan password saat ini" style="padding-right: 36px;" required>
-                <button type="button" class="btn-inspect-pw" data-target="input-curr-pw" style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <input type="password" id="input-curr-pw" class="form-control" placeholder="Masukkan password saat ini"
+                  style="padding-right: 36px;" required>
+                <button type="button" class="btn-inspect-pw" data-target="input-curr-pw"
+                  style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -1396,9 +1516,15 @@
             <div class="form-group">
               <label class="form-label" for="input-new-pw">Kata Sandi Baru</label>
               <div style="position: relative; display: flex; align-items: center;">
-                <input type="password" id="input-new-pw" class="form-control" placeholder="Minimal 4 karakter" style="padding-right: 36px;" required>
-                <button type="button" class="btn-inspect-pw" data-target="input-new-pw" style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <input type="password" id="input-new-pw" class="form-control" placeholder="Minimal 4 karakter"
+                  style="padding-right: 36px;" required>
+                <button type="button" class="btn-inspect-pw" data-target="input-new-pw"
+                  style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -1406,9 +1532,15 @@
             <div class="form-group">
               <label class="form-label" for="input-confirm-pw">Konfirmasi Kata Sandi Baru</label>
               <div style="position: relative; display: flex; align-items: center;">
-                <input type="password" id="input-confirm-pw" class="form-control" placeholder="Ulangi kata sandi baru" style="padding-right: 36px;" required>
-                <button type="button" class="btn-inspect-pw" data-target="input-confirm-pw" style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <input type="password" id="input-confirm-pw" class="form-control" placeholder="Ulangi kata sandi baru"
+                  style="padding-right: 36px;" required>
+                <button type="button" class="btn-inspect-pw" data-target="input-confirm-pw"
+                  style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -1443,7 +1575,8 @@
       <form id="form-login">
         <div class="modal-body">
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" class="brand-logo-img" style="margin: 0 auto 12px; width: 64px; height: 64px;">
+            <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" class="brand-logo-img"
+              style="margin: 0 auto 12px; width: 64px; height: 64px;">
             <h4 style="color: var(--primary-dark);">PT. REKA CIPTA GARAM</h4>
             <p class="text-secondary text-small">Silakan masuk menggunakan kredensial operator atau admin</p>
           </div>
@@ -1460,7 +1593,8 @@
 
           <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
             <input type="checkbox" id="login-remember" checked>
-            <label for="login-remember" style="font-size: 13px; color: var(--text-secondary); cursor: pointer;">Remember Me</label>
+            <label for="login-remember" style="font-size: 13px; color: var(--text-secondary); cursor: pointer;">Remember
+              Me</label>
           </div>
         </div>
         <div class="modal-footer">
@@ -1515,15 +1649,18 @@
       </div>
       <div class="modal-body">
         <p class="text-secondary text-small mb-3">
-          Sistem akan mendeteksi Port COM (RS232 / USB Serial Converter) yang terhubung ke indikator timbangan jembatan truk (Yaohua A12E, CAS, Toledo, dsb).
+          Sistem akan mendeteksi Port COM (RS232 / USB Serial Converter) yang terhubung ke indikator timbangan jembatan
+          truk (Yaohua A12E, CAS, Toledo, dsb).
         </p>
 
         <!-- Port Detection Status Banner -->
-        <div id="serial-port-status-banner" style="background: var(--bg-surface-alt); border: 1px solid var(--border-color); border-radius: var(--radius-tight); padding: 10px 14px; margin-bottom: 14px; font-size: 11.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <div id="serial-port-status-banner"
+          style="background: var(--bg-surface-alt); border: 1px solid var(--border-color); border-radius: var(--radius-tight); padding: 10px 14px; margin-bottom: 14px; font-size: 11.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
           <div id="serial-port-status-text" style="color: var(--text-secondary);">
             Memeriksa ketersediaan Port COM...
           </div>
-          <button type="button" id="btn-refresh-serial-ports" class="btn btn-secondary btn-sm" style="height: 28px; padding: 0 10px; font-size: 11px; white-space: nowrap;">
+          <button type="button" id="btn-refresh-serial-ports" class="btn btn-secondary btn-sm"
+            style="height: 28px; padding: 0 10px; font-size: 11px; white-space: nowrap;">
             Pindai Ulang
           </button>
         </div>
@@ -1565,17 +1702,21 @@
         <!-- Data Bits / Parity / Stop Bits -->
         <div class="form-group mb-3">
           <label class="form-label">Data Bits / Parity / Stop Bits</label>
-          <input type="text" class="form-control mono" value="8 Data Bits - No Parity - 1 Stop Bit" readonly style="font-size: 11.5px;">
+          <input type="text" class="form-control mono" value="8 Data Bits - No Parity - 1 Stop Bit" readonly
+            style="font-size: 11.5px;">
         </div>
 
         <!-- Live Raw Data Stream Monitor -->
         <div class="form-group mb-0">
           <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
             <span>Monitor Aliran Data Masuk (Raw Stream)</span>
-            <span id="serial-stream-status-tag" class="text-secondary" style="font-size: 10.5px;">Menunggu data...</span>
+            <span id="serial-stream-status-tag" class="text-secondary" style="font-size: 10.5px;">Menunggu
+              data...</span>
           </label>
-          <div style="background: #070D19; border: 1px solid #1E293B; border-radius: 6px; padding: 10px 12px; font-family: var(--font-mono); font-size: 11.5px; color: #38BDF8; min-height: 48px; max-height: 80px; overflow-y: auto; word-break: break-all;">
-            <div id="serial-raw-stream-display" style="opacity: 0.85;">[Port belum terhubung - Klik 'Hubungkan Serial' di bawah]</div>
+          <div
+            style="background: #070D19; border: 1px solid #1E293B; border-radius: 6px; padding: 10px 12px; font-family: var(--font-mono); font-size: 11.5px; color: #38BDF8; min-height: 48px; max-height: 80px; overflow-y: auto; word-break: break-all;">
+            <div id="serial-raw-stream-display" style="opacity: 0.85;">[Port belum terhubung - Klik 'Hubungkan Serial'
+              di bawah]</div>
           </div>
         </div>
       </div>
@@ -1615,7 +1756,8 @@
           <label class="form-label" for="input-delete-reason" style="font-weight: 600; color: var(--text-primary);">
             Alasan Penghapusan <span class="required">*</span>
           </label>
-          <textarea id="input-delete-reason" class="form-control" rows="2" placeholder="Tuliskan alasan penghapusan transaksi (wajib diisi)..." required></textarea>
+          <textarea id="input-delete-reason" class="form-control" rows="2"
+            placeholder="Tuliskan alasan penghapusan transaksi (wajib diisi)..." required></textarea>
         </div>
       </div>
       <div class="modal-footer">
@@ -1650,12 +1792,14 @@
         <button class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Apakah Anda yakin ingin menghapus seluruh rekaman <strong>data transaksi penimbangan</strong> secara permanen?</p>
+        <p>Apakah Anda yakin ingin menghapus seluruh rekaman <strong>data transaksi penimbangan</strong> secara
+          permanen?</p>
         <div class="form-group mt-3" style="text-align: left;">
           <label class="form-label" for="input-clear-all-reason" style="font-weight: 600; color: var(--text-primary);">
             Alasan Reset Database <span class="required">*</span>
           </label>
-          <textarea id="input-clear-all-reason" class="form-control" rows="2" placeholder="Tuliskan alasan reset seluruh data (wajib diisi)..." required></textarea>
+          <textarea id="input-clear-all-reason" class="form-control" rows="2"
+            placeholder="Tuliskan alasan reset seluruh data (wajib diisi)..." required></textarea>
         </div>
       </div>
       <div class="modal-footer">
@@ -1676,7 +1820,8 @@
         <p class="text-secondary text-small mb-3">Pilih cakupan tanggal data transaksi yang ingin diekspor:</p>
 
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
-          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+          <label
+            style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
             <input type="radio" name="export-scope-option" value="today" checked>
             <div>
               <strong>Hari Ini</strong>
@@ -1684,7 +1829,8 @@
             </div>
           </label>
 
-          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+          <label
+            style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
             <input type="radio" name="export-scope-option" value="date">
             <div>
               <strong>Tanggal Tertentu</strong>
@@ -1695,7 +1841,8 @@
             <input type="date" id="export-input-single-date" class="form-control mono" style="height: 36px;">
           </div>
 
-          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+          <label
+            style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
             <input type="radio" name="export-scope-option" value="range">
             <div>
               <strong>Rentang Tanggal</strong>
@@ -1708,7 +1855,8 @@
             <input type="date" id="export-input-range-end" class="form-control mono" style="height: 36px;">
           </div>
 
-          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
+          <label
+            style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-tight); background: var(--bg-surface);">
             <input type="radio" name="export-scope-option" value="all">
             <div>
               <strong>Seluruh Data</strong>
@@ -1719,7 +1867,9 @@
 
         <!-- Filter Material Scope (Riwayat Penimbangan) -->
         <div id="export-material-filter-wrap" class="form-group mb-3">
-          <label class="form-label" for="export-select-material" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Filter Jenis Material Garam:</label>
+          <label class="form-label" for="export-select-material"
+            style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Filter Jenis
+            Material Garam:</label>
           <select id="export-select-material" class="form-select" style="height: 38px;">
             <option value="">Semua Jenis Garam</option>
             <option value="Garam Curah">Garam Curah</option>
@@ -1729,11 +1879,18 @@
 
         <!-- Filter Nama Pemasok Scope (Riwayat Pemasok) -->
         <div id="export-supplier-filter-wrap" class="form-group mb-3" style="display: none;">
-          <label class="form-label" for="export-supplier-input" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Filter Nama Pemasok:</label>
+          <label class="form-label" for="export-supplier-input"
+            style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Filter Nama
+            Pemasok:</label>
           <div class="custom-combobox" id="export-supplier-combobox" style="width: 100%;">
-            <input type="text" id="export-supplier-input" class="form-control" placeholder="Semua Pemasok (Ketik untuk mencari...)" autocomplete="off" style="height: 38px;">
-            <button type="button" class="combobox-chevron-btn" id="export-supplier-combobox-btn" title="Pilih Pemasok" tabindex="-1">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <input type="text" id="export-supplier-input" class="form-control"
+              placeholder="Semua Pemasok (Ketik untuk mencari...)" autocomplete="off" style="height: 38px;">
+            <button type="button" class="combobox-chevron-btn" id="export-supplier-combobox-btn" title="Pilih Pemasok"
+              tabindex="-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
             </button>
             <div id="export-supplier-combobox-menu" class="dropdown-menu-card custom-combobox-menu"></div>
           </div>
@@ -1751,44 +1908,28 @@
   <div id="modal-print-settings" class="modal-overlay">
     <div class="modal-container print-modal-container">
       <div class="modal-header">
-        <h3 id="modal-print-title" style="margin: 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
-            <polyline points="6 9 6 2 18 2 18 9"></polyline>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-            <rect x="6" y="14" width="12" height="8"></rect>
-          </svg>
+        <h3 id="modal-print-title" style="margin: 0; font-size: 16px; font-weight: 700;">
           <span>Pratinjau &amp; Pengaturan Cetak Dokumen</span>
         </h3>
         <button class="modal-close-btn" aria-label="Tutup Modal">&times;</button>
       </div>
-      
+
       <div class="modal-body print-modal-body">
         <!-- Panel Kiri: Sidebar Pengaturan & Kontrol Cetak (340px) -->
         <div class="print-modal-sidebar">
           <!-- Target Printer Fisik -->
           <div class="form-group mb-0">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <label class="form-label mb-0" for="select-print-target-device" style="font-size: 11.5px; font-weight: 700;">Printer Target</label>
-              <button type="button" id="btn-refresh-printers" class="btn btn-secondary btn-sm" style="height: 22px; padding: 0 6px; font-size: 10px; gap: 4px;" title="Pindai Ulang Printer Terpasang">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 4 23 10 17 10"></polyline>
-                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                </svg>
-                <span>Pindai</span>
-              </button>
-            </div>
+            <label class="form-label" for="select-print-target-device"
+              style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Printer Target</label>
             <select id="select-print-target-device" class="form-select form-control-sm" style="width: 100%;">
               <option value="">Printer Sistem (Default Driver)</option>
             </select>
-            <div style="margin-top: 4px; display: flex; align-items: center; justify-content: space-between;">
-              <span id="badge-printer-status" class="badge badge-info" style="font-size: 10px; padding: 2px 6px;">Mencari printer...</span>
-              <span id="text-printer-default-hint" style="font-size: 10px; color: var(--text-secondary);">Direct Silent Print</span>
-            </div>
           </div>
 
           <!-- Ukuran Kertas -->
           <div class="form-group mb-0">
-            <label class="form-label" for="select-print-paper-size" style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Format Kertas</label>
+            <label class="form-label" for="select-print-paper-size"
+              style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Format Kertas</label>
             <select id="select-print-paper-size" class="form-select form-control-sm" style="width: 100%;">
               <option value="NCR_Wartel" selected>NCR Continuous 9.5" × 11"</option>
               <option value="A4">A4 (210 × 297 mm)</option>
@@ -1800,19 +1941,22 @@
 
           <!-- Orientasi Halaman -->
           <div class="form-group mb-0">
-            <label class="form-label" for="select-print-orientation" style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Orientasi Halaman</label>
+            <label class="form-label" for="select-print-orientation"
+              style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Orientasi Halaman</label>
             <select id="select-print-orientation" class="form-select form-control-sm" style="width: 100%;">
               <option value="portrait" selected>Portrait (Tegak - Traktor Vertikal)</option>
               <option value="landscape">Landscape (Mendatar)</option>
             </select>
-            <small id="text-ncr-orientation-hint" style="font-size: 10px; color: var(--text-secondary); margin-top: 3px; display: block;">
+            <small id="text-ncr-orientation-hint"
+              style="font-size: 10px; color: var(--text-secondary); margin-top: 3px; display: block;">
               Format NCR otomatis dikunci ke Portrait agar selaras dengan traktor dot-matrix.
             </small>
           </div>
 
           <!-- Jumlah Rangkap -->
           <div class="form-group mb-0">
-            <label class="form-label" for="select-print-copies" style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Jumlah Salinan (Rangkap)</label>
+            <label class="form-label" for="select-print-copies"
+              style="font-size: 11.5px; font-weight: 700; margin-bottom: 4px;">Jumlah Salinan (Rangkap)</label>
             <select id="select-print-copies" class="form-select form-control-sm" style="width: 100%;">
               <option value="1" selected>1 Rangkap (Lembar Utama)</option>
               <option value="2">2 Rangkap (Asli + Arsip)</option>
@@ -1823,8 +1967,10 @@
           <!-- Preset Margin -->
           <div class="form-group mb-0">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <label class="form-label mb-0" for="select-print-margin-preset" style="font-size: 11.5px; font-weight: 700;">Margin Dokumen</label>
-              <span id="label-current-margin-val" class="badge badge-primary mono-num" style="font-size: 10px; padding: 2px 7px; font-weight: 700;">5 mm</span>
+              <label class="form-label mb-0" for="select-print-margin-preset"
+                style="font-size: 11.5px; font-weight: 700;">Margin Dokumen</label>
+              <span id="label-current-margin-val" class="badge badge-primary mono-num"
+                style="font-size: 10px; padding: 2px 7px; font-weight: 700;">5 mm</span>
             </div>
             <div style="display: flex; gap: 8px;">
               <select id="select-print-margin-preset" class="form-select form-control-sm" style="flex: 1;">
@@ -1834,7 +1980,8 @@
                 <option value="wide">Lebar (12 mm / 1.2 cm)</option>
                 <option value="custom">Kustom (Atur Manual)...</option>
               </select>
-              <select id="select-print-margin-unit" class="form-select form-control-sm" style="width: 82px; min-width: 82px; font-weight: 700; text-align: center;" title="Pilih Satuan Margin">
+              <select id="select-print-margin-unit" class="form-select form-control-sm"
+                style="width: 82px; min-width: 82px; font-weight: 700; text-align: center;" title="Pilih Satuan Margin">
                 <option value="mm" selected>mm</option>
                 <option value="cm">cm</option>
               </select>
@@ -1842,50 +1989,54 @@
           </div>
 
           <!-- Panel Input Margin Kustom (Tampil saat opsi Kustom dipilih) -->
-          <div id="panel-custom-margins" class="custom-margin-panel" style="display: none; padding: 10px 12px; margin-bottom: 0;">
+          <div id="panel-custom-margins" class="custom-margin-panel"
+            style="display: none; padding: 10px 12px; margin-bottom: 0;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
               <span style="font-size: 11px; font-weight: 700; color: var(--text-primary);">Margin Per Sisi:</span>
-              <span style="font-size: 10px; color: var(--text-secondary);">Satuan: <strong id="custom-margin-unit-label" style="color: var(--primary); font-weight: 700;">mm</strong></span>
+              <span style="font-size: 10px; color: var(--text-secondary);">Satuan: <strong id="custom-margin-unit-label"
+                  style="color: var(--primary); font-weight: 700;">mm</strong></span>
             </div>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
               <div>
-                <label class="form-label" for="input-margin-top" style="font-size: 10.5px; margin-bottom: 2px;">Atas (Top)</label>
-                <input type="number" id="input-margin-top" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+                <label class="form-label" for="input-margin-top" style="font-size: 10.5px; margin-bottom: 2px;">Atas
+                  (Top)</label>
+                <input type="number" id="input-margin-top" class="form-control form-control-sm mono-num" value="5"
+                  min="0" max="50" step="0.5">
               </div>
               <div>
-                <label class="form-label" for="input-margin-bottom" style="font-size: 10.5px; margin-bottom: 2px;">Bawah (Bottom)</label>
-                <input type="number" id="input-margin-bottom" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+                <label class="form-label" for="input-margin-bottom" style="font-size: 10.5px; margin-bottom: 2px;">Bawah
+                  (Bottom)</label>
+                <input type="number" id="input-margin-bottom" class="form-control form-control-sm mono-num" value="5"
+                  min="0" max="50" step="0.5">
               </div>
               <div>
-                <label class="form-label" for="input-margin-left" style="font-size: 10.5px; margin-bottom: 2px;">Kiri (Left)</label>
-                <input type="number" id="input-margin-left" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+                <label class="form-label" for="input-margin-left" style="font-size: 10.5px; margin-bottom: 2px;">Kiri
+                  (Left)</label>
+                <input type="number" id="input-margin-left" class="form-control form-control-sm mono-num" value="5"
+                  min="0" max="50" step="0.5">
               </div>
               <div>
-                <label class="form-label" for="input-margin-right" style="font-size: 10.5px; margin-bottom: 2px;">Kanan (Right)</label>
-                <input type="number" id="input-margin-right" class="form-control form-control-sm mono-num" value="5" min="0" max="50" step="0.5">
+                <label class="form-label" for="input-margin-right" style="font-size: 10.5px; margin-bottom: 2px;">Kanan
+                  (Right)</label>
+                <input type="number" id="input-margin-right" class="form-control form-control-sm mono-num" value="5"
+                  min="0" max="50" step="0.5">
               </div>
             </div>
           </div>
 
           <!-- Tombol Aksi Cetak di Bagian Bawah Panel Kiri -->
-          <div class="print-sidebar-actions" style="margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
-            <button id="btn-direct-print-dialog" class="btn btn-primary" type="button" style="justify-content: center; font-weight: 700; padding: 10px 14px; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                <rect x="6" y="14" width="12" height="8"></rect>
-              </svg>
+          <div class="print-sidebar-actions"
+            style="margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+            <button id="btn-direct-print-dialog" class="btn btn-primary" type="button"
+              style="justify-content: center; font-weight: 700; padding: 10px 14px;">
               <span>Cetak ke Printer</span>
             </button>
-            <button id="btn-confirm-print-dialog" class="btn btn-secondary" type="button" style="justify-content: center; gap: 6px; font-weight: 600;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
+            <button id="btn-confirm-print-dialog" class="btn btn-secondary" type="button"
+              style="justify-content: center; font-weight: 600;">
               <span>Unduh Dokumen PDF</span>
             </button>
-            <button class="btn btn-secondary btn-modal-cancel" type="button" style="justify-content: center;">Batal</button>
+            <button class="btn btn-secondary btn-modal-cancel" type="button"
+              style="justify-content: center;">Batal</button>
           </div>
         </div>
 
@@ -1894,12 +2045,11 @@
           <!-- Bar Informasi Pratinjau -->
           <div class="print-preview-header-bar">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.04em;">Pratinjau Lembar:</span>
-              <span id="badge-preview-paper-spec" class="badge badge-primary mono-num" style="font-size: 10.5px; padding: 2px 8px;">NCR Continuous 9.5" × 11" (Portrait - 241 × 279 mm)</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span id="badge-preview-copies-count" class="badge badge-secondary mono-num" style="font-size: 10px;">1 Rangkap</span>
-              <span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">PDF Native WYSIWYG</span>
+              <span
+                style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.04em;">Pratinjau
+                Lembar:</span>
+              <span id="badge-preview-paper-spec" class="badge badge-primary mono-num"
+                style="font-size: 10.5px; padding: 2px 8px;">NCR Continuous 9.5" × 11" (Portrait - 241 × 279 mm)</span>
             </div>
           </div>
 
@@ -1912,7 +2062,9 @@
             </div>
 
             <!-- Native PDF iframe element with blob URL -->
-            <iframe id="print-pdf-preview-iframe" class="print-pdf-native-frame" src="about:blank" style="width: 100%; height: 100%; border: none; min-height: 520px; background: #1E293B;" title="Pratinjau PDF Native"></iframe>
+            <iframe id="print-pdf-preview-iframe" class="print-pdf-native-frame" src="about:blank"
+              style="width: 100%; height: 100%; border: none; min-height: 520px; background: #1E293B;"
+              title="Pratinjau PDF Native"></iframe>
 
             <!-- Hidden container for live HTML generation & fallback -->
             <div id="modal-print-preview-content" style="display: none;"></div>
@@ -1924,10 +2076,12 @@
 
   <!-- Modal 10: Hak Akses & Manajemen Pemakai (Strictly DESIGN_SYSTEM.md Compliant) -->
   <div id="modal-user-permissions" class="modal-overlay">
-    <div class="modal-container" style="max-width: 920px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-container"
+      style="max-width: 920px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
       <div class="modal-header">
         <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Hak Akses &amp; Manajemen Pengguna</h3>
-        <button class="modal-close-btn" id="btn-close-perm-modal-x" type="button" aria-label="Tutup Modal">&times;</button>
+        <button class="modal-close-btn" id="btn-close-perm-modal-x" type="button"
+          aria-label="Tutup Modal">&times;</button>
       </div>
 
       <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
@@ -1937,9 +2091,10 @@
             <div class="perm-panel-title">
               Daftar Pengguna
             </div>
-            
-            <input type="text" id="perm-user-search-input" class="form-control form-control-sm mb-2" placeholder="Cari nama atau role...">
-            
+
+            <input type="text" id="perm-user-search-input" class="form-control form-control-sm mb-2"
+              placeholder="Cari nama atau role...">
+
             <div class="perm-user-table-wrapper">
               <table class="data-table perm-user-table">
                 <thead>
@@ -1956,13 +2111,16 @@
 
             <!-- Tombol Aksi Pengguna (Text Only) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <button type="button" id="btn-perm-add-user" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; justify-content: center; padding: 0 8px;">
+              <button type="button" id="btn-perm-add-user" class="btn btn-secondary btn-sm"
+                style="display: flex; align-items: center; justify-content: center; padding: 0 8px;">
                 Tambah User
               </button>
-              <button type="button" id="btn-perm-edit-pass" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; justify-content: center; padding: 0 8px;">
+              <button type="button" id="btn-perm-edit-pass" class="btn btn-secondary btn-sm"
+                style="display: flex; align-items: center; justify-content: center; padding: 0 8px;">
                 Ubah Password
               </button>
-              <button type="button" id="btn-perm-del-user" class="btn btn-confirm-accent btn-sm" style="grid-column: span 2; display: flex; align-items: center; justify-content: center; padding: 0 8px;">
+              <button type="button" id="btn-perm-del-user" class="btn btn-confirm-accent btn-sm"
+                style="grid-column: span 2; display: flex; align-items: center; justify-content: center; padding: 0 8px;">
                 Hapus Pengguna
               </button>
             </div>
@@ -1970,7 +2128,8 @@
 
           <!-- Kolom Kanan: Matriks Hak Akses Granular -->
           <div id="perm-matrix-container" class="perm-main-panel">
-            <div class="d-flex align-center justify-between mb-3" style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+            <div class="d-flex align-center justify-between mb-3"
+              style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
               <h4 id="perm-selected-user-title" style="margin: 0; font-size: 15px; font-weight: 600;">
                 Hak Akses : wms
               </h4>
@@ -2014,7 +2173,8 @@
                   <td style="text-align: center;"><input type="checkbox" id="perm-report-view"></td>
                   <td style="text-align: center; color: var(--text-muted);">-</td>
                   <td style="text-align: center; color: var(--text-muted);">-</td>
-                  <td style="text-align: center;"><input type="checkbox" id="perm-report-export" title="Export Excel / PDF"></td>
+                  <td style="text-align: center;"><input type="checkbox" id="perm-report-export"
+                      title="Export Excel / PDF"></td>
                 </tr>
               </tbody>
             </table>
@@ -2071,7 +2231,8 @@
     <div class="modal-container" style="max-width: 440px;">
       <div class="modal-header">
         <h3 style="font-size: 16px; font-weight: 600;">Konfirmasi Perubahan Hak Akses</h3>
-        <button class="modal-close-btn" id="btn-close-unsaved-perm-x" type="button" aria-label="Tutup Modal">&times;</button>
+        <button class="modal-close-btn" id="btn-close-unsaved-perm-x" type="button"
+          aria-label="Tutup Modal">&times;</button>
       </div>
       <div class="modal-body" style="padding: 16px;">
         <p style="margin: 0; line-height: 1.5; color: var(--text-primary);">
@@ -2080,7 +2241,8 @@
       </div>
       <div class="modal-footer" style="padding: 12px 16px;">
         <button type="button" id="btn-cancel-unsaved-perm" class="btn btn-secondary">Batal</button>
-        <button type="button" id="btn-confirm-discard-perm-yes" class="btn btn-confirm-accent">Ya, Tutup Tanpa Simpan</button>
+        <button type="button" id="btn-confirm-discard-perm-yes" class="btn btn-confirm-accent">Ya, Tutup Tanpa
+          Simpan</button>
       </div>
     </div>
   </div>
@@ -2100,7 +2262,8 @@
           </div>
           <div class="form-group mb-3">
             <label class="form-label" for="input-add-user-fullname">Nama Lengkap</label>
-            <input type="text" id="input-add-user-fullname" class="form-control" placeholder="Contoh: Budi Santoso" required>
+            <input type="text" id="input-add-user-fullname" class="form-control" placeholder="Contoh: Budi Santoso"
+              required>
           </div>
           <div class="form-group mb-3">
             <label class="form-label" for="input-add-user-email">Email Akun (Opsional)</label>
@@ -2108,7 +2271,8 @@
           </div>
           <div class="form-group mb-3">
             <label class="form-label" for="input-add-user-password">Kata Sandi Awal</label>
-            <input type="password" id="input-add-user-password" class="form-control" placeholder="Minimal 4 karakter" required>
+            <input type="password" id="input-add-user-password" class="form-control" placeholder="Minimal 4 karakter"
+              required>
           </div>
           <div class="form-group mb-0">
             <label class="form-label" for="input-add-user-role">Bagian / Role</label>
@@ -2123,7 +2287,8 @@
         <div class="modal-footer" style="padding: 12px 16px;">
           <button type="button" class="btn btn-secondary btn-modal-cancel">Batal</button>
           <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
@@ -2144,17 +2309,20 @@
       <form id="form-admin-edit-pass">
         <div class="modal-body" style="padding: 16px;">
           <p class="text-secondary text-small mb-3">
-            Mengatur ulang kata sandi untuk akun: <strong id="admin-edit-pass-target-username" style="color: var(--text-primary);">-</strong>
+            Mengatur ulang kata sandi untuk akun: <strong id="admin-edit-pass-target-username"
+              style="color: var(--text-primary);">-</strong>
           </p>
           <div class="form-group mb-0">
             <label class="form-label" for="input-admin-new-password">Kata Sandi Baru</label>
-            <input type="password" id="input-admin-new-password" class="form-control" placeholder="Masukkan password baru" required>
+            <input type="password" id="input-admin-new-password" class="form-control"
+              placeholder="Masukkan password baru" required>
           </div>
         </div>
         <div class="modal-footer" style="padding: 12px 16px;">
           <button type="button" class="btn btn-secondary btn-modal-cancel">Batal</button>
           <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
             <span>Simpan Password</span>
@@ -2172,12 +2340,14 @@
         <button class="modal-close-btn" type="button">&times;</button>
       </div>
       <div class="modal-body" style="padding: 16px;">
-        <p>Apakah Anda yakin ingin menghapus akun pengguna <strong id="delete-user-target-name" style="color: var(--text-primary);">-</strong>?</p>
+        <p>Apakah Anda yakin ingin menghapus akun pengguna <strong id="delete-user-target-name"
+            style="color: var(--text-primary);">-</strong>?</p>
         <p class="text-secondary text-small mt-2">Tindakan ini tidak dapat dibatalkan.</p>
       </div>
       <div class="modal-footer" style="padding: 12px 16px;">
         <button type="button" class="btn btn-secondary btn-modal-cancel">Batal</button>
-        <button type="button" id="btn-confirm-delete-user-yes" class="btn btn-confirm-accent">Ya, Hapus Pengguna</button>
+        <button type="button" id="btn-confirm-delete-user-yes" class="btn btn-confirm-accent">Ya, Hapus
+          Pengguna</button>
       </div>
     </div>
   </div>
@@ -2208,4 +2378,5 @@
   <script src="assets/js/app.js"></script>
 
 </body>
+
 </html>

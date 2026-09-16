@@ -72,14 +72,24 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Antarmuka cetak kustom (`#modal-print-settings`) memisahkan fungsi kontrol konfigurasi dan visualisasi dokumen ke dalam dua panel mandiri guna mengatasi keterbatasan dialog print bawaan Windows/Chromium ("This app doesn't support print preview") dan masalah dimensional pada printer dot-matrix.
   - **Panel Kanan (Live WYSIWYG Native PDF Preview)**: Memanfaatkan elemen frame terisolasi (`#print-pdf-preview-iframe`) berbasis Blob URL untuk me-render dokumen PDF secara native dengan dukungan plugin Chromium PDF Viewer (`plugins: true`). Dimensi kertas, orientasi, dan margin dokumen tampil 100% presisi (*what-you-see-is-what-you-get*) tanpa distorsi CSS rendering.
   - **Panel Kiri (Sidebar Pengaturan Cetak & Kontrol Perangkat)**: Panel kontrol selebar 340px yang mengelola pemilihan printer fisik, format kertas, orientasi, salinan (rangkap), preset margin dokumen, margin kustom granular, serta tombol aksi pencetakan langsung dan unduh PDF.
-- **Deteksi Printer Fisik Terpasang (Physical Printer Discovery)**:
-  - Menarik daftar printer aktif dari sistem operasi Windows secara dinamis melalui kanal IPC main process Electron menggunakan API `webContents.getPrintersAsync()`.
-  - Dilengkapi tombol "Pindai" ulang, penanda printer default sistem, dan badge status ketersediaan printer (`badge-success`, `badge-warning`, atau `badge-info`).
+- **Pemindaian Printer Otomatis (Port, Bluetooth & Network Auto-Discovery)**:
+  - Menarik daftar printer aktif dari sistem operasi Windows secara berkala dan dinamis melalui kanal IPC main process Electron menggunakan API `webContents.getPrintersAsync()`.
+  - Secara otomatis memindai dan menambahkan printer baru yang terhubung melalui port fisik (USB/Serial), Bluetooth, maupun jaringan (Network/TCP-IP/WSD) ke dalam dropdown perangkat tujuan tanpa memerlukan tombol pindai manual.
 - **Pencetakan Latar Belakang Langsung (Direct Silent Print)**:
   - Tombol "Cetak ke Printer" mengeksekusi pencetakan latar belakang (*silent print*) langsung ke printer fisik yang dipilih melalui API Electron `webContents.print` tanpa memunculkan dialog sistem operasi lagi.
-  - Pemetaan ukuran kertas kustom ke spesifikasi mikron baku (`{ width: number, height: number }`) seperti Continuous Form NCR (241.300 × 279.400 mikron) dan A6 (105.000 × 148.000 mikron) untuk mencegah kegagalan antrean cetak driver printer dot-matrix.
+  - Pemetaan ukuran kertas kustom ke spesifikasi mikron baku (`{ width: number, height: number }`), seperti Continuous Form NCR Wartel / Bagi 2 (241.300 × 139.700 mikron) dan A6 (105.000 × 148.000 mikron) untuk mencegah kegagalan antrean cetak driver printer dot-matrix.
+- **Sistem Penskalaan Tata Letak Dokumen Proporsional Berbasis Referensi A6 (105 × 148 mm)**:
+  - Mengadopsi ukuran baku **A6 (105 × 148 mm)** sebagai acuan dasar desain nota timbang dengan faktor pengali skala dasar (`--doc-scale: 1.0`).
+  - Seluruh elemen desain nota timbang dan rekapitulasi pemasok—meliputi tinggi logo kop surat, hierarki ukuran font, tinggi baris (*line-height*), jarak bantalan (*padding/margin*), ketebalan garis pembatas, kotak total, hingga kolom tanda tangan—dihitung secara matematis proporsional menggunakan CSS Custom Property `--doc-scale` dan ekspresi `calc(... * var(--doc-scale, 1))`.
+  - Faktor skala proporsional dinamis:
+    - **A6 (105 × 148 mm)**: Skala `1.0` (Portrait) / `0.71` (Landscape)
+    - **A5 (148 × 210 mm)**: Skala `1.414` (Portrait) / `1.0` (Landscape)
+    - **A4 (210 × 297 mm)**: Skala `2.0` (Portrait) / `1.414` (Landscape)
+    - **Letter (8.5" × 11")**: Skala `1.888` (Portrait) / `1.45` (Landscape)
+    - **NCR Continuous 9.5" × 11/2" (Wartel / Bagi 2)**: Skala `0.95` (Portrait)
+  - Memberikan komposisi visual yang identik, simetris, dan seimbang pada setiap format kertas target tanpa distorsi, tanpa teks yang kekecilan, serta tanpa ruang kosong berlebih.
 - **Pilihan Ukuran Kertas Fleksibel**:
-  - **NCR Continuous Sheet 9.5" × 11"**: Format kertas continuous form standar printer dot-matrix (241 × 279 mm).
+  - **NCR Continuous 9.5" × 11/2" (Wartel / Bagi 2)**: Format kertas continuous form standar printer dot-matrix (241 × 140 mm / 241.3 × 139.7 mm) dengan rasio aspek CSS `aspect-ratio: 241.3 / 139.7`, aturan `@page { size: 241.3mm 139.7mm; margin: 0; }`, dan batas margin horizontal aman minimal 8-10 mm guna melindungi teks dari lubang pin-feed traktor dot-matrix.
   - **A4 (210 × 297 mm)**: Format laporan dokumen ukuran penuh.
   - **A5 (148 × 210 mm)**: Format nota medium.
   - **A6 (105 × 148 mm)**: Standar tiket nota timbangan ringkas.
@@ -201,16 +211,35 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 | Impor & Pemulihan Basis Data (.sqlite) | Ya | Tidak | Tidak |
 | Reset & Penghapusan Basis Data (Danger Zone) | Ya | Tidak | Tidak |
 
-### 11. Audit Trail & Activity Log
+### 11. Arsitektur Keamanan Siber & Remediasi Defensif (Security & Defensive Hardening)
+- **Kriptografi Kata Sandi Standar Industri (Web Crypto PBKDF2)**:
+  - Kredensial seluruh akun pengguna diamankan menggunakan algoritma hashing standar **PBKDF2** (Password-Based Key Derivation Function 2) dengan Web Crypto API murni (`crypto.subtle`).
+  - Menggunakan konfigurasi 100.000 iterasi, salt unik 16-byte acak berbasis CSPRNG (`crypto.getRandomValues`), dan algoritma ringkasan SHA-256 (`$pbkdf2$100000$<saltHex>$<hashHex>`).
+  - Dilengkapi mekanisme migrasi transparan otomatis dari format plaintext lama ke hash aman saat autentikasi pertama.
+- **Perlindungan Anti-Brute Force & Rate Limiting Login**:
+  - Pembatasan frekuensi percobaan masuk (maksimal 5 kali kegagalan berturut-turut).
+  - Kegagalan berulang secara otomatis memicu penguncian akun selama 3 menit (180 detik) dengan hitung mundur visual di antarmuka serta pencatatan audit log keamanan permanen ke basis data SQLite.
+- **Sanitasi Global & Pencegahan Stored XSS (Cross-Site Scripting)**:
+  - Pustaka sanitasi entitas HTML global `window.escapeHtml()` diterapkan secara konsisten pada seluruh interpolasi data dinamis pengguna (nama pemasok, nomor polisi, jenis material, nama supir, asal daerah, catatan transaksi, hingga dialog modal konfirmasi) guna mencegah injeksi skrip peramban jahat.
+- **Pencegahan Injeksi Formula Spreadsheet (CSV/Excel Formula Injection)**:
+  - Seluruh data string yang diekspor melalui generator ExcelJS difilter secara ketat menggunakan fungsi `sanitizeExcelCell()`.
+  - Karakter awal berisiko formula (`=`, `+`, `-`, `@`, tab `\t`, dan carriage return `\r`) dinetralisasi secara otomatis dengan awalan tanda petik tunggal (`'`) untuk melindungi perangkat lunak pembukuan akuntansi dari eksekusi kode berbahaya.
+- **Kebijakan Keamanan Konten Berlapis (Content Security Policy - CSP)**:
+  - Header CSP ketat diterapkan pada lapisan sesi jaringan Electron (`session.defaultSession.webRequest.onHeadersReceived`) dan meta tag pada seluruh dokumen HTML aplikasi.
+  - Membatasi eksekusi sumber skrip eksternal, gaya, dan frame tidak dikenal.
+- **Isolasi & Pembekuan Objek Sesi Autentikasi (Session Tampering Protection)**:
+  - Pengambilan sesi aktif `AuthManager.getCurrentUser()` mengembalikan objek sesi beku (`Object.freeze()`) dan bernilai `null` saat tidak ada sesi valid, mencegah eskalasi wewenang atau manipulasi runtime melalui Developer Tools.
+
+### 12. Audit Trail & Activity Log
 - **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar Satuan / Massal, Reset Database) tercatat otomatis di tabel `activity_logs`.
 - **Validasi Alasan Wajib**: Setiap tindakan sensitif (seperti penghapusan atau reset data) mewajibkan input alasan tertulis sebelum dieksekusi demi kepatuhan audit.
 
-### 12. Pencadangan Data, Pemulihan, & Proteksi Zona Bahaya
+### 13. Pencadangan Data, Pemulihan, & Proteksi Zona Bahaya
 - **Dukungan Ganda Format Cadangan**: Mendukung format database biner SQLite (`.sqlite`) dan berkas log JSON (`.json`).
 - **Slot Pemulihan Auto-Backup**: Penyimpanan otomatis slot cadangan lokal terakhir yang dapat dipulihkan sewaktu-waktu.
 - **Zona Bahaya (Reset Data)**: Opsi penghapusan seluruh data transaksi dengan proteksi konfirmasi ganda, input alasan wajib, dan pencatatan audit log permanen.
 
-### 13. Standar Desain Antarmuka Industrial (Design System)
+### 14. Standar Desain Antarmuka Industrial (Design System)
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
 - **Komponen Floating Dropdown Universal (Custom Select Component)**:
   - Seluruh elemen `<select>` formulir dikonversi menjadi custom floating dropdown yang elegan dengan trigger berstatus aktif.

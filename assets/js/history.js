@@ -358,12 +358,12 @@ const HistoryManager = {
     const list = StorageManager.getTransactions();
     const tx = list.find(t => t.id === id);
     if (tx) {
-      const generatorFn = (copyNumber, totalCopies) => TransactionEngine.generateNotaHtml(tx, copyNumber, totalCopies);
+      const generatorFn = (copyNumber, totalCopies, scale) => TransactionEngine.generateNotaHtml(tx, copyNumber, totalCopies, scale);
       if (typeof PrintManager !== 'undefined') {
-        PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang', 'A6');
+        PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang');
       } else {
         const container = document.getElementById('printable-nota');
-        if (container) container.innerHTML = generatorFn(1, 1);
+        if (container) container.innerHTML = generatorFn(1, 1, 1.0);
         window.print();
       }
     }

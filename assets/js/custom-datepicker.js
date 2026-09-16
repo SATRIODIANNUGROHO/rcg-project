@@ -258,12 +258,48 @@ const CustomDatePicker = {
     wrapper.appendChild(popup);
     input.parentNode.insertBefore(wrapper, input.nextSibling);
 
+    const adjustPlacement = () => {
+      const triggerRect = trigger.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - triggerRect.bottom;
+      const spaceAbove = triggerRect.top;
+      const availableBelow = Math.max(0, spaceBelow - 14);
+      const availableAbove = Math.max(0, spaceAbove - 14);
+
+      // Datepicker calendar popup natural height is ~310px
+      const naturalHeight = 310;
+      const shouldFlip = (availableBelow < naturalHeight && availableAbove > availableBelow) || (availableBelow < 200 && availableAbove >= 180);
+
+      if (shouldFlip) {
+        wrapper.classList.add('open-upward');
+        popup.style.top = 'auto';
+        popup.style.bottom = 'calc(100% + 4px)';
+      } else {
+        wrapper.classList.remove('open-upward');
+        popup.style.top = 'calc(100% + 4px)';
+        popup.style.bottom = 'auto';
+      }
+    };
+
+    const closeCalendar = () => {
+      wrapper.classList.remove('open', 'open-upward');
+      popup.style.top = '';
+      popup.style.bottom = '';
+      if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+        CustomSelectManager.elevateAncestors(wrapper, false);
+      }
+    };
+
     // Toggle on trigger click
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
       const isAlreadyOpen = wrapper.classList.contains('open');
-      document.querySelectorAll('.custom-select-container.open, .custom-datepicker-container.open, .user-profile-dropdown.open').forEach(w => {
-        if (w !== wrapper) w.classList.remove('open');
+      document.querySelectorAll('.custom-select-container.open, .custom-datepicker-container.open, .user-profile-dropdown.open, .custom-combobox.open, .custom-autocomplete-container.open').forEach(w => {
+        if (w !== wrapper) {
+          w.classList.remove('open', 'open-upward');
+          if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+            CustomSelectManager.elevateAncestors(w, false);
+          }
+        }
       });
       if (!isAlreadyOpen) {
         // Sync calendar view with current input value
@@ -275,8 +311,14 @@ const CustomDatePicker = {
           }
         }
         renderCalendar();
+        adjustPlacement();
+        wrapper.classList.add('open');
+        if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+          CustomSelectManager.elevateAncestors(wrapper, true);
+        }
+      } else {
+        closeCalendar();
       }
-      wrapper.classList.toggle('open', !isAlreadyOpen);
     });
 
     // Native input value change sync
@@ -288,7 +330,17 @@ const CustomDatePicker = {
   selectDate(input, textSpan, wrapper, isoDate) {
     input.value = isoDate;
     textSpan.textContent = this.formatDateDisplay(isoDate);
-    if (wrapper) wrapper.classList.remove('open');
+    if (wrapper) {
+      wrapper.classList.remove('open', 'open-upward');
+      const popup = wrapper.querySelector('.custom-datepicker-popup');
+      if (popup) {
+        popup.style.top = '';
+        popup.style.bottom = '';
+      }
+      if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+        CustomSelectManager.elevateAncestors(wrapper, false);
+      }
+    }
     input.dispatchEvent(new Event('change', { bubbles: true }));
     input.dispatchEvent(new Event('input', { bubbles: true }));
   },
@@ -312,14 +364,68 @@ const CustomDatePicker = {
   bindGlobalEvents() {
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.custom-datepicker-container')) {
-        document.querySelectorAll('.custom-datepicker-container.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.custom-datepicker-container.open').forEach(w => {
+          w.classList.remove('open', 'open-upward');
+          const popup = w.querySelector('.custom-datepicker-popup');
+          if (popup) {
+            popup.style.top = '';
+            popup.style.bottom = '';
+          }
+          if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+            CustomSelectManager.elevateAncestors(w, false);
+          }
+        });
       }
     });
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        document.querySelectorAll('.custom-datepicker-container.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.custom-datepicker-container.open').forEach(w => {
+          w.classList.remove('open', 'open-upward');
+          const popup = w.querySelector('.custom-datepicker-popup');
+          if (popup) {
+            popup.style.top = '';
+            popup.style.bottom = '';
+          }
+          if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+            CustomSelectManager.elevateAncestors(w, false);
+          }
+        });
       }
     });
+
+    const handleScrollOrResize = (e) => {
+      const openPickers = document.querySelectorAll('.custom-datepicker-container.open');
+      if (!openPickers.length) return;
+      openPickers.forEach(wrapper => {
+        if (e && e.target && wrapper.contains(e.target) && e.target.classList.contains('custom-datepicker-popup')) {
+          return;
+        }
+        const trigger = wrapper.querySelector('.custom-datepicker-trigger');
+        const popup = wrapper.querySelector('.custom-datepicker-popup');
+        if (trigger && popup) {
+          const triggerRect = trigger.getBoundingClientRect();
+          const spaceBelow = window.innerHeight - triggerRect.bottom;
+          const spaceAbove = triggerRect.top;
+          const availableBelow = Math.max(0, spaceBelow - 14);
+          const availableAbove = Math.max(0, spaceAbove - 14);
+          const naturalHeight = 310;
+          const shouldFlip = (availableBelow < naturalHeight && availableAbove > availableBelow) || (availableBelow < 200 && availableAbove >= 180);
+
+          if (shouldFlip) {
+            wrapper.classList.add('open-upward');
+            popup.style.top = 'auto';
+            popup.style.bottom = 'calc(100% + 4px)';
+          } else {
+            wrapper.classList.remove('open-upward');
+            popup.style.top = 'calc(100% + 4px)';
+            popup.style.bottom = 'auto';
+          }
+        }
+      });
+    };
+
+    window.addEventListener('resize', handleScrollOrResize, { passive: true });
+    window.addEventListener('scroll', handleScrollOrResize, { passive: true, capture: true });
   }
 };

@@ -6,12 +6,14 @@
 
 const PAPER_FORMATS = {
   NCR_Wartel: {
-    label: 'NCR Continuous Sheet 9.5" × 11"',
+    label: 'NCR Continuous 9.5" × 11"',
     specText: 'NCR Continuous 9.5" × 11" (241 × 279 mm)',
     previewWidth: '780px',
     cssPageSize: '9.5in 11in portrait',
     defaultOrientation: 'portrait',
-    lockPortrait: true
+    lockPortrait: true,
+    scaleFactor: 1.888,
+    scaleFactorLandscape: 1.888
   },
   A4: {
     label: 'A4 (210 × 297 mm)',
@@ -19,7 +21,9 @@ const PAPER_FORMATS = {
     previewWidth: '760px',
     cssPageSize: '210mm 297mm',
     defaultOrientation: 'portrait',
-    lockPortrait: false
+    lockPortrait: false,
+    scaleFactor: 2.0,
+    scaleFactorLandscape: 1.414
   },
   A5: {
     label: 'A5 (148 × 210 mm)',
@@ -27,7 +31,9 @@ const PAPER_FORMATS = {
     previewWidth: '620px',
     cssPageSize: '148mm 210mm',
     defaultOrientation: 'portrait',
-    lockPortrait: false
+    lockPortrait: false,
+    scaleFactor: 1.414,
+    scaleFactorLandscape: 1.0
   },
   A6: {
     label: 'A6 (105 × 148 mm - Standar Tiket Timbang)',
@@ -35,7 +41,9 @@ const PAPER_FORMATS = {
     previewWidth: '520px',
     cssPageSize: '105mm 148mm',
     defaultOrientation: 'portrait',
-    lockPortrait: false
+    lockPortrait: false,
+    scaleFactor: 1.0,
+    scaleFactorLandscape: 0.71
   },
   Letter: {
     label: 'Letter (8.5 × 11 inch)',
@@ -43,16 +51,18 @@ const PAPER_FORMATS = {
     previewWidth: '760px',
     cssPageSize: '8.5in 11in',
     defaultOrientation: 'portrait',
-    lockPortrait: false
+    lockPortrait: false,
+    scaleFactor: 1.888,
+    scaleFactorLandscape: 1.45
   }
 };
 
 const MARGIN_PRESETS = {
   default: { label: 'Standar (5 mm / 0.5 cm)', mm: 5, cm: 0.5 },
-  narrow:  { label: 'Sempit (2 mm / 0.2 cm)', mm: 2, cm: 0.2 },
-  medium:  { label: 'Sedang (8 mm / 0.8 cm)', mm: 8, cm: 0.8 },
-  wide:    { label: 'Lebar (12 mm / 1.2 cm)', mm: 12, cm: 1.2 },
-  custom:  { label: 'Kustom (Atur Manual)', mm: 5, cm: 0.5 }
+  narrow: { label: 'Sempit (2 mm / 0.2 cm)', mm: 2, cm: 0.2 },
+  medium: { label: 'Sedang (8 mm / 0.8 cm)', mm: 8, cm: 0.8 },
+  wide: { label: 'Lebar (12 mm / 1.2 cm)', mm: 12, cm: 1.2 },
+  custom: { label: 'Kustom (Atur Manual)', mm: 5, cm: 0.5 }
 };
 
 const PrintManager = {
@@ -67,6 +77,7 @@ const PrintManager = {
   previewDebounceTimer: null,
   isRenderingPreview: false,
   availablePrinters: [],
+  autoDiscoveryTimer: null,
 
   marginState: {
     preset: 'default',
@@ -96,73 +107,80 @@ const PrintManager = {
       }
     }
 
-    this.fetchPrinters();
+    this.fetchPrinters(false);
   },
 
-  async fetchPrinters() {
+  startAutoDiscovery() {
+    this.stopAutoDiscovery();
+    this.fetchPrinters(false);
+
+    // Continuous dynamic polling for printers connected via Port (USB/Serial), Bluetooth, or Network (TCP/IP/WSD/Share)
+    this.autoDiscoveryTimer = setInterval(() => {
+      const modal = document.getElementById('modal-print-settings');
+      if (modal && modal.classList.contains('active')) {
+        this.fetchPrinters(true);
+      } else {
+        this.stopAutoDiscovery();
+      }
+    }, 2500);
+  },
+
+  stopAutoDiscovery() {
+    if (this.autoDiscoveryTimer) {
+      clearInterval(this.autoDiscoveryTimer);
+      this.autoDiscoveryTimer = null;
+    }
+  },
+
+  async fetchPrinters(silent = false) {
     const printerSelect = document.getElementById('select-print-target-device');
-    const statusBadge = document.getElementById('badge-printer-status');
-    const defaultHint = document.getElementById('text-printer-default-hint');
     if (!printerSelect) return;
 
     if (window.electronAPI && typeof window.electronAPI.getSystemPrinters === 'function') {
-      if (statusBadge) {
-        statusBadge.className = 'badge badge-info';
-        statusBadge.textContent = 'Memindai printer...';
-      }
-
       try {
         const printers = await window.electronAPI.getSystemPrinters();
-        this.availablePrinters = Array.isArray(printers) ? printers : [];
+        const freshList = Array.isArray(printers) ? printers : [];
 
+        // Check if printer list has actually changed (added, removed, or name/default changed)
+        const oldSignatures = (this.availablePrinters || []).map(p => `${p.name}_${p.isDefault}`).sort().join('|');
+        const newSignatures = freshList.map(p => `${p.name}_${p.isDefault}`).sort().join('|');
+
+        if (silent && oldSignatures === newSignatures) {
+          // No port, bluetooth, or network changes detected, skip DOM update
+          return;
+        }
+
+        this.availablePrinters = freshList;
         const currentVal = printerSelect.value;
         printerSelect.innerHTML = '<option value="">Printer Sistem (Default Driver)</option>';
 
         if (this.availablePrinters.length > 0) {
+          let foundSelected = false;
           this.availablePrinters.forEach(printer => {
             const opt = document.createElement('option');
             opt.value = printer.name;
             const isDef = Boolean(printer.isDefault);
             opt.textContent = `${printer.displayName || printer.name}${isDef ? ' (Default)' : ''}`;
-            if (isDef && !currentVal) {
+            if (currentVal && printer.name === currentVal) {
+              opt.selected = true;
+              foundSelected = true;
+            } else if (isDef && !currentVal) {
               opt.selected = true;
             }
             printerSelect.appendChild(opt);
           });
 
-          if (currentVal) {
+          if (foundSelected) {
             printerSelect.value = currentVal;
-          }
-
-          if (statusBadge) {
-            statusBadge.className = 'badge badge-success';
-            statusBadge.textContent = `${this.availablePrinters.length} printer terpasang`;
-          }
-          if (defaultHint) {
-            defaultHint.textContent = 'Direct Silent Print';
-          }
-        } else {
-          if (statusBadge) {
-            statusBadge.className = 'badge badge-warning';
-            statusBadge.textContent = 'Tidak ada printer terpasang';
           }
         }
       } catch (err) {
-        console.error('Failed to enumerate system printers:', err);
-        if (statusBadge) {
-          statusBadge.className = 'badge badge-danger';
-          statusBadge.textContent = 'Galat pemindaian printer';
+        if (!silent) {
+          console.error('Failed to enumerate system printers:', err);
         }
       }
     } else {
       // Running inside web browser without Electron
-      if (statusBadge) {
-        statusBadge.className = 'badge badge-secondary';
-        statusBadge.textContent = 'Peramban Web';
-      }
-      if (defaultHint) {
-        defaultHint.textContent = 'Dialog Cetak Browser';
-      }
       printerSelect.innerHTML = '<option value="">Printer Sistem Default (Dialog Browser)</option>';
       printerSelect.disabled = true;
     }
@@ -281,17 +299,7 @@ const PrintManager = {
   },
 
   bindEvents() {
-    // 1. Refresh Printers Button
-    const refreshPrintersBtn = document.getElementById('btn-refresh-printers');
-    if (refreshPrintersBtn) {
-      refreshPrintersBtn.addEventListener('click', async () => {
-        refreshPrintersBtn.disabled = true;
-        await this.fetchPrinters();
-        refreshPrintersBtn.disabled = false;
-      });
-    }
-
-    // 2. Direct Silent Print Button ("Cetak ke Printer")
+    // Direct Silent Print Button ("Cetak ke Printer")
     const directPrintBtn = document.getElementById('btn-direct-print-dialog');
     if (directPrintBtn) {
       directPrintBtn.addEventListener('click', async () => {
@@ -308,7 +316,8 @@ const PrintManager = {
         const copiesSelect = document.getElementById('select-print-copies');
         const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
 
-        const finalHtml = this.getRenderedHtml(copies);
+        const activeScale = this.getScaleFactor(paperVal, orientation);
+        const finalHtml = this.getRenderedHtml(copies, activeScale);
 
         const printableContainer = document.getElementById('printable-nota');
         if (printableContainer) {
@@ -360,7 +369,8 @@ const PrintManager = {
         const copiesSelect = document.getElementById('select-print-copies');
         const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
 
-        const finalHtml = this.getRenderedHtml(copies);
+        const activeScale = this.getScaleFactor(paperVal, orientation);
+        const finalHtml = this.getRenderedHtml(copies, activeScale);
         const marginValues = this.getMarginValues();
 
         const printableContainer = document.getElementById('printable-nota');
@@ -382,6 +392,7 @@ const PrintManager = {
             defaultFilename: filename,
             paperSize: paperVal,
             landscape: isLandscape,
+            scaleFactor: activeScale,
             htmlContent: finalHtml,
             margins: marginValues
           });
@@ -404,7 +415,7 @@ const PrintManager = {
         const val = paperSelect.value;
         try {
           localStorage.setItem('rcg_print_paper_size', val);
-        } catch (e) {}
+        } catch (e) { }
 
         this.syncOrientationLock(val);
         this.updateNativePdfPreview();
@@ -519,11 +530,33 @@ const PrintManager = {
     }
   },
 
-  getRenderedHtml(copies = 1) {
+  getScaleFactor(paperSize, orientation = 'portrait') {
+    const isLandscape = (orientation === 'landscape');
+    const fmt = PAPER_FORMATS[paperSize];
+    if (fmt) {
+      return isLandscape ? (fmt.scaleFactorLandscape || fmt.scaleFactor || 1.0) : (fmt.scaleFactor || 1.0);
+    }
+    if (paperSize === 'A4') return isLandscape ? 1.414 : 2.0;
+    if (paperSize === 'A5') return isLandscape ? 1.0 : 1.414;
+    if (paperSize === 'A6') return isLandscape ? 0.71 : 1.0;
+    if (paperSize === 'Letter') return isLandscape ? 1.45 : 1.888;
+    if (paperSize === 'NCR_Wartel') return 1.888;
+    return 1.0;
+  },
+
+  getRenderedHtml(copies = 1, scaleFactor = null) {
     if (typeof this.currentGeneratorFn === 'function') {
+      let activeScale = scaleFactor;
+      if (activeScale === null || activeScale === undefined) {
+        const paperSelect = document.getElementById('select-print-paper-size');
+        const paperVal = paperSelect ? paperSelect.value : 'NCR_Wartel';
+        const orientationSelect = document.getElementById('select-print-orientation');
+        const orientation = orientationSelect ? orientationSelect.value : 'portrait';
+        activeScale = this.getScaleFactor(paperVal, orientation);
+      }
       const sheets = [];
       for (let i = 1; i <= copies; i++) {
-        sheets.push(this.currentGeneratorFn(i, copies));
+        sheets.push(this.currentGeneratorFn(i, copies, activeScale));
       }
       return sheets.join('');
     }
@@ -558,6 +591,7 @@ const PrintManager = {
     const copies = parseInt(copiesSelect ? copiesSelect.value : '1', 10) || 1;
 
     const margins = this.getMarginValues();
+    const activeScale = this.getScaleFactor(paperVal, orientation);
 
     // Synchronize Header Badges
     const badgePaperSpec = document.getElementById('badge-preview-paper-spec');
@@ -576,7 +610,7 @@ const PrintManager = {
       loader.style.display = 'flex';
     }
 
-    const finalHtml = this.getRenderedHtml(copies);
+    const finalHtml = this.getRenderedHtml(copies, activeScale);
 
     // Primary Engine: Electron Offscreen Native PDF Renderer with 100% WYSIWYG Precision
     if (window.electronAPI && typeof window.electronAPI.generatePdfPreview === 'function') {
@@ -585,6 +619,7 @@ const PrintManager = {
           paperSize: paperVal,
           landscape: isLandscape,
           margins: margins,
+          scaleFactor: activeScale,
           htmlContent: finalHtml
         });
 
@@ -612,9 +647,11 @@ const PrintManager = {
         tempContainer.style.margin = '0 auto';
         tempContainer.style.border = 'none';
         tempContainer.style.boxSizing = 'border-box';
+        tempContainer.style.setProperty('--doc-scale', activeScale);
         tempContainer.innerHTML = finalHtml;
 
         tempContainer.querySelectorAll('.nota-container, .nota-sheet').forEach(el => {
+          el.style.setProperty('--doc-scale', activeScale);
           el.style.setProperty('padding', '0', 'important');
         });
 
@@ -674,6 +711,8 @@ const PrintManager = {
   },
 
   cleanup() {
+    this.stopAutoDiscovery();
+
     if (this.previewDebounceTimer) {
       clearTimeout(this.previewDebounceTimer);
       this.previewDebounceTimer = null;
@@ -701,6 +740,7 @@ const PrintManager = {
 
       const formatCfg = PAPER_FORMATS[paperSize] || PAPER_FORMATS.NCR_Wartel;
       const marginValues = margins || this.getMarginValues();
+      const activeScale = this.getScaleFactor(paperSize, orientation);
 
       const tempContainer = document.createElement('div');
       tempContainer.style.background = '#FFFFFF';
@@ -714,9 +754,11 @@ const PrintManager = {
       tempContainer.style.boxShadow = 'none';
       tempContainer.style.width = formatCfg.previewWidth || '780px';
       tempContainer.style.boxSizing = 'border-box';
+      tempContainer.style.setProperty('--doc-scale', activeScale);
       tempContainer.innerHTML = htmlContent;
 
       tempContainer.querySelectorAll('.nota-container, .nota-sheet').forEach(el => {
+        el.style.setProperty('--doc-scale', activeScale);
         el.style.setProperty('padding', '0', 'important');
       });
 
@@ -785,7 +827,9 @@ const PrintManager = {
     const paperSelect = document.getElementById('select-print-paper-size');
     if (paperSelect) {
       const savedPaperSize = localStorage.getItem('rcg_print_paper_size');
-      const targetSize = defaultPaperSize || savedPaperSize || paperSelect.value || 'NCR_Wartel';
+      const targetSize = (savedPaperSize && PAPER_FORMATS[savedPaperSize])
+        ? savedPaperSize
+        : ((defaultPaperSize && PAPER_FORMATS[defaultPaperSize]) ? defaultPaperSize : 'NCR_Wartel');
       paperSelect.value = targetSize;
       this.syncOrientationLock(targetSize);
       if (typeof CustomSelectManager !== 'undefined' && typeof CustomSelectManager.sync === 'function') {
@@ -804,9 +848,9 @@ const PrintManager = {
 
     this.updateMarginControlsUI();
     this.applySelectedPrintSettings();
-    this.fetchPrinters();
 
     App.openModal('modal-print-settings');
+    this.startAutoDiscovery();
     this.updateNativePdfPreview(60);
   },
 
@@ -822,9 +866,13 @@ const PrintManager = {
     }
 
     const margin = this.getMarginValues();
+    const scale = this.getScaleFactor(paperVal, orientation);
 
     if (this.dynamicPrintStyleEl) {
       this.dynamicPrintStyleEl.innerHTML = `
+        :root {
+          --doc-scale: ${scale} !important;
+        }
         @media print {
           @page {
             size: ${formatCfg.cssPageSize} ${orientation};
@@ -837,6 +885,7 @@ const PrintManager = {
           }
           .nota-sheet,
           .nota-container {
+            --doc-scale: ${scale} !important;
             width: 100% !important;
             max-width: 100% !important;
             box-shadow: none !important;

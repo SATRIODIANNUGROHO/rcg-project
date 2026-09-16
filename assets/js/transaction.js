@@ -57,10 +57,25 @@ const TransactionEngine = {
     // Ambil Bobot Timbangan (Gross & Tare) dari ScaleEngine (COM Port / Simulator)
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
-      btnCaptureGross.addEventListener('click', () => {
-        const currentWeight = (typeof ScaleEngine !== 'undefined' && typeof ScaleEngine.getCurrentWeight === 'function') 
-          ? ScaleEngine.getCurrentWeight() 
-          : ((typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight) ? ScaleEngine.currentWeight : 0);
+      btnCaptureGross.addEventListener('click', (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        let currentWeight = 0;
+        if (typeof ScaleEngine !== 'undefined' && typeof ScaleEngine.getCurrentWeight === 'function') {
+          currentWeight = ScaleEngine.getCurrentWeight();
+        } else if (typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight) {
+          currentWeight = Math.max(0, parseInt(ScaleEngine.currentWeight, 10) || 0);
+        }
+
+        if (!currentWeight) {
+          const liveEl = document.getElementById('live-weight-display');
+          if (liveEl) {
+            const parsed = parseInt((liveEl.textContent || '').replace(/[^\d]/g, ''), 10);
+            if (!isNaN(parsed) && parsed > 0) currentWeight = parsed;
+          }
+        }
         
         const grossInput = document.getElementById('input-gross-weight');
         if (grossInput) {
@@ -75,10 +90,25 @@ const TransactionEngine = {
 
     const btnCaptureTare = document.getElementById('btn-capture-tare');
     if (btnCaptureTare) {
-      btnCaptureTare.addEventListener('click', () => {
-        const currentWeight = (typeof ScaleEngine !== 'undefined' && typeof ScaleEngine.getCurrentWeight === 'function') 
-          ? ScaleEngine.getCurrentWeight() 
-          : ((typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight) ? ScaleEngine.currentWeight : 0);
+      btnCaptureTare.addEventListener('click', (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        let currentWeight = 0;
+        if (typeof ScaleEngine !== 'undefined' && typeof ScaleEngine.getCurrentWeight === 'function') {
+          currentWeight = ScaleEngine.getCurrentWeight();
+        } else if (typeof ScaleEngine !== 'undefined' && ScaleEngine.currentWeight) {
+          currentWeight = Math.max(0, parseInt(ScaleEngine.currentWeight, 10) || 0);
+        }
+
+        if (!currentWeight) {
+          const liveEl = document.getElementById('live-weight-display');
+          if (liveEl) {
+            const parsed = parseInt((liveEl.textContent || '').replace(/[^\d]/g, ''), 10);
+            if (!isNaN(parsed) && parsed > 0) currentWeight = parsed;
+          }
+        }
         
         const tareInput = document.getElementById('input-tare-weight');
         if (tareInput) {
@@ -232,7 +262,11 @@ const TransactionEngine = {
     if (netLoadInput) netLoadInput.value = '0';
 
     const refPercentInput = document.getElementById('input-refraction-percent');
-    if (refPercentInput) refPercentInput.value = settings.defaultRefraction || 5.0;
+    if (refPercentInput) {
+      refPercentInput.value = (settings && typeof settings.defaultRefraction !== 'undefined' && settings.defaultRefraction !== 5.0 && settings.defaultRefraction !== 2.0)
+        ? settings.defaultRefraction 
+        : 10.0;
+    }
 
     const refKgInput = document.getElementById('input-refraction-kg');
     if (refKgInput) refKgInput.value = '0';
@@ -608,7 +642,7 @@ const TransactionEngine = {
     }
   },
 
-  generateNotaHtml(tx, copyNumber = 1, totalCopies = 1) {
+  generateNotaHtml(tx, copyNumber = 1, totalCopies = 1, scaleFactor = null) {
     let copyBadgeText = 'NOTA TIMBANG';
     let copyReceiverText = 'LEMBAR UTAMA (ASLI)';
     let copyFooterText = '* Dokumen ini merupakan bukti sah penerimaan & penimbangan garam PT. Reka Cipta Garam.';
@@ -641,128 +675,129 @@ const TransactionEngine = {
 
     const isLunas = (tx.paymentStatus === 'Lunas');
     const payStatusText = isLunas ? 'Lunas' : 'Belum Lunas';
+    const scaleCssProp = (scaleFactor !== null && scaleFactor !== undefined) ? `--doc-scale: ${scaleFactor};` : '--doc-scale: var(--doc-scale, 1);';
 
     return `
-      <div class="nota-container" style="background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 6px 14px; border: none !important; outline: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%; page-break-inside: avoid !important; break-inside: avoid !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
+      <div class="nota-container" style="${scaleCssProp} background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: calc(6px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); border: none !important; outline: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%; page-break-inside: avoid !important; break-inside: avoid !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
         <!-- Header Logo Centered -->
-        <div style="text-align: center; margin-bottom: 6px;">
-          <img src="assets/images/kop surat nota timbang.webp" alt="PT REKA CIPTA GARAM - Subsidiary Bawang Mas Grup" style="max-height: 42px; max-width: 100%; width: auto; height: auto; object-fit: contain; display: inline-block;">
+        <div class="nota-header" style="text-align: center; margin-bottom: calc(6px * var(--doc-scale, 1));">
+          <img class="nota-logo" src="assets/images/kop surat nota timbang.webp" alt="PT REKA CIPTA GARAM - Subsidiary Bawang Mas Grup" style="max-height: calc(42px * var(--doc-scale, 1)); max-width: 100%; width: auto; height: auto; object-fit: contain; display: inline-block;">
         </div>
 
         <!-- Solid Theme Divider -->
-        <div style="border-top: 2px solid #163A5F; margin: 0 0 6px 0;"></div>
+        <div class="nota-divider-solid" style="border-top: calc(2px * var(--doc-scale, 1)) solid #163A5F; margin: 0 0 calc(6px * var(--doc-scale, 1)) 0;"></div>
 
         <!-- Title -->
-        <div style="text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; color: #163A5F;">
+        <div class="nota-title" style="text-align: center; font-size: calc(13px * var(--doc-scale, 1)); font-weight: 800; letter-spacing: calc(1.5px * var(--doc-scale, 1)); text-transform: uppercase; margin-bottom: calc(6px * var(--doc-scale, 1)); color: #163A5F; line-height: 1.25;">
           ${copyBadgeText}
-          ${totalCopies > 1 ? `<div style="font-size: 9px; font-weight: 700; color: #64748B; margin-top: 1px; letter-spacing: 0.03em;">[ ${copyReceiverText} ]</div>` : ''}
+          ${totalCopies > 1 ? `<div class="nota-subtitle" style="font-size: calc(9px * var(--doc-scale, 1)); font-weight: 700; color: #64748B; margin-top: calc(1px * var(--doc-scale, 1)); letter-spacing: 0.03em;">[ ${copyReceiverText} ]</div>` : ''}
         </div>
 
         <!-- Metadata Section (2 Columns with resilient 50/50 minmax) -->
-        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
+        <div class="nota-grid" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); font-size: calc(10px * var(--doc-scale, 1)); margin-bottom: calc(2px * var(--doc-scale, 1)); line-height: 1.25; width: 100%; box-sizing: border-box;">
           <div style="min-width: 0; overflow: hidden;">
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Tanggal</div>
-            <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.date}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Tanggal</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.date}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Polisi</div>
-            <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.plateNo}">${tx.plateNo}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">No. Polisi</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.plateNo}">${tx.plateNo}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Material</div>
-            <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.formatMaterialDisplay(tx)}">${this.formatMaterialDisplay(tx)}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Material</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.formatMaterialDisplay(tx)}">${this.formatMaterialDisplay(tx)}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Masuk</div>
-            <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.timeIn ? tx.timeIn + ' WIB' : '-'}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Masuk</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 500; font-size: calc(9.5px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.timeIn ? tx.timeIn + ' WIB' : '-'}</div>
           </div>
 
           <div style="min-width: 0; overflow: hidden;">
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">No. Dok</div>
-            <div style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.docNo}">${tx.docNo}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">No. Dok</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.docNo}">${tx.docNo}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Nama Pemasok</div>
-            <div style="color: #0F172A; font-weight: 700; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.supplier}">${tx.supplier}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Nama Pemasok</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 700; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.supplier}">${tx.supplier}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Asal Material</div>
-            <div style="color: #0F172A; font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.originRegion || '-'}${tx.originArea ? ' - ' + tx.originArea : ''}">${tx.originRegion || '-'}${tx.originArea ? ' - ' + tx.originArea : ''}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Asal Material</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${tx.originRegion || '-'}${tx.originArea ? ' - ' + tx.originArea : ''}">${tx.originRegion || '-'}${tx.originArea ? ' - ' + tx.originArea : ''}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Keluar</div>
-            <div style="color: #0F172A; font-weight: 500; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.timeOut ? tx.timeOut + ' WIB' : '-'}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Keluar</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 500; font-size: calc(9.5px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.timeOut ? tx.timeOut + ' WIB' : '-'}</div>
           </div>
         </div>
 
         <!-- Dashed Divider 1 -->
-        <div style="border-top: 1px dashed #94A3B8; margin: 4px 0;"></div>
+        <div class="nota-divider-dashed" style="border-top: calc(1px * var(--doc-scale, 1)) dashed #94A3B8; margin: calc(4px * var(--doc-scale, 1)) 0;"></div>
 
         <!-- Weight Section (2 Columns with resilient 50/50 minmax) -->
-        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
+        <div class="nota-grid" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); font-size: calc(10px * var(--doc-scale, 1)); margin-bottom: calc(2px * var(--doc-scale, 1)); line-height: 1.25; width: 100%; box-sizing: border-box;">
           <div style="min-width: 0; overflow: hidden;">
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Kotor (Gross)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.grossWeight.toLocaleString('id-ID')} Kg</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Kotor (Gross)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.grossWeight.toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Muatan (Bruto)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Muatan (Bruto)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.netLoadWeight.toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih Total (Kg)</div>
-            <div style="color: #163A5F; font-weight: 800; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Bersih Total (Kg)</div>
+            <div class="nota-val" style="color: #163A5F; font-weight: 800; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(tx.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
           </div>
 
           <div style="min-width: 0; overflow: hidden;">
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Tara (Tare)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.tareWeight.toLocaleString('id-ID')} Kg</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Tara (Tare)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.tareWeight.toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Refraksi (%)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.refractionPercent}%</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Refraksi (%)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${tx.refractionPercent}%</div>
           </div>
         </div>
 
         <!-- Dashed Divider 2 -->
-        <div style="border-top: 1px dashed #94A3B8; margin: 4px 0;"></div>
+        <div class="nota-divider-dashed" style="border-top: calc(1px * var(--doc-scale, 1)) dashed #94A3B8; margin: calc(4px * var(--doc-scale, 1)) 0;"></div>
 
         <!-- Quality & Price Section (2 Columns with resilient 50/50 minmax) -->
-        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; font-size: 10px; margin-bottom: 2px; line-height: 1.25; width: 100%; box-sizing: border-box;">
+        <div class="nota-grid" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); font-size: calc(10px * var(--doc-scale, 1)); margin-bottom: calc(2px * var(--doc-scale, 1)); line-height: 1.25; width: 100%; box-sizing: border-box;">
           <div style="min-width: 0; overflow: hidden;">
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih K1 (Kg)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(tx.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Bersih K1 (Kg)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(tx.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Berat Bersih K2 (Kg)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(tx.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Bersih K2 (Kg)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(tx.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total K1 (Rp)</div>
-            <div style="color: #163A5F; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k1Total || 0).toLocaleString('id-ID')}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Total K1 (Rp)</div>
+            <div class="nota-val" style="color: #163A5F; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k1Total || 0).toLocaleString('id-ID')}</div>
           </div>
 
           <div style="min-width: 0; overflow: hidden;">
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Harga K1 / Kg (Rp)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k1Price || 0).toLocaleString('id-ID')}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Harga K1 / Kg (Rp)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k1Price || 0).toLocaleString('id-ID')}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Harga K2 / Kg (Rp)</div>
-            <div style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k2Price || 0).toLocaleString('id-ID')}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Harga K2 / Kg (Rp)</div>
+            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k2Price || 0).toLocaleString('id-ID')}</div>
 
-            <div style="font-weight: 700; color: #475569; font-size: 9.5px; margin-bottom: 1px;">Total K2 (Rp)</div>
-            <div style="color: #B45309; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k2Total || 0).toLocaleString('id-ID')}</div>
+            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Total K2 (Rp)</div>
+            <div class="nota-val" style="color: #B45309; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(tx.k2Total || 0).toLocaleString('id-ID')}</div>
           </div>
         </div>
 
         <!-- Total Keseluruhan (Thematic Accent Box) -->
-        <div style="margin-top: 5px; background: #F8FAFC; border-left: 3px solid #163A5F; border-top: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0; padding: 4px 8px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
-          <span style="font-weight: 800; font-size: 9.5px; color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL KESELURUHAN:</span>
-          <span style="font-weight: 800; font-size: 11.5px; color: #163A5F; font-family: monospace;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</span>
+        <div class="nota-total-box" style="margin-top: calc(5px * var(--doc-scale, 1)); background: #F8FAFC; border-left: calc(3px * var(--doc-scale, 1)) solid #163A5F; border-top: calc(1px * var(--doc-scale, 1)) solid #E2E8F0; border-right: calc(1px * var(--doc-scale, 1)) solid #E2E8F0; border-bottom: calc(1px * var(--doc-scale, 1)) solid #E2E8F0; padding: calc(4px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border-radius: calc(3px * var(--doc-scale, 1)); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+          <span class="nota-total-label" style="font-weight: 800; font-size: calc(9.5px * var(--doc-scale, 1)); color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL KESELURUHAN:</span>
+          <span class="nota-total-amount" style="font-weight: 800; font-size: calc(11.5px * var(--doc-scale, 1)); color: #163A5F; font-family: monospace;">Rp ${(tx.grandTotal || 0).toLocaleString('id-ID')}</span>
         </div>
 
         <!-- Signatures (2 Columns with resilient 50/50 minmax) -->
-        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); text-align: center; margin-top: 12px; font-size: 9.5px; width: 100%; box-sizing: border-box;">
-          <div style="min-width: 0; overflow: hidden; padding: 0 4px;">
-            <div style="color: #64748B; margin-bottom: 22px;">Supir Kendaraan</div>
-            <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;" title="${tx.driverName || 'SUPIR'}">( ${tx.driverName || 'SUPIR'} )</div>
+        <div class="nota-signatures" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); text-align: center; margin-top: calc(12px * var(--doc-scale, 1)); font-size: calc(9.5px * var(--doc-scale, 1)); width: 100%; box-sizing: border-box;">
+          <div class="nota-sign-col" style="min-width: 0; overflow: hidden; padding: 0 calc(4px * var(--doc-scale, 1));">
+            <div class="nota-sign-title" style="color: #64748B; margin-bottom: calc(22px * var(--doc-scale, 1));">Supir Kendaraan</div>
+            <div class="nota-sign-line" style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: calc(1px * var(--doc-scale, 1)) solid #64748B; min-width: calc(90px * var(--doc-scale, 1)); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: calc(2px * var(--doc-scale, 1));" title="${tx.driverName || 'SUPIR'}">( ${tx.driverName || 'SUPIR'} )</div>
           </div>
-          <div style="min-width: 0; overflow: hidden; padding: 0 4px;">
-            <div style="color: #64748B; margin-bottom: 22px;">Petugas / Admin</div>
-            <div style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: 1px solid #64748B; min-width: 90px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px;" title="${tx.adminName || tx.weighmasterName || 'ADMIN'}">( ${tx.adminName || tx.weighmasterName || 'ADMIN'} )</div>
+          <div class="nota-sign-col" style="min-width: 0; overflow: hidden; padding: 0 calc(4px * var(--doc-scale, 1));">
+            <div class="nota-sign-title" style="color: #64748B; margin-bottom: calc(22px * var(--doc-scale, 1));">Petugas / Admin</div>
+            <div class="nota-sign-line" style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: calc(1px * var(--doc-scale, 1)) solid #64748B; min-width: calc(90px * var(--doc-scale, 1)); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: calc(2px * var(--doc-scale, 1));" title="${tx.adminName || tx.weighmasterName || 'ADMIN'}">( ${tx.adminName || tx.weighmasterName || 'ADMIN'} )</div>
           </div>
         </div>
 
         <!-- Footer Note -->
         ${totalCopies > 1 ? `
-          <div style="font-size: 8px; color: #64748B; text-align: center; margin-top: 8px; border-top: 1px dotted #CBD5E1; padding-top: 2px;">
+          <div class="nota-footer" style="font-size: calc(8px * var(--doc-scale, 1)); color: #64748B; text-align: center; margin-top: calc(8px * var(--doc-scale, 1)); border-top: calc(1px * var(--doc-scale, 1)) dotted #CBD5E1; padding-top: calc(2px * var(--doc-scale, 1));">
             ${copyFooterText}
           </div>
         ` : ''}
@@ -772,13 +807,13 @@ const TransactionEngine = {
 
   printCurrentNota() {
     const tx = this.getCurrentFormData();
-    const generatorFn = (copyNumber, totalCopies) => this.generateNotaHtml(tx, copyNumber, totalCopies);
+    const generatorFn = (copyNumber, totalCopies, scale) => this.generateNotaHtml(tx, copyNumber, totalCopies, scale);
 
     if (typeof PrintManager !== 'undefined') {
-      PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang', 'A6');
+      PrintManager.openPrintDialog('Pratinjau Cetak Nota Timbang', generatorFn, tx.docNo, 'Nota_Timbang');
     } else {
       const container = document.getElementById('printable-nota');
-      if (container) container.innerHTML = generatorFn(1, 1);
+      if (container) container.innerHTML = generatorFn(1, 1, 1.0);
       window.print();
     }
   }

@@ -361,9 +361,22 @@ body.dark-mode .custom-select-trigger:hover {
   background-color: #1E2D44;
 }
 
-body.dark-mode .custom-select-container.open {
+body.dark-mode .custom-select-container.open,
+body.dark-mode .custom-combobox.open,
+body.dark-mode .custom-autocomplete-container.open,
+body.dark-mode .custom-datepicker-container.open {
   position: relative !important;
   z-index: 10000 !important;
+}
+
+body.dark-mode .custom-select-container.open-upward .custom-select-menu,
+body.dark-mode .custom-combobox.open-upward .custom-combobox-menu,
+body.dark-mode .custom-combobox.open-upward .dropdown-menu-card,
+body.dark-mode .custom-autocomplete-container.open-upward .custom-autocomplete-menu,
+body.dark-mode .custom-autocomplete-container.open-upward .dropdown-menu-card,
+body.dark-mode .custom-datepicker-container.open-upward .custom-datepicker-popup {
+  top: auto !important;
+  bottom: calc(100% + 4px) !important;
 }
 
 body.dark-mode .custom-select-container.open .custom-select-trigger {

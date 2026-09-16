@@ -110,7 +110,7 @@ function createWindow() {
     event.preventDefault();
     if (portList && portList.length > 0) {
       if (targetSerialPortName) {
-        const matched = portList.find(p => 
+        const matched = portList.find(p =>
           (p.portName && p.portName.toUpperCase() === targetSerialPortName) ||
           (p.displayName && p.displayName.toUpperCase().includes(targetSerialPortName))
         );
@@ -200,15 +200,31 @@ ipcMain.handle('app:get-printers', async () => {
   }
 });
 
+function calculateDocScale(paperSize, landscape = false) {
+  const isLandscape = Boolean(landscape);
+  const sizeKey = String(paperSize || 'A6').toUpperCase();
+  if (sizeKey === 'A6') return isLandscape ? 0.71 : 1.0;
+  if (sizeKey === 'A5') return isLandscape ? 1.0 : 1.414;
+  if (sizeKey === 'A4') return isLandscape ? 1.414 : 2.0;
+  if (sizeKey === 'LETTER') return isLandscape ? 1.45 : 1.888;
+  if (sizeKey.includes('NCR') || sizeKey === 'CONTINUOUS') return 1.888;
+  return 1.0;
+}
+
 ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
   if (!mainWindow) return { success: false, error: 'Window not found' };
   try {
-    const { 
-      paperSize = 'NCR_Wartel', 
-      landscape = false, 
-      margins = {}, 
-      htmlContent = '' 
+    const {
+      paperSize = 'NCR_Wartel',
+      landscape = false,
+      margins = {},
+      scaleFactor = null,
+      htmlContent = ''
     } = options;
+
+    const docScale = (scaleFactor !== null && scaleFactor !== undefined)
+      ? scaleFactor
+      : calculateDocScale(paperSize, landscape);
 
     let pageSize = 'A4';
     let pageCSS = '210mm 297mm';
@@ -253,8 +269,12 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
   <meta charset="UTF-8">
   <base href="${baseHref}">
   <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/print-nota.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    :root {
+      --doc-scale: ${docScale} !important;
+    }
     *, *::before, *::after {
       box-sizing: border-box !important;
       -webkit-print-color-adjust: exact !important;
@@ -273,6 +293,7 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
       size: ${pageCSS} ${landscape ? 'landscape' : 'portrait'};
     }
     .nota-container, .nota-sheet {
+      --doc-scale: ${docScale} !important;
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 auto !important;
@@ -325,13 +346,13 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
 ipcMain.handle('app:print', async (event, options = {}) => {
   if (!mainWindow) return { success: false, error: 'Window not found' };
   try {
-    const { 
-      pageSize: requestedPaperSize, 
-      landscape: requestedLandscape, 
+    const {
+      pageSize: requestedPaperSize,
+      landscape: requestedLandscape,
       deviceName: targetDevice,
       silent = true,
       copies = 1,
-      ...cleanOptions 
+      ...cleanOptions
     } = options;
 
     let finalPageSize = 'A4';
@@ -426,7 +447,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       pageSize = 'Letter';
       pageCSS = '8.5in 11in';
       containerWidth = '7.8in';
-    } else if (options.paperSize === 'NCR_Wartel') {
+    } else if (options.paperSize === 'NCR_Wartel' || options.paperSize === 'NCR' || options.paperSize === 'Continuous') {
       pageSize = { width: 9.5, height: 11.0 };
       pageCSS = '9.5in 11in';
       containerWidth = '8.8in';
@@ -469,6 +490,10 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     const marginRight = (marginObj.right !== undefined && marginObj.right !== null) ? marginObj.right : 5;
     const pageMarginCss = `${marginTop}${marginUnit} ${marginRight}${marginUnit} ${marginBottom}${marginUnit} ${marginLeft}${marginUnit}`;
 
+    const docScale = (options.scaleFactor !== null && options.scaleFactor !== undefined)
+      ? options.scaleFactor
+      : calculateDocScale(options.paperSize, options.landscape);
+
     const fullDoc = `<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -476,8 +501,12 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
   <base href="${baseHref}">
   <title>${defaultFilename}</title>
   <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/print-nota.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    :root {
+      --doc-scale: ${docScale} !important;
+    }
     *, *::before, *::after {
       box-sizing: border-box !important;
       -webkit-print-color-adjust: exact !important;
@@ -499,6 +528,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       size: ${pageCSS} ${options.landscape ? 'landscape' : 'portrait'};
     }
     .nota-container, .nota-sheet {
+      --doc-scale: ${docScale} !important;
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 auto !important;
@@ -582,7 +612,7 @@ ipcMain.handle('db:save-file', async (event, binaryArray) => {
         fs.mkdirSync(localDataDir, { recursive: true });
       }
       await fs.promises.writeFile(path.join(localDataDir, 'rcg_database.sqlite'), buffer);
-    } catch (e) {}
+    } catch (e) { }
 
     return { success: true, path: dbPath };
   } catch (err) {

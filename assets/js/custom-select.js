@@ -85,12 +85,16 @@ const CustomSelectManager = {
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
       const isAlreadyOpen = wrapper.classList.contains('open');
-      document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open, .custom-combobox.open, .custom-autocomplete-container.open').forEach(w => {
+      document.querySelectorAll('.custom-select-container.open, .user-profile-dropdown.open, .custom-combobox.open, .custom-autocomplete-container.open, .custom-datepicker-container.open').forEach(w => {
         if (w !== wrapper) {
-          w.classList.remove('open', 'open-upward');
-          this.elevateAncestors(w, false);
-          const inp = w.querySelector('input');
-          if (inp) inp.setAttribute('aria-expanded', 'false');
+          if (w.classList.contains('custom-select-container')) {
+            this.closeMenu(w);
+          } else {
+            w.classList.remove('open', 'open-upward');
+            this.elevateAncestors(w, false);
+            const inp = w.querySelector('input');
+            if (inp) inp.setAttribute('aria-expanded', 'false');
+          }
         }
       });
       if (typeof CustomAutocomplete !== 'undefined' && CustomAutocomplete.closeAll) {
@@ -98,38 +102,11 @@ const CustomSelectManager = {
       }
 
       if (!isAlreadyOpen) {
-        // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
-        const triggerRect = trigger.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - triggerRect.bottom;
-        const spaceAbove = triggerRect.top;
-        const menuHeight = Math.min(280, (select.options.length * 36) + 16);
-
-        if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
-          wrapper.classList.add('open-upward');
-        } else {
-          wrapper.classList.remove('open-upward');
-        }
-
         wrapper.classList.add('open');
         this.elevateAncestors(wrapper, true);
-
-        // Smart screen & container boundary positioning (prevent right edge overflow/clipping)
-        menu.style.left = '0';
-        menu.style.right = 'auto';
-        
-        requestAnimationFrame(() => {
-          const menuRect = menu.getBoundingClientRect();
-          const boundaryParent = wrapper.closest('.perm-main-panel, .modal-body, .modal-container, .card, .table-toolbar, .section-block') || document.body;
-          const boundaryRect = boundaryParent.getBoundingClientRect();
-
-          if (menuRect.right > window.innerWidth - 12 || (boundaryParent !== document.body && menuRect.right > boundaryRect.right - 12)) {
-            menu.style.left = 'auto';
-            menu.style.right = '0';
-          }
-        });
+        this.adjustMenuPlacement(wrapper, trigger, menu, select);
       } else {
-        wrapper.classList.remove('open', 'open-upward');
-        this.elevateAncestors(wrapper, false);
+        this.closeMenu(wrapper);
       }
     });
 
@@ -149,6 +126,69 @@ const CustomSelectManager = {
     });
   },
 
+  adjustMenuPlacement(wrapper, trigger, menu, select) {
+    if (!wrapper || !trigger || !menu) return;
+
+    // Reset styles first to measure accurately
+    menu.style.maxHeight = '';
+    menu.style.overflowY = 'auto';
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
+
+    const availableBelow = Math.max(0, spaceBelow - 14);
+    const availableAbove = Math.max(0, spaceAbove - 14);
+
+    const optionCount = select ? select.options.length : menu.children.length;
+    const naturalHeight = Math.min(280, (optionCount * 36) + 16);
+
+    const shouldFlip = (availableBelow < naturalHeight && availableAbove > availableBelow) || (availableBelow < 130 && availableAbove >= 100);
+
+    if (shouldFlip) {
+      wrapper.classList.add('open-upward');
+      menu.style.top = 'auto';
+      menu.style.bottom = 'calc(100% + 4px)';
+      const maxAllowed = Math.max(90, Math.min(280, availableAbove));
+      menu.style.maxHeight = `${maxAllowed}px`;
+    } else {
+      wrapper.classList.remove('open-upward');
+      menu.style.top = 'calc(100% + 4px)';
+      menu.style.bottom = 'auto';
+      const maxAllowed = Math.max(90, Math.min(280, availableBelow));
+      menu.style.maxHeight = `${maxAllowed}px`;
+    }
+
+    // Boundary check for horizontal overflow
+    menu.style.left = '0';
+    menu.style.right = 'auto';
+
+    requestAnimationFrame(() => {
+      const menuRect = menu.getBoundingClientRect();
+      const boundaryParent = wrapper.closest('.perm-main-panel, .modal-body, .modal-container, .card, .table-toolbar, .section-block') || document.body;
+      const boundaryRect = boundaryParent.getBoundingClientRect();
+
+      if (menuRect.right > window.innerWidth - 12 || (boundaryParent !== document.body && menuRect.right > boundaryRect.right - 12)) {
+        menu.style.left = 'auto';
+        menu.style.right = '0';
+      }
+    });
+  },
+
+  closeMenu(wrapper) {
+    if (!wrapper) return;
+    wrapper.classList.remove('open', 'open-upward');
+    this.elevateAncestors(wrapper, false);
+    const menu = wrapper.querySelector('.custom-select-menu');
+    if (menu) {
+      menu.style.maxHeight = '';
+      menu.style.top = '';
+      menu.style.bottom = '';
+      menu.style.left = '';
+      menu.style.right = '';
+    }
+  },
+
   populateMenu(select, menu, trigger, textSpan) {
     menu.innerHTML = '';
     Array.from(select.options).forEach(option => {
@@ -165,8 +205,7 @@ const CustomSelectManager = {
         optItem.classList.add('selected');
         const wrapper = trigger.closest('.custom-select-container');
         if (wrapper) {
-          wrapper.classList.remove('open', 'open-upward');
-          CustomSelectManager.elevateAncestors(wrapper, false);
+          this.closeMenu(wrapper);
         }
 
         // Dispatch change event to original select
@@ -187,7 +226,7 @@ const CustomSelectManager = {
           cur.style.position = 'relative';
           cur.style.zIndex = '1050';
         } else {
-          if (!cur.querySelector('.custom-select-container.open')) {
+          if (!cur.querySelector('.custom-select-container.open, .custom-autocomplete-container.open, .custom-combobox.open, .custom-datepicker-container.open')) {
             cur.classList.remove('has-dropdown-open');
             cur.style.position = '';
             cur.style.zIndex = '';
@@ -200,8 +239,7 @@ const CustomSelectManager = {
 
   closeAll() {
     document.querySelectorAll('.custom-select-container.open').forEach(w => {
-      w.classList.remove('open', 'open-upward');
-      this.elevateAncestors(w, false);
+      this.closeMenu(w);
     });
   },
 
@@ -241,5 +279,24 @@ const CustomSelectManager = {
         document.querySelectorAll('.user-profile-dropdown.open').forEach(w => w.classList.remove('open'));
       }
     });
+
+    const handleScrollOrResize = (e) => {
+      const openContainers = document.querySelectorAll('.custom-select-container.open');
+      if (!openContainers.length) return;
+      openContainers.forEach(wrapper => {
+        if (e && e.target && wrapper.contains(e.target) && e.target.classList.contains('custom-select-menu')) {
+          return;
+        }
+        const trigger = wrapper.querySelector('.custom-select-trigger');
+        const menu = wrapper.querySelector('.custom-select-menu');
+        const select = wrapper.previousElementSibling;
+        if (trigger && menu) {
+          this.adjustMenuPlacement(wrapper, trigger, menu, select);
+        }
+      });
+    };
+
+    window.addEventListener('resize', handleScrollOrResize, { passive: true });
+    window.addEventListener('scroll', handleScrollOrResize, { passive: true, capture: true });
   }
 };

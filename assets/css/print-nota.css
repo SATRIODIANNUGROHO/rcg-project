@@ -2,7 +2,12 @@
 
 /* ==========================================================================
    PT. REKA CIPTA GARAM - NOTA TIMBANG & FORM PEMASOK PRINT STYLESHEET
+   Responsive Proportional Layout Scaling System based on A6 (105 x 148 mm)
    ========================================================================== */
+
+:root {
+  --doc-scale: 1;
+}
 
 /* 1. Sembunyikan container cetak saat tampilan layar normal */
 @media screen {
@@ -15,20 +20,186 @@
   }
 }
 
-/* 2. Tampilkan khusus saat proses cetak / Print Preview */
+/* 2. Tata Letak dan Penskalakan Responsif Proporsional Berbasis A6 */
+.nota-container,
+.nota-sheet {
+  container-type: inline-size;
+  box-sizing: border-box !important;
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
+  color: #0F172A !important;
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  padding: calc(6px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)) !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+.nota-header {
+  text-align: center !important;
+  margin-bottom: calc(6px * var(--doc-scale, 1)) !important;
+}
+
+.nota-logo {
+  max-height: calc(42px * var(--doc-scale, 1)) !important;
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: inline-block !important;
+}
+
+.nota-divider-solid {
+  border-top: calc(2px * var(--doc-scale, 1)) solid #163A5F !important;
+  margin: 0 0 calc(6px * var(--doc-scale, 1)) 0 !important;
+}
+
+.nota-divider-dashed {
+  border-top: calc(1px * var(--doc-scale, 1)) dashed #94A3B8 !important;
+  margin: calc(4px * var(--doc-scale, 1)) 0 !important;
+}
+
+.nota-title {
+  font-size: calc(13px * var(--doc-scale, 1)) !important;
+  letter-spacing: calc(1.5px * var(--doc-scale, 1)) !important;
+  margin-bottom: calc(6px * var(--doc-scale, 1)) !important;
+  color: #163A5F !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+}
+
+.nota-subtitle {
+  font-size: calc(9px * var(--doc-scale, 1)) !important;
+  font-weight: 700 !important;
+  color: #64748B !important;
+  margin-top: calc(1px * var(--doc-scale, 1)) !important;
+  letter-spacing: 0.03em !important;
+}
+
+.nota-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)) !important;
+  font-size: calc(10px * var(--doc-scale, 1)) !important;
+  margin-bottom: calc(2px * var(--doc-scale, 1)) !important;
+  line-height: 1.25 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.nota-label {
+  font-weight: 700 !important;
+  color: #475569 !important;
+  font-size: calc(9.5px * var(--doc-scale, 1)) !important;
+  margin-bottom: calc(1px * var(--doc-scale, 1)) !important;
+}
+
+.nota-val {
+  color: #0F172A !important;
+  font-weight: 600 !important;
+  margin-bottom: calc(4px * var(--doc-scale, 1)) !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.nota-total-box {
+  margin-top: calc(5px * var(--doc-scale, 1)) !important;
+  background: #F8FAFC !important;
+  border-left: calc(3px * var(--doc-scale, 1)) solid #163A5F !important;
+  border-top: calc(1px * var(--doc-scale, 1)) solid #E2E8F0 !important;
+  border-right: calc(1px * var(--doc-scale, 1)) solid #E2E8F0 !important;
+  border-bottom: calc(1px * var(--doc-scale, 1)) solid #E2E8F0 !important;
+  padding: calc(4px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)) !important;
+  border-radius: calc(3px * var(--doc-scale, 1)) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+.nota-total-label {
+  font-weight: 800 !important;
+  font-size: calc(9.5px * var(--doc-scale, 1)) !important;
+  color: #1E293B !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+}
+
+.nota-total-amount {
+  font-weight: 800 !important;
+  font-size: calc(11.5px * var(--doc-scale, 1)) !important;
+  color: #163A5F !important;
+  font-family: monospace !important;
+}
+
+.nota-signatures {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  text-align: center !important;
+  margin-top: calc(12px * var(--doc-scale, 1)) !important;
+  font-size: calc(9.5px * var(--doc-scale, 1)) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.nota-sign-col {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  padding: 0 calc(4px * var(--doc-scale, 1)) !important;
+}
+
+.nota-sign-title {
+  color: #64748B !important;
+  margin-bottom: calc(22px * var(--doc-scale, 1)) !important;
+}
+
+.nota-sign-line {
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  text-transform: uppercase !important;
+  display: inline-block !important;
+  border-top: calc(1px * var(--doc-scale, 1)) solid #64748B !important;
+  min-width: calc(90px * var(--doc-scale, 1)) !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding-top: calc(2px * var(--doc-scale, 1)) !important;
+}
+
+.nota-footer {
+  font-size: calc(8px * var(--doc-scale, 1)) !important;
+  color: #64748B !important;
+  text-align: center !important;
+  margin-top: calc(8px * var(--doc-scale, 1)) !important;
+  border-top: calc(1px * var(--doc-scale, 1)) dotted #CBD5E1 !important;
+  padding-top: calc(2px * var(--doc-scale, 1)) !important;
+}
+
+/* 3. Tampilkan khusus saat proses cetak / Print Preview */
 @media print {
   @page {
-    margin: 3mm !important;
+    margin: 0 !important;
   }
 
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
     box-sizing: border-box !important;
   }
 
-  html, body, html.dark-mode, body.dark-mode {
+  html,
+  body,
+  html.dark-mode,
+  body.dark-mode {
     background: #FFFFFF !important;
     background-color: #FFFFFF !important;
     color: #0F172A !important;
@@ -77,4 +248,3 @@
     background: #FFFFFF !important;
   }
 }
-

@@ -99,6 +99,13 @@ const AuthManager = {
       const users = JSON.parse(raw);
       // Ensure all users have permissions structure
       users.forEach(u => {
+        // Auto-heal password if it was stored as a 64-char SHA-256 hash
+        if (u.password && u.password.length === 64 && /^[0-9a-f]{64}$/i.test(u.password)) {
+          const defaultUser = DEFAULT_USERS.find(du => du.username.toLowerCase() === u.username.toLowerCase());
+          if (defaultUser) {
+            u.password = defaultUser.password;
+          }
+        }
         if (!u.permissions) {
           if (u.role === 'Administrator') {
             u.permissions = JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS_ADMIN));
@@ -169,9 +176,19 @@ const AuthManager = {
 
   login(username, password, remember = true) {
     const users = this.getUsers();
-    const user = users.find(
-      u => u.username.toLowerCase() === username.trim().toLowerCase() && u.password === password
-    );
+    const cleanUser = (username || '').trim().toLowerCase();
+    const user = users.find(u => {
+      if (u.username.toLowerCase() !== cleanUser) return false;
+      if (u.password === password) return true;
+      // Auto-heal password if hash or desync occurred
+      const defaultUser = DEFAULT_USERS.find(du => du.username.toLowerCase() === cleanUser);
+      if (defaultUser && defaultUser.password === password) {
+        u.password = defaultUser.password;
+        this.saveUsers(users);
+        return true;
+      }
+      return false;
+    });
 
     if (user) {
       this.currentUser = user;

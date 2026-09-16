@@ -101,12 +101,46 @@ const CustomAutocomplete = {
     input.setAttribute('aria-expanded', 'false');
     menu.setAttribute('role', 'listbox');
 
+    const adjustPlacement = () => {
+      const inputRect = input.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - inputRect.bottom;
+      const spaceAbove = inputRect.top;
+      const availableBelow = Math.max(0, spaceBelow - 14);
+      const availableAbove = Math.max(0, spaceAbove - 14);
+
+      const itemCount = menu.children.length;
+      const naturalHeight = Math.min(260, (itemCount * 36) + 16);
+
+      const shouldFlip = (availableBelow < naturalHeight && availableAbove > availableBelow) || (availableBelow < 130 && availableAbove >= 100);
+
+      if (shouldFlip) {
+        wrapper.classList.add('open-upward');
+        menu.style.top = 'auto';
+        menu.style.bottom = 'calc(100% + 4px)';
+        const maxAllowed = Math.max(90, Math.min(260, availableAbove));
+        menu.style.maxHeight = `${maxAllowed}px`;
+      } else {
+        wrapper.classList.remove('open-upward');
+        menu.style.top = 'calc(100% + 4px)';
+        menu.style.bottom = 'auto';
+        const maxAllowed = Math.max(90, Math.min(260, availableBelow));
+        menu.style.maxHeight = `${maxAllowed}px`;
+      }
+      menu.style.overflowY = 'auto';
+    };
+
     const closeDropdown = () => {
       isOpen = false;
       wrapper.classList.remove('open', 'open-upward');
+      menu.style.maxHeight = '';
+      menu.style.top = '';
+      menu.style.bottom = '';
       input.setAttribute('aria-expanded', 'false');
       activeIndex = -1;
       menu.querySelectorAll('.custom-autocomplete-item.active').forEach(el => el.classList.remove('active'));
+      if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+        CustomSelectManager.elevateAncestors(wrapper, false);
+      }
     };
 
     const selectOption = (optText) => {
@@ -177,21 +211,13 @@ const CustomAutocomplete = {
         menu.appendChild(item);
       });
 
-      // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
-      const inputRect = input.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - inputRect.bottom;
-      const spaceAbove = inputRect.top;
-      const menuHeight = 240;
-
-      if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
-        wrapper.classList.add('open-upward');
-      } else {
-        wrapper.classList.remove('open-upward');
-      }
-
+      adjustPlacement();
       isOpen = true;
       wrapper.classList.add('open');
       input.setAttribute('aria-expanded', 'true');
+      if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+        CustomSelectManager.elevateAncestors(wrapper, true);
+      }
     };
 
     // Events
@@ -255,6 +281,7 @@ const CustomAutocomplete = {
 
     const instance = {
       close: () => closeDropdown(),
+      adjust: () => { if (isOpen) adjustPlacement(); },
       getContainer: () => wrapper,
       getInput: () => input,
       isOpen: () => isOpen
@@ -318,12 +345,46 @@ const CustomAutocomplete = {
       return text.replace(regex, '<span class="highlight-match">$1</span>');
     };
 
+    const adjustPlacement = () => {
+      const inputRect = input.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - inputRect.bottom;
+      const spaceAbove = inputRect.top;
+      const availableBelow = Math.max(0, spaceBelow - 14);
+      const availableAbove = Math.max(0, spaceAbove - 14);
+
+      const itemCount = menu.children.length;
+      const naturalHeight = Math.min(260, (itemCount * 36) + 16);
+
+      const shouldFlip = (availableBelow < naturalHeight && availableAbove > availableBelow) || (availableBelow < 130 && availableAbove >= 100);
+
+      if (shouldFlip) {
+        container.classList.add('open-upward');
+        menu.style.top = 'auto';
+        menu.style.bottom = 'calc(100% + 4px)';
+        const maxAllowed = Math.max(90, Math.min(260, availableAbove));
+        menu.style.maxHeight = `${maxAllowed}px`;
+      } else {
+        container.classList.remove('open-upward');
+        menu.style.top = 'calc(100% + 4px)';
+        menu.style.bottom = 'auto';
+        const maxAllowed = Math.max(90, Math.min(260, availableBelow));
+        menu.style.maxHeight = `${maxAllowed}px`;
+      }
+      menu.style.overflowY = 'auto';
+    };
+
     const closeDropdown = () => {
       isOpen = false;
       container.classList.remove('open', 'open-upward');
+      menu.style.maxHeight = '';
+      menu.style.top = '';
+      menu.style.bottom = '';
       input.setAttribute('aria-expanded', 'false');
       activeIndex = -1;
       menu.querySelectorAll('.custom-combobox-item.active').forEach(el => el.classList.remove('active'));
+      if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+        CustomSelectManager.elevateAncestors(container, false);
+      }
     };
 
     const selectSupplier = (supplier) => {
@@ -424,21 +485,13 @@ const CustomAutocomplete = {
         });
       }
 
-      // Smart Collision-Aware Positioning (Flip upward if limited bottom space)
-      const inputRect = input.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - inputRect.bottom;
-      const spaceAbove = inputRect.top;
-      const menuHeight = 240;
-
-      if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
-        container.classList.add('open-upward');
-      } else {
-        container.classList.remove('open-upward');
-      }
-
+      adjustPlacement();
       isOpen = true;
       container.classList.add('open');
       input.setAttribute('aria-expanded', 'true');
+      if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
+        CustomSelectManager.elevateAncestors(container, true);
+      }
     };
 
     // Events
@@ -550,6 +603,7 @@ const CustomAutocomplete = {
       getValue: () => selectedValue,
       open: () => openDropdown(true),
       close: () => closeDropdown(),
+      adjust: () => { if (isOpen) adjustPlacement(); },
       refresh: () => {
         // Strictly only refresh if open AND input is actively focused
         if (isOpen && document.activeElement === input) {
@@ -659,5 +713,23 @@ const CustomAutocomplete = {
     window.addEventListener('blur', () => {
       this.closeAll();
     });
+
+    // 5. Dynamic capture scroll and resize listener
+    const handleScrollOrResize = (e) => {
+      if (this.activeInstances) {
+        this.activeInstances.forEach(inst => {
+          if (inst && typeof inst.isOpen === 'function' && inst.isOpen() && typeof inst.adjust === 'function') {
+            const container = inst.getContainer ? inst.getContainer() : null;
+            if (e && e.target && container && container.contains(e.target) && (e.target.classList.contains('custom-autocomplete-menu') || e.target.classList.contains('custom-combobox-menu'))) {
+              return;
+            }
+            inst.adjust();
+          }
+        });
+      }
+    };
+
+    window.addEventListener('resize', handleScrollOrResize, { passive: true });
+    window.addEventListener('scroll', handleScrollOrResize, { passive: true, capture: true });
   }
 };
