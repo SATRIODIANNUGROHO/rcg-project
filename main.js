@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,6 +14,58 @@ function getDatabaseFilePath() {
 
 let mainWindow;
 let splashWindow;
+
+// =========================================================================
+// Zoom Lock Enforcement — Lock application zoom factor permanently to 1.0 (100%)
+// Completely prevents zoom in, zoom out, or reset zoom across Electron/Chromium.
+// =========================================================================
+function enforceZoomLock(webContents) {
+  if (!webContents || webContents.isDestroyed()) return;
+
+  // Set zoom factor to 1.0 (100%) and level to 0
+  webContents.setZoomFactor(1.0);
+  webContents.setZoomLevel(0);
+
+  // Lock visual zoom range to 1.0 minimum and 1.0 maximum
+  if (typeof webContents.setVisualZoomLevelLimits === 'function') {
+    webContents.setVisualZoomLevelLimits(1, 1);
+  }
+
+  // Intercept all zoom shortcuts before Chromium/renderer processes them
+  webContents.on('before-input-event', (event, input) => {
+    if (!input.control && !input.meta) return;
+
+    const zoomKeys = ['=', '+', '-', '_', '0'];
+    const zoomCodes = [
+      'Equal', 'Minus', 'Digit0',
+      'NumpadAdd', 'NumpadSubtract', 'Numpad0'
+    ];
+
+    if (zoomKeys.includes(input.key) || zoomCodes.includes(input.code)) {
+      event.preventDefault();
+      if (!webContents.isDestroyed()) {
+        webContents.setZoomFactor(1.0);
+        webContents.setZoomLevel(0);
+      }
+    }
+  });
+
+  // Re-enforce lock on every navigation and reload event
+  const reEnforce = () => {
+    if (!webContents.isDestroyed()) {
+      webContents.setZoomFactor(1.0);
+      webContents.setZoomLevel(0);
+      if (typeof webContents.setVisualZoomLevelLimits === 'function') {
+        webContents.setVisualZoomLevelLimits(1, 1);
+      }
+    }
+  };
+
+  webContents.on('dom-ready', reEnforce);
+  webContents.on('did-finish-load', reEnforce);
+  webContents.on('did-navigate', reEnforce);
+  webContents.on('did-navigate-in-page', reEnforce);
+}
 
 function createSplashScreen() {
   splashWindow = new BrowserWindow({
@@ -41,11 +93,14 @@ function createSplashScreen() {
 function createWindow() {
   createSplashScreen();
 
+  // Completely eliminate the default Electron menu (removes Zoom In/Out/Reset menus)
+  Menu.setApplicationMenu(null);
+
   mainWindow = new BrowserWindow({
     width: 1366,
     height: 850,
-    minWidth: 1100,
-    minHeight: 700,
+    minWidth: 1024,
+    minHeight: 600,
     title: 'PT. Reka Cipta Garam | Salt Weighing System',
     icon: path.join(__dirname, 'assets/icons/icon.png'),
     backgroundColor: '#0B1120',
@@ -59,6 +114,9 @@ function createWindow() {
       plugins: true
     }
   });
+
+  // Enforce permanent 1.0 zoom lock on main window
+  enforceZoomLock(mainWindow.webContents);
 
   // Handle Serial Permissions and Hardware Port Routing in Electron
   let targetSerialPortName = null;
@@ -675,6 +733,14 @@ ipcMain.handle('db:get-path', () => {
 
 app.whenReady().then(() => {
   createWindow();
+
+  // Apply zoom lock to any new BrowserWindow created (including popups or dialog windows)
+  app.on('browser-window-created', (event, win) => {
+    enforceZoomLock(win.webContents);
+    win.webContents.on('did-create-window', (newWin) => {
+      enforceZoomLock(newWin.webContents);
+    });
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

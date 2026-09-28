@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/dark-mode.css">
   <link rel="stylesheet" href="assets/css/print-nota.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
 
   <!-- Local Offline Libraries (Chart.js & SheetJS & html2pdf & sql.js SQLite Engine) -->
   <script src="assets/vendor/chart.umd.min.js"></script>
@@ -56,6 +57,31 @@
           document.documentElement.classList.add('dark-mode');
         }
       } catch (e) { }
+    })();
+  </script>
+
+  <!-- Zoom Lock (Secondary Renderer Defense) — Primary lock is enforced in Electron main process. -->
+  <script>
+    (function () {
+      // Block Ctrl/Cmd + wheel zoom in renderer
+      document.addEventListener('wheel', function (e) {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, { passive: false, capture: true });
+
+      // Block touch gestures / pinch zoom in Chromium renderer
+      document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false, capture: true });
+      document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false, capture: true });
+      document.addEventListener('gestureend', function (e) { e.preventDefault(); }, { passive: false, capture: true });
+
+      // Secondary keyboard defense
+      window.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '_', '0'].includes(e.key)) {
+          e.preventDefault();
+        }
+      }, { capture: true });
     })();
   </script>
 </head>

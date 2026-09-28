@@ -1,4 +1,10 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webFrame } = require('electron');
+
+// Lock zoom factor in preload frame immediately
+try {
+  webFrame.setZoomFactor(1.0);
+  webFrame.setVisualZoomLevelLimits(1, 1);
+} catch (e) {}
 
 contextBridge.exposeInMainWorld('electronAPI', {
   isElectron: true,

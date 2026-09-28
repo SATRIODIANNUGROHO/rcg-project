@@ -179,16 +179,6 @@ body.dark-mode .nav-item.active {
   border-bottom-color: var(--primary);
 }
 
-@media (max-width: 768px) {
-  body.dark-mode .main-nav {
-    background: #0B132B;
-    border-right-color: #1E293B;
-  }
-  body.dark-mode .nav-item.active {
-    border-left-color: #38BDF8;
-    border-bottom-color: transparent;
-  }
-}
 
 /* Scale Bar in Dark Mode */
 body.dark-mode .scale-indicator-card {
@@ -1100,6 +1090,12 @@ body.dark-mode .print-modal-preview-panel {
 body.dark-mode .print-preview-header-bar {
   background: #0B132B;
   border-bottom-color: #1E293B;
+  color: #FFFFFF;
+}
+
+body.dark-mode .print-preview-header-bar #badge-preview-paper-spec,
+body.dark-mode #badge-preview-paper-spec {
+  color: #FFFFFF !important;
 }
 
 body.dark-mode .print-preview-viewport {

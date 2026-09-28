@@ -266,6 +266,41 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Penyajian identitas entitas pengembang, legalitas kepemilikan PT. Reka Cipta Garam, dan atribusi lisensi open-source pihak ketiga (Electron, SQLite, Chart.js, SheetJS, html2pdf, Plus Jakarta Sans).
   - Tautan profil GitHub tim pengembang yang terproteksi dengan penanganan pembukaan peramban eksternal bawaan via `shell.openExternal`.
 
+### 15. Sistem Tata Letak Adaptif Multi-Resolusi & Penguncian Zoom Permanen (Desktop-Native Responsive System & Permanent Zoom Lock)
+- **Filosofi "Same Layout, Adaptive Dimensions"**:
+  - Berbeda dengan pendekatan responsive web/mobile konvensional yang secara agresif melakukan reflow atau pengubahan layout, antarmuka aplikasi Electron desktop dirancang dengan prinsip bahwa tampilan saat ini adalah desain final dan satu-satunya acuan geometris.
+  - Dimensi internal (ukuran font, padding, margin, gap, tinggi komponen, ukuran icon, tinggi input, button, dan chart) menyesuaikan secara proporsional dan halus menggunakan CSS custom properties, `clamp()`, `min()`, `max()`, serta CSS Grid dan Flexbox native tanpa pernah mengubah struktur tata letak, susunan baris, maupun jumlah kolom.
+  - Tanpa `transform: scale()`, tanpa CSS `zoom`, dan tanpa mekanisme browser zoom sehingga terbebas dari masalah teks buram (blur), hitbox kontrol yang meleset, dropdown yang salah posisi, dan distorsi DPI display scaling.
+- **Konsistensi Struktur Desktop di Seluruh Resolusi**:
+  - **Header Utama**: Selalu tampil dalam satu baris horizontal dengan logo dan identitas korporat di sisi kiri, serta live clock dan info profil pemakai di sisi kanan. Tombol hamburger menu dinonaktifkan secara permanen (`display: none !important`).
+  - **Navigasi Horizontal 7 Modul**: Selalu mempertahankan orientasi horizontal 1 baris tanpa wrapping dengan urutan baku: Dashboard, Transaksi Penimbangan, Riwayat Penimbangan, Riwayat Pemasok, Activity Log, Backup & Manajemen Data, serta About & Licenses.
+  - **Panel Status Timbangan**: Selalu tersusun horizontal 1 baris dengan posisi relatif yang konsisten: Status koneksi timbangan di sisi kiri, pembacaan bobot kilogram di bagian tengah, dan tombol aksi Serial/Simulasi di sisi kanan.
+  - **Empat Summary Card Utama**: Total Transaksi, Total Berat Bersih, Total Pembayaran, dan Transaksi Hari Ini selalu berada dalam satu baris 4 kolom di seluruh resolusi target tanpa pemecahan menjadi layout 2x2 atau 1 kolom.
+  - **Ringkasan Analitik Operasional**: Enam kartu metrik operasional (Supplier Terbanyak, Material Terbanyak, Asal Material Terbanyak, Rata-rata Tonase Truk, Pembayaran Lunas, Pembayaran Belum Lunas) dipertahankan tetap dalam satu baris 6 kolom.
+  - **Area Visualisasi Data (Chart)**: Mempertahankan tata letak 2 kolom (Bar Chart Mingguan 8 kolom + Donut Mutu Garam 4 kolom), dan Sebaran Asal Garam 12 kolom penuh di bawahnya.
+  - **Formulir Transaksi Penimbangan (Nota Timbang)**: Heading dan tombol aksi (Transaksi Baru, Simpan Transaksi, Cetak Nota) tetap dalam satu baris. Form utama mempertahankan struktur 2 kolom besar (Area Informasi Dokumen, Kendaraan, Material, dan Mutu di sisi kiri; Card Data Penimbangan di sisi kanan) tanpa memindahkan Data Penimbangan ke bawah area kiri. Seluruh field formulir yang berpasangan (`.form-row`) dikunci tetap dalam 2 kolom.
+- **Dukungan Spektrum Resolusi Lengkap & Windows DPI Scaling**:
+  - **Baseline Acuan Visual**: **1920 x 1080** menjadi patokan visual standar dengan ukuran, proporsi, spacing, hierarchy, dan density UI asli.
+  - **Layar Compact & Laptop (1280x800, 1280x1024, 1366x768, 1600x900)**: Penyesuaian dimensi kompak yang proporsional melalui `clamp()`, menjaga keterbacaan teks dan ergonomi klik tanpa memecah kolom.
+  - **Layar Lebar & Standar 2K (1920x1200, 2560x1440, 2560x1600)**: Pemanfaatan ruang secara proporsional dengan batas padding dan gap yang elegan.
+  - **Layar Ultrawide & Super Ultrawide (3440x1440, 3840x1600, 5120x1440, 5120x2160)**: Mempertahankan struktur kolom yang sama tanpa menambah kolom baru buatan atau menggeser posisi section.
+  - **Layar 4K UHD & 8K UHD (3840x2160, 7680x4320)**: Penerapan batasan maksimum via `clamp()` sehingga elemen antarmuka tetap berada dalam density desktop yang nyaman dan tidak membesar secara berlebihan.
+  - **Kompatibilitas Windows Display Scaling**: Mendukung penskalaan layar Windows 100%, 125%, 150%, 175%, dan 200% dengan responsivitas berbasis CSS viewport aktual.
+  - **Kepadatan Vertikal & Layar Pendek (<= 800px / 768px / 720px)**: Pengurangan bantalan vertikal, margin antar-section, dan tinggi chart secara terbatas. Pengguliran vertikal (vertical scrolling) diperbolehkan secara natural ketika konten melebihi tinggi layar, tanpa menimbulkan scrollbar horizontal pada jendela utama.
+- **Penguncian Zoom Permanen 100% (Zoom Factor 1.0)**:
+  - **Lapisan Utama (Electron Main Process)**:
+    - Penghapusan menu bawaan Chromium via `Menu.setApplicationMenu(null)` (meniadakan menu View > Zoom In, Zoom Out, Actual Size).
+    - Penetapan permanen `webContents.setZoomFactor(1.0)` dan `webContents.setZoomLevel(0)`.
+    - Pembatasan tingkat zoom visual via `webContents.setVisualZoomLevelLimits(1, 1)`.
+    - Pencegatan pintasan keyboard zoom pada event `before-input-event` (`Ctrl + +`, `Ctrl + -`, `Ctrl + =`, `Ctrl + _`, `Ctrl + 0`, Numpad Add/Subtract/0).
+    - Penegakan ulang faktor zoom pada event siklus hidup jendela: `dom-ready`, `did-finish-load`, `did-navigate`, `did-navigate-in-page`, serta event `browser-window-created`.
+  - **Lapisan Preload Bridge**:
+    - Penegakan faktor zoom instan pada frame renderer via `webFrame.setZoomFactor(1.0)` dan `webFrame.setVisualZoomLevelLimits(1, 1)`.
+  - **Lapisan Renderer Web**:
+    - Pencegatan event `wheel` saat `ctrlKey` / `metaKey` aktif dengan mode non-pasif dan penangkapan (`{ passive: false, capture: true }`) untuk mencegah Ctrl + Mouse Wheel zoom.
+    - Pencegatan event gesture touch (`gesturestart`, `gesturechange`, `gestureend`) untuk memblokir pinch-to-zoom pada layar sentuh.
+    - Pencegatan event `keydown` zoom sekunder pada peramban.
+
 ---
 
 ## Daftar Pengguna & Hak Akses Bawaan (Default Login)
@@ -377,9 +412,10 @@ RCG/
 │       └── build-exe-rule.md     # Aturan otomatis taskkill sebelum build .exe
 ├── assets/
 │   ├── css/
-│   │   ├── style.css             # Tema utama, tata letak, & komponen
+│   │   ├── style.css             # Tema utama, tata letak dasar, & komponen
 │   │   ├── dark-mode.css         # Skema warna mode gelap (Design System)
-│   │   └── print-nota.css        # Format cetak nota tiket timbangan
+│   │   ├── print-nota.css        # Format cetak nota tiket timbangan
+│   │   └── responsive.css        # Sistem responsif adaptif desktop & penguncian layout
 │   ├── icons/
 │   │   ├── icon.ico              # Ikon Windows Executable resmi (.exe)
 │   │   └── icon.png              # Ikon resolusi tinggi

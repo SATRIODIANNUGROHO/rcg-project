@@ -1,0 +1,675 @@
+/**
+ * ============================================================================
+ * PT. REKA CIPTA GARAM - SALT WEIGHING SYSTEM v8.0
+ * Responsive Adaptation System: "Same Layout, Adaptive Dimensions"
+ * ============================================================================
+ * Baseline Visual Reference: 1920 × 1080
+ *
+ * Strict Preservation Directives:
+ * 1. ZERO structural reflow (no 4-card to 2x2, no 2-col to 1-col, no drawer/hamburger).
+ * 2. Navigation must ALWAYS remain horizontal and in exact fixed sequence.
+ * 3. Scale status panel must ALWAYS retain horizontal layout (left, center, right).
+ * 4. 4 Dashboard summary cards must ALWAYS stay in a single 4-column row.
+ * 5. 6 Operational analytics cards must ALWAYS stay in a single 6-column row.
+ * 6. Weighing Transaction form must ALWAYS maintain 2-column layout (left info, right scale).
+ * 7. Paired form fields (.form-row) must ALWAYS remain in two paired columns.
+ * 8. All dimension adjustments are proportional, fluid via clamp(), min(), max().
+ * 9. NO transform: scale(), NO CSS zoom, NO browser zoom.
+ * ============================================================================
+ */
+
+:root {
+  /* Fluid Spacing & Dimensions Tokens (Exact at 1920x1080 baseline) */
+  --spacing-page-x: clamp(14px, 0.9vw + 6.7px, 32px);
+  --spacing-page-y: clamp(12px, 0.6vw + 6.5px, 24px);
+  --gap-cards: clamp(10px, 0.5vw + 4.4px, 18px);
+  --gap-mini-cards: clamp(6px, 0.4vw + 2.3px, 12px);
+  --padding-card: clamp(12px, 0.6vw + 4.5px, 20px);
+  --padding-section-block: clamp(12px, 0.6vw + 4.5px, 20px);
+
+  /* Heights */
+  --header-height-fluid: clamp(52px, 0.7vw + 46.5px, 64px);
+  --input-height-fluid: clamp(34px, 0.4vw + 30.3px, 40px);
+  --btn-height-fluid: clamp(34px, 0.4vw + 30.3px, 40px);
+  --chart-height-weekly: clamp(240px, 26vh + 20px, 360px);
+  --chart-height-origin: clamp(220px, 24vh + 20px, 320px);
+
+  /* Fluid Typography (Clamped for Readability & High-DPI Desktop Ergonomics) */
+  --font-size-base: clamp(12px, 0.25vw + 8.7px, 14.5px);
+  --stat-main-val-size: clamp(18px, 0.9vw + 6.7px, 26px);
+  --scale-weight-val-size: clamp(22px, 1.1vw + 8.9px, 34px);
+}
+
+/* ============================================================================
+   1. GLOBAL VIEWPORT & OVERFLOW CONTROL
+   ============================================================================ */
+html,
+body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  font-size: var(--font-size-base);
+}
+
+.app-container {
+  width: 100%;
+  max-width: 100%;
+  padding: var(--spacing-page-y) var(--spacing-page-x) 40px;
+  box-sizing: border-box;
+}
+
+/* Ensure flex children don't overflow unexpectedly */
+.d-flex > *,
+.card-header > *,
+.header-status-area > *,
+.scale-indicator-card > * {
+  min-width: 0;
+}
+
+/* ============================================================================
+   2. APP HEADER — Fixed Desktop Row Structure
+   ============================================================================ */
+.app-header {
+  height: var(--header-height-fluid) !important;
+  padding: 0 var(--spacing-page-x) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.brand-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: clamp(8px, 0.8vw, 14px) !important;
+  flex-shrink: 0 !important;
+}
+
+/* Mobile hamburger button MUST NEVER appear on desktop */
+.btn-mobile-nav,
+#btn-mobile-nav-toggle,
+.mobile-nav-header,
+.nav-overlay {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.brand-logo-img,
+.brand-logo {
+  width: clamp(30px, 1.2vw + 13px, 38px) !important;
+  height: clamp(30px, 1.2vw + 13px, 38px) !important;
+}
+
+.brand-info h1 {
+  font-size: clamp(13px, 0.35vw + 8.3px, 16px) !important;
+  white-space: nowrap !important;
+}
+
+.brand-info .app-sub {
+  font-size: clamp(9.5px, 0.2vw + 7.2px, 11.5px) !important;
+  white-space: nowrap !important;
+}
+
+.header-status-area {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: clamp(8px, 1vw, 20px) !important;
+  flex-shrink: 0 !important;
+}
+
+.header-clock-text {
+  font-size: clamp(11px, 0.25vw + 7.7px, 13px) !important;
+  white-space: nowrap !important;
+}
+
+.user-profile-trigger {
+  height: clamp(32px, 0.4vw + 28.3px, 38px) !important;
+  padding: 4px clamp(6px, 0.5vw, 10px) 4px clamp(4px, 0.4vw, 8px) !important;
+}
+
+.user-avatar {
+  width: clamp(20px, 0.4vw + 14px, 24px) !important;
+  height: clamp(20px, 0.4vw + 14px, 24px) !important;
+  font-size: clamp(9px, 0.2vw + 6px, 11px) !important;
+}
+
+.user-name {
+  font-size: clamp(11px, 0.2vw + 8px, 12.5px) !important;
+}
+
+.user-role {
+  font-size: clamp(9px, 0.2vw + 6.5px, 10.5px) !important;
+}
+
+/* User profile dropdown: always overlay without pushing layout */
+.user-profile-dropdown .dropdown-menu-card {
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+}
+
+/* ============================================================================
+   3. HORIZONTAL NAVIGATION BAR — Strictly Horizontal Across All Resolutions
+   ============================================================================ */
+.main-nav {
+  position: static !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 42px !important;
+  padding: 0 var(--spacing-page-x) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background: #0F2742 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-right: none !important;
+  box-shadow: none !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  gap: clamp(2px, 0.3vw, 6px) !important;
+  z-index: 90 !important;
+}
+
+.main-nav::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.nav-item {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  padding: clamp(8px, 0.8vh, 11px) clamp(8px, 0.75vw, 16px) !important;
+  font-size: clamp(11.5px, 0.25vw + 8.2px, 13px) !important;
+  border-bottom: 2px solid transparent !important;
+  border-left: none !important;
+  border-radius: 0 !important;
+  min-height: 38px !important;
+  width: auto !important;
+}
+
+.nav-item.active {
+  border-bottom-color: var(--primary) !important;
+  border-left-color: transparent !important;
+  background: rgba(37, 99, 184, 0.15) !important;
+}
+
+/* ============================================================================
+   4. SCALE STATUS PANEL — Strictly Horizontal (Left, Center, Right)
+   ============================================================================ */
+.scale-indicator-card {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: clamp(8px, 0.6vw + 4px, 14px) clamp(12px, 0.8vw + 6px, 20px) !important;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+  gap: clamp(8px, 1vw, 16px) !important;
+}
+
+.scale-info-left {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: clamp(8px, 0.7vw, 14px) !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+}
+
+.scale-status-text h4 {
+  font-size: clamp(12px, 0.3vw + 8.2px, 14.5px) !important;
+  white-space: nowrap !important;
+}
+
+.scale-status-text p {
+  font-size: clamp(10.5px, 0.2vw + 7.6px, 12px) !important;
+  white-space: nowrap !important;
+}
+
+.scale-display-center {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  padding: clamp(3px, 0.3vh, 5px) clamp(10px, 1vw + 4px, 24px) !important;
+  gap: clamp(4px, 0.5vw, 8px) !important;
+}
+
+.scale-weight-val {
+  font-size: var(--scale-weight-val-size) !important;
+  min-width: clamp(90px, 8vw + 20px, 140px) !important;
+  text-align: right !important;
+}
+
+.scale-weight-unit {
+  font-size: clamp(12px, 0.3vw + 9.2px, 16px) !important;
+}
+
+.scale-actions-right {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: clamp(6px, 0.6vw, 10px) !important;
+  flex-shrink: 0 !important;
+}
+
+.scale-actions-right .btn {
+  height: var(--btn-height-fluid) !important;
+  padding: 0 clamp(8px, 0.7vw, 16px) !important;
+  font-size: clamp(11.5px, 0.25vw + 8.2px, 13px) !important;
+  white-space: nowrap !important;
+}
+
+/* ============================================================================
+   5. DASHBOARD SUMMARY CARDS — Strictly 4 Columns in One Row
+   ============================================================================ */
+.stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: var(--gap-cards) !important;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
+.stat-card {
+  padding: var(--padding-card) !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.stat-label {
+  font-size: clamp(10px, 0.2vw + 7.1px, 12px) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.stat-icon {
+  width: clamp(26px, 0.6vw + 16.5px, 34px) !important;
+  height: clamp(26px, 0.6vw + 16.5px, 34px) !important;
+  flex-shrink: 0 !important;
+}
+
+.stat-icon svg {
+  width: clamp(14px, 0.3vw + 9px, 18px) !important;
+  height: clamp(14px, 0.3vw + 9px, 18px) !important;
+}
+
+.stat-main-val {
+  font-size: var(--stat-main-val-size) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.stat-sub-info {
+  font-size: clamp(10px, 0.25vw + 6.2px, 12px) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  gap: clamp(6px, 0.8vw, 12px) !important;
+}
+
+/* ============================================================================
+   6. OPERATIONAL ANALYTICS — Strictly 6 Columns in One Row
+   ============================================================================ */
+.mini-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: var(--gap-mini-cards) !important;
+}
+
+.mini-stat-item {
+  padding: clamp(7px, 0.3vw + 4.2px, 11px) clamp(8px, 0.4vw + 4.3px, 14px) !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.mini-stat-item .title {
+  font-size: clamp(9px, 0.2vw + 6.1px, 11px) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.mini-stat-item .value {
+  font-size: clamp(11px, 0.25vw + 7.2px, 13.5px) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ============================================================================
+   7. DASHBOARD DATA VISUALIZATION / CHARTS — Two Columns (8 + 4) and Full (12)
+   ============================================================================ */
+.analytics-grid {
+  display: grid !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  gap: var(--gap-cards) !important;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
+.analytics-grid .col-8 {
+  grid-column: span 8 !important;
+  min-width: 0 !important;
+}
+
+.analytics-grid .col-4 {
+  grid-column: span 4 !important;
+  min-width: 0 !important;
+}
+
+.analytics-grid .col-12 {
+  grid-column: span 12 !important;
+  min-width: 0 !important;
+}
+
+.analytics-grid .col-8 .card-body,
+.analytics-grid .col-4 .card-body {
+  height: var(--chart-height-weekly) !important;
+  position: relative !important;
+  padding: clamp(10px, 0.8vw + 4px, 16px) !important;
+}
+
+.analytics-grid .col-12 .card-body {
+  height: var(--chart-height-origin) !important;
+  position: relative !important;
+  padding: clamp(10px, 0.8vw + 4px, 16px) !important;
+}
+
+/* Canvas responsiveness */
+.card-body canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
+/* ============================================================================
+   8. TRANSAKSI PENIMBANGAN — Strictly 2 Columns (Left Info, Right Data Penimbangan)
+   ============================================================================ */
+#section-nota-timbang .d-flex.align-center.justify-between.mb-3 {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: clamp(8px, 0.8vh + 4px, 16px) !important;
+}
+
+#section-nota-timbang .d-flex.gap-8.align-center {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: clamp(6px, 0.6vw, 10px) !important;
+}
+
+#section-nota-timbang .d-flex.gap-8.align-center .btn {
+  height: var(--btn-height-fluid) !important;
+  padding: 0 clamp(10px, 0.8vw, 16px) !important;
+  font-size: clamp(11.5px, 0.25vw + 8.2px, 13px) !important;
+  white-space: nowrap !important;
+}
+
+.transaction-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+  gap: var(--gap-cards) !important;
+  align-items: start !important;
+}
+
+.transaction-layout > * {
+  min-width: 0 !important;
+}
+
+/* Paired Form Fields: Strictly Two Columns */
+.form-row {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: clamp(8px, 0.8vw, 14px) !important;
+}
+
+.form-row > * {
+  min-width: 0 !important;
+}
+
+.form-group {
+  min-width: 0 !important;
+}
+
+.form-control {
+  height: var(--input-height-fluid) !important;
+  font-size: clamp(11.5px, 0.25vw + 8.2px, 13.5px) !important;
+  padding: 0 clamp(8px, 0.6vw, 12px) !important;
+}
+
+.form-label {
+  font-size: clamp(11px, 0.2vw + 8.1px, 12.5px) !important;
+  margin-bottom: clamp(3px, 0.4vh, 6px) !important;
+}
+
+.section-block {
+  padding: var(--padding-section-block) !important;
+  margin-bottom: clamp(8px, 0.6vw + 4px, 14px) !important;
+}
+
+.section-block-title {
+  font-size: clamp(12.5px, 0.3vw + 8.7px, 14.5px) !important;
+  margin-bottom: clamp(8px, 0.6vh + 4px, 12px) !important;
+}
+
+/* Right column: Data Penimbangan row buttons */
+.weighing-input-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.weighing-input-group .form-control {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.weighing-input-group .btn {
+  height: var(--input-height-fluid) !important;
+  padding: 0 clamp(10px, 0.8vw, 16px) !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* ============================================================================
+   9. TABLES & LISTS — Clean Internal Scrolling (Page never horizontally scrolls)
+   ============================================================================ */
+.table-container,
+.table-responsive {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+}
+
+.table-toolbar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: clamp(8px, 1vw, 16px) !important;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 16px) !important;
+}
+
+.table-toolbar > * {
+  min-width: 0;
+}
+
+.table-filter-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: clamp(6px, 0.6vw, 10px) !important;
+}
+
+.pagination-area {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: clamp(8px, 1vw, 16px) !important;
+  margin-top: clamp(10px, 0.8vw + 4px, 16px) !important;
+}
+
+/* ============================================================================
+   10. MODAL & DIALOG ERGONOMICS
+   ============================================================================ */
+.modal-overlay {
+  padding: clamp(10px, 2vh, 24px) clamp(10px, 2vw, 24px) !important;
+}
+
+.modal-container {
+  max-height: calc(100vh - 40px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.modal-body {
+  overflow-y: auto !important;
+  max-height: calc(100vh - 160px) !important;
+}
+
+/* Print Modal Two-Column Body */
+.print-modal-body {
+  display: grid !important;
+  grid-template-columns: clamp(260px, 24vw, 360px) 1fr !important;
+}
+
+/* ============================================================================
+   11. VERTICAL DENSITY ADAPTATION (Short Viewports <= 800px / 720px)
+   ============================================================================ */
+@media (max-height: 800px) {
+  :root {
+    --spacing-page-y: 10px;
+    --chart-height-weekly: clamp(200px, 27vh, 260px);
+    --chart-height-origin: clamp(180px, 25vh, 240px);
+  }
+
+  .app-container {
+    padding-top: 10px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .scale-indicator-card {
+    padding: 6px 14px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .stats-grid {
+    margin-bottom: 10px !important;
+  }
+
+  .stat-card {
+    padding: 10px 12px !important;
+  }
+
+  .section-block {
+    padding: 10px 14px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .card-header {
+    padding: 8px 14px !important;
+  }
+
+  .card-body {
+    padding: 10px 14px !important;
+  }
+}
+
+@media (max-height: 720px) {
+  :root {
+    --spacing-page-y: 8px;
+    --chart-height-weekly: clamp(180px, 28vh, 230px);
+    --chart-height-origin: clamp(160px, 26vh, 210px);
+  }
+
+  .scale-weight-val {
+    font-size: clamp(20px, 1.8vw, 26px) !important;
+  }
+}
+
+/* ============================================================================
+   12. ULTRA-WIDE & 4K/8K ADAPTATION (High resolutions, with or without DPI scaling)
+   ============================================================================ */
+@media (min-width: 2560px) {
+  :root {
+    --spacing-page-x: clamp(28px, 1.5vw, 64px);
+    --gap-cards: clamp(16px, 0.8vw, 24px);
+    --chart-height-weekly: clamp(320px, 28vh, 440px);
+    --chart-height-origin: clamp(280px, 26vh, 380px);
+  }
+
+  /* Keep same columns without absurdly stretching */
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .mini-stats-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+
+  .transaction-layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
+    gap: var(--gap-cards) !important;
+  }
+}
+
+@media (min-width: 3440px) {
+  /* Ultrawide screens (21:9, 32:9): keep exact desktop structure */
+  :root {
+    --spacing-page-x: clamp(36px, 2vw, 96px);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .mini-stats-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+
+  .transaction-layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+  }
+}
+
+/* ============================================================================
+   13. ACCESSIBILITY & MOTION
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+}

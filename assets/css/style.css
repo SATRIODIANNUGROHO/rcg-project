@@ -1355,7 +1355,7 @@ input[type="number"] {
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1862,7 +1862,7 @@ input[type="number"] {
   align-items: center;
   justify-content: space-between;
   box-shadow: var(--shadow-sm);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 12px;
 }
 
@@ -1948,7 +1948,7 @@ input[type="number"] {
 /* Dashboard Stat Cards */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 16px;
 }
@@ -2050,18 +2050,9 @@ input[type="number"] {
   grid-column: span 12;
 }
 
-@media (max-width: 1024px) {
-
-  .col-8,
-  .col-4,
-  .col-6 {
-    grid-column: span 12;
-  }
-}
-
 .mini-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -2093,12 +2084,6 @@ input[type="number"] {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 16px;
-}
-
-@media (max-width: 1100px) {
-  .transaction-layout {
-    grid-template-columns: 1fr;
-  }
 }
 
 .section-block {
@@ -2888,380 +2873,10 @@ input[type="range"] {
 }
 
 /* ==========================================================================
-   Comprehensive Responsive & Adaptive Breakpoints
-   1. Ultra-Wide & Large Desktop (>= 1440px / 2K / 4K)
-   2. Standard Laptop / Desktop (1024px - 1439px)
-   3. Tablet (768px - 1023px)
-   4. Mobile (481px - 767px)
-   5. Small Mobile (320px - 480px)
+   Responsive Adaptation System
+   Desktop-native adaptive layout dimensions are managed in assets/css/responsive.css
+   adhering to "Same layout, adaptive dimensions" with no column or structure changes.
    ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   Ultra-Wide & Large Desktop (>= 1440px)
-   -------------------------------------------------------------------------- */
-@media (min-width: 1440px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-  }
-
-  .mini-stats-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .transaction-layout {
-    grid-template-columns: 1.25fr 0.85fr;
-    gap: 20px;
-  }
-
-  .scale-weight-val {
-    font-size: 34px;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Standard Laptop / Desktop (1024px - 1439px)
-   -------------------------------------------------------------------------- */
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .mini-stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-  }
-
-  .transaction-layout {
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 16px;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Tablet & Smaller (<= 1023px)
-   -------------------------------------------------------------------------- */
-@media (max-width: 1023px) {
-  .app-container {
-    padding: 14px 16px 36px;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .mini-stats-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .analytics-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .col-8,
-  .col-4,
-  .col-6,
-  .col-12 {
-    grid-column: span 12;
-  }
-
-  .transaction-layout {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Mobile & Tablet Navigation Transition (<= 768px)
-   -------------------------------------------------------------------------- */
-@media (max-width: 768px) {
-  .app-header {
-    padding: 0 14px;
-    height: 56px;
-  }
-
-  .btn-mobile-nav {
-    display: flex;
-  }
-
-  .brand-logo {
-    width: 30px;
-    height: 30px;
-    font-size: 12.5px;
-  }
-
-  .brand-info h1 {
-    font-size: 13.5px;
-  }
-
-  .brand-info .app-sub {
-    font-size: 10px;
-  }
-
-  /* Off-Canvas Navigation Drawer */
-  .mobile-nav-header {
-    display: flex;
-  }
-
-  .main-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    max-width: 84vw;
-    background: #0B1C2D;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 14px 10px;
-    transform: translateX(-100%);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 0 32px rgba(0, 0, 0, 0.45);
-    border-bottom: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    overflow-y: auto;
-  }
-
-  .main-nav.open {
-    transform: translateX(0);
-  }
-
-  .nav-item {
-    width: 100%;
-    padding: 12px 14px;
-    font-size: 13.5px;
-    border-radius: var(--radius-sm);
-    border-bottom: none;
-    border-left: 3px solid transparent;
-    min-height: 44px;
-  }
-
-  .nav-item.active {
-    border-left-color: var(--primary);
-    border-bottom-color: transparent;
-    background: rgba(37, 99, 184, 0.22);
-  }
-
-  /* Scale Indicator Card Stack */
-  .scale-indicator-card {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px 14px;
-    gap: 10px;
-  }
-
-  .scale-info-left {
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .scale-display-center {
-    width: 100%;
-    justify-content: center;
-    padding: 8px 12px;
-  }
-
-  .scale-weight-val {
-    min-width: unset;
-    text-align: center;
-    font-size: 28px;
-  }
-
-  .scale-actions-right {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .scale-actions-right .btn {
-    width: 100%;
-    height: 38px;
-    font-size: 12px;
-    padding: 0 8px;
-  }
-
-  /* Transaction Header Buttons */
-  #section-nota-timbang .d-flex.align-center.justify-between.mb-3 {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  #section-nota-timbang .d-flex.gap-8.align-center {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    width: 100%;
-    gap: 8px;
-  }
-
-  #section-nota-timbang .d-flex.gap-8.align-center .btn {
-    width: 100%;
-    height: 40px;
-    justify-content: center;
-  }
-
-  /* Tables Toolbar */
-  .table-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .search-box {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .table-filter-group {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 8px;
-  }
-
-  .table-filter-group .custom-select-container,
-  .table-filter-group .form-control {
-    width: 100% !important;
-  }
-
-  .pagination-area {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    text-align: center;
-  }
-
-  .pagination-controls {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Small Mobile (<= 480px)
-   -------------------------------------------------------------------------- */
-@media (max-width: 480px) {
-  .app-container {
-    padding: 10px 10px 30px;
-  }
-
-  .header-clock-text,
-  .header-divider {
-    display: none;
-  }
-
-  .user-meta {
-    display: none;
-  }
-
-  .user-profile-trigger {
-    padding: 4px 6px;
-  }
-
-  .user-profile-dropdown .dropdown-menu-card {
-    right: -4px;
-    width: 220px;
-    max-width: calc(100vw - 20px);
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .mini-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .stat-card {
-    padding: 12px 14px;
-  }
-
-  .scale-actions-right {
-    grid-template-columns: 1fr;
-  }
-
-  .sim-presets {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .sim-presets .btn {
-    font-size: 11px;
-    padding: 0 4px;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .section-block {
-    padding: 12px;
-  }
-
-  .card-header {
-    padding: 10px 12px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .card-body {
-    padding: 12px;
-  }
-
-  .grand-total-banner {
-    padding: 14px 10px;
-  }
-
-  .grand-total-banner .val {
-    font-size: 22px;
-  }
-
-  .modal-overlay {
-    padding: 10px;
-  }
-
-  .modal-container {
-    width: 100%;
-    max-height: 92vh;
-  }
-
-  .modal-body {
-    padding: 14px 12px;
-  }
-
-  .modal-footer {
-    flex-direction: column-reverse;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .modal-footer .btn {
-    width: 100%;
-    height: 38px;
-    justify-content: center;
-  }
-
-  .toast-container {
-    width: calc(100% - 20px);
-    top: 8px;
-  }
-
-  .toast-item {
-    width: 100%;
-    min-width: unset;
-    padding: 8px 12px;
-  }
-}
 
 /* ==========================================================================
    User Permissions (RBAC) Matrix & Modal Styles (DESIGN_SYSTEM.md Compliant)
@@ -3591,8 +3206,18 @@ input[type="range"] {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #1E293B;
-  background: #0F172A;
+  background: #0F2742;
   flex-shrink: 0;
+  color: #FFFFFF;
+}
+
+body:not(.dark-mode) .print-preview-header-bar {
+  background: #0F2742;
+}
+
+.print-preview-header-bar #badge-preview-paper-spec,
+#badge-preview-paper-spec {
+  color: #FFFFFF !important;
 }
 
 .print-preview-viewport {
