@@ -1173,13 +1173,27 @@ input[type="number"] {
 }
 
 .custom-combobox input.form-control {
-  cursor: text;
+  cursor: pointer;
   background-color: var(--bg-surface);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  height: 38px !important;
+  padding: 0 32px 0 12px !important;
+  box-sizing: border-box !important;
   transition: var(--transition);
-  padding-right: 32px;
+  text-align: left;
+}
+
+.custom-combobox input.form-control::placeholder {
+  color: var(--text-primary);
+  opacity: 1;
+  font-weight: 500;
+  font-family: var(--font-primary);
+  font-size: 13px;
 }
 
 .custom-combobox:hover input.form-control:not(:disabled),
@@ -2318,8 +2332,32 @@ input[type="number"] {
 .table-filter-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
+}
+
+.table-filter-group > .d-flex {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.table-filter-group span,
+.table-filter-group .filter-label,
+.table-toolbar span.text-small {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  min-width: max-content !important;
+  display: inline-block !important;
+}
+
+.table-filter-group .custom-select-container,
+.table-filter-group .custom-combobox,
+.table-filter-group .custom-datepicker-container,
+.table-filter-group .form-control,
+.table-filter-group .form-select {
+  flex-shrink: 0 !important;
 }
 
 /* Pagination */

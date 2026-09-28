@@ -563,6 +563,19 @@ body.dark-mode .nav-item.active::after {
   padding: 0 clamp(8px, 0.6vw, 12px) !important;
 }
 
+.custom-combobox input.form-control {
+  height: 38px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 0 32px 0 12px !important;
+  box-sizing: border-box !important;
+}
+
+.custom-combobox input.form-control::placeholder {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
 .form-label {
   font-size: clamp(11px, 0.2vw + 8.1px, 12.5px) !important;
   margin-bottom: clamp(3px, 0.4vh, 6px) !important;
@@ -613,7 +626,7 @@ body.dark-mode .nav-item.active::after {
 .table-toolbar {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: clamp(8px, 1vw, 16px) !important;
@@ -627,9 +640,33 @@ body.dark-mode .nav-item.active::after {
 .table-filter-group {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap !important;
   align-items: center !important;
-  gap: clamp(6px, 0.6vw, 10px) !important;
+  gap: clamp(8px, 0.8vw, 12px) !important;
+}
+
+.table-filter-group > .d-flex {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.table-filter-group span,
+.table-filter-group .filter-label,
+.table-toolbar span.text-small {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  min-width: max-content !important;
+  display: inline-block !important;
+}
+
+.table-filter-group .custom-select-container,
+.table-filter-group .custom-combobox,
+.table-filter-group .custom-datepicker-container,
+.table-filter-group .form-control,
+.table-filter-group .form-select {
+  flex-shrink: 0 !important;
 }
 
 .pagination-area {
