@@ -150,7 +150,66 @@ body {
   position: absolute !important;
   top: calc(100% + 6px) !important;
   right: 0 !important;
+  width: 230px !important;
   z-index: 9999 !important;
+}
+
+/* ============================================================================
+   CUSTOM DROPDOWN MENUS (SELECT / COMBOBOX / AUTOCOMPLETE) — 100% WIDTH SYNC
+   ============================================================================ */
+.custom-select-container,
+.custom-combobox,
+.custom-autocomplete-container {
+  box-sizing: border-box !important;
+}
+
+.table-toolbar.has-dropdown-open,
+.table-filter-group.has-dropdown-open,
+.table-toolbar:has(.custom-select-container.open),
+.table-filter-group:has(.custom-select-container.open) {
+  position: relative !important;
+  z-index: 1050 !important;
+}
+
+.custom-select-menu,
+.custom-combobox-menu,
+.custom-combobox .dropdown-menu-card,
+.custom-autocomplete-menu,
+.custom-autocomplete-container .dropdown-menu-card {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+.custom-select-option,
+.custom-autocomplete-item {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
+}
+
+.custom-combobox-item {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.custom-combobox-item > span {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+  flex: 1 !important;
 }
 
 /* ============================================================================

@@ -159,20 +159,20 @@ const CustomSelectManager = {
       menu.style.maxHeight = `${maxAllowed}px`;
     }
 
-    // Boundary check for horizontal overflow
+    // Precise dimension synchronization with trigger button
+    const triggerWidth = trigger.offsetWidth;
+    if (triggerWidth > 0) {
+      menu.style.width = `${triggerWidth}px`;
+      menu.style.minWidth = `${triggerWidth}px`;
+      menu.style.maxWidth = `${triggerWidth}px`;
+    } else {
+      menu.style.width = '100%';
+      menu.style.minWidth = '100%';
+      menu.style.maxWidth = '100%';
+    }
     menu.style.left = '0';
-    menu.style.right = 'auto';
-
-    requestAnimationFrame(() => {
-      const menuRect = menu.getBoundingClientRect();
-      const boundaryParent = wrapper.closest('.perm-main-panel, .modal-body, .modal-container, .card, .table-toolbar, .section-block') || document.body;
-      const boundaryRect = boundaryParent.getBoundingClientRect();
-
-      if (menuRect.right > window.innerWidth - 12 || (boundaryParent !== document.body && menuRect.right > boundaryRect.right - 12)) {
-        menu.style.left = 'auto';
-        menu.style.right = '0';
-      }
-    });
+    menu.style.right = '0';
+    menu.style.boxSizing = 'border-box';
   },
 
   closeMenu(wrapper) {
@@ -186,6 +186,9 @@ const CustomSelectManager = {
       menu.style.bottom = '';
       menu.style.left = '';
       menu.style.right = '';
+      menu.style.width = '';
+      menu.style.minWidth = '';
+      menu.style.maxWidth = '';
     }
   },
 
@@ -195,6 +198,7 @@ const CustomSelectManager = {
       const optItem = document.createElement('div');
       optItem.className = `dropdown-menu-item custom-select-option ${option.selected ? 'selected' : ''}`;
       optItem.dataset.value = option.value;
+      optItem.title = option.text;
       optItem.innerHTML = formatOptionLabel(option.text);
 
       optItem.addEventListener('click', (e) => {
@@ -220,7 +224,7 @@ const CustomSelectManager = {
     if (!container) return;
     let cur = container.parentElement;
     while (cur && cur !== document.body && cur !== document.documentElement) {
-      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('print-toolbar-grid') || cur.classList.contains('print-modal-sidebar')) {
+      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('table-filter-group') || cur.classList.contains('print-toolbar-grid') || cur.classList.contains('print-modal-sidebar')) {
         if (isElevate) {
           cur.classList.add('has-dropdown-open');
           cur.style.position = 'relative';

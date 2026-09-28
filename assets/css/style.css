@@ -504,10 +504,14 @@ textarea.form-control {
 .form-row:has(.custom-select-container.open),
 .section-block:has(.custom-select-container.open),
 .card:has(.custom-select-container.open),
+.table-toolbar:has(.custom-select-container.open),
+.table-filter-group:has(.custom-select-container.open),
 .form-group.has-dropdown-open,
 .form-row.has-dropdown-open,
 .section-block.has-dropdown-open,
-.card.has-dropdown-open {
+.card.has-dropdown-open,
+.table-toolbar.has-dropdown-open,
+.table-filter-group.has-dropdown-open {
   position: relative !important;
   z-index: 1050 !important;
 }
@@ -568,11 +572,11 @@ textarea.form-control {
 .custom-select-menu {
   position: absolute !important;
   top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  min-width: 100%;
-  width: 100%;
-  max-width: none;
+  left: 0 !important;
+  right: 0 !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
   max-height: 280px;
   overflow-y: auto !important;
   overflow-x: hidden !important;
@@ -585,7 +589,7 @@ textarea.form-control {
   display: none;
   z-index: 100000 !important;
   animation: fadeInDown 0.12s ease-out;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 .custom-select-container.open .custom-select-menu {
@@ -601,7 +605,13 @@ textarea.form-control {
   border-radius: var(--radius-tight);
   cursor: pointer;
   transition: var(--transition);
-  white-space: nowrap;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: block !important;
 }
 
 .custom-select-option:last-child {
@@ -1105,16 +1115,16 @@ input[type="number"] {
 
 .custom-autocomplete-menu,
 .custom-autocomplete-container .dropdown-menu-card {
-  position: absolute;
+  position: absolute !important;
   top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  min-width: 100%;
-  width: 100%;
-  max-width: none;
+  left: 0 !important;
+  right: 0 !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
   max-height: 240px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   overscroll-behavior: contain;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
@@ -1124,7 +1134,7 @@ input[type="number"] {
   display: none;
   z-index: 100000 !important;
   animation: fadeInDown 0.12s ease-out;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 .custom-autocomplete-container.open .custom-autocomplete-menu,
@@ -1140,7 +1150,13 @@ input[type="number"] {
   border-radius: var(--radius-tight);
   cursor: pointer;
   transition: var(--transition);
-  box-sizing: border-box;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
 }
 
 .custom-autocomplete-item:hover,
@@ -1210,16 +1226,16 @@ input[type="number"] {
 
 .custom-combobox-menu,
 .custom-combobox .dropdown-menu-card {
-  position: absolute;
+  position: absolute !important;
   top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  min-width: 100%;
-  width: 100%;
-  max-width: none;
+  left: 0 !important;
+  right: 0 !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
   max-height: 240px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   overscroll-behavior: contain;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
@@ -1229,7 +1245,7 @@ input[type="number"] {
   display: none;
   z-index: 100000 !important;
   animation: fadeInDown 0.12s ease-out;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 .custom-combobox.open .custom-combobox-menu,
@@ -1249,8 +1265,20 @@ input[type="number"] {
   align-items: center;
   justify-content: space-between;
   user-select: none;
-  white-space: nowrap;
-  box-sizing: border-box;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.custom-combobox-item > span {
+  display: block;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  min-width: 0;
+  flex: 1;
 }
 
 .custom-combobox-item:hover,
@@ -1618,12 +1646,9 @@ input[type="number"] {
   transform: rotate(180deg);
 }
 
-/* Floating Dropdown Card */
+/* Floating Dropdown Card (Base Styling) */
 .dropdown-menu-card {
   position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 230px;
   background: #FFFFFF;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -1632,6 +1657,13 @@ input[type="number"] {
   display: none;
   z-index: 1000;
   animation: fadeInDown 0.15s ease-out;
+  box-sizing: border-box;
+}
+
+.user-profile-dropdown .dropdown-menu-card {
+  top: calc(100% + 8px);
+  right: 0;
+  width: 230px;
 }
 
 .user-profile-dropdown.open .dropdown-menu-card {

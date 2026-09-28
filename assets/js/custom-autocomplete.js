@@ -127,6 +127,21 @@ const CustomAutocomplete = {
         menu.style.maxHeight = `${maxAllowed}px`;
       }
       menu.style.overflowY = 'auto';
+
+      // Precise dimension synchronization with input
+      const inputWidth = input.offsetWidth;
+      if (inputWidth > 0) {
+        menu.style.width = `${inputWidth}px`;
+        menu.style.minWidth = `${inputWidth}px`;
+        menu.style.maxWidth = `${inputWidth}px`;
+      } else {
+        menu.style.width = '100%';
+        menu.style.minWidth = '100%';
+        menu.style.maxWidth = '100%';
+      }
+      menu.style.left = '0';
+      menu.style.right = '0';
+      menu.style.boxSizing = 'border-box';
     };
 
     const closeDropdown = () => {
@@ -135,6 +150,11 @@ const CustomAutocomplete = {
       menu.style.maxHeight = '';
       menu.style.top = '';
       menu.style.bottom = '';
+      menu.style.left = '';
+      menu.style.right = '';
+      menu.style.width = '';
+      menu.style.minWidth = '';
+      menu.style.maxWidth = '';
       input.setAttribute('aria-expanded', 'false');
       activeIndex = -1;
       menu.querySelectorAll('.custom-autocomplete-item.active').forEach(el => el.classList.remove('active'));
@@ -371,6 +391,21 @@ const CustomAutocomplete = {
         menu.style.maxHeight = `${maxAllowed}px`;
       }
       menu.style.overflowY = 'auto';
+
+      // Precise dimension synchronization with container
+      const comboboxWidth = container.offsetWidth || input.offsetWidth;
+      if (comboboxWidth > 0) {
+        menu.style.width = `${comboboxWidth}px`;
+        menu.style.minWidth = `${comboboxWidth}px`;
+        menu.style.maxWidth = `${comboboxWidth}px`;
+      } else {
+        menu.style.width = '100%';
+        menu.style.minWidth = '100%';
+        menu.style.maxWidth = '100%';
+      }
+      menu.style.left = '0';
+      menu.style.right = '0';
+      menu.style.boxSizing = 'border-box';
     };
 
     const closeDropdown = () => {
@@ -379,6 +414,11 @@ const CustomAutocomplete = {
       menu.style.maxHeight = '';
       menu.style.top = '';
       menu.style.bottom = '';
+      menu.style.left = '';
+      menu.style.right = '';
+      menu.style.width = '';
+      menu.style.minWidth = '';
+      menu.style.maxWidth = '';
       input.setAttribute('aria-expanded', 'false');
       activeIndex = -1;
       menu.querySelectorAll('.custom-combobox-item.active').forEach(el => el.classList.remove('active'));
