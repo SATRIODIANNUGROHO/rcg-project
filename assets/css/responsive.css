@@ -161,13 +161,13 @@ body {
   transform: none !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: auto !important;
+  height: clamp(42px, 0.5vw + 34px, 48px) !important;
   min-height: 42px !important;
   padding: 0 var(--spacing-page-x) !important;
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  align-items: center !important;
+  align-items: stretch !important;
   justify-content: flex-start !important;
   background: #0F2742 !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -176,7 +176,7 @@ body {
   overflow-x: auto !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  gap: clamp(2px, 0.3vw, 6px) !important;
+  gap: 0 !important;
   z-index: 90 !important;
 }
 
@@ -187,24 +187,68 @@ body {
 }
 
 .nav-item {
+  position: relative !important;
   display: inline-flex !important;
   flex-direction: row !important;
   align-items: center !important;
+  justify-content: center !important;
+  align-self: stretch !important;
+  height: 100% !important;
+  min-height: 100% !important;
   flex-shrink: 0 !important;
   white-space: nowrap !important;
-  padding: clamp(8px, 0.8vh, 11px) clamp(8px, 0.75vw, 16px) !important;
+  margin: 0 !important;
+  padding: 0 clamp(10px, 0.8vw + 3px, 18px) !important;
+  font-family: var(--font-primary) !important;
   font-size: clamp(11.5px, 0.25vw + 8.2px, 13px) !important;
-  border-bottom: 2px solid transparent !important;
-  border-left: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  color: #94A3B8 !important;
+  background: transparent !important;
+  border: none !important;
   border-radius: 0 !important;
-  min-height: 38px !important;
   width: auto !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: color 0.15s ease, background 0.15s ease !important;
+}
+
+.nav-item::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  transition: background-color 0.15s ease-in-out !important;
+}
+
+.nav-item:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.04) !important;
 }
 
 .nav-item.active {
-  border-bottom-color: var(--primary) !important;
-  border-left-color: transparent !important;
-  background: rgba(37, 99, 184, 0.15) !important;
+  color: #FFFFFF !important;
+  background: rgba(37, 99, 184, 0.22) !important;
+  border: none !important;
+}
+
+.nav-item.active::after {
+  background: var(--primary) !important;
+}
+
+body.dark-mode .nav-item.active {
+  color: #FFFFFF !important;
+  background: rgba(56, 189, 248, 0.16) !important;
+  border: none !important;
+}
+
+body.dark-mode .nav-item.active::after {
+  background: #38BDF8 !important;
 }
 
 /* ============================================================================
