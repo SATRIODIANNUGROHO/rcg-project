@@ -503,8 +503,8 @@ const SQLiteEngine = {
           parseFloat(t.k1Total) || 0,
           parseFloat(t.k2Total) || 0,
           parseFloat(t.grandTotal) || 0,
-          t.driverName || 'ISMAIL',
-          t.weighmasterName || 'AFIF',
+          t.driverName || '',
+          t.weighmasterName || '',
           t.adminName || 'admin',
           t.paymentStatus || 'Belum Lunas',
           t.notes || '',
@@ -793,8 +793,8 @@ const StorageManager = {
           parseFloat(tx.k1Total) || 0,
           parseFloat(tx.k2Total) || 0,
           parseFloat(tx.grandTotal) || 0,
-          tx.driverName || 'ISMAIL',
-          tx.weighmasterName || 'AFIF',
+          tx.driverName || '',
+          tx.weighmasterName || '',
           tx.adminName || 'admin',
           tx.paymentStatus || 'Belum Lunas',
           tx.notes || '',
@@ -1100,7 +1100,7 @@ const StorageManager = {
             parseFloat(t.refractionKg) || 0, parseFloat(t.finalNetWeight) || 0, parseFloat(t.k1Weight) || 0,
             parseFloat(t.k2Weight) || 0, parseFloat(t.k1Price) || 1250, parseFloat(t.k2Price) || 1050,
             parseFloat(t.k1Total) || 0, parseFloat(t.k2Total) || 0, parseFloat(t.grandTotal) || 0,
-            t.driverName || 'ISMAIL', t.weighmasterName || 'AFIF', t.adminName || 'admin',
+            t.driverName || '', t.weighmasterName || '', t.adminName || 'admin',
             t.paymentStatus || 'Belum Lunas', t.notes || '', t.createdAt || '', t.updatedAt || ''
           ]);
         });
@@ -1272,7 +1272,7 @@ const StorageManager = {
             k2Total: k2Tot,
             grandTotal: gTot,
             driverName: item.supir || item.driverName || '-',
-            weighmasterName: item.admin || item.weighmasterName || 'AFIF',
+            weighmasterName: item.admin || item.weighmasterName || '',
             adminName: item.admin || 'admin',
             paymentStatus: item.paymentStatus || 'Lunas',
             notes: item.notes || (item.jenisMaterial ? `Jenis: ${item.jenisMaterial}` : '')
@@ -1304,7 +1304,7 @@ const StorageManager = {
               parseFloat(t.refractionKg) || 0, parseFloat(t.finalNetWeight) || 0, parseFloat(t.k1Weight) || 0,
               parseFloat(t.k2Weight) || 0, parseFloat(t.k1Price) || 1250, parseFloat(t.k2Price) || 1050,
               parseFloat(t.k1Total) || 0, parseFloat(t.k2Total) || 0, parseFloat(t.grandTotal) || 0,
-              t.driverName || 'ISMAIL', t.weighmasterName || 'AFIF', t.adminName || 'admin',
+              t.driverName || '', t.weighmasterName || '', t.adminName || 'admin',
               t.paymentStatus || 'Belum Lunas', t.notes || '', t.createdAt || '', t.updatedAt || ''
             ]);
           });

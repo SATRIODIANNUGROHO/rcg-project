@@ -323,8 +323,8 @@ const ExportExcelManager = {
             Number(t.k2Price) || 0,
             Number(t.k2Total) || 0,
             Number(t.grandTotal) || 0,
-            t.driverName || 'SUPIR',
-            t.weighmasterName || t.adminName || 'AFIF'
+            t.driverName || '-',
+            t.weighmasterName || t.adminName || '-'
           ];
 
           const addedRow = ws.addRow(rowData);
@@ -846,8 +846,8 @@ const ExportExcelManager = {
         Number(t.k2Price) || 0,
         Number(t.k2Total) || 0,
         Number(t.grandTotal) || 0,
-        t.driverName || 'SUPIR',
-        t.weighmasterName || t.adminName || 'AFIF'
+        t.driverName || '-',
+        t.weighmasterName || t.adminName || '-'
       ]);
     });
 

@@ -299,7 +299,7 @@ const TransactionEngine = {
     if (driverNameInput) driverNameInput.value = '';
 
     const weighmasterInput = document.getElementById('input-weighmaster');
-    if (weighmasterInput) weighmasterInput.value = settings.defaultWeighmaster || 'AFIF';
+    if (weighmasterInput) weighmasterInput.value = '';
 
     const adminNameInput = document.getElementById('input-admin-name');
     if (adminNameInput) adminNameInput.value = currentUser.username || 'admin';
@@ -424,8 +424,8 @@ const TransactionEngine = {
       k1Total: k1Total,
       k2Total: k2Total,
       grandTotal: grandTotal,
-      driverName: (document.getElementById('input-driver-name')?.value.trim().toUpperCase()) || 'ISMAIL',
-      weighmasterName: (document.getElementById('input-weighmaster')?.value.trim().toUpperCase()) || 'AFIF',
+      driverName: (document.getElementById('input-driver-name')?.value.trim().toUpperCase()) || '',
+      weighmasterName: (document.getElementById('input-weighmaster')?.value.trim().toUpperCase()) || '',
       adminName: (AuthManager.getCurrentUser() && AuthManager.getCurrentUser().username) || 'admin',
       paymentStatus: document.getElementById('select-payment-status').value,
       notes: document.getElementById('input-notes').value.trim()
