@@ -405,6 +405,7 @@ body.dark-mode #input-notes::placeholder,
   -webkit-text-fill-color: #FFFFFF !important;
   opacity: 1 !important;
   font-weight: 500 !important;
+  text-transform: none !important;
 }
 
 /* WebKit Vendor Pseudo-Element for Pure Solid White Placeholder */
@@ -439,6 +440,7 @@ body.dark-mode #input-notes::-webkit-input-placeholder,
   -webkit-text-fill-color: #FFFFFF !important;
   opacity: 1 !important;
   font-weight: 500 !important;
+  text-transform: none !important;
 }
 
 /* Spacing and Flex layout for Input with Action in Dark Mode */

@@ -632,7 +632,7 @@ Seluruh tombol dropdown di bilah filter dan form wajib memiliki gaya visual yang
 - **Bahasa**: Bahasa Indonesia baku, formal, dan konsisten di seluruh aplikasi.
 - **Teks Tombol**: Gunakan kata kerja tindakan spesifik ("Simpan Transaksi", "Cetak Nota", "Export Excel", bukan "OK" atau "Kirim").
 - **Teks Label**: Singkat dan jelas dengan tanda titik dua di akhir pada bilah filter toolbar (`Material:`, `Pemasok:`, `Tanggal:`).
-- **Placeholder**: Mengindikasikan format atau status default ("Semua Pemasok", "Cari nama dokumen...").
+- **Placeholder**: Mengindikasikan panduan instruksi pengisian standar ("Masukkan nomor polisi kendaraan", "Masukkan nama supir", "Masukkan nama petugas timbang", "Tambahkan catatan transaksi (Opsional)", "Semua Pemasok"). Dilarang menggunakan mock/dummy sample values sebagai teks placeholder.
 
 ---
 

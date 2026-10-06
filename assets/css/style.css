@@ -456,6 +456,7 @@ textarea::placeholder,
   color: #64748B;
   opacity: 1;
   font-family: var(--font-primary);
+  text-transform: none;
 }
 
 input::-webkit-input-placeholder,
@@ -464,6 +465,7 @@ textarea::-webkit-input-placeholder,
   color: #64748B;
   opacity: 1;
   font-family: var(--font-primary);
+  text-transform: none;
 }
 
 input::-moz-placeholder,
@@ -472,6 +474,7 @@ textarea::-moz-placeholder,
   color: #64748B;
   opacity: 1;
   font-family: var(--font-primary);
+  text-transform: none;
 }
 
 input:-ms-input-placeholder,
@@ -480,6 +483,7 @@ textarea:-ms-input-placeholder,
   color: #64748B;
   opacity: 1;
   font-family: var(--font-primary);
+  text-transform: none;
 }
 
 textarea.form-control {
