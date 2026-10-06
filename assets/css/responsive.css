@@ -612,6 +612,29 @@ body.dark-mode .nav-item.active::after {
   white-space: nowrap !important;
 }
 
+.input-with-action {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.input-with-action .input-unit {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.input-with-action .btn,
+.input-with-action .btn-action-capture {
+  flex-shrink: 0 !important;
+  height: var(--input-height-fluid) !important;
+  padding: 0 clamp(10px, 0.8vw, 16px) !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+}
+
 /* ============================================================================
    9. TABLES & LISTS — Clean Internal Scrolling (Page never horizontally scrolls)
    ============================================================================ */
@@ -635,6 +658,33 @@ body.dark-mode .nav-item.active::after {
 
 .table-toolbar > * {
   min-width: 0;
+}
+
+.search-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 1 280px !important;
+  max-width: 440px !important;
+  min-width: 0 !important;
+}
+
+.search-box input.form-control,
+.search-box input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 38px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.search-box .btn,
+.search-box button {
+  flex-shrink: 0 !important;
+  height: 38px !important;
+  padding: 0 16px !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
 }
 
 .table-filter-group {

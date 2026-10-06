@@ -291,11 +291,185 @@ body.dark-mode .form-label {
   color: #E2E8F0;
 }
 
+/* Universal Dark Mode Input Styling */
+html.dark-mode .form-control,
 body.dark-mode .form-control,
-body.dark-mode .form-select {
-  background-color: #16243A;
-  color: #F5F7FA;
-  border-color: #334155;
+.dark-mode .form-control,
+html.dark-mode input.form-control,
+body.dark-mode input.form-control,
+.dark-mode input.form-control,
+html.dark-mode input[type="text"],
+body.dark-mode input[type="text"],
+.dark-mode input[type="text"],
+html.dark-mode input[type="number"],
+body.dark-mode input[type="number"],
+.dark-mode input[type="number"],
+html.dark-mode textarea,
+body.dark-mode textarea,
+.dark-mode textarea,
+html.dark-mode select.form-select,
+body.dark-mode select.form-select,
+.dark-mode select.form-select {
+  background-color: #16243A !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  border-color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* Specific Transaction Form Inputs */
+html.dark-mode #input-plate-no,
+body.dark-mode #input-plate-no,
+.dark-mode #input-plate-no,
+html.dark-mode #input-supplier,
+body.dark-mode #input-supplier,
+.dark-mode #input-supplier,
+html.dark-mode #input-driver-name,
+body.dark-mode #input-driver-name,
+.dark-mode #input-driver-name,
+html.dark-mode #input-weighmaster,
+body.dark-mode #input-weighmaster,
+.dark-mode #input-weighmaster,
+html.dark-mode #input-notes,
+body.dark-mode #input-notes,
+.dark-mode #input-notes,
+html.dark-mode #input-doc-no,
+body.dark-mode #input-doc-no,
+.dark-mode #input-doc-no,
+html.dark-mode #input-bag-count,
+body.dark-mode #input-bag-count,
+.dark-mode #input-bag-count,
+html.dark-mode #input-gross-weight,
+body.dark-mode #input-gross-weight,
+.dark-mode #input-gross-weight,
+html.dark-mode #input-tare-weight,
+body.dark-mode #input-tare-weight,
+.dark-mode #input-tare-weight,
+html.dark-mode #input-net-load,
+body.dark-mode #input-net-load,
+.dark-mode #input-net-load,
+html.dark-mode #input-refraction-percent,
+body.dark-mode #input-refraction-percent,
+.dark-mode #input-refraction-percent,
+html.dark-mode #input-refraction-kg,
+body.dark-mode #input-refraction-kg,
+.dark-mode #input-refraction-kg,
+html.dark-mode #input-k1-weight,
+body.dark-mode #input-k1-weight,
+.dark-mode #input-k1-weight,
+html.dark-mode #input-k1-price,
+body.dark-mode #input-k1-price,
+.dark-mode #input-k1-price,
+html.dark-mode #input-k2-weight,
+body.dark-mode #input-k2-weight,
+.dark-mode #input-k2-weight,
+html.dark-mode #input-k2-price,
+body.dark-mode #input-k2-price,
+.dark-mode #input-k2-price {
+  background-color: #16243A !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  border-color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* Explicit Pure Solid White Placeholders for ALL Form Fields in Dark Mode */
+html.dark-mode ::placeholder,
+body.dark-mode ::placeholder,
+.dark-mode ::placeholder,
+html.dark-mode input::placeholder,
+body.dark-mode input::placeholder,
+.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder,
+body.dark-mode textarea::placeholder,
+.dark-mode textarea::placeholder,
+html.dark-mode .form-control::placeholder,
+body.dark-mode .form-control::placeholder,
+.dark-mode .form-control::placeholder,
+html.dark-mode #input-plate-no::placeholder,
+body.dark-mode #input-plate-no::placeholder,
+.dark-mode #input-plate-no::placeholder,
+html.dark-mode #input-supplier::placeholder,
+body.dark-mode #input-supplier::placeholder,
+.dark-mode #input-supplier::placeholder,
+html.dark-mode #input-driver-name::placeholder,
+body.dark-mode #input-driver-name::placeholder,
+.dark-mode #input-driver-name::placeholder,
+html.dark-mode #input-weighmaster::placeholder,
+body.dark-mode #input-weighmaster::placeholder,
+.dark-mode #input-weighmaster::placeholder,
+html.dark-mode #input-notes::placeholder,
+body.dark-mode #input-notes::placeholder,
+.dark-mode #input-notes::placeholder {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+/* WebKit Vendor Pseudo-Element for Pure Solid White Placeholder */
+html.dark-mode ::-webkit-input-placeholder,
+body.dark-mode ::-webkit-input-placeholder,
+.dark-mode ::-webkit-input-placeholder,
+html.dark-mode input::-webkit-input-placeholder,
+body.dark-mode input::-webkit-input-placeholder,
+.dark-mode input::-webkit-input-placeholder,
+html.dark-mode textarea::-webkit-input-placeholder,
+body.dark-mode textarea::-webkit-input-placeholder,
+.dark-mode textarea::-webkit-input-placeholder,
+html.dark-mode .form-control::-webkit-input-placeholder,
+body.dark-mode .form-control::-webkit-input-placeholder,
+.dark-mode .form-control::-webkit-input-placeholder,
+html.dark-mode #input-plate-no::-webkit-input-placeholder,
+body.dark-mode #input-plate-no::-webkit-input-placeholder,
+.dark-mode #input-plate-no::-webkit-input-placeholder,
+html.dark-mode #input-supplier::-webkit-input-placeholder,
+body.dark-mode #input-supplier::-webkit-input-placeholder,
+.dark-mode #input-supplier::-webkit-input-placeholder,
+html.dark-mode #input-driver-name::-webkit-input-placeholder,
+body.dark-mode #input-driver-name::-webkit-input-placeholder,
+.dark-mode #input-driver-name::-webkit-input-placeholder,
+html.dark-mode #input-weighmaster::-webkit-input-placeholder,
+body.dark-mode #input-weighmaster::-webkit-input-placeholder,
+.dark-mode #input-weighmaster::-webkit-input-placeholder,
+html.dark-mode #input-notes::-webkit-input-placeholder,
+body.dark-mode #input-notes::-webkit-input-placeholder,
+.dark-mode #input-notes::-webkit-input-placeholder {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+/* Spacing and Flex layout for Input with Action in Dark Mode */
+html.dark-mode .input-with-action,
+body.dark-mode .input-with-action,
+.dark-mode .input-with-action {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+html.dark-mode .input-with-action .input-unit,
+body.dark-mode .input-with-action .input-unit,
+.dark-mode .input-with-action .input-unit {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+html.dark-mode .input-with-action .btn,
+body.dark-mode .input-with-action .btn,
+.dark-mode .input-with-action .btn,
+html.dark-mode .input-with-action .btn-action-capture,
+body.dark-mode .input-with-action .btn-action-capture,
+.dark-mode .input-with-action .btn-action-capture {
+  flex-shrink: 0 !important;
+  height: 38px !important;
+  min-width: 80px !important;
+  padding: 0 16px !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
 }
 
 body.dark-mode input[type="date"] {
@@ -964,6 +1138,126 @@ body.dark-mode .custom-combobox-menu::-webkit-scrollbar-thumb:hover,
 body.dark-mode .custom-autocomplete-container .dropdown-menu-card::-webkit-scrollbar-thumb:hover,
 body.dark-mode .custom-combobox .dropdown-menu-card::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.45);
+}
+
+/* ==========================================================================
+   Table Toolbar & Search Box Controls in Dark Mode (High Contrast & Clean Spacing)
+   ========================================================================== */
+body.dark-mode .table-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+}
+
+body.dark-mode .search-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 1 320px !important;
+  max-width: 440px !important;
+  min-width: 200px !important;
+}
+
+body.dark-mode .search-box input.form-control,
+body.dark-mode .search-box input,
+body.dark-mode #history-search-input,
+body.dark-mode #supplier-history-search {
+  background-color: #16243A !important;
+  border-color: #334155 !important;
+  color: #FFFFFF !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  height: 38px !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+body.dark-mode .search-box input.form-control:hover:not(:disabled),
+body.dark-mode .search-box input:hover:not(:disabled),
+body.dark-mode #history-search-input:hover:not(:disabled),
+body.dark-mode #supplier-history-search:hover:not(:disabled) {
+  border-color: var(--primary) !important;
+  background-color: #1E2D44 !important;
+}
+
+body.dark-mode .search-box input.form-control:focus,
+body.dark-mode .search-box input:focus,
+body.dark-mode #history-search-input:focus,
+body.dark-mode #supplier-history-search:focus {
+  border-color: var(--primary) !important;
+  background-color: #1E2D44 !important;
+  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25) !important;
+  outline: none !important;
+}
+
+/* High Contrast Pure White Placeholder for Search Inputs */
+body.dark-mode .search-box input.form-control::placeholder,
+body.dark-mode .search-box input::placeholder,
+body.dark-mode #history-search-input::placeholder,
+body.dark-mode #supplier-history-search::placeholder {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+body.dark-mode .search-box input.form-control::-webkit-input-placeholder,
+body.dark-mode .search-box input::-webkit-input-placeholder,
+body.dark-mode #history-search-input::-webkit-input-placeholder,
+body.dark-mode #supplier-history-search::-webkit-input-placeholder {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+body.dark-mode .search-box input.form-control::-moz-placeholder,
+body.dark-mode .search-box input::-moz-placeholder,
+body.dark-mode #history-search-input::-moz-placeholder,
+body.dark-mode #supplier-history-search::-moz-placeholder {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+body.dark-mode .search-box input.form-control:-ms-input-placeholder,
+body.dark-mode .search-box input:-ms-input-placeholder,
+body.dark-mode #history-search-input:-ms-input-placeholder,
+body.dark-mode #supplier-history-search:-ms-input-placeholder {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+/* Action Button Inside Search Box (Reset button) */
+body.dark-mode .search-box .btn,
+body.dark-mode .search-box button,
+body.dark-mode #history-reset-search,
+body.dark-mode #supplier-history-reset-search {
+  background-color: #16243A !important;
+  border-color: #334155 !important;
+  color: #FFFFFF !important;
+  height: 38px !important;
+  padding: 0 16px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+body.dark-mode .search-box .btn:hover:not(:disabled),
+body.dark-mode .search-box button:hover:not(:disabled),
+body.dark-mode #history-reset-search:hover:not(:disabled),
+body.dark-mode #supplier-history-reset-search:hover:not(:disabled) {
+  background-color: #1E2D44 !important;
+  border-color: var(--primary) !important;
+  color: #FFFFFF !important;
 }
 
 /* Modal Export Excel in Dark Mode - Elevated Upward Shadow */

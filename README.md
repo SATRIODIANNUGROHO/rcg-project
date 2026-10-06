@@ -240,6 +240,19 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Zona Bahaya (Reset Data)**: Opsi penghapusan seluruh data transaksi dengan proteksi konfirmasi ganda, input alasan wajib, dan pencatatan audit log permanen.
 
 ### 14. Standar Desain Antarmuka Industrial (Design System)
+- **Dokumen Acuan Resmi Design System (`DESIGN_SYSTEM.md`)**:
+  - Proyek ini memiliki panduan spesifikasi master komprehensif sebanyak **80 bab** di dalam dokumen `DESIGN_SYSTEM.md`.
+  - Dokumen tersebut menjadi *single source of truth* untuk seluruh token desain (`--rcg-*`), tipografi, sistem elevasi z-index, aturan paritas Dark Mode dan Light Mode, ergonomi formulir, checklist visual QA, serta protokol pencegahan *AI-slop* dan *Final Design Contract for AI Assistants*.
+- **Teks Input & Placeholder Putih Solid Kontras Tinggi (High-Contrast Solid White Styling)**:
+  - Penegakan warna teks solid `#FFFFFF` dan `-webkit-text-fill-color: #FFFFFF !important;` dengan `opacity: 1 !important;` serta bobot font 500 pada seluruh elemen input formulir maupun selektor pseudo `::placeholder` (beserta varian vendor `::-webkit-input-placeholder`).
+  - Menghilangkan rona kecokelatan kusam atau abu-abu redup akibat blending alpha bawaan engine peramban pada latar permukaan gelap `#16243A`.
+  - Diterapkan secara menyeluruh pada kolom formulir transaksi (Nama Supir, Catatan Transaksi, No. Polisi Kendaraan, Nama Pemasok, Petugas Timbang) serta bilah pencarian riwayat penimbangan (`#history-search-input`) dan riwayat pemasok (`#supplier-history-search`).
+- **Standardisasi Spasi Pemisah Horizontal Antarkontrol (gap: 8px)**:
+  - Penataan jarak pemisah horizontal terstandarisasi sebesar **8px** pada kontainer tombol aksi jembatan timbang (`.input-with-action` untuk baris Berat Kotor dan Berat Tara terhadap tombol "Ambil") serta kontainer bilah pencarian tabel (`.search-box` terhadap tombol "Reset").
+  - Menjamin elemen input fleksibel (`min-width: 0`) dan tombol aksi pendamping (`flex-shrink: 0`) tidak pernah saling menindih atau terkompresi di seluruh resolusi layar.
+- **Penyelarasan Visual Komponen Filter Dropdown & Combobox**:
+  - Penyeragaman 100% gaya visual antara dropdown pilihan material ("Semua Jenis Garam") dan searchable combobox pemasok ("Semua Pemasok").
+  - Keduanya mengadopsi dimensi tinggi presisi 38px, batas tepi 1px solid `#334155`, latar belakang `#16243A` (hover `#1E2D44`), teks putih murni `#FFFFFF`, serta placeholder `#FFFFFF` berbobot medium (500).
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
 - **Komponen Floating Dropdown Universal (Custom Select Component)**:
   - Seluruh elemen `<select>` formulir dikonversi menjadi custom floating dropdown yang elegan dengan trigger berstatus aktif.
@@ -353,9 +366,12 @@ Untuk membuat berkas installer mandiri Windows:
 1. Jalankan berkas batch:
    - **`build-exe.bat`**
    *(atau jalankan perintah `npm run dist` pada terminal)*
-2. Skrip build secara otomatis akan mematikan proses aplikasi yang masih berjalan terlebih dahulu (`taskkill /F /IM "RCG Salt Weighing System.exe" /T` dan `electron.exe`) guna mencegah galat file locking EBUSY.
+2. Skrip build secara otomatis mematikan proses aplikasi yang masih berjalan terlebih dahulu guna mencegah galat file locking EBUSY:
+   ```cmd
+   cmd.exe /c "taskkill /F /IM \"RCG Salt Weighing System 8.0.0.exe\" /T 2>nul & taskkill /F /IM electron.exe /T 2>nul & exit 0"
+   ```
 3. Berkas hasil kompilasi akan tersimpan di dalam folder **`dist/`**:
-   - **`dist/RCG Salt Weighing System Setup 8.0.0.exe`** (Installer Setup Windows)
+   - **`dist/RCG Salt Weighing System Setup 8.0.0.exe`** (Installer Setup Windows berbasis NSIS)
    - **`dist/RCG Salt Weighing System 8.0.0.exe`** (Versi Portable Standalone)
    - **`dist/win-unpacked/RCG Salt Weighing System.exe`** (Versi Unpacked)
 
