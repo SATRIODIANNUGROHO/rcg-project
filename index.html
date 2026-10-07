@@ -94,9 +94,10 @@
   </script>
 
   <!-- =========================================================================
-       Top Application Header
+       Top Application Navigation Shell (Unified Sticky Topbar Container)
        ========================================================================= -->
-  <header class="app-header">
+  <header class="app-topbar-wrapper" id="app-topbar-wrapper">
+    <div class="app-header">
     <div class="brand-section">
       <!-- Mobile Hamburger Toggle Button (Visible on <= 768px) -->
       <button id="btn-mobile-nav-toggle" class="btn-mobile-nav" type="button" aria-label="Buka Menu Navigasi"
@@ -215,14 +216,9 @@
         </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <!-- Mobile Backdrop Overlay -->
-  <div id="nav-overlay" class="nav-overlay"></div>
-
-  <!-- =========================================================================
-       Navigation Tabs (Adaptive Desktop Bar / Mobile Drawer)
-       ========================================================================= -->
+  <!-- Navigation Tabs (Adaptive Desktop Bar / Mobile Drawer) -->
   <nav class="main-nav" id="main-nav-bar">
     <div class="mobile-nav-header">
       <span>Menu Navigasi</span>
@@ -250,6 +246,10 @@
       About &amp; Licenses
     </button>
   </nav>
+</header>
+
+<!-- Mobile Backdrop Overlay -->
+<div id="nav-overlay" class="nav-overlay"></div>
 
   <!-- =========================================================================
        Main Application Shell Container

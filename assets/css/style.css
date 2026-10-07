@@ -161,7 +161,7 @@ body {
   line-height: 1.5;
   color: var(--text-primary);
   background-color: var(--bg-app);
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
 }
 
@@ -1629,8 +1629,19 @@ input[type="number"] {
 }
 
 /* ==========================================================================
-   Header & Navigation
+   Header & Navigation — Unified Sticky Topbar Container
    ========================================================================== */
+.app-topbar-wrapper {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  width: 100% !important;
+  background-color: var(--primary-dark);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  overflow: visible !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
 .app-header {
   height: var(--header-height);
   background-color: var(--primary-dark);
@@ -1639,9 +1650,9 @@ input[type="number"] {
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   padding: 0 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: relative;
+  z-index: 10;
+  overflow: visible;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1855,7 +1866,7 @@ input[type="number"] {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   padding: 6px;
   display: none;
-  z-index: 1000;
+  z-index: 1100;
   animation: fadeInDown 0.15s ease-out;
   box-sizing: border-box;
 }
@@ -1867,7 +1878,10 @@ input[type="number"] {
 }
 
 .user-profile-dropdown.open .dropdown-menu-card {
-  display: block;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 @keyframes fadeInDown {
@@ -2020,6 +2034,8 @@ input[type="number"] {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   overflow-x: auto;
   height: 44px;
+  position: relative;
+  z-index: 5;
 }
 
 .nav-item {

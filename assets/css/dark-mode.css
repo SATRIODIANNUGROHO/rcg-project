@@ -92,6 +92,11 @@ body.dark-mode *::-webkit-scrollbar-thumb:hover {
 }
 
 /* Header & Nav in Dark Mode */
+body.dark-mode .app-topbar-wrapper {
+  background-color: #0B132B !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
 body.dark-mode .app-header {
   background-color: #0B132B;
   border-bottom-color: #1E293B;

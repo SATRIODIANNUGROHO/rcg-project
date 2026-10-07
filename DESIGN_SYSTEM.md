@@ -255,6 +255,13 @@ body:not(.dark-mode) {
 - **Reading Width**: Max `720px` untuk dokumen teks deskriptif panjang agar kenyamanan membaca terjaga.
 - **Full-Width Behavior**: Area tabel arsip dan bilah live scale membentang penuh mengikuti batas kontainer halaman.
 - **Section Padding**: `20px 24px` pada desktop standar (1366×768), `16px 20px` pada laptop kecil (1024×768).
+- **Unified Sticky Topbar Shell**: Seluruh header atas aplikasi (`.app-topbar-wrapper`) membungkus bilah judul utama (`.app-header`) dan bilah menu navigasi tab (`.main-nav`) dalam satu kesatuan kontainer tetap (`position: sticky !important; top: 0 !important; z-index: 1000 !important; width: 100% !important; overflow: visible !important;`). Kedua bilah terkunci permanen di bagian atas layar (*frozen at the top*) saat konten halaman digulir (*scroll*).
+- **Stacking Context Hierarchy**:
+  - Topbar Wrapper: `z-index: 1000; overflow: visible;`
+  - App Header: `z-index: 10; position: relative; overflow: visible;`
+  - Main Navigation: `z-index: 5; position: relative;`
+  - Profile Dropdown Menu: `z-index: 1100; position: absolute;` (mengapung di lapisan teratas tanpa terpotong atau menimbulkan celah).
+  - Modal & Overlays: `z-index: 10000` s/d `100000` (melapisi seluruh area viewport termasuk sticky topbar).
 
 ---
 
