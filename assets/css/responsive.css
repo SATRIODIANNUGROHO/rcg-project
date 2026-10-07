@@ -802,9 +802,23 @@ body.dark-mode .nav-item.active::after {
   flex-direction: row !important;
   flex-wrap: wrap !important;
   align-items: center !important;
-  justify-content: space-between !important;
+  justify-content: flex-start !important;
   gap: clamp(8px, 1vw, 16px) !important;
   margin-bottom: clamp(10px, 0.8vw + 4px, 16px) !important;
+}
+
+.table-header-search-input,
+#history-search-input,
+#supplier-history-search {
+  width: 260px !important;
+  min-width: 180px !important;
+  max-width: 320px !important;
+  height: 38px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: var(--radius-sm);
+  margin: 0 !important;
+  flex: 0 1 260px !important;
 }
 
 .table-toolbar > * {

@@ -843,12 +843,14 @@
          SECTION 3: RIWAYAT PENIMBANGAN
          ======================================================================= -->
     <section id="section-riwayat" class="view-section">
-      <div class="d-flex align-center justify-between mb-3">
+      <div class="d-flex align-center justify-between mb-3 flex-wrap gap-12">
         <div>
           <h2 class="section-title">Riwayat Penimbangan</h2>
           <p class="text-secondary text-small">Daftar arsip seluruh transaksi penimbangan garam PT. Reka Cipta Garam</p>
         </div>
-        <div class="d-flex gap-8">
+        <div class="d-flex gap-8 align-center flex-wrap">
+          <input type="text" id="history-search-input" class="form-control table-header-search-input"
+            placeholder="Masukkan kata kunci">
           <button id="btn-export-excel" class="btn btn-primary">
             Export Excel (.xlsx)
           </button>
@@ -857,12 +859,6 @@
 
       <!-- Toolbar Pencarian & Filter -->
       <div class="table-toolbar">
-        <div class="search-box">
-          <input type="text" id="history-search-input" class="form-control"
-            placeholder="Cari Material, Tanggal, Supplier, No. Polisi, No. Dok...">
-          <button id="history-reset-search" class="btn btn-secondary">Reset</button>
-        </div>
-
         <div class="table-filter-group">
           <!-- Filter Material -->
           <div class="d-flex align-center gap-8">
@@ -956,6 +952,8 @@
             supplier</p>
         </div>
         <div class="d-flex gap-8 align-center flex-wrap">
+          <input type="text" id="supplier-history-search" class="form-control table-header-search-input"
+            placeholder="Masukkan kata kunci">
           <button id="btn-export-supplier-excel" class="btn btn-primary">
             Export Excel (.xlsx)
           </button>
@@ -964,14 +962,6 @@
 
       <!-- Toolbar Filter & Search Pemasok -->
       <div class="table-toolbar">
-        <div class="search-box">
-          <input type="text" id="supplier-history-search" class="form-control"
-            placeholder="Cari nama pemasok, no. dokumen, dll...">
-          <button id="supplier-history-reset-search" class="btn btn-secondary" title="Reset Pencarian">
-            Reset
-          </button>
-        </div>
-
         <div class="table-filter-group">
           <!-- Filter Nama Pemasok (Searchable Combobox) -->
           <div class="d-flex align-center gap-8">

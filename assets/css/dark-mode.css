@@ -1233,9 +1233,7 @@ body.dark-mode .search-box {
 }
 
 body.dark-mode .search-box input.form-control,
-body.dark-mode .search-box input,
-body.dark-mode #history-search-input,
-body.dark-mode #supplier-history-search {
+body.dark-mode .search-box input {
   background-color: #16243A !important;
   border-color: #334155 !important;
   color: #FFFFFF !important;
@@ -1245,6 +1243,22 @@ body.dark-mode #supplier-history-search {
   flex: 1 1 auto !important;
   width: 100% !important;
   min-width: 0 !important;
+  margin: 0 !important;
+}
+
+body.dark-mode .table-header-search-input,
+body.dark-mode #history-search-input,
+body.dark-mode #supplier-history-search {
+  background-color: #16243A !important;
+  border-color: #334155 !important;
+  color: #FFFFFF !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  height: 38px !important;
+  width: 260px !important;
+  min-width: 180px !important;
+  max-width: 320px !important;
+  flex: 0 1 260px !important;
   margin: 0 !important;
 }
 
