@@ -2523,28 +2523,6 @@ input[type="number"] {
   z-index: 20;
 }
 
-.table-header-search-input,
-#history-search-input,
-#supplier-history-search {
-  width: 260px !important;
-  min-width: 180px !important;
-  max-width: 320px !important;
-  height: 38px !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  border-radius: var(--radius-sm);
-  margin: 0 !important;
-  flex: 0 1 260px !important;
-}
-
-.table-header-search-input:focus,
-#history-search-input:focus,
-#supplier-history-search:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25);
-  outline: none;
-}
-
 .search-box {
   display: flex !important;
   align-items: center !important;

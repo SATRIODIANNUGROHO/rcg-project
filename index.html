@@ -98,158 +98,158 @@
        ========================================================================= -->
   <header class="app-topbar-wrapper" id="app-topbar-wrapper">
     <div class="app-header">
-    <div class="brand-section">
-      <!-- Mobile Hamburger Toggle Button (Visible on <= 768px) -->
-      <button id="btn-mobile-nav-toggle" class="btn-mobile-nav" type="button" aria-label="Buka Menu Navigasi"
-        title="Navigasi Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-
-      <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" class="brand-logo-img">
-      <div class="brand-info">
-        <h1>PT. REKA CIPTA GARAM</h1>
-        <div class="app-sub">SALT WEIGHING SYSTEM</div>
-      </div>
-    </div>
-
-    <!-- Center Prominent Digital Clock Display (HH:mm:ss) -->
-    <div class="header-center-area">
-      <div id="header-digital-clock" class="header-clock-digital">00:00:00</div>
-    </div>
-
-    <div class="header-status-area">
-      <!-- Clean Simplified Date Display (e.g. "Rabu, 07 Oktober 2026") -->
-      <div id="header-live-date" class="header-date-text">Memuat Tanggal...</div>
-
-      <!-- User Profile Dropdown Menu Container -->
-      <div class="user-profile-dropdown" id="profile-dropdown-wrapper">
-        <button class="user-profile-trigger" id="btn-profile-trigger" type="button" aria-haspopup="true"
-          aria-expanded="false" title="Menu Pengguna">
-          <span class="user-avatar" id="user-avatar-text">AD</span>
-          <div class="user-meta">
-            <span class="user-name" id="user-display-name">admin</span>
-            <span class="user-role" id="user-display-role">Administrator</span>
-          </div>
-          <svg class="dropdown-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
+      <div class="brand-section">
+        <!-- Mobile Hamburger Toggle Button (Visible on <= 768px) -->
+        <button id="btn-mobile-nav-toggle" class="btn-mobile-nav" type="button" aria-label="Buka Menu Navigasi"
+          title="Navigasi Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
 
-        <!-- Dropdown Popup Card -->
-        <div class="dropdown-menu-card" id="profile-dropdown-menu">
-          <div class="dropdown-user-header">
-            <div class="dropdown-user-name" id="menu-user-name">admin</div>
-            <div class="dropdown-user-role" id="menu-user-role">Administrator RCG</div>
+        <img src="assets/images/RCG.webp" alt="Logo PT. Reka Cipta Garam" class="brand-logo-img">
+        <div class="brand-info">
+          <h1>PT. REKA CIPTA GARAM</h1>
+          <div class="app-sub">SALT WEIGHING SYSTEM</div>
+        </div>
+      </div>
+
+      <!-- Center Prominent Digital Clock Display (HH:mm:ss) -->
+      <div class="header-center-area">
+        <div id="header-digital-clock" class="header-clock-digital">00:00:00</div>
+      </div>
+
+      <div class="header-status-area">
+        <!-- Clean Simplified Date Display (e.g. "Rabu, 07 Oktober 2026") -->
+        <div id="header-live-date" class="header-date-text">Memuat Tanggal...</div>
+
+        <!-- User Profile Dropdown Menu Container -->
+        <div class="user-profile-dropdown" id="profile-dropdown-wrapper">
+          <button class="user-profile-trigger" id="btn-profile-trigger" type="button" aria-haspopup="true"
+            aria-expanded="false" title="Menu Pengguna">
+            <span class="user-avatar" id="user-avatar-text">AD</span>
+            <div class="user-meta">
+              <span class="user-name" id="user-display-name">admin</span>
+              <span class="user-role" id="user-display-role">Administrator</span>
+            </div>
+            <svg class="dropdown-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Dropdown Popup Card -->
+          <div class="dropdown-menu-card" id="profile-dropdown-menu">
+            <div class="dropdown-user-header">
+              <div class="dropdown-user-name" id="menu-user-name">admin</div>
+              <div class="dropdown-user-role" id="menu-user-role">Administrator RCG</div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Profile Modal Trigger -->
+            <button class="dropdown-menu-item" id="btn-open-profile" type="button">
+              <span class="menu-item-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <span class="menu-item-text">Profil Saya</span>
+            </button>
+
+            <div class="dropdown-divider admin-only"></div>
+
+            <!-- Permissions & User Management Trigger (Administrator Only) -->
+            <button class="dropdown-menu-item admin-only" id="btn-open-permissions-manager" type="button">
+              <span class="menu-item-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span class="menu-item-text">Hak Akses &amp; Pemakai</span>
+            </button>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Theme Mode Switch Item -->
+            <button class="dropdown-menu-item" id="btn-toggle-theme" type="button">
+              <span class="menu-item-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              </span>
+              <span class="menu-item-text" id="menu-theme-text">Mode Gelap (Dark Mode)</span>
+            </button>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Logout Item -->
+            <button class="dropdown-menu-item item-danger" id="btn-header-logout" type="button">
+              <span class="menu-item-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+              </span>
+              <span class="menu-item-text">Keluar (Logout)</span>
+            </button>
           </div>
-
-          <div class="dropdown-divider"></div>
-
-          <!-- Profile Modal Trigger -->
-          <button class="dropdown-menu-item" id="btn-open-profile" type="button">
-            <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </span>
-            <span class="menu-item-text">Profil Saya</span>
-          </button>
-
-          <div class="dropdown-divider admin-only"></div>
-
-          <!-- Permissions & User Management Trigger (Administrator Only) -->
-          <button class="dropdown-menu-item admin-only" id="btn-open-permissions-manager" type="button">
-            <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            </span>
-            <span class="menu-item-text">Hak Akses &amp; Pemakai</span>
-          </button>
-
-          <div class="dropdown-divider"></div>
-
-          <!-- Theme Mode Switch Item -->
-          <button class="dropdown-menu-item" id="btn-toggle-theme" type="button">
-            <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
-            </span>
-            <span class="menu-item-text" id="menu-theme-text">Mode Gelap (Dark Mode)</span>
-          </button>
-
-          <div class="dropdown-divider"></div>
-
-          <!-- Logout Item -->
-          <button class="dropdown-menu-item item-danger" id="btn-header-logout" type="button">
-            <span class="menu-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-            </span>
-            <span class="menu-item-text">Keluar (Logout)</span>
-          </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Navigation Tabs (Adaptive Desktop Bar / Mobile Drawer) -->
-  <nav class="main-nav" id="main-nav-bar">
-    <div class="mobile-nav-header">
-      <span>Menu Navigasi</span>
-      <button id="btn-close-mobile-nav" class="btn-close-drawer" type="button">&times;</button>
-    </div>
-    <button class="nav-item active" data-tab="dashboard">
-      Dashboard
-    </button>
-    <button class="nav-item" data-tab="nota-timbang">
-      Transaksi Penimbangan
-    </button>
-    <button class="nav-item" data-tab="riwayat">
-      Riwayat Penimbangan
-    </button>
-    <button class="nav-item" data-tab="riwayat-pemasok">
-      Riwayat Pemasok
-    </button>
-    <button class="nav-item" data-tab="activity-log">
-      Activity Log
-    </button>
-    <button class="nav-item admin-only" data-tab="backup-restore">
-      Backup &amp; Manajemen Data
-    </button>
-    <button class="nav-item" data-tab="about-licenses">
-      About &amp; Licenses
-    </button>
-  </nav>
-</header>
+    <!-- Navigation Tabs (Adaptive Desktop Bar / Mobile Drawer) -->
+    <nav class="main-nav" id="main-nav-bar">
+      <div class="mobile-nav-header">
+        <span>Menu Navigasi</span>
+        <button id="btn-close-mobile-nav" class="btn-close-drawer" type="button">&times;</button>
+      </div>
+      <button class="nav-item active" data-tab="dashboard">
+        Dashboard
+      </button>
+      <button class="nav-item" data-tab="nota-timbang">
+        Transaksi Penimbangan
+      </button>
+      <button class="nav-item" data-tab="riwayat">
+        Riwayat Penimbangan
+      </button>
+      <button class="nav-item" data-tab="riwayat-pemasok">
+        Riwayat Pemasok
+      </button>
+      <button class="nav-item" data-tab="activity-log">
+        Activity Log
+      </button>
+      <button class="nav-item admin-only" data-tab="backup-restore">
+        Backup &amp; Manajemen Data
+      </button>
+      <button class="nav-item" data-tab="about-licenses">
+        About &amp; Licenses
+      </button>
+    </nav>
+  </header>
 
-<!-- Mobile Backdrop Overlay -->
-<div id="nav-overlay" class="nav-overlay"></div>
+  <!-- Mobile Backdrop Overlay -->
+  <div id="nav-overlay" class="nav-overlay"></div>
 
   <!-- =========================================================================
        Main Application Shell Container
@@ -587,8 +587,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">No. Polisi Kendaraan <span class="required">*</span></label>
-                <input type="text" id="input-plate-no" class="form-control mono" placeholder="Masukkan nomor polisi kendaraan"
-                  style="text-transform: uppercase;">
+                <input type="text" id="input-plate-no" class="form-control mono"
+                  placeholder="Masukkan nomor polisi kendaraan" style="text-transform: uppercase;">
               </div>
 
               <div class="form-group">
@@ -679,8 +679,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Nama Admin (Petugas Timbang)</label>
-                <input type="text" id="input-weighmaster" class="form-control" placeholder="Masukkan nama petugas timbang"
-                  style="text-transform: uppercase;">
+                <input type="text" id="input-weighmaster" class="form-control"
+                  placeholder="Masukkan nama petugas timbang" style="text-transform: uppercase;">
               </div>
             </div>
 
@@ -694,7 +694,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Catatan Transaksi</label>
-                <input type="text" id="input-notes" class="form-control" placeholder="Tambahkan catatan transaksi (Opsional)">
+                <input type="text" id="input-notes" class="form-control"
+                  placeholder="Tambahkan catatan transaksi (Opsional)">
               </div>
             </div>
           </div>
@@ -849,15 +850,17 @@
           <p class="text-secondary text-small">Daftar arsip seluruh transaksi penimbangan garam PT. Reka Cipta Garam</p>
         </div>
         <div class="d-flex gap-8 align-center flex-wrap">
-          <input type="text" id="history-search-input" class="form-control table-header-search-input"
-            placeholder="Masukkan kata kunci">
+          <div class="search-box">
+            <input type="text" id="history-search-input" class="form-control"
+              placeholder="Masukkan kata kunci">
+          </div>
           <button id="btn-export-excel" class="btn btn-primary">
             Export Excel (.xlsx)
           </button>
         </div>
       </div>
 
-      <!-- Toolbar Pencarian & Filter -->
+      <!-- Toolbar Filter Riwayat -->
       <div class="table-toolbar">
         <div class="table-filter-group">
           <!-- Filter Material -->
@@ -952,15 +955,17 @@
             supplier</p>
         </div>
         <div class="d-flex gap-8 align-center flex-wrap">
-          <input type="text" id="supplier-history-search" class="form-control table-header-search-input"
-            placeholder="Masukkan kata kunci">
+          <div class="search-box">
+            <input type="text" id="supplier-history-search" class="form-control"
+              placeholder="Masukkan kata kunci">
+          </div>
           <button id="btn-export-supplier-excel" class="btn btn-primary">
             Export Excel (.xlsx)
           </button>
         </div>
       </div>
 
-      <!-- Toolbar Filter & Search Pemasok -->
+      <!-- Toolbar Filter Pemasok -->
       <div class="table-toolbar">
         <div class="table-filter-group">
           <!-- Filter Nama Pemasok (Searchable Combobox) -->
