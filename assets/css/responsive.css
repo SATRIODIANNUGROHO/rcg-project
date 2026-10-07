@@ -802,7 +802,7 @@ body.dark-mode .nav-item.active::after {
   flex-direction: row !important;
   flex-wrap: wrap !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
   gap: clamp(8px, 1vw, 16px) !important;
   margin-bottom: clamp(10px, 0.8vw + 4px, 16px) !important;
 }
@@ -811,13 +811,28 @@ body.dark-mode .nav-item.active::after {
   min-width: 0;
 }
 
+.table-filter-left {
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.table-filter-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: clamp(8px, 0.8vw, 12px) !important;
+  flex-wrap: wrap !important;
+  margin-left: auto !important;
+}
+
 .search-box {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  flex: 1 1 280px !important;
-  max-width: 440px !important;
-  min-width: 0 !important;
+  width: clamp(200px, 18vw, 260px) !important;
+  max-width: 320px !important;
+  min-width: 180px !important;
+  flex-shrink: 0 !important;
 }
 
 .search-box input.form-control,

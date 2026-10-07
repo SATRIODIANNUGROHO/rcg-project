@@ -224,7 +224,7 @@ const CustomSelectManager = {
     if (!container) return;
     let cur = container.parentElement;
     while (cur && cur !== document.body && cur !== document.documentElement) {
-      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('table-filter-group') || cur.classList.contains('print-toolbar-grid') || cur.classList.contains('print-modal-sidebar')) {
+      if (cur.classList.contains('form-row') || cur.classList.contains('form-group') || cur.classList.contains('section-block') || cur.classList.contains('card') || cur.classList.contains('modal-body') || cur.classList.contains('table-toolbar') || cur.classList.contains('table-filter-group') || cur.classList.contains('table-filter-left') || cur.classList.contains('table-filter-right') || cur.classList.contains('print-toolbar-grid') || cur.classList.contains('print-modal-sidebar')) {
         if (isElevate) {
           cur.classList.add('has-dropdown-open');
           cur.style.position = 'relative';

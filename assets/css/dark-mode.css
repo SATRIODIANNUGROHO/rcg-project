@@ -1223,13 +1223,28 @@ body.dark-mode .table-toolbar {
   gap: 14px !important;
 }
 
+body.dark-mode .table-filter-left {
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+body.dark-mode .table-filter-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  margin-left: auto !important;
+}
+
 body.dark-mode .search-box {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  flex: 1 1 320px !important;
-  max-width: 440px !important;
-  min-width: 200px !important;
+  width: 240px !important;
+  max-width: 320px !important;
+  min-width: 180px !important;
+  flex-shrink: 0 !important;
 }
 
 body.dark-mode .search-box input.form-control,

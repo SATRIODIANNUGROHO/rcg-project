@@ -2515,7 +2515,7 @@ input[type="number"] {
 .table-toolbar {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 14px;
   margin-bottom: 14px;
   flex-wrap: wrap;
@@ -2523,13 +2523,28 @@ input[type="number"] {
   z-index: 20;
 }
 
+.table-filter-left {
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.table-filter-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  margin-left: auto !important;
+}
+
 .search-box {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  flex: 1 1 320px !important;
-  max-width: 440px !important;
-  min-width: 200px !important;
+  width: 240px !important;
+  max-width: 320px !important;
+  min-width: 180px !important;
+  flex-shrink: 0 !important;
 }
 
 .search-box input.form-control,
