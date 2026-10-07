@@ -556,22 +556,29 @@ const App = {
   },
 
   startLiveClock() {
-    const clockEl = document.getElementById('header-live-clock');
+    const clockEl = document.getElementById('header-digital-clock') || document.getElementById('header-live-clock');
+    const dateEl = document.getElementById('header-live-date');
     const updateClock = () => {
       const now = new Date();
-      const options = {
-        timeZone: 'Asia/Jakarta',
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      };
+
+      // Prominent Center Digital Clock: HH:mm:ss (24-hour, zero padded)
       if (clockEl) {
-        clockEl.textContent = `${now.toLocaleString('id-ID', options)} WIB`;
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+      }
+
+      // Simplified Right Date: e.g. "Rabu, 07 Oktober 2026"
+      if (dateEl) {
+        const dateOptions = {
+          timeZone: 'Asia/Jakarta',
+          weekday: 'long',
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        };
+        dateEl.textContent = now.toLocaleDateString('id-ID', dateOptions);
       }
     };
     updateClock();

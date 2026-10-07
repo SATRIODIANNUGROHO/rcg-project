@@ -97,6 +97,14 @@ body.dark-mode .app-header {
   border-bottom-color: #1E293B;
 }
 
+body.dark-mode .header-clock-digital {
+  color: #FFFFFF !important;
+}
+
+body.dark-mode .header-date-text {
+  color: #FFFFFF !important;
+}
+
 body.dark-mode .dropdown-menu-card {
   background: #1E293B;
   border-color: #334155;
