@@ -405,6 +405,7 @@ body.dark-mode #input-notes::placeholder,
   -webkit-text-fill-color: #FFFFFF !important;
   opacity: 1 !important;
   font-weight: 500 !important;
+  font-size: 13px !important;
   text-transform: none !important;
 }
 
@@ -440,6 +441,7 @@ body.dark-mode #input-notes::-webkit-input-placeholder,
   -webkit-text-fill-color: #FFFFFF !important;
   opacity: 1 !important;
   font-weight: 500 !important;
+  font-size: 13px !important;
   text-transform: none !important;
 }
 

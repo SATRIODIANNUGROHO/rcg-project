@@ -1079,6 +1079,37 @@ input[type="number"] {
   font-weight: 500;
 }
 
+/* Ensure Transaction Form Inputs Match Status Pembayaran Dropdown Exactly */
+#section-nota-timbang #input-driver-name,
+#section-nota-timbang #input-weighmaster,
+#section-nota-timbang #input-notes,
+#section-nota-timbang #input-plate-no,
+#input-driver-name,
+#input-weighmaster,
+#input-notes,
+#input-plate-no {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 12px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+}
+
+#section-nota-timbang #input-driver-name::placeholder,
+#section-nota-timbang #input-weighmaster::placeholder,
+#section-nota-timbang #input-notes::placeholder,
+#section-nota-timbang #input-plate-no::placeholder,
+#input-driver-name::placeholder,
+#input-weighmaster::placeholder,
+#input-notes::placeholder,
+#input-plate-no::placeholder {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+}
+
 .form-control:hover:not(:disabled):not([readonly]) {
   border-color: var(--primary);
 }

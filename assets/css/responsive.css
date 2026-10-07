@@ -563,17 +563,35 @@ body.dark-mode .nav-item.active::after {
   padding: 0 clamp(8px, 0.6vw, 12px) !important;
 }
 
+/* Transaction Form Inputs Standardization (Visual Parity with Status Pembayaran Dropdown) */
+#section-nota-timbang .form-control,
+#input-driver-name,
+#input-weighmaster,
+#input-notes,
+#input-plate-no,
 .custom-combobox input.form-control {
   height: 38px !important;
+  min-height: 38px !important;
   font-size: 13px !important;
   font-weight: 500 !important;
-  padding: 0 32px 0 12px !important;
+  padding: 0 12px !important;
+  line-height: normal !important;
   box-sizing: border-box !important;
 }
 
+.custom-combobox input.form-control {
+  padding: 0 32px 0 12px !important;
+}
+
+#section-nota-timbang .form-control::placeholder,
+#input-driver-name::placeholder,
+#input-weighmaster::placeholder,
+#input-notes::placeholder,
+#input-plate-no::placeholder,
 .custom-combobox input.form-control::placeholder {
   font-size: 13px !important;
   font-weight: 500 !important;
+  line-height: normal !important;
 }
 
 .form-label {
