@@ -1110,6 +1110,42 @@ input[type="number"] {
   line-height: normal !important;
 }
 
+/* Ensure Account / Profile Settings Form Inputs Match Status Pembayaran Dropdown Exactly */
+#modal-user-profile .form-control,
+#input-avatar-url,
+#input-profile-fullname,
+#input-profile-email,
+#input-curr-pw,
+#input-new-pw,
+#input-confirm-pw {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 12px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+}
+
+#modal-user-profile input[type="password"],
+#input-curr-pw,
+#input-new-pw,
+#input-confirm-pw {
+  padding: 0 36px 0 12px !important;
+}
+
+#modal-user-profile .form-control::placeholder,
+#input-avatar-url::placeholder,
+#input-profile-fullname::placeholder,
+#input-profile-email::placeholder,
+#input-curr-pw::placeholder,
+#input-new-pw::placeholder,
+#input-confirm-pw::placeholder {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+}
+
 .form-control:hover:not(:disabled):not([readonly]) {
   border-color: var(--primary);
 }
