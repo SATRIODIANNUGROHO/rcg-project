@@ -630,9 +630,14 @@ body.dark-mode .nav-item.active::after {
   line-height: normal !important;
 }
 
-.form-label {
-  font-size: clamp(11px, 0.2vw + 8.1px, 12.5px) !important;
-  margin-bottom: clamp(3px, 0.4vh, 6px) !important;
+/* Unified Standard Form Label Typography & Ergonomics */
+.form-label,
+#modal-user-profile .form-label,
+#section-nota-timbang .form-label {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.01em;
 }
 
 .section-block {
