@@ -215,19 +215,19 @@
     }
 
     .form-label {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 600;
       color: var(--login-label-color);
       margin-bottom: 6px;
       display: block;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.01em;
     }
 
     .login-box .form-control {
-      height: 42px;
-      padding: 0 14px;
+      height: 38px;
+      padding: 0 12px;
       font-family: var(--font-primary);
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 500;
       color: var(--login-input-text);
       background-color: var(--login-input-bg);
@@ -253,7 +253,17 @@
     .login-box .form-control::placeholder {
       color: var(--login-input-placeholder);
       opacity: 1;
-      font-weight: 400;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    html.dark-mode .login-box .form-control::placeholder,
+    body.dark-mode .login-box .form-control::placeholder {
+      color: #FFFFFF !important;
+      -webkit-text-fill-color: #FFFFFF !important;
+      opacity: 1 !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
     }
 
     .login-password-wrapper {
@@ -264,7 +274,8 @@
     }
 
     .login-password-wrapper .form-control {
-      padding-right: 42px;
+      padding-right: 38px;
+      padding-left: 12px;
     }
 
     .password-toggle-btn {
@@ -335,7 +346,7 @@
     }
 
     #btn-login-submit {
-      height: 42px;
+      height: 38px;
       font-size: 13.5px;
       font-weight: 600;
       letter-spacing: 0.01em;

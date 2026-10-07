@@ -425,7 +425,13 @@ body.dark-mode #input-new-pw::placeholder,
 html.dark-mode #input-confirm-pw::placeholder,
 body.dark-mode #input-confirm-pw::placeholder,
 .dark-mode #input-confirm-pw::placeholder,
-#modal-user-profile input::placeholder {
+#modal-user-profile input::placeholder,
+#modal-login input::placeholder,
+.login-box input::placeholder,
+#input-username::placeholder,
+#input-password::placeholder,
+#login-username::placeholder,
+#login-password::placeholder {
   color: #FFFFFF !important;
   -webkit-text-fill-color: #FFFFFF !important;
   opacity: 1 !important;
@@ -480,7 +486,13 @@ body.dark-mode #input-new-pw::-webkit-input-placeholder,
 html.dark-mode #input-confirm-pw::-webkit-input-placeholder,
 body.dark-mode #input-confirm-pw::-webkit-input-placeholder,
 .dark-mode #input-confirm-pw::-webkit-input-placeholder,
-#modal-user-profile input::-webkit-input-placeholder {
+#modal-user-profile input::-webkit-input-placeholder,
+#modal-login input::-webkit-input-placeholder,
+.login-box input::-webkit-input-placeholder,
+#input-username::-webkit-input-placeholder,
+#input-password::-webkit-input-placeholder,
+#login-username::-webkit-input-placeholder,
+#login-password::-webkit-input-placeholder {
   color: #FFFFFF !important;
   -webkit-text-fill-color: #FFFFFF !important;
   opacity: 1 !important;

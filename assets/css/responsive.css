@@ -630,8 +630,45 @@ body.dark-mode .nav-item.active::after {
   line-height: normal !important;
 }
 
+/* Authentication & Login Form Inputs Standardization (Visual Parity with Status Pembayaran) */
+.login-box .form-control,
+#modal-login .form-control,
+#input-username,
+#input-password,
+#login-username,
+#login-password {
+  height: 38px !important;
+  min-height: 38px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 0 12px !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.login-password-wrapper .form-control,
+#input-password,
+#modal-login input[type="password"],
+#login-password {
+  padding: 0 38px 0 12px !important;
+}
+
+.login-box .form-control::placeholder,
+#modal-login .form-control::placeholder,
+#input-username::placeholder,
+#input-password::placeholder,
+#login-username::placeholder,
+#login-password::placeholder {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+}
+
 /* Unified Standard Form Label Typography & Ergonomics */
 .form-label,
+.login-box .form-label,
+#modal-login .form-label,
 #modal-user-profile .form-label,
 #section-nota-timbang .form-label {
   font-size: 13.5px !important;

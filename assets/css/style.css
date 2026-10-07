@@ -1148,6 +1148,41 @@ input[type="number"] {
   line-height: normal !important;
 }
 
+/* Ensure Authentication & Login Form Inputs Match Status Pembayaran Dropdown Exactly */
+.login-box .form-control,
+#modal-login .form-control,
+#input-username,
+#input-password,
+#login-username,
+#login-password {
+  height: 38px !important;
+  min-height: 38px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 0 12px !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.login-password-wrapper .form-control,
+#input-password,
+#modal-login input[type="password"],
+#login-password {
+  padding: 0 38px 0 12px !important;
+}
+
+.login-box .form-control::placeholder,
+#modal-login .form-control::placeholder,
+#input-username::placeholder,
+#input-password::placeholder,
+#login-username::placeholder,
+#login-password::placeholder {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+}
+
 .form-control:hover:not(:disabled):not([readonly]) {
   border-color: var(--primary);
 }
