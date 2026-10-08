@@ -636,11 +636,12 @@ textarea.form-control {
 }
 
 .custom-select-option {
-  padding: 7px 12px;
+  padding: 8px 12px;
   margin-bottom: 2px;
   font-size: 12.5px;
   font-weight: 500;
   color: var(--text-primary);
+  border: 1px solid transparent;
   border-radius: var(--radius-tight);
   cursor: pointer;
   transition: var(--transition);
@@ -663,9 +664,10 @@ textarea.form-control {
 }
 
 .custom-select-option.selected {
-  background-color: var(--primary-light);
-  color: var(--primary);
-  font-weight: 700;
+  background-color: var(--primary-light) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(37, 99, 184, 0.35) !important;
 }
 
 /* ==========================================================================
@@ -1297,10 +1299,12 @@ input[type="number"] {
 
 .custom-autocomplete-item {
   padding: 8px 12px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-primary);
+  border: 1px solid transparent;
   border-radius: var(--radius-tight);
+  margin-bottom: 2px;
   cursor: pointer;
   transition: var(--transition);
   box-sizing: border-box !important;
@@ -1312,10 +1316,21 @@ input[type="number"] {
   display: block !important;
 }
 
+.custom-autocomplete-item:last-child {
+  margin-bottom: 0;
+}
+
 .custom-autocomplete-item:hover,
-.custom-autocomplete-item.active {
+.custom-autocomplete-item.active:not(.selected) {
   background-color: var(--bg-surface-alt);
   color: var(--primary);
+}
+
+.custom-autocomplete-item.selected {
+  background-color: var(--primary-light) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(37, 99, 184, 0.35) !important;
 }
 
 /* Custom Combobox / Searchable Autocomplete Dropdown */
@@ -1400,15 +1415,15 @@ input[type="number"] {
   min-width: 100% !important;
   width: 100% !important;
   max-width: 100% !important;
-  max-height: 240px;
+  max-height: 280px;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior: contain;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
-  padding: 4px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+  padding: 6px;
   display: none;
   z-index: 100000 !important;
   animation: fadeInDown 0.12s ease-out;
@@ -1422,9 +1437,11 @@ input[type="number"] {
 
 .custom-combobox-item {
   padding: 8px 12px;
-  font-size: 13px;
+  margin-bottom: 2px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-primary);
+  border: 1px solid transparent;
   border-radius: var(--radius-tight);
   cursor: pointer;
   transition: var(--transition);
@@ -1439,6 +1456,10 @@ input[type="number"] {
   overflow: hidden !important;
 }
 
+.custom-combobox-item:last-child {
+  margin-bottom: 0;
+}
+
 .custom-combobox-item > span {
   display: block;
   overflow: hidden !important;
@@ -1449,15 +1470,16 @@ input[type="number"] {
 }
 
 .custom-combobox-item:hover,
-.custom-combobox-item.active {
+.custom-combobox-item.active:not(.selected) {
   background-color: var(--bg-surface-alt);
   color: var(--primary);
 }
 
 .custom-combobox-item.selected {
-  background-color: rgba(15, 76, 129, 0.08);
-  color: var(--primary);
-  font-weight: 600;
+  background-color: var(--primary-light) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(37, 99, 184, 0.35) !important;
 }
 
 .custom-combobox-item .highlight-match {
@@ -1468,10 +1490,9 @@ input[type="number"] {
 }
 
 .custom-combobox-item.special-all {
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 3px;
-  padding-bottom: 9px;
-  font-weight: 600;
+  margin-bottom: 2px;
+  padding: 8px 12px;
+  border-bottom: 1px solid transparent;
 }
 
 .custom-combobox-empty {
@@ -1940,6 +1961,16 @@ input[type="number"] {
 .dropdown-menu-item:hover {
   background: var(--bg-surface-alt);
   color: var(--primary);
+}
+
+.dropdown-menu-item.selected,
+.dropdown-menu-item.active,
+.dropdown-item.selected,
+.dropdown-item.active {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(37, 99, 184, 0.35) !important;
 }
 
 .dropdown-menu-item .menu-item-icon {

@@ -459,6 +459,23 @@ Seluruh tombol dropdown di bilah filter dan form wajib memiliki gaya visual yang
 - Menu melayang (`.custom-select-menu`, `.custom-combobox-menu`) wajib terkunci tepat 100% sejajar dengan tombol pemicunya: `width: 100% !important; min-width: 100% !important; max-width: 100% !important; left: 0 !important; right: 0 !important; box-sizing: border-box !important;`.
 - Max-height: `240px` s/d `280px` disertai scrollbar tipis. Jika ruang bawah layar sempit, terapkan kelas `.open-upward` untuk membuka menu ke arah atas.
 
+### 26.3 Penyelarasan Penanda Opsi Aktif / Terpilih (Selected Option Highlight)
+Seluruh menu opsi dropdown (`.custom-select-option`, `.custom-combobox-item`, `.custom-autocomplete-item`, `.dropdown-menu-item`) wajib memiliki styling penanda opsi terpilih (`.selected` / `.active`) yang **100% konsisten dan seragam**:
+- **Dilarang**: Menggunakan blok warna latar belakang pekat/solid (`solid filled background color` seperti `rgba(56, 189, 248, 0.15)`) tanpa garis tepi terpisah yang menutupi kontainer.
+- **Wajib (Dark Mode)**:
+  - Garis tepi kotak kontur: `border: 1px solid rgba(56, 189, 248, 0.3);` (Hover: `border-color: rgba(56, 189, 248, 0.45);`).
+  - Latar belakang: `#16243A` (selaras dengan tone permukaan gelap, bukan blok aksen terang pekat).
+  - Sudut melengkung: `border-radius: 4px;` (atau `var(--radius-tight)`).
+  - Teks: `color: #38BDF8; font-weight: 700;`.
+  - Spasi bantalan: `padding: 8px 12px; margin-bottom: 2px;`.
+- **Wajib (Light Mode)**:
+  - Garis tepi kotak kontur: `border: 1px solid rgba(37, 99, 184, 0.35);`.
+  - Latar belakang: `var(--primary-light)`.
+  - Sudut melengkung: `border-radius: var(--radius-tight);`.
+  - Teks: `color: var(--primary); font-weight: 700;`.
+  - Spasi bantalan: `padding: 8px 12px; margin-bottom: 2px;`.
+- **Padding Kontainer Dropdown Menu**: `padding: 6px;` pada seluruh container `.custom-select-menu` dan `.custom-combobox-menu` guna memastikan jarak aman merata antara tepi menu dan kotak kontur item.
+
 ---
 
 ## 27. Tables Component

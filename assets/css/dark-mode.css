@@ -133,8 +133,18 @@ body.dark-mode .dropdown-menu-item {
 }
 
 body.dark-mode .dropdown-menu-item:hover {
-  background: #0F172A;
-  color: #38BDF8;
+  background: #2D405E;
+  color: #FFFFFF;
+}
+
+body.dark-mode .dropdown-menu-item.selected,
+body.dark-mode .dropdown-menu-item.active,
+body.dark-mode .dropdown-item.selected,
+body.dark-mode .dropdown-item.active {
+  background-color: #16243A !important;
+  color: #38BDF8 !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
 }
 
 body.dark-mode .dropdown-menu-item:hover .menu-item-icon {
@@ -641,6 +651,7 @@ body.dark-mode .custom-select-option {
   color: #F5F7FA;
   padding: 8px 12px;
   margin-bottom: 2px;
+  border: 1px solid transparent;
   border-radius: 4px;
   font-size: 12.5px;
   font-weight: 500;
@@ -657,10 +668,16 @@ body.dark-mode .custom-select-option:hover {
 }
 
 body.dark-mode .custom-select-option.selected {
-  background-color: #16243A;
-  color: #38BDF8;
-  font-weight: 700;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background-color: #16243A !important;
+  color: #38BDF8 !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+
+body.dark-mode .custom-select-option.selected:hover {
+  background-color: #16243A !important;
+  color: #38BDF8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
 }
 
 /* Primary Action Buttons in Dark Mode (100% Flat Murni Solid) */
@@ -1159,29 +1176,57 @@ body.dark-mode .combobox-chevron-btn:hover {
 }
 
 body.dark-mode .custom-combobox-menu,
-body.dark-mode .custom-combobox .dropdown-menu-card {
-  background-color: #1E2D44;
-  border-color: #475569;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+body.dark-mode .custom-combobox .dropdown-menu-card,
+body.dark-mode .custom-autocomplete-menu,
+body.dark-mode .custom-autocomplete-container .dropdown-menu-card {
+  background-color: #1E2D44 !important;
+  border: 1px solid #475569 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior: contain;
-  max-height: 240px;
+  max-height: 280px;
+  padding: 6px !important;
 }
 
-body.dark-mode .custom-combobox-item {
+body.dark-mode .custom-combobox-item,
+body.dark-mode .custom-autocomplete-item {
   color: #F5F7FA;
+  padding: 8px 12px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+body.dark-mode .custom-combobox-item:last-child,
+body.dark-mode .custom-autocomplete-item:last-child {
+  margin-bottom: 0;
 }
 
 body.dark-mode .custom-combobox-item:hover,
-body.dark-mode .custom-combobox-item.active {
-  background-color: #16243A;
-  color: #38BDF8;
+body.dark-mode .custom-combobox-item.active:not(.selected),
+body.dark-mode .custom-autocomplete-item:hover,
+body.dark-mode .custom-autocomplete-item.active:not(.selected) {
+  background-color: #2D405E;
+  color: #FFFFFF;
 }
 
-body.dark-mode .custom-combobox-item.selected {
-  background-color: rgba(56, 189, 248, 0.15);
-  color: #38BDF8;
+body.dark-mode .custom-combobox-item.selected,
+body.dark-mode .custom-autocomplete-item.selected {
+  background-color: #16243A !important;
+  color: #38BDF8 !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+
+body.dark-mode .custom-combobox-item.selected:hover,
+body.dark-mode .custom-autocomplete-item.selected:hover {
+  background-color: #16243A !important;
+  color: #38BDF8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
 }
 
 body.dark-mode .custom-combobox-item .highlight-match {
@@ -1189,7 +1234,14 @@ body.dark-mode .custom-combobox-item .highlight-match {
 }
 
 body.dark-mode .custom-combobox-item.special-all {
-  border-bottom-color: #334155;
+  border-bottom: 1px solid transparent;
+  margin-bottom: 2px;
+  padding-bottom: 8px;
+}
+
+body.dark-mode .custom-combobox-item.special-all.selected {
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  background-color: #16243A !important;
 }
 
 body.dark-mode .custom-combobox-empty {

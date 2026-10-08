@@ -214,8 +214,10 @@ const CustomAutocomplete = {
 
       filtered.forEach((optText) => {
         const item = document.createElement('div');
-        item.className = 'custom-autocomplete-item';
+        const isSel = input.value && input.value.trim().toLowerCase() === optText.toLowerCase();
+        item.className = `custom-autocomplete-item ${isSel ? 'selected' : ''}`;
         item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', isSel ? 'true' : 'false');
         item.textContent = optText;
 
         item.addEventListener('mousedown', (e) => {
