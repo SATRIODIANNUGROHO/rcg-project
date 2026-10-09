@@ -476,6 +476,18 @@ Seluruh menu opsi dropdown (`.custom-select-option`, `.custom-combobox-item`, `.
   - Spasi bantalan: `padding: 8px 12px; margin-bottom: 2px;`.
 - **Padding Kontainer Dropdown Menu**: `padding: 6px;` pada seluruh container `.custom-select-menu` dan `.custom-combobox-menu` guna memastikan jarak aman merata antara tepi menu dan kotak kontur item.
 
+### 26.4 Penyelarasan Status Aktif Tombol Pemicu Saat Menu Terbuka (Active State Trigger Box Parity)
+Ketika menu opsi sedang terbuka (`.open`, `.is-active`) atau elemen sedang berstatus fokus (`:focus`, `:focus-visible`, `:focus-within`), seluruh tombol pemicu dropdown (`.custom-select-trigger`, `.custom-combobox input.form-control`, `.custom-autocomplete-container input.form-control`) wajib menampilkan respon visual aktif yang **100% seragam**:
+- **Border**: `border-color: var(--primary) !important;` (Biru aksen tema cerah `#3671C6` / `#38BDF8`).
+- **Latar Belakang**:
+  - Dark Mode: `background-color: #1E2D44 !important;`
+  - Light Mode: `background-color: var(--bg-surface) !important;`
+- **Box-Shadow / Halo Outline**:
+  - Dark Mode: `box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25) !important; outline: none !important;`
+  - Light Mode: `box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12) !important; outline: none !important;`
+- **Ikon Chevron**: Berotasi 180 derajat (`transform: rotate(180deg);`) dengan warna aksen `color: var(--primary) !important;`.
+- **Dilarang**: Membiarkan border tetap berwarna gelap non-aktif (`#334155`) ketika dropdown sedang aktif/terbuka atau fokus.
+
 ---
 
 ## 27. Tables Component

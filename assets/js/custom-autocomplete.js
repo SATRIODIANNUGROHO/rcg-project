@@ -146,7 +146,8 @@ const CustomAutocomplete = {
 
     const closeDropdown = () => {
       isOpen = false;
-      wrapper.classList.remove('open', 'open-upward');
+      wrapper.classList.remove('open', 'is-active', 'open-upward');
+      input.classList.remove('open', 'is-active');
       menu.style.maxHeight = '';
       menu.style.top = '';
       menu.style.bottom = '';
@@ -206,9 +207,12 @@ const CustomAutocomplete = {
       // Close all other dropdowns
       document.querySelectorAll('.custom-combobox.open, .custom-autocomplete-container.open, .custom-select-container.open, .user-profile-dropdown.open').forEach(c => {
         if (c !== wrapper) {
-          c.classList.remove('open', 'open-upward');
+          c.classList.remove('open', 'is-active', 'open-upward');
           const inp = c.querySelector('input');
-          if (inp) inp.setAttribute('aria-expanded', 'false');
+          if (inp) {
+            inp.classList.remove('open', 'is-active');
+            inp.setAttribute('aria-expanded', 'false');
+          }
         }
       });
 
@@ -235,7 +239,8 @@ const CustomAutocomplete = {
 
       adjustPlacement();
       isOpen = true;
-      wrapper.classList.add('open');
+      wrapper.classList.add('open', 'is-active');
+      input.classList.add('open', 'is-active');
       input.setAttribute('aria-expanded', 'true');
       if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
         CustomSelectManager.elevateAncestors(wrapper, true);
@@ -412,7 +417,8 @@ const CustomAutocomplete = {
 
     const closeDropdown = () => {
       isOpen = false;
-      container.classList.remove('open', 'open-upward');
+      container.classList.remove('open', 'is-active', 'open-upward');
+      input.classList.remove('open', 'is-active');
       menu.style.maxHeight = '';
       menu.style.top = '';
       menu.style.bottom = '';
@@ -454,9 +460,12 @@ const CustomAutocomplete = {
       // Close all other dropdowns
       document.querySelectorAll('.custom-combobox.open, .custom-autocomplete-container.open, .custom-select-container.open, .user-profile-dropdown.open').forEach(c => {
         if (c !== container) {
-          c.classList.remove('open', 'open-upward');
+          c.classList.remove('open', 'is-active', 'open-upward');
           const inp = c.querySelector('input');
-          if (inp) inp.setAttribute('aria-expanded', 'false');
+          if (inp) {
+            inp.classList.remove('open', 'is-active');
+            inp.setAttribute('aria-expanded', 'false');
+          }
           if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
             CustomSelectManager.elevateAncestors(c, false);
           }
@@ -529,7 +538,8 @@ const CustomAutocomplete = {
 
       adjustPlacement();
       isOpen = true;
-      container.classList.add('open');
+      container.classList.add('open', 'is-active');
+      input.classList.add('open', 'is-active');
       input.setAttribute('aria-expanded', 'true');
       if (typeof CustomSelectManager !== 'undefined' && CustomSelectManager.elevateAncestors) {
         CustomSelectManager.elevateAncestors(container, true);
@@ -674,9 +684,12 @@ const CustomAutocomplete = {
 
   closeAll() {
     document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => {
-      w.classList.remove('open', 'open-upward');
+      w.classList.remove('open', 'is-active', 'open-upward');
       const inp = w.querySelector('input');
-      if (inp) inp.setAttribute('aria-expanded', 'false');
+      if (inp) {
+        inp.classList.remove('open', 'is-active');
+        inp.setAttribute('aria-expanded', 'false');
+      }
     });
 
     if (this.activeInstances) {
@@ -699,9 +712,12 @@ const CustomAutocomplete = {
 
       document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => {
         if (w !== activeContainer) {
-          w.classList.remove('open', 'open-upward');
+          w.classList.remove('open', 'is-active', 'open-upward');
           const inp = w.querySelector('input');
-          if (inp) inp.setAttribute('aria-expanded', 'false');
+          if (inp) {
+            inp.classList.remove('open', 'is-active');
+            inp.setAttribute('aria-expanded', 'false');
+          }
         }
       });
 
@@ -726,9 +742,12 @@ const CustomAutocomplete = {
 
       document.querySelectorAll('.custom-autocomplete-container.open, .custom-combobox.open').forEach(w => {
         if (w !== activeContainer) {
-          w.classList.remove('open', 'open-upward');
+          w.classList.remove('open', 'is-active', 'open-upward');
           const inp = w.querySelector('input');
-          if (inp) inp.setAttribute('aria-expanded', 'false');
+          if (inp) {
+            inp.classList.remove('open', 'is-active');
+            inp.setAttribute('aria-expanded', 'false');
+          }
         }
       });
 

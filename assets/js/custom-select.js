@@ -90,10 +90,13 @@ const CustomSelectManager = {
           if (w.classList.contains('custom-select-container')) {
             this.closeMenu(w);
           } else {
-            w.classList.remove('open', 'open-upward');
+            w.classList.remove('open', 'is-active', 'open-upward');
             this.elevateAncestors(w, false);
             const inp = w.querySelector('input');
-            if (inp) inp.setAttribute('aria-expanded', 'false');
+            if (inp) {
+              inp.classList.remove('open', 'is-active');
+              inp.setAttribute('aria-expanded', 'false');
+            }
           }
         }
       });
@@ -102,7 +105,8 @@ const CustomSelectManager = {
       }
 
       if (!isAlreadyOpen) {
-        wrapper.classList.add('open');
+        wrapper.classList.add('open', 'is-active');
+        trigger.classList.add('open', 'is-active');
         this.elevateAncestors(wrapper, true);
         this.adjustMenuPlacement(wrapper, trigger, menu, select);
       } else {
@@ -177,7 +181,9 @@ const CustomSelectManager = {
 
   closeMenu(wrapper) {
     if (!wrapper) return;
-    wrapper.classList.remove('open', 'open-upward');
+    wrapper.classList.remove('open', 'is-active', 'open-upward');
+    const trigger = wrapper.querySelector('.custom-select-trigger');
+    if (trigger) trigger.classList.remove('open', 'is-active');
     this.elevateAncestors(wrapper, false);
     const menu = wrapper.querySelector('.custom-select-menu');
     if (menu) {

@@ -630,9 +630,13 @@ body.dark-mode .custom-datepicker-container.open-upward .custom-datepicker-popup
   bottom: calc(100% + 4px) !important;
 }
 
-body.dark-mode .custom-select-container.open .custom-select-trigger {
-  border-color: var(--primary);
-  background-color: #1E2D44;
+body.dark-mode .custom-select-container.open .custom-select-trigger,
+body.dark-mode .custom-select-container.is-active .custom-select-trigger,
+body.dark-mode .custom-select-container:focus-within .custom-select-trigger {
+  border-color: var(--primary) !important;
+  background-color: #1E2D44 !important;
+  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25) !important;
+  outline: none !important;
 }
 
 body.dark-mode .custom-select-menu {
@@ -1153,17 +1157,30 @@ body.dark-mode .custom-combobox input.form-control::placeholder {
 }
 
 body.dark-mode .custom-combobox:hover input.form-control:not(:disabled),
-body.dark-mode .custom-combobox input.form-control:hover:not(:disabled) {
-  border-color: var(--primary);
-  background-color: #1E2D44;
+body.dark-mode .custom-combobox input.form-control:hover:not(:disabled),
+body.dark-mode .custom-autocomplete-container:hover input.form-control:not(:disabled) {
+  border-color: var(--primary) !important;
+  background-color: #1E2D44 !important;
 }
 
 body.dark-mode .custom-combobox.open input.form-control,
-body.dark-mode .custom-combobox input.form-control:focus {
-  border-color: var(--primary);
-  background-color: #1E2D44;
-  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25);
-  outline: none;
+body.dark-mode .custom-combobox.is-active input.form-control,
+body.dark-mode .custom-combobox input.form-control.open,
+body.dark-mode .custom-combobox input.form-control.is-active,
+body.dark-mode .custom-combobox input.form-control:focus,
+body.dark-mode .custom-combobox input.form-control:focus-visible,
+body.dark-mode .custom-combobox:focus-within input.form-control,
+body.dark-mode .custom-autocomplete-container.open input.form-control,
+body.dark-mode .custom-autocomplete-container.is-active input.form-control,
+body.dark-mode .custom-autocomplete-container input.form-control.open,
+body.dark-mode .custom-autocomplete-container input.form-control.is-active,
+body.dark-mode .custom-autocomplete-container input.form-control:focus,
+body.dark-mode .custom-autocomplete-container input.form-control:focus-visible,
+body.dark-mode .custom-autocomplete-container:focus-within input.form-control {
+  border-color: var(--primary) !important;
+  background-color: #1E2D44 !important;
+  box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25) !important;
+  outline: none !important;
 }
 
 body.dark-mode .combobox-chevron-btn {
@@ -1171,8 +1188,11 @@ body.dark-mode .combobox-chevron-btn {
 }
 
 body.dark-mode .custom-combobox:hover .combobox-chevron-btn,
-body.dark-mode .combobox-chevron-btn:hover {
-  color: var(--primary);
+body.dark-mode .combobox-chevron-btn:hover,
+body.dark-mode .custom-combobox.open .combobox-chevron-btn,
+body.dark-mode .custom-combobox.is-active .combobox-chevron-btn,
+body.dark-mode .custom-combobox:focus-within .combobox-chevron-btn {
+  color: var(--primary) !important;
 }
 
 body.dark-mode .custom-combobox-menu,

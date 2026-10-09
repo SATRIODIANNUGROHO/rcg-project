@@ -587,16 +587,23 @@ textarea.form-control {
 }
 
 .custom-select-trigger:hover,
-.custom-select-container.open .custom-select-trigger {
+.custom-select-container.open .custom-select-trigger,
+.custom-select-container.is-active .custom-select-trigger,
+.custom-select-container:focus-within .custom-select-trigger {
   border-color: var(--primary);
   background-color: var(--bg-surface);
 }
 
-.custom-select-container.open .custom-select-trigger {
-  box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12);
+.custom-select-container.open .custom-select-trigger,
+.custom-select-container.is-active .custom-select-trigger,
+.custom-select-container:focus-within .custom-select-trigger {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12) !important;
+  outline: none !important;
 }
 
-.custom-select-container.open .dropdown-chevron {
+.custom-select-container.open .dropdown-chevron,
+.custom-select-container.is-active .dropdown-chevron {
   transform: rotate(180deg);
 }
 
@@ -1365,15 +1372,29 @@ input[type="number"] {
 }
 
 .custom-combobox:hover input.form-control:not(:disabled),
-.custom-combobox input.form-control:hover:not(:disabled) {
+.custom-combobox input.form-control:hover:not(:disabled),
+.custom-combobox:hover .combobox-chevron-btn ~ input.form-control,
+.custom-autocomplete-container:hover input.form-control:not(:disabled) {
   border-color: var(--primary);
 }
 
 .custom-combobox.open input.form-control,
-.custom-combobox input.form-control:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12);
-  outline: none;
+.custom-combobox.is-active input.form-control,
+.custom-combobox input.form-control.open,
+.custom-combobox input.form-control.is-active,
+.custom-combobox input.form-control:focus,
+.custom-combobox input.form-control:focus-visible,
+.custom-combobox:focus-within input.form-control,
+.custom-autocomplete-container.open input.form-control,
+.custom-autocomplete-container.is-active input.form-control,
+.custom-autocomplete-container input.form-control.open,
+.custom-autocomplete-container input.form-control.is-active,
+.custom-autocomplete-container input.form-control:focus,
+.custom-autocomplete-container input.form-control:focus-visible,
+.custom-autocomplete-container:focus-within input.form-control {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12) !important;
+  outline: none !important;
 }
 
 .combobox-chevron-btn {
@@ -1394,7 +1415,10 @@ input[type="number"] {
 }
 
 .custom-combobox:hover .combobox-chevron-btn,
-.combobox-chevron-btn:hover {
+.combobox-chevron-btn:hover,
+.custom-combobox.open .combobox-chevron-btn,
+.custom-combobox.is-active .combobox-chevron-btn,
+.custom-combobox:focus-within .combobox-chevron-btn {
   color: var(--primary);
 }
 
@@ -1402,7 +1426,9 @@ input[type="number"] {
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.custom-combobox.open .combobox-chevron-btn svg {
+.custom-combobox.open .combobox-chevron-btn svg,
+.custom-combobox.is-active .combobox-chevron-btn svg,
+.custom-combobox:focus-within .combobox-chevron-btn svg {
   transform: rotate(180deg);
 }
 
