@@ -602,6 +602,14 @@ textarea.form-control {
   outline: none !important;
 }
 
+.custom-select-container .dropdown-chevron,
+.custom-select-container:hover .dropdown-chevron,
+.custom-select-container.open .dropdown-chevron,
+.custom-select-container.is-active .dropdown-chevron,
+.custom-select-container:focus-within .dropdown-chevron {
+  color: var(--text-secondary) !important;
+}
+
 .custom-select-container.open .dropdown-chevron,
 .custom-select-container.is-active .dropdown-chevron {
   transform: rotate(180deg);
@@ -1414,15 +1422,24 @@ input[type="number"] {
   transition: color 0.15s ease;
 }
 
+.combobox-chevron-btn,
+.custom-combobox .combobox-chevron-btn,
 .custom-combobox:hover .combobox-chevron-btn,
 .combobox-chevron-btn:hover,
 .custom-combobox.open .combobox-chevron-btn,
 .custom-combobox.is-active .combobox-chevron-btn,
 .custom-combobox:focus-within .combobox-chevron-btn {
-  color: var(--primary);
+  color: var(--text-secondary) !important;
 }
 
-.combobox-chevron-btn svg {
+.combobox-chevron-btn svg,
+.custom-combobox .combobox-chevron-btn svg,
+.custom-combobox:hover .combobox-chevron-btn svg,
+.custom-combobox.open .combobox-chevron-btn svg,
+.custom-combobox.is-active .combobox-chevron-btn svg,
+.custom-combobox:focus-within .combobox-chevron-btn svg {
+  color: var(--text-secondary) !important;
+  stroke: currentColor !important;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

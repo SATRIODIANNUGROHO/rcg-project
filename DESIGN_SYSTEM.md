@@ -485,8 +485,8 @@ Ketika menu opsi sedang terbuka (`.open`, `.is-active`) atau elemen sedang berst
 - **Box-Shadow / Halo Outline**:
   - Dark Mode: `box-shadow: 0 0 0 2px rgba(54, 113, 198, 0.25) !important; outline: none !important;`
   - Light Mode: `box-shadow: 0 0 0 2px rgba(37, 99, 184, 0.12) !important; outline: none !important;`
-- **Ikon Chevron**: Berotasi 180 derajat (`transform: rotate(180deg);`) dengan warna aksen `color: var(--primary) !important;`.
-- **Dilarang**: Membiarkan border tetap berwarna gelap non-aktif (`#334155`) ketika dropdown sedang aktif/terbuka atau fokus.
+- **Ikon Chevron**: Berotasi 180 derajat (`transform: rotate(180deg);`) dengan warna terkunci secara permanen pada abu-abu netral bawaan tema (`color: var(--text-secondary) !important;` pada Light Mode dan `color: #94A3B8 !important;` pada Dark Mode). Perubahan warna biru aksen (`var(--primary)`) hanya diterapkan secara eksklusif pada garis tepi kotak luar (*outer border*), tanpa memengaruhi atau mendistorsi warna ikon panah indikator.
+- **Dilarang**: Mengubah warna ikon panah menjadi biru aksen saat dropdown aktif/terbuka atau membiarkan border tetap berwarna gelap non-aktif (`#334155`) ketika dropdown sedang aktif/terbuka atau fokus.
 
 ---
 

@@ -1183,16 +1183,33 @@ body.dark-mode .custom-autocomplete-container:focus-within input.form-control {
   outline: none !important;
 }
 
-body.dark-mode .combobox-chevron-btn {
-  color: #94A3B8;
-}
-
+body.dark-mode .combobox-chevron-btn,
+body.dark-mode .custom-combobox .combobox-chevron-btn,
 body.dark-mode .custom-combobox:hover .combobox-chevron-btn,
 body.dark-mode .combobox-chevron-btn:hover,
 body.dark-mode .custom-combobox.open .combobox-chevron-btn,
 body.dark-mode .custom-combobox.is-active .combobox-chevron-btn,
 body.dark-mode .custom-combobox:focus-within .combobox-chevron-btn {
-  color: var(--primary) !important;
+  color: #94A3B8 !important;
+}
+
+body.dark-mode .combobox-chevron-btn svg,
+body.dark-mode .custom-combobox .combobox-chevron-btn svg,
+body.dark-mode .custom-combobox:hover .combobox-chevron-btn svg,
+body.dark-mode .custom-combobox.open .combobox-chevron-btn svg,
+body.dark-mode .custom-combobox.is-active .combobox-chevron-btn svg,
+body.dark-mode .custom-combobox:focus-within .combobox-chevron-btn svg {
+  color: #94A3B8 !important;
+  stroke: currentColor !important;
+}
+
+body.dark-mode .dropdown-chevron,
+body.dark-mode .custom-select-container .dropdown-chevron,
+body.dark-mode .custom-select-container:hover .dropdown-chevron,
+body.dark-mode .custom-select-container.open .dropdown-chevron,
+body.dark-mode .custom-select-container.is-active .dropdown-chevron,
+body.dark-mode .custom-select-container:focus-within .dropdown-chevron {
+  color: #94A3B8 !important;
 }
 
 body.dark-mode .custom-combobox-menu,
