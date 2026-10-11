@@ -367,13 +367,22 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 
 ### 18.1 Button Variants & Matrix
 - **Primary (`.btn.btn-primary`)**: Background `#3671C6`, Teks `#FFFFFF`, Font Weight `600`, Border `transparent`. Hover: `#2563EB`, Active: `#1D4ED8`.
-- **Secondary (`.btn.btn-secondary`)**: Background `#1E2D44`, Teks `#FFFFFF`, Font Weight `500`, Border `1px solid #334155`. Hover: `#2A3F5F`, Active: `#16243A`.
+- **Secondary (`.btn.btn-secondary`)**: Background `#1E2D44`, Teks `#FFFFFF`, Font Weight `600`, Border `1px solid #334155`. Hover: `#2A3F5F`, Active: `#16243A`.
 - **Danger (`.btn.btn-danger`)**: Background `#EF4444`, Teks `#FFFFFF`, Font Weight `600`. Hover: `#DC2626`.
+- **Accent / Confirm (`.btn.btn-confirm-accent`, `.btn.btn-accent`)**: Background `#D69E2E`, Teks `#0F172A` (dark mode) / `#FFFFFF` (light mode), Font Weight `700` / `600`.
 - **Icon Button (`.btn-icon`)**: Background `transparent` (atau `#1E2D44`), padding seragam, menampilkan SVG tepat di tengah.
 
-### 18.2 Dimensi Tombol
-- **Standar**: Tinggi `38px`, padding `0 14px`, font size `13px`.
-- **Kompak**: Tinggi `32px`, padding `0 10px`, font size `12px` (digunakan pada tabel aksi).
+### 18.2 Dimensi & Tipografi Tombol Standar
+- **Standar Utama (Action & Header Buttons)**:
+  - Diterapkan secara seragam pada seluruh tombol aksi utama: `#btn-export-excel`, `#btn-export-supplier-excel`, `#btn-new-transaction`, `#btn-save-transaction`, `#btn-print-nota`, `#btn-connect-serial`, `#btn-toggle-sim`, `#btn-analytics-period-show`, dan `#btn-filter-week-chart`.
+  - **Tinggi Tombol**: Tepat `38px` (`height: var(--btn-height-standard); box-sizing: border-box;`).
+  - **Spasi Bantalan (Padding)**: `0 16px` (top/bottom: `0px`, left/right: `16px`).
+  - **Ukuran Huruf (Font Size)**: `13px` (`font-size: 13px;`).
+  - **Ketebalan Huruf (Font Weight)**: `600` (Semibold).
+  - **Kelengkungan Sudut (Border Radius)**: `6px` (`border-radius: var(--radius-sm);`).
+  - **Perilaku Teks & Line Height**: `white-space: nowrap; line-height: normal;`.
+  - **Aturan Konsistensi Mutlak**: Tombol aksi pada header timbangan dan nota timbang dilarang menggunakan kelas pengurang ukuran (`.btn-sm`) atau deklarasi tipografi yang mengecil (`clamp(11.5px, ...)`). Seluruh tombol aksi operasional wajib memiliki paritas dimensi, bantalan, dan tipografi 100% identik dengan tombol referensi `Export Excel (.xlsx)`.
+- **Kompak (`.btn-sm`)**: Tinggi `32px`, padding `0 10px`, font size `12px` (hanya diperbolehkan untuk pagination tabel seperti `#history-prev-page`, `#history-next-page`, atau tombol aksi mikro internal dialog seperti `#btn-remove-avatar`).
 
 ---
 

@@ -429,9 +429,12 @@ body.dark-mode .nav-item.active::after {
 }
 
 .scale-actions-right .btn {
-  height: var(--btn-height-fluid) !important;
-  padding: 0 clamp(8px, 0.7vw, 16px) !important;
-  font-size: clamp(11.5px, 0.25vw + 8.2px, 13px) !important;
+  height: var(--btn-height-standard) !important;
+  padding: 0 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-sm) !important;
+  box-sizing: border-box !important;
   white-space: nowrap !important;
 }
 
@@ -580,9 +583,12 @@ body.dark-mode .nav-item.active::after {
 }
 
 #section-nota-timbang .d-flex.gap-8.align-center .btn {
-  height: var(--btn-height-fluid) !important;
-  padding: 0 clamp(10px, 0.8vw, 16px) !important;
-  font-size: clamp(11.5px, 0.25vw + 8.2px, 13px) !important;
+  height: var(--btn-height-standard) !important;
+  padding: 0 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-sm) !important;
+  box-sizing: border-box !important;
   white-space: nowrap !important;
 }
 
