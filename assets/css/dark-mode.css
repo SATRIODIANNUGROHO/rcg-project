@@ -207,8 +207,9 @@ body.dark-mode .nav-item.active::after {
 
 
 /* Scale Bar in Dark Mode */
-body.dark-mode .scale-indicator-card {
-  background: #1E293B;
+body.dark-mode .scale-indicator-card,
+html.dark-mode .scale-indicator-card {
+  background: #16243A;
   border-color: #334155;
 }
 
@@ -234,12 +235,15 @@ body.dark-mode .scale-weight-unit {
 }
 
 /* Stat Cards in Dark Mode */
-body.dark-mode .stat-card {
-  background: #1E293B;
+body.dark-mode .stat-card,
+html.dark-mode .stat-card {
+  background: #16243A;
   border-color: #334155;
 }
 
-body.dark-mode .stat-card:hover {
+body.dark-mode .stat-card:hover,
+html.dark-mode .stat-card:hover {
+  background: #16243A;
   border-color: #475569;
 }
 
@@ -985,8 +989,9 @@ body.dark-mode .my-activity-item .act-time {
 }
 
 /* Simulator Panel & #D69E2E Accent in Dark Mode */
-body.dark-mode .sim-panel-box {
-  background: #1E293B;
+body.dark-mode .sim-panel-box,
+html.dark-mode .sim-panel-box {
+  background: #16243A;
   border-color: #334155;
 }
 
