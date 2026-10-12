@@ -238,10 +238,10 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar Satuan / Massal, Reset Database) tercatat otomatis di tabel `activity_logs`.
 - **Validasi Alasan Wajib**: Setiap tindakan sensitif (seperti penghapusan atau reset data) mewajibkan input alasan tertulis sebelum dieksekusi demi kepatuhan audit.
 
-### 13. Pencadangan Data, Pemulihan, & Proteksi Zona Bahaya
+### 13. Pencadangan Data, Pemulihan, & Reset Data
 - **Dukungan Ganda Format Cadangan**: Mendukung format database biner SQLite (`.sqlite`) dan berkas log JSON (`.json`).
 - **Slot Pemulihan Auto-Backup**: Penyimpanan otomatis slot cadangan lokal terakhir yang dapat dipulihkan sewaktu-waktu.
-- **Zona Bahaya (Reset Data)**: Opsi penghapusan seluruh data transaksi dengan proteksi konfirmasi ganda, input alasan wajib, dan pencatatan audit log permanen.
+- **Reset Data**: Opsi penghapusan seluruh data transaksi dengan proteksi konfirmasi ganda, input alasan wajib, dan pencatatan audit log permanen.
 
 ### 14. Standar Desain Antarmuka Industrial (Design System)
 - **Dokumen Acuan Resmi Design System (`DESIGN_SYSTEM.md`)**:

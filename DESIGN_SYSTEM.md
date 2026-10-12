@@ -393,7 +393,7 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Warna Latar Belakang (Dark Mode)**: `#16243A` (Hover & Focus: `#1E2D44`).
 - **Batas Tepi (Border)**: `1px solid #334155` (Hover/Focus: `var(--color-primary)`).
 - **Padding Dalam**: `0 12px` (khusus combobox: `0 32px 0 12px` agar teks tidak tertimpa ikon panah).
-- **Tata Letak Bilah Pencarian (`.search-box`)**: Field input pencarian tabel diposisikan di baris atas sejajar tepat di sebelah kiri tombol ekspor (`Export Excel (.xlsx)`) dengan teks placeholder seragam `"Masukkan kata kunci"`, dimensi responsif `width: clamp(200px, 18vw, 260px); height: 38px;`, tanpa tombol aksi Reset.
+- **Tata Letak Bilah Pencarian (`.search-box`)**: Field input pencarian tabel diposisikan di baris atas sejajar tepat di sebelah kiri tombol ekspor (`Export Excel`) dengan teks placeholder seragam `"Masukkan kata kunci"`, dimensi responsif `width: clamp(200px, 18vw, 260px); height: 38px;`, tanpa tombol aksi Reset.
 - **Tata Letak Baris Filter Tabel (`.table-toolbar`)**: Menggunakan pola distribusi flexbox terpisah (*split layout*):
   - **Sisi Kiri (`.table-filter-left`)**: Menampung kontrol filter spesifik modul (label `"Material:"` atau `"Pemasok:"` beserta dropdown masing-masing) menempel rapat di sisi paling kiri (*left-aligned*).
   - **Sisi Kanan (`.table-filter-right`)**: Menampung kontrol universal (pemilih `"Tanggal: dd/mm/yyyy"`, pengurutan `"Urutan:"`, dan jumlah baris `"Tampilkan:"`) yang didorong rapat ke sisi paling kanan (*right-aligned*) menggunakan `margin-left: auto !important; gap: 10px;`.
