@@ -552,6 +552,8 @@ const App = {
       SupplierHistoryManager.render();
     } else if (tabId === 'activity-log') {
       this.renderActivityLogs();
+    } else if (tabId === 'nota-timbang' && typeof TransactionEngine !== 'undefined' && TransactionEngine.syncCardHeights) {
+      setTimeout(() => TransactionEngine.syncCardHeights(), 50);
     }
   },
 
@@ -749,7 +751,11 @@ const App = {
   }
 };
 
+// Expose App globally
+window.App = App;
+
 // Initialize when DOM content is ready
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });
+

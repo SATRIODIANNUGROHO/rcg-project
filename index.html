@@ -549,7 +549,7 @@
 
       <div class="transaction-layout">
         <!-- Kolom Kiri: Dokumen, Kendaraan, Material, Asal -->
-        <div>
+        <div class="transaction-col-left">
           <!-- 1. Informasi Dokumen -->
           <div class="section-block">
             <div class="section-block-title">
@@ -668,41 +668,43 @@
           </div>
 
           <!-- 4. Penandatangan & Status -->
-          <div class="section-block">
+          <div class="section-block card-identitas-status" id="card-identitas-status">
             <div class="section-block-title">4. Identitas &amp; Status Pembayaran</div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Nama Supir</label>
-                <input type="text" id="input-driver-name" class="form-control" placeholder="Masukkan nama supir"
-                  style="text-transform: uppercase;">
+            <div class="card-identitas-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Nama Supir</label>
+                  <input type="text" id="input-driver-name" class="form-control" placeholder="Masukkan nama supir"
+                    style="text-transform: uppercase;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nama Admin (Petugas Timbang)</label>
+                  <input type="text" id="input-weighmaster" class="form-control"
+                    placeholder="Masukkan nama petugas timbang" style="text-transform: uppercase;">
+                </div>
               </div>
-              <div class="form-group">
-                <label class="form-label">Nama Admin (Petugas Timbang)</label>
-                <input type="text" id="input-weighmaster" class="form-control"
-                  placeholder="Masukkan nama petugas timbang" style="text-transform: uppercase;">
-              </div>
-            </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Status Pembayaran</label>
-                <select id="select-payment-status" class="form-select">
-                  <option value="Lunas">Lunas</option>
-                  <option value="Belum Lunas">Belum Lunas</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Catatan Transaksi</label>
-                <input type="text" id="input-notes" class="form-control"
-                  placeholder="Tambahkan catatan transaksi (Opsional)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Status Pembayaran</label>
+                  <select id="select-payment-status" class="form-select">
+                    <option value="Lunas">Lunas</option>
+                    <option value="Belum Lunas">Belum Lunas</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Catatan Transaksi</label>
+                  <input type="text" id="input-notes" class="form-control"
+                    placeholder="Tambahkan catatan transaksi (Opsional)">
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Kolom Kanan: Pengambilan Berat, Refraksi, K1/K2, Harga, Total -->
-        <div>
+        <div class="transaction-col-right">
           <!-- 5. Timbang Masuk & Keluar -->
           <div class="section-block">
             <div class="section-block-title">5. Data Penimbangan (Kg)</div>
@@ -778,7 +780,7 @@
           </div>
 
           <!-- 6. Klasifikasi Mutu K1 & K2 & Harga -->
-          <div class="section-block">
+          <div class="section-block card-klasifikasi-mutu" id="card-klasifikasi-mutu">
             <div class="section-block-title">6. Klasifikasi Mutu &amp; Harga Satuan</div>
 
             <!-- K1 -->

@@ -20,6 +20,7 @@ const TransactionEngine = {
     this.bindEvents();
     this.populateOrigins();
     this.newTransaction();
+    this.setupCardHeightObserver();
   },
 
   bindEvents() {
@@ -326,6 +327,8 @@ const TransactionEngine = {
     if (typeof AuthManager !== 'undefined' && AuthManager.updateUserUI) {
       AuthManager.updateUserUI();
     }
+
+    this.syncCardHeights();
   },
 
   handleCalculation(triggerId) {
@@ -816,5 +819,41 @@ const TransactionEngine = {
       if (container) container.innerHTML = generatorFn(1, 1, 1.0);
       window.print();
     }
+  },
+
+  syncCardHeights() {
+    const card4 = document.getElementById('card-identitas-status') || document.querySelector('.card-identitas-status');
+    const card6 = document.getElementById('card-klasifikasi-mutu') || document.querySelector('.card-klasifikasi-mutu');
+    if (!card4 || !card6) return;
+
+    card4.style.minHeight = '';
+    const r4 = card4.getBoundingClientRect();
+    const r6 = card6.getBoundingClientRect();
+
+    if (r4.width > 0 && r6.width > 0 && Math.abs(r4.left - r6.left) > 50) {
+      const targetHeight = Math.round(r6.bottom - r4.top);
+      if (targetHeight > 0) {
+        card4.style.minHeight = targetHeight + 'px';
+      }
+    }
+  },
+
+  setupCardHeightObserver() {
+    this.syncCardHeights();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const card6 = document.getElementById('card-klasifikasi-mutu') || document.querySelector('.card-klasifikasi-mutu');
+      const layout = document.querySelector('.transaction-layout');
+      const observer = new ResizeObserver(() => {
+        this.syncCardHeights();
+      });
+      if (card6) observer.observe(card6);
+      if (layout) observer.observe(layout);
+    }
+
+    window.addEventListener('resize', () => this.syncCardHeights());
   }
 };
+
+window.TransactionEngine = TransactionEngine;
+

@@ -2430,6 +2430,29 @@ input[type="number"] {
   gap: 16px;
 }
 
+.transaction-col-left,
+.transaction-col-right {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Card 4 Equal-Height Alignment with Card 6 */
+.card-identitas-status {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+  min-height: 248px;
+  margin-bottom: 0 !important;
+}
+
+.card-identitas-status .card-identitas-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 auto;
+}
+
 .section-block {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);

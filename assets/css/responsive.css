@@ -603,6 +603,29 @@ body.dark-mode .nav-item.active::after {
   min-width: 0 !important;
 }
 
+.transaction-col-left,
+.transaction-col-right {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+/* Card 4 Equal-Height Vertical Alignment with Card 6 */
+.card-identitas-status {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+  min-height: 248px !important;
+  margin-bottom: 0 !important;
+}
+
+.card-identitas-status .card-identitas-body {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  flex: 1 1 auto !important;
+}
+
 /* Paired Form Fields: Strictly Two Columns */
 .form-row {
   display: grid !important;
