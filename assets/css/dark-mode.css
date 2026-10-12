@@ -914,6 +914,18 @@ body.dark-mode .modal-footer {
   border-top-color: #334155;
 }
 
+body.dark-mode .modal-footer .btn,
+body.dark-mode .modal-footer .btn-confirm-accent,
+body.dark-mode .modal-footer .btn-primary,
+body.dark-mode .modal-footer .btn-secondary,
+body.dark-mode .modal-footer .btn-modal-cancel {
+  font-weight: 600 !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  border-radius: var(--radius-sm, 6px) !important;
+}
+
 /* Profile Modal in Dark Mode */
 body.dark-mode .profile-tabs-header {
   background-color: #0F172A;

@@ -192,7 +192,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Hak Akses Pengaturan Konfigurasi Sistem
   - Hak Akses Kelola Pengguna & Hak Akses
   - Hak Akses Pencadangan & Reset Database
-- **Aksi Pengguna**: Tambah Pengguna Baru, Ubah Kata Sandi, Hapus Pengguna, serta tombol cepat Pilih Semua dan Kosongkan Semua.
+- **Aksi Pengguna & Dialog Modal Terstandardisasi**: Tambah Pengguna Baru, Ubah Kata Sandi, Hapus Pengguna, serta tombol cepat Pilih Semua dan Kosongkan Semua dengan standardisasi dimensi tombol aksi dialog modal (tinggi seragam 38px, padding 0 16px, border-radius 6px, serta keseragaman tipografi dan kelas aksi Batal/Simpan/Hapus).
 - **Proteksi Perubahan Belum Disimpan**: Dialog konfirmasi otomatis saat tombol Tutup ditekan jika ada perubahan hak akses yang belum disimpan.
 
 #### Matriks Hak Akses Berdasarkan Peran (Role Permission Matrix)

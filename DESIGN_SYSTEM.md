@@ -373,15 +373,15 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Icon Button (`.btn-icon`)**: Background `transparent` (atau `#1E2D44`), padding seragam, menampilkan SVG tepat di tengah.
 
 ### 18.2 Dimensi & Tipografi Tombol Standar
-- **Standar Utama (Action & Header Buttons)**:
-  - Diterapkan secara seragam pada seluruh tombol aksi utama: `#btn-export-excel`, `#btn-export-supplier-excel`, `#btn-new-transaction`, `#btn-save-transaction`, `#btn-print-nota`, `#btn-connect-serial`, `#btn-toggle-sim`, `#btn-analytics-period-show`, dan `#btn-filter-week-chart`.
+- **Standar Utama (Action, Header, & Modal Dialog Buttons)**:
+  - Diterapkan secara seragam pada seluruh tombol aksi utama dan tombol dialog modal: `#btn-export-excel`, `#btn-export-supplier-excel`, `#btn-new-transaction`, `#btn-save-transaction`, `#btn-print-nota`, `#btn-connect-serial`, `#btn-toggle-sim`, `#btn-analytics-period-show`, `#btn-filter-week-chart`, serta seluruh tombol aksi modal `.modal-footer .btn` (dialog entri pengguna baru `#modal-add-user`, ubah kata sandi `#modal-admin-edit-pass`, dan konfirmasi hapus pengguna `#modal-confirm-delete-user`).
   - **Tinggi Tombol**: Tepat `38px` (`height: var(--btn-height-standard); box-sizing: border-box;`).
   - **Spasi Bantalan (Padding)**: `0 16px` (top/bottom: `0px`, left/right: `16px`).
   - **Ukuran Huruf (Font Size)**: `13px` (`font-size: 13px;`).
-  - **Ketebalan Huruf (Font Weight)**: `600` (Semibold).
+  - **Ketebalan Huruf (Font Weight)**: `600` (Semibold) seragam untuk tombol primer, sekunder, maupun aksen konfirmasi dalam modal.
   - **Kelengkungan Sudut (Border Radius)**: `6px` (`border-radius: var(--radius-sm);`).
   - **Perilaku Teks & Line Height**: `white-space: nowrap; line-height: normal;`.
-  - **Aturan Konsistensi Mutlak**: Tombol aksi pada header timbangan dan nota timbang dilarang menggunakan kelas pengurang ukuran (`.btn-sm`) atau deklarasi tipografi yang mengecil (`clamp(11.5px, ...)`). Seluruh tombol aksi operasional wajib memiliki paritas dimensi, bantalan, dan tipografi 100% identik dengan tombol referensi `Export Excel (.xlsx)`.
+  - **Aturan Konsistensi Mutlak**: Tombol aksi pada dialog modal dan kontrol operasional wajib memiliki paritas dimensi, bantalan, border-radius, dan tipografi 100% identik tanpa diskrepansi visual.
 - **Kompak (`.btn-sm`)**: Tinggi `32px`, padding `0 10px`, font size `12px` (hanya diperbolehkan untuk pagination tabel seperti `#history-prev-page`, `#history-next-page`, atau tombol aksi mikro internal dialog seperti `#btn-remove-avatar`).
 
 ---
