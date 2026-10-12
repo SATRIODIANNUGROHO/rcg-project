@@ -317,14 +317,25 @@ const App = {
       });
     }
 
-    // Password Inspect Toggle in Modals
-    document.querySelectorAll('.btn-inspect-pw').forEach(btn => {
+    // Password Inspect / Visibility Toggle in Modals & Forms
+    document.querySelectorAll('.password-toggle-btn, .btn-inspect-pw').forEach(btn => {
       btn.addEventListener('click', () => {
-        const targetInput = document.getElementById(btn.dataset.target);
+        const targetId = btn.dataset.target;
+        const targetInput = targetId
+          ? document.getElementById(targetId)
+          : (btn.closest('.password-wrapper')?.querySelector('input') || btn.previousElementSibling);
         if (targetInput) {
-          const isPw = targetInput.type === 'password';
-          targetInput.type = isPw ? 'text' : 'password';
-          btn.style.color = isPw ? 'var(--primary)' : 'var(--text-secondary)';
+          const willBeVisible = targetInput.type === 'password';
+          targetInput.type = willBeVisible ? 'text' : 'password';
+
+          const iconOpen = btn.querySelector('.icon-eye-open, [id^="icon-eye-open"]');
+          const iconClosed = btn.querySelector('.icon-eye-closed, [id^="icon-eye-closed"]');
+          if (iconOpen) iconOpen.style.display = willBeVisible ? 'none' : 'block';
+          if (iconClosed) iconClosed.style.display = willBeVisible ? 'block' : 'none';
+
+          btn.classList.toggle('is-active', willBeVisible);
+          btn.setAttribute('aria-pressed', String(willBeVisible));
+          targetInput.focus();
         }
       });
     });

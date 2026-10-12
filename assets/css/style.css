@@ -3757,3 +3757,65 @@ body:not(.dark-mode) .print-preview-header-bar {
     min-height: 420px;
   }
 }
+
+/* ==========================================================================
+   PASSWORD FIELD WRAPPER & VISIBILITY TOGGLE COMPONENT STANDARD
+   Standardized with login component: hover tint, active state, and icon toggle
+   ========================================================================== */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper .form-control {
+  padding-right: 38px !important;
+  padding-left: 12px;
+}
+
+.password-toggle-btn,
+.btn-inspect-pw {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748B;
+  border-radius: var(--radius-tight, 4px);
+  outline: none;
+  padding: 0;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.password-toggle-btn:hover,
+.btn-inspect-pw:hover {
+  color: #2563B8;
+  background-color: rgba(37, 99, 184, 0.08);
+}
+
+.password-toggle-btn:focus-visible,
+.btn-inspect-pw:focus-visible {
+  outline: 2px solid #2563B8;
+  outline-offset: 1px;
+}
+
+.password-toggle-btn.is-active,
+.btn-inspect-pw.is-active {
+  color: #2563B8;
+}
+
+.password-toggle-btn.is-active:hover,
+.btn-inspect-pw.is-active:hover {
+  color: #1D4ED8;
+  background-color: rgba(37, 99, 184, 0.12);
+}

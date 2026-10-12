@@ -258,6 +258,11 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Konsistensi Visual Ikon Chevron & Penyorotan Opsi Dropdown**:
   - Warna ikon panah chevron pada custom select dan combobox dikunci pada abu-abu netral sekunder (`#64748B` di mode terang dan `#94A3B8` di mode gelap) di semua status interaksi (default, hover, focus, open).
   - Opsi dropdown yang sedang aktif terpilih (*selected item*) ditandai dengan aksen visual yang tegas: latar belakang lembut bertema dan garis batas kiri (border-left) berwarna biru korporat `#3671C6`.
+- **Standardisasi Komponen Alih Visibilitas Kata Sandi (Password Visibility Toggle Standard)**:
+  - Penyeragaman menyeluruh kontrol alih visibilitas kata sandi antara formulir login dan seluruh modal keamanan akun (Kata Sandi Saat Ini, Kata Sandi Baru, dan Konfirmasi Kata Sandi Baru).
+  - Mengadopsi arsitektur terpadu kontainer `.password-wrapper` dan tombol interaktif `.password-toggle-btn` (32x32px, `border-radius: 4px`, padding kanan input 38px).
+  - Penyelarasan transisi sorot kursor (*hover effect*) dengan aksen warna dan latar belakang lembut (*subtle tint/glow*: `rgba(37, 99, 184, 0.08)` pada mode terang dan `rgba(56, 189, 248, 0.12)` pada mode gelap).
+  - Pertukaran dinamis aset SVG ikon mata terbuka (`icon-eye-open`) dan mata tercoret (`icon-eye-closed`) berdimensi 16x16px saat visibilitas kata sandi dibuka (*password visible state*), menghasilkan umpan balik visual dan interaksi yang identik di seluruh modul.
 - **Standardisasi Spasi Pemisah Horizontal Antarkontrol (gap: 8px)**:
   - Penataan jarak pemisah horizontal terstandarisasi sebesar **8px** pada kontainer tombol aksi jembatan timbang (`.input-with-action` untuk baris Berat Kotor dan Berat Tara terhadap tombol "Ambil") serta kontainer bilah pencarian tabel (`.search-box` terhadap tombol "Reset").
   - Menjamin elemen input fleksibel (`min-width: 0`) dan tombol aksi pendamping (`flex-shrink: 0`) tidak pernah saling menindih atau terkompresi di seluruh resolusi layar.

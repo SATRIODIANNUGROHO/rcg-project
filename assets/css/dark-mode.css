@@ -1594,3 +1594,46 @@ body.dark-mode .print-pdf-loading-overlay {
   background: rgba(11, 17, 32, 0.88);
 }
 
+/* ==========================================================================
+   PASSWORD VISIBILITY TOGGLE DARK MODE STANDARD
+   Matches login.html dark mode styling: #38BDF8 hover tint and clean blue active
+   ========================================================================== */
+html.dark-mode .password-toggle-btn,
+body.dark-mode .password-toggle-btn,
+html.dark-mode .btn-inspect-pw,
+body.dark-mode .btn-inspect-pw {
+  color: #94A3B8;
+}
+
+html.dark-mode .password-toggle-btn:hover,
+body.dark-mode .password-toggle-btn:hover,
+html.dark-mode .btn-inspect-pw:hover,
+body.dark-mode .btn-inspect-pw:hover {
+  color: #38BDF8;
+  background-color: rgba(56, 189, 248, 0.12);
+}
+
+html.dark-mode .password-toggle-btn:focus-visible,
+body.dark-mode .password-toggle-btn:focus-visible,
+html.dark-mode .btn-inspect-pw:focus-visible,
+body.dark-mode .btn-inspect-pw:focus-visible {
+  outline: 2px solid #3671C6;
+  outline-offset: 1px;
+}
+
+html.dark-mode .password-toggle-btn.is-active,
+body.dark-mode .password-toggle-btn.is-active,
+html.dark-mode .btn-inspect-pw.is-active,
+body.dark-mode .btn-inspect-pw.is-active {
+  color: #3671C6;
+}
+
+html.dark-mode .password-toggle-btn.is-active:hover,
+body.dark-mode .password-toggle-btn.is-active:hover,
+html.dark-mode .btn-inspect-pw.is-active:hover,
+body.dark-mode .btn-inspect-pw.is-active:hover {
+  color: #38BDF8;
+  background-color: rgba(56, 189, 248, 0.16);
+}
+
+

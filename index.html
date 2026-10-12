@@ -1518,15 +1518,17 @@
           <form id="form-change-password">
             <div class="form-group">
               <label class="form-label" for="input-curr-pw">Kata Sandi Saat Ini</label>
-              <div style="position: relative; display: flex; align-items: center;">
-                <input type="password" id="input-curr-pw" class="form-control" placeholder="Masukkan password saat ini"
-                  style="padding-right: 36px;" required>
-                <button type="button" class="btn-inspect-pw" data-target="input-curr-pw"
-                  style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
+              <div class="password-wrapper">
+                <input type="password" id="input-curr-pw" class="form-control" placeholder="Masukkan password saat ini" required>
+                <button type="button" class="password-toggle-btn" data-target="input-curr-pw"
+                  title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Tampilkan atau sembunyikan kata sandi" aria-pressed="false">
+                  <svg class="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
                   </svg>
                 </button>
               </div>
@@ -1534,15 +1536,17 @@
 
             <div class="form-group">
               <label class="form-label" for="input-new-pw">Kata Sandi Baru</label>
-              <div style="position: relative; display: flex; align-items: center;">
-                <input type="password" id="input-new-pw" class="form-control" placeholder="Minimal 4 karakter"
-                  style="padding-right: 36px;" required>
-                <button type="button" class="btn-inspect-pw" data-target="input-new-pw"
-                  style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
+              <div class="password-wrapper">
+                <input type="password" id="input-new-pw" class="form-control" placeholder="Minimal 4 karakter" required>
+                <button type="button" class="password-toggle-btn" data-target="input-new-pw"
+                  title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Tampilkan atau sembunyikan kata sandi" aria-pressed="false">
+                  <svg class="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
                   </svg>
                 </button>
               </div>
@@ -1550,15 +1554,17 @@
 
             <div class="form-group">
               <label class="form-label" for="input-confirm-pw">Konfirmasi Kata Sandi Baru</label>
-              <div style="position: relative; display: flex; align-items: center;">
-                <input type="password" id="input-confirm-pw" class="form-control" placeholder="Ulangi kata sandi baru"
-                  style="padding-right: 36px;" required>
-                <button type="button" class="btn-inspect-pw" data-target="input-confirm-pw"
-                  style="position: absolute; right: 8px; background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
+              <div class="password-wrapper">
+                <input type="password" id="input-confirm-pw" class="form-control" placeholder="Ulangi kata sandi baru" required>
+                <button type="button" class="password-toggle-btn" data-target="input-confirm-pw"
+                  title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Tampilkan atau sembunyikan kata sandi" aria-pressed="false">
+                  <svg class="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
                   </svg>
                 </button>
               </div>
@@ -1606,8 +1612,21 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" id="login-password" class="form-control" value="admin123" required>
+            <label class="form-label" for="login-password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="login-password" class="form-control" value="admin123" required>
+              <button type="button" class="password-toggle-btn" data-target="login-password"
+                title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Tampilkan atau sembunyikan kata sandi" aria-pressed="false">
+                <svg class="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
@@ -2290,8 +2309,20 @@
           </div>
           <div class="form-group mb-3">
             <label class="form-label" for="input-add-user-password">Kata Sandi Awal</label>
-            <input type="password" id="input-add-user-password" class="form-control" placeholder="Minimal 4 karakter"
-              required>
+            <div class="password-wrapper">
+              <input type="password" id="input-add-user-password" class="form-control" placeholder="Minimal 4 karakter" required>
+              <button type="button" class="password-toggle-btn" data-target="input-add-user-password"
+                title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Tampilkan atau sembunyikan kata sandi" aria-pressed="false">
+                <svg class="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
           </div>
           <div class="form-group mb-0">
             <label class="form-label" for="input-add-user-role">Bagian / Role</label>
@@ -2333,8 +2364,21 @@
           </p>
           <div class="form-group mb-0">
             <label class="form-label" for="input-admin-new-password">Kata Sandi Baru</label>
-            <input type="password" id="input-admin-new-password" class="form-control"
-              placeholder="Masukkan password baru" required>
+            <div class="password-wrapper">
+              <input type="password" id="input-admin-new-password" class="form-control"
+                placeholder="Masukkan password baru" required>
+              <button type="button" class="password-toggle-btn" data-target="input-admin-new-password"
+                title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Tampilkan atau sembunyikan kata sandi" aria-pressed="false">
+                <svg class="icon-eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="icon-eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
         <div class="modal-footer" style="padding: 12px 16px;">

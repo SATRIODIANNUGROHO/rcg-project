@@ -591,12 +591,12 @@
       // Password Inspect Toggle Handler
       if (btnTogglePw && inputPassword) {
         btnTogglePw.addEventListener('click', () => {
-          const isCurrentlyPassword = inputPassword.type === 'password';
-          inputPassword.type = isCurrentlyPassword ? 'text' : 'password';
-          if (iconEyeOpen) iconEyeOpen.style.display = isCurrentlyPassword ? 'none' : 'block';
-          if (iconEyeClosed) iconEyeClosed.style.display = isCurrentlyPassword ? 'block' : 'none';
-          btnTogglePw.classList.toggle('is-active', !isCurrentlyPassword);
-          btnTogglePw.setAttribute('aria-pressed', !isCurrentlyPassword);
+          const willBeVisible = inputPassword.type === 'password';
+          inputPassword.type = willBeVisible ? 'text' : 'password';
+          if (iconEyeOpen) iconEyeOpen.style.display = willBeVisible ? 'none' : 'block';
+          if (iconEyeClosed) iconEyeClosed.style.display = willBeVisible ? 'block' : 'none';
+          btnTogglePw.classList.toggle('is-active', willBeVisible);
+          btnTogglePw.setAttribute('aria-pressed', String(willBeVisible));
           inputPassword.focus();
         });
       }
