@@ -82,6 +82,7 @@
 
   /* Layout Standards */
   --header-height: 60px;
+  --gap-cards: 16px;
   --btn-height-standard: 38px;
   --btn-height-sm: 32px;
   --btn-height-action: 28px;
@@ -2441,14 +2442,23 @@ input[type="number"] {
 .transaction-layout {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 16px;
+  gap: var(--gap-cards, 16px);
+  align-items: start;
 }
 
 .transaction-col-left,
 .transaction-col-right {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--gap-cards, 16px);
   min-width: 0;
+}
+
+.transaction-col-left > .section-block,
+.transaction-col-right > .section-block {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 /* Card 4 Equal-Height Alignment with Card 6 */
@@ -2495,7 +2505,8 @@ input[type="number"] {
   border-radius: var(--radius-card);
   padding: 18px;
   text-align: center;
-  margin-top: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .grand-total-banner .lbl {

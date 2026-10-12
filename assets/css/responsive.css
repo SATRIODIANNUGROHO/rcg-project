@@ -607,7 +607,20 @@ body.dark-mode .nav-item.active::after {
 .transaction-col-right {
   display: flex !important;
   flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: var(--gap-cards, 16px) !important;
   min-width: 0 !important;
+}
+
+.transaction-col-left > .section-block,
+.transaction-col-right > .section-block {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.grand-total-banner {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 /* Card 4 Equal-Height Vertical Alignment with Card 6 */
