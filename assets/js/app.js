@@ -217,9 +217,6 @@ const App = {
         document.querySelectorAll('.profile-tab-pane').forEach(pane => pane.classList.remove('active'));
         const targetPane = document.getElementById(`pane-${targetTab}`);
         if (targetPane) targetPane.classList.add('active');
-        if (targetTab === 'my-activities') {
-          this.renderMyActivities();
-        }
       });
     });
 
