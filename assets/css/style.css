@@ -2522,8 +2522,9 @@ input[type="number"] {
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-tight);
+  border-radius: var(--radius-card);
   background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .data-table {
@@ -2753,19 +2754,21 @@ input[type="number"] {
   flex-shrink: 0 !important;
 }
 
-/* Pagination */
+/* Pagination Card (Standalone Card Identical to Footer Legal Strip) */
 .pagination-area {
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 48px;
-  padding: 8px 16px;
-  background: var(--bg-surface);
+  padding: 12px 18px;
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-top: none;
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
   flex-wrap: wrap;
   gap: 12px;
+  margin-top: 14px;
+  box-sizing: border-box;
 }
 
 .pagination-controls {
@@ -3643,6 +3646,7 @@ input[type="range"] {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3651,6 +3655,7 @@ input[type="range"] {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================

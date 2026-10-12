@@ -129,7 +129,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Pengguna dengan wewenang (Administrator dan Supervisor) dapat langsung mengklik emblem untuk beralih status secara langsung, disertai pencatatan audit log otomatis.
   - Untuk Operator, emblem tampil dalam mode baca saja (Read-Only) dengan tooltip penjelas.
 - **Pengelolaan Transaksi**: Menu aksi per baris transaksi untuk melihat detail lengkap, mengubah data transaksi, mencetak ulang tiket timbang, atau menghapus transaksi (sesuai hak akses role).
-- **Pengurutan & Paginasi**: Pengurutan data Terbaru / Terlama serta pilihan ukuran halaman (10, 25, 50 baris).
+- **Pengurutan & Kartu Paginasi Mandiri**: Pengurutan data Terbaru / Terlama, pilihan ukuran halaman (10, 25, 50 baris), serta bilah navigasi paginasi berdesain kartu mandiri (*standalone card*) dengan garis batas halus, sudut membulat 8px, elevasi shadow, dan padding 12px 18px yang selaras dengan kartu strip hak cipta footer.
 
 ### 7. Riwayat Pemasok (Supplier History) Terintegrasi
 - **Aturan Grouping / Akumulasi Transaksi Harian**:

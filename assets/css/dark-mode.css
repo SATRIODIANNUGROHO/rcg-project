@@ -867,9 +867,11 @@ body.dark-mode .data-table tbody tr:hover {
   background-color: #22334D;
 }
 
-body.dark-mode .pagination-area {
-  background: #16243A;
-  border-color: #334155;
+body.dark-mode .pagination-area,
+body.dark-mode .about-legal-strip {
+  background: #16243A !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Modals in Dark Mode */

@@ -418,6 +418,13 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Padding**: `16px` s/d `20px`.
 - **Header**: Memisahkan judul kartu (bobot 600) dengan area aksi kanan menggunakan Flexbox rata vertikal.
 
+### 21.1 Standalone Pagination Card (`.pagination-area`)
+- **Struktur Kartu Mandiri**: Bilah kontrol paginasi di bawah tabel data (`.pagination-area`) mengadopsi arsitektur kartu mandiri (*standalone card*) yang harmonis dan identik dengan kartu informasi hak cipta footer (`.about-legal-strip`).
+- **Dimensi & Bantalan**: `padding: 12px 18px; min-height: 48px; box-sizing: border-box;`.
+- **Garis Batas & Kelengkungan**: `border: 1px solid var(--border-color); border-radius: var(--radius-card, 8px);`.
+- **Latar Belakang & Elevasi**: `background: var(--bg-card); box-shadow: var(--shadow-card);` (Dark Mode: `#16243A` dengan border `#334155`).
+- **Tata Letak Flexbox**: `display: flex; justify-content: space-between; align-items: center; margin-top: 14px;` dengan pemisahan margin luar yang rapi terhadap kontainer tabel di atasnya.
+
 ---
 
 ## 22. Navigation Bar System
