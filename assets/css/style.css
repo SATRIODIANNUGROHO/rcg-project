@@ -525,6 +525,20 @@ textarea.form-control {
   box-sizing: border-box;
 }
 
+/* Time Range Filter Controls */
+.time-filter-group {
+  display: flex;
+  align-items: center;
+}
+
+.time-filter-group .form-control,
+.time-filter-group .form-select,
+.time-filter-group .btn,
+.time-filter-group .custom-select-trigger {
+  height: var(--btn-height-standard);
+  box-sizing: border-box;
+}
+
 /* ==========================================================================
    Universal Custom Select Dropdowns (Identical to Profile Dropdown)
    ========================================================================== */

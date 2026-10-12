@@ -749,6 +749,79 @@ body.dark-mode .nav-item.active::after {
   line-height: normal !important;
 }
 
+/* Time Range Filter Controls Standardization (Height & Vertical Alignment) */
+.time-filter-group,
+#weekly-chart-filter-group,
+#analytics-period-filter-group,
+#analytics-custom-date-wrap {
+  display: flex !important;
+  align-items: center !important;
+}
+
+#chart-week-start,
+#chart-week-end,
+#btn-filter-week-chart,
+#analytics-period-select,
+#analytics-date-start,
+#analytics-date-end,
+#btn-analytics-period-show,
+#custom-wrapper-analytics-period-select,
+#custom-wrapper-analytics-period-select .custom-select-trigger {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  border-radius: var(--radius-sm, 6px) !important;
+  font-size: 13px !important;
+  line-height: normal !important;
+  margin: 0 !important;
+}
+
+#chart-week-start,
+#chart-week-end {
+  padding: 0 8px !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+}
+
+#analytics-date-start,
+#analytics-date-end {
+  padding: 0 10px !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 500 !important;
+}
+
+#custom-wrapper-analytics-period-select .custom-select-trigger {
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+#btn-filter-week-chart,
+#btn-analytics-period-show {
+  padding: 0 16px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+.time-filter-group .text-small,
+#weekly-chart-filter-group .text-small,
+#analytics-period-filter-group .text-small,
+#analytics-custom-date-wrap .text-small,
+.time-filter-group .filter-label,
+.time-filter-group .filter-separator {
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+
 /* Unified Standard Form Label Typography & Ergonomics */
 .form-label,
 .login-box .form-label,

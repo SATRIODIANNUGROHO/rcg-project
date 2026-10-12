@@ -393,8 +393,8 @@
         <div class="card-header">
           <div class="d-flex align-center gap-12 flex-wrap" style="width: 100%; justify-content: space-between;">
             <h3 class="card-title">Analisis Periode Transaksi</h3>
-            <div class="d-flex align-center gap-8 flex-wrap">
-              <select id="analytics-period-select" class="form-select" style="min-width: 215px; width: auto;">
+            <div class="d-flex align-center gap-8 flex-wrap time-filter-group" id="analytics-period-filter-group">
+              <select id="analytics-period-select" class="form-select" style="min-width: 215px; width: auto; height: 38px;">
                 <option value="today">Hari Ini</option>
                 <option value="7days">7 Hari Terakhir</option>
                 <option value="30days">30 Hari Terakhir</option>
@@ -403,11 +403,11 @@
                 <option value="custom">Rentang Tanggal Kustom</option>
               </select>
               <div id="analytics-custom-date-wrap" class="d-flex align-center gap-6" style="display: none !important;">
-                <input type="date" id="analytics-date-start" class="form-control mono" style="width: 140px;">
-                <span class="text-small text-secondary">s/d</span>
-                <input type="date" id="analytics-date-end" class="form-control mono" style="width: 140px;">
+                <input type="date" id="analytics-date-start" class="form-control mono" style="width: 140px; height: 38px;">
+                <span class="text-small text-secondary filter-separator">s/d</span>
+                <input type="date" id="analytics-date-end" class="form-control mono" style="width: 140px; height: 38px;">
               </div>
-              <button id="btn-analytics-period-show" class="btn btn-primary">Tampilkan</button>
+              <button id="btn-analytics-period-show" class="btn btn-primary" style="height: 38px;">Tampilkan</button>
             </div>
           </div>
         </div>
@@ -482,14 +482,14 @@
           <div class="card" style="height: 100%;">
             <div class="card-header">
               <h3 class="card-title">Grafik Transaksi per Minggu</h3>
-              <div class="d-flex align-center gap-8">
-                <span class="text-small text-secondary" style="font-weight: 500;">Minggu:</span>
+              <div class="d-flex align-center gap-8 time-filter-group" id="weekly-chart-filter-group">
+                <span class="text-small text-secondary filter-label" style="font-weight: 500;">Minggu:</span>
                 <input type="number" id="chart-week-start" class="form-control mono text-center" value="1" min="1"
-                  max="10" style="width: 52px;">
-                <span class="text-small text-secondary">s/d</span>
+                  max="10" style="width: 52px; height: 38px;">
+                <span class="text-small text-secondary filter-separator">s/d</span>
                 <input type="number" id="chart-week-end" class="form-control mono text-center" value="6" min="1"
-                  max="10" style="width: 52px;">
-                <button id="btn-filter-week-chart" class="btn btn-primary">Tampilkan</button>
+                  max="10" style="width: 52px; height: 38px;">
+                <button id="btn-filter-week-chart" class="btn btn-primary" style="height: 38px;">Tampilkan</button>
               </div>
             </div>
             <div class="card-body" style="height: 300px; position: relative;">
