@@ -325,13 +325,19 @@ html.dark-mode .form-label,
 }
 
 /* Label Penutup Hasil Timbangan Dark Mode */
+html.dark-mode #section-nota-timbang #label-final-net,
+body.dark-mode #section-nota-timbang #label-final-net,
+.dark-mode #section-nota-timbang #label-final-net,
+html.dark-mode #section-nota-timbang .label-final-net,
+body.dark-mode #section-nota-timbang .label-final-net,
+.dark-mode #section-nota-timbang .label-final-net,
 html.dark-mode #label-final-net,
 body.dark-mode #label-final-net,
 .dark-mode #label-final-net,
 html.dark-mode .label-final-net,
 body.dark-mode .label-final-net,
 .dark-mode .label-final-net {
-  color: var(--primary) !important;
+  color: #E2E8F0 !important;
   font-weight: 700 !important;
 }
 

@@ -858,7 +858,7 @@ body.dark-mode .nav-item.active::after {
 #label-final-net,
 .label-final-net {
   font-weight: 700 !important;
-  color: var(--primary) !important;
+  color: var(--text-primary) !important;
 }
 
 .section-block {
