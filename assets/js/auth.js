@@ -194,11 +194,7 @@ const AuthManager = {
       this.currentUser = user;
       localStorage.setItem(STORAGE_KEYS.AUTH_SESSION, JSON.stringify(user));
       
-      if (remember) {
-        localStorage.setItem('rcg_remembered_username', user.username);
-      } else {
-        localStorage.removeItem('rcg_remembered_username');
-      }
+      localStorage.removeItem('rcg_remembered_username');
 
       StorageManager.addLog(user.username, user.role, 'Login Aplikasi Berhasil', '-');
       this.updateUserUI();
@@ -214,6 +210,7 @@ const AuthManager = {
     this.currentUser = null;
     localStorage.removeItem(STORAGE_KEYS.AUTH_SESSION);
     sessionStorage.removeItem(STORAGE_KEYS.AUTH_SESSION);
+    localStorage.removeItem('rcg_remembered_username');
     window.location.href = 'login.html';
   },
 

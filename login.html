@@ -492,6 +492,7 @@
             id="input-username" 
             class="form-control" 
             placeholder="Masukkan username" 
+            value=""
             required 
             autofocus
           >
@@ -505,6 +506,7 @@
               id="input-password" 
               class="form-control" 
               placeholder="Masukkan kata sandi" 
+              value=""
               required
             >
             <button 
@@ -589,15 +591,17 @@
       const iconEyeClosed = document.getElementById('icon-eye-closed');
 
 
-      // Pre-fill remembered username
-      const rememberedUser = localStorage.getItem('rcg_remembered_username');
-      if (rememberedUser && inputUsername) {
-        inputUsername.value = rememberedUser;
-        if (checkRemember) checkRemember.checked = true;
-        if (inputPassword) inputPassword.focus();
-      } else if (inputUsername) {
-        inputUsername.value = 'admin';
-        if (inputPassword) inputPassword.focus();
+      // Clean initialization: ensure input fields start completely empty with clean placeholders
+      try {
+        localStorage.removeItem('rcg_remembered_username');
+      } catch (e) {}
+
+      if (inputUsername) {
+        inputUsername.value = '';
+        inputUsername.focus();
+      }
+      if (inputPassword) {
+        inputPassword.value = '';
       }
 
       // Password Inspect Toggle Handler
