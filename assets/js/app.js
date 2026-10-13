@@ -343,9 +343,8 @@ const App = {
         e.preventDefault();
         const u = document.getElementById('login-username').value;
         const p = document.getElementById('login-password').value;
-        const rem = document.getElementById('login-remember').checked;
 
-        const res = AuthManager.login(u, p, rem);
+        const res = AuthManager.login(u, p);
         if (res.success) {
           this.closeModal('modal-login');
           this.showToast(`Selamat datang, ${res.user.fullName || res.user.username}! Login berhasil.`, 'success');

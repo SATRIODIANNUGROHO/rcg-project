@@ -174,7 +174,7 @@ const AuthManager = {
     this.bindPermissionsEvents();
   },
 
-  login(username, password, remember = true) {
+  login(username, password) {
     const users = this.getUsers();
     const cleanUser = (username || '').trim().toLowerCase();
     const user = users.find(u => {
@@ -214,7 +214,7 @@ const AuthManager = {
     window.location.href = 'login.html';
   },
 
-  saveSession(remember = true) {
+  saveSession() {
     if (this.currentUser) {
       localStorage.setItem(STORAGE_KEYS.AUTH_SESSION, JSON.stringify(this.currentUser));
     }

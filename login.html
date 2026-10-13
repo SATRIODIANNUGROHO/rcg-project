@@ -322,42 +322,8 @@
       color: var(--login-focus-border);
     }
 
-    .login-remember-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 12px 0 20px;
-    }
-
-    .login-remember-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--login-remember-color);
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .login-remember-label:hover {
-      color: var(--login-remember-hover);
-    }
-
-    .login-remember-checkbox {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      accent-color: var(--primary);
-      border-radius: 3px;
-    }
-
-    .login-remember-checkbox:focus-visible {
-      outline: 2px solid var(--login-focus-border);
-      outline-offset: 2px;
-    }
-
     #btn-login-submit {
+      margin-top: 20px;
       height: 38px;
       font-size: 13.5px;
       font-weight: 600;
@@ -531,13 +497,6 @@
           </div>
         </div>
 
-        <div class="login-remember-row">
-          <label class="login-remember-label" for="check-remember">
-            <input type="checkbox" id="check-remember" class="login-remember-checkbox" checked>
-            <span>Remember Me</span>
-          </label>
-        </div>
-
         <button type="submit" id="btn-login-submit" class="btn btn-primary w-100">
           Masuk ke Aplikasi
         </button>
@@ -581,7 +540,6 @@
       const loginForm = document.getElementById('form-login-page');
       const inputUsername = document.getElementById('input-username');
       const inputPassword = document.getElementById('input-password');
-      const checkRemember = document.getElementById('check-remember');
       const alertBox = document.getElementById('login-error-alert');
       const alertMsg = document.getElementById('login-error-msg');
       const btnTheme = document.getElementById('btn-login-theme');
@@ -678,11 +636,10 @@
         e.preventDefault();
         const username = inputUsername.value.trim();
         const password = inputPassword.value;
-        const remember = checkRemember.checked;
 
         if (alertBox) alertBox.style.display = 'none';
 
-        const result = AuthManager.login(username, password, remember);
+        const result = AuthManager.login(username, password);
         if (result.success) {
           const submitBtn = document.getElementById('btn-login-submit');
           if (submitBtn) {
