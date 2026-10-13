@@ -338,7 +338,7 @@ html.dark-mode .label-final-net,
 body.dark-mode .label-final-net,
 .dark-mode .label-final-net {
   color: #E2E8F0 !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
 }
 
 /* Universal Dark Mode Input Styling */

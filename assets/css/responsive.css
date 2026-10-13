@@ -857,7 +857,7 @@ body.dark-mode .nav-item.active::after {
 #section-nota-timbang .label-final-net,
 #label-final-net,
 .label-final-net {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   color: var(--text-primary) !important;
 }
 
