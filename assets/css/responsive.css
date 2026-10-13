@@ -758,7 +758,11 @@ body.dark-mode .nav-item.active::after {
 #login-username::placeholder,
 #login-password::placeholder,
 #input-gross-weight::placeholder,
-#input-tare-weight::placeholder {
+#input-tare-weight::placeholder,
+#input-k1-weight::placeholder,
+#input-k2-weight::placeholder,
+#input-k1-price::placeholder,
+#input-k2-price::placeholder {
   font-size: 13px !important;
   font-weight: 500 !important;
   line-height: normal !important;

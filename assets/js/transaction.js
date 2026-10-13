@@ -276,10 +276,10 @@ const TransactionEngine = {
     if (finalNetInput) finalNetInput.value = '0';
 
     const k1WeightInput = document.getElementById('input-k1-weight');
-    if (k1WeightInput) k1WeightInput.value = '0';
+    if (k1WeightInput) k1WeightInput.value = '';
 
     const k2WeightInput = document.getElementById('input-k2-weight');
-    if (k2WeightInput) k2WeightInput.value = '0';
+    if (k2WeightInput) k2WeightInput.value = '';
 
     const k1PriceInput = document.getElementById('input-k1-price');
     if (k1PriceInput) k1PriceInput.value = settings.defaultK1Price || 1250;
@@ -288,10 +288,10 @@ const TransactionEngine = {
     if (k2PriceInput) k2PriceInput.value = settings.defaultK2Price || 1050;
 
     const k1TotalInput = document.getElementById('input-k1-total');
-    if (k1TotalInput) k1TotalInput.value = '0';
+    if (k1TotalInput) k1TotalInput.value = 'Rp 0';
 
     const k2TotalInput = document.getElementById('input-k2-total');
-    if (k2TotalInput) k2TotalInput.value = '0';
+    if (k2TotalInput) k2TotalInput.value = 'Rp 0';
 
     const grandTotalDisplay = document.getElementById('display-grand-total');
     if (grandTotalDisplay) grandTotalDisplay.textContent = 'Rp 0';
@@ -302,7 +302,7 @@ const TransactionEngine = {
     const weighmasterInput = document.getElementById('input-weighmaster');
     if (weighmasterInput) weighmasterInput.value = '';
 
-    const adminNameInput = document.getElementById('input-admin-name');
+    const adminNameInput = document.getElementById('admin-name-input') || document.getElementById('input-admin-name');
     if (adminNameInput) adminNameInput.value = currentUser.username || 'admin';
 
     const paymentStatusSelect = document.getElementById('select-payment-status');
@@ -336,57 +336,112 @@ const TransactionEngine = {
     const tareRaw = (document.getElementById('input-tare-weight')?.value || '').trim();
     const gross = grossRaw === '' ? 0 : Math.max(0, parseFloat(grossRaw) || 0);
     const tare = tareRaw === '' ? 0 : Math.max(0, parseFloat(tareRaw) || 0);
-    const refPercent = Math.max(0, parseFloat(document.getElementById('input-refraction-percent').value) || 0);
-    const k1Price = Math.max(0, parseFloat(document.getElementById('input-k1-price').value) || 0);
-    const k2Price = Math.max(0, parseFloat(document.getElementById('input-k2-price').value) || 0);
+    const refPercent = Math.max(0, parseFloat(document.getElementById('input-refraction-percent')?.value) || 0);
+    const k1PriceRaw = (document.getElementById('input-k1-price')?.value || '').trim();
+    const k2PriceRaw = (document.getElementById('input-k2-price')?.value || '').trim();
+    const k1Price = k1PriceRaw === '' ? 0 : Math.max(0, parseFloat(k1PriceRaw) || 0);
+    const k2Price = k2PriceRaw === '' ? 0 : Math.max(0, parseFloat(k2PriceRaw) || 0);
 
     // 1. Bruto (Muatan) = Gross - Tare
     const netLoad = Math.max(0, gross - tare);
-    document.getElementById('input-net-load').value = netLoad.toLocaleString('id-ID');
+    const netLoadEl = document.getElementById('input-net-load');
+    if (netLoadEl) netLoadEl.value = netLoad.toLocaleString('id-ID');
 
     // 2. Refraksi Potongan (Kg) = Bruto * Refraksi % / 100
     const refractionKg = Math.round(netLoad * (refPercent / 100));
-    document.getElementById('input-refraction-kg').value = refractionKg.toLocaleString('id-ID');
+    const refractionKgEl = document.getElementById('input-refraction-kg');
+    if (refractionKgEl) refractionKgEl.value = refractionKg.toLocaleString('id-ID');
 
     // 3. Bersih Total = Bruto - Refraksi Kg
     const finalNet = Math.max(0, netLoad - refractionKg);
-    document.getElementById('input-final-net').value = finalNet.toLocaleString('id-ID');
+    const finalNetEl = document.getElementById('input-final-net');
+    if (finalNetEl) finalNetEl.value = finalNet.toLocaleString('id-ID');
 
     // 4. K1 vs K2 Split Logic
-    let k1 = parseFloat(document.getElementById('input-k1-weight').value) || 0;
-    let k2 = parseFloat(document.getElementById('input-k2-weight').value) || 0;
+    const k1El = document.getElementById('input-k1-weight');
+    const k2El = document.getElementById('input-k2-weight');
+    const k1Raw = (k1El?.value || '').trim();
+    const k2Raw = (k2El?.value || '').trim();
+    let k1 = k1Raw === '' ? 0 : Math.max(0, parseFloat(k1Raw) || 0);
+    let k2 = k2Raw === '' ? 0 : Math.max(0, parseFloat(k2Raw) || 0);
 
     if (triggerId === 'input-k1-weight') {
-      k1 = Math.min(finalNet, Math.max(0, k1));
-      k2 = Math.max(0, finalNet - k1);
-      document.getElementById('input-k2-weight').value = k2;
-    } else if (triggerId === 'input-k2-weight') {
-      k2 = Math.min(finalNet, Math.max(0, k2));
-      k1 = Math.max(0, finalNet - k2);
-      document.getElementById('input-k1-weight').value = k1;
-    } else {
-      // Auto distribution if gross/tare/refraction changed
-      if (k1 === 0 && k2 === 0) {
-        k1 = finalNet;
-        k2 = 0;
+      if (finalNet > 0) {
+        if (k1Raw === '') {
+          k1 = 0;
+          k2 = finalNet;
+          if (k2El) k2El.value = k2;
+        } else {
+          k1 = Math.min(finalNet, Math.max(0, k1));
+          k2 = Math.max(0, finalNet - k1);
+          if (k2El) k2El.value = k2;
+          if (parseFloat(k1Raw) > finalNet && k1El) {
+            k1El.value = k1;
+          }
+        }
       } else {
-        const totalPrevious = (k1 + k2) || 1;
-        const ratioK1 = k1 / totalPrevious;
-        k1 = Math.round(finalNet * ratioK1);
-        k2 = Math.max(0, finalNet - k1);
+        k1 = Math.max(0, k1);
+        if (k1Raw === '') k1 = 0;
+        k2 = k2Raw === '' ? 0 : Math.max(0, k2);
       }
-      document.getElementById('input-k1-weight').value = k1;
-      document.getElementById('input-k2-weight').value = k2;
+    } else if (triggerId === 'input-k2-weight') {
+      if (finalNet > 0) {
+        if (k2Raw === '') {
+          k2 = 0;
+          k1 = finalNet;
+          if (k1El) k1El.value = k1;
+        } else {
+          k2 = Math.min(finalNet, Math.max(0, k2));
+          k1 = Math.max(0, finalNet - k2);
+          if (k1El) k1El.value = k1;
+          if (parseFloat(k2Raw) > finalNet && k2El) {
+            k2El.value = k2;
+          }
+        }
+      } else {
+        k2 = Math.max(0, k2);
+        if (k2Raw === '') k2 = 0;
+        k1 = k1Raw === '' ? 0 : Math.max(0, k1);
+      }
+    } else {
+      // Auto distribution if gross/tare/refraction or price changed
+      if (finalNet > 0) {
+        if (k1Raw === '' && k2Raw === '') {
+          k1 = finalNet;
+          k2 = 0;
+        } else {
+          const totalPrevious = (k1 + k2) || 1;
+          const ratioK1 = k1 / totalPrevious;
+          k1 = Math.round(finalNet * ratioK1);
+          k2 = Math.max(0, finalNet - k1);
+        }
+        if (k1El) k1El.value = k1;
+        if (k2El) k2El.value = k2;
+      } else {
+        // finalNet is 0 (initial state, or gross/tare cleared, or price changed before weighing)
+        if (k1Raw === '' && k1El) k1El.value = '';
+        if (k2Raw === '' && k2El) k2El.value = '';
+      }
     }
 
     // 5. Total Prices
-    const k1Total = Math.round(k1 * k1Price);
-    const k2Total = Math.round(k2 * k2Price);
+    const safeK1 = isNaN(k1) ? 0 : Math.max(0, k1);
+    const safeK2 = isNaN(k2) ? 0 : Math.max(0, k2);
+    const safeK1Price = isNaN(k1Price) ? 0 : Math.max(0, k1Price);
+    const safeK2Price = isNaN(k2Price) ? 0 : Math.max(0, k2Price);
+
+    const k1Total = Math.round(safeK1 * safeK1Price);
+    const k2Total = Math.round(safeK2 * safeK2Price);
     const grandTotal = k1Total + k2Total;
 
-    document.getElementById('input-k1-total').value = 'Rp ' + k1Total.toLocaleString('id-ID');
-    document.getElementById('input-k2-total').value = 'Rp ' + k2Total.toLocaleString('id-ID');
-    document.getElementById('display-grand-total').textContent = 'Rp ' + grandTotal.toLocaleString('id-ID');
+    const k1TotalEl = document.getElementById('input-k1-total');
+    if (k1TotalEl) k1TotalEl.value = 'Rp ' + (isNaN(k1Total) ? 0 : k1Total).toLocaleString('id-ID');
+
+    const k2TotalEl = document.getElementById('input-k2-total');
+    if (k2TotalEl) k2TotalEl.value = 'Rp ' + (isNaN(k2Total) ? 0 : k2Total).toLocaleString('id-ID');
+
+    const grandTotalDisplay = document.getElementById('display-grand-total');
+    if (grandTotalDisplay) grandTotalDisplay.textContent = 'Rp ' + (isNaN(grandTotal) ? 0 : grandTotal).toLocaleString('id-ID');
   },
 
   getCurrentFormData() {
@@ -395,13 +450,17 @@ const TransactionEngine = {
     const gross = grossRaw === '' ? 0 : Math.max(0, parseFloat(grossRaw) || 0);
     const tare = tareRaw === '' ? 0 : Math.max(0, parseFloat(tareRaw) || 0);
     const netLoad = Math.max(0, gross - tare);
-    const refPercent = Math.max(0, parseFloat(document.getElementById('input-refraction-percent').value) || 0);
+    const refPercent = Math.max(0, parseFloat(document.getElementById('input-refraction-percent')?.value) || 0);
     const refractionKg = Math.round(netLoad * (refPercent / 100));
     const finalNet = Math.max(0, netLoad - refractionKg);
-    const k1 = parseFloat(document.getElementById('input-k1-weight').value) || 0;
-    const k2 = parseFloat(document.getElementById('input-k2-weight').value) || 0;
-    const k1Price = parseFloat(document.getElementById('input-k1-price').value) || 0;
-    const k2Price = parseFloat(document.getElementById('input-k2-price').value) || 0;
+    const k1Raw = (document.getElementById('input-k1-weight')?.value || '').trim();
+    const k2Raw = (document.getElementById('input-k2-weight')?.value || '').trim();
+    const k1PriceRaw = (document.getElementById('input-k1-price')?.value || '').trim();
+    const k2PriceRaw = (document.getElementById('input-k2-price')?.value || '').trim();
+    const k1 = k1Raw === '' ? 0 : Math.max(0, parseFloat(k1Raw) || 0);
+    const k2 = k2Raw === '' ? 0 : Math.max(0, parseFloat(k2Raw) || 0);
+    const k1Price = k1PriceRaw === '' ? 0 : Math.max(0, parseFloat(k1PriceRaw) || 0);
+    const k2Price = k2PriceRaw === '' ? 0 : Math.max(0, parseFloat(k2PriceRaw) || 0);
     const k1Total = Math.round(k1 * k1Price);
     const k2Total = Math.round(k2 * k2Price);
     const grandTotal = k1Total + k2Total;
