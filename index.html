@@ -1986,15 +1986,15 @@
           </div>
 
           <!-- Preset Margin -->
-          <div class="form-group mb-0">
+          <div class="form-group mb-0 print-margin-form-group">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
               <label class="form-label mb-0" for="select-print-margin-preset"
                 style="font-size: 11.5px; font-weight: 700;">Margin Dokumen</label>
               <span id="label-current-margin-val" class="badge badge-primary mono-num"
                 style="font-size: 10px; padding: 2px 7px; font-weight: 700;">5 mm</span>
             </div>
-            <div style="display: flex; gap: 8px;">
-              <select id="select-print-margin-preset" class="form-select form-control-sm" style="flex: 1;">
+            <div class="print-margin-controls-row" style="display: flex; gap: 8px; align-items: center; width: 100%; box-sizing: border-box;">
+              <select id="select-print-margin-preset" class="form-select form-control-sm" style="flex: 1 1 0%; min-width: 0;">
                 <option value="default" selected>Standar (5 mm / 0.5 cm)</option>
                 <option value="narrow">Sempit (2 mm / 0.2 cm)</option>
                 <option value="medium">Sedang (8 mm / 0.8 cm)</option>
@@ -2002,7 +2002,7 @@
                 <option value="custom">Kustom (Atur Manual)...</option>
               </select>
               <select id="select-print-margin-unit" class="form-select form-control-sm"
-                style="width: 82px; min-width: 82px; font-weight: 700; text-align: center;" title="Pilih Satuan Margin">
+                style="width: 64px; min-width: 64px; max-width: 64px; flex: 0 0 64px; font-weight: 700; text-align: center;" title="Pilih Satuan Margin">
                 <option value="mm" selected>mm</option>
                 <option value="cm">cm</option>
               </select>

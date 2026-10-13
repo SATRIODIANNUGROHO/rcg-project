@@ -1037,7 +1037,7 @@ body.dark-mode .nav-item.active::after {
 /* Print Modal Two-Column Body */
 .print-modal-body {
   display: grid !important;
-  grid-template-columns: clamp(260px, 24vw, 360px) 1fr !important;
+  grid-template-columns: clamp(330px, 26vw, 360px) 1fr !important;
 }
 
 /* Modal Footer & Action Buttons Dimension Standardization */

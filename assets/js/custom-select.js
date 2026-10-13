@@ -52,6 +52,9 @@ const CustomSelectManager = {
     }
     if (select.style.flex) {
       wrapper.style.flex = select.style.flex;
+      if (!select.style.minWidth) {
+        wrapper.style.minWidth = '0';
+      }
     }
     wrapper.id = `custom-wrapper-${select.id || Math.random().toString(36).substr(2, 9)}`;
 
