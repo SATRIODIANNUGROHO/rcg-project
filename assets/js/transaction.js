@@ -268,7 +268,7 @@ const TransactionEngine = {
     if (refPercentInput) {
       refPercentInput.value = (settings && typeof settings.defaultRefraction !== 'undefined' && settings.defaultRefraction !== 5.0 && settings.defaultRefraction !== 2.0)
         ? settings.defaultRefraction 
-        : 10.0;
+        : 10;
     }
 
     const refKgInput = document.getElementById('input-refraction-kg');

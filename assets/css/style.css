@@ -436,6 +436,12 @@ h6 {
   margin-left: 2px;
 }
 
+#label-final-net,
+.label-final-net {
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+}
+
 .form-control,
 .form-select {
   height: var(--btn-height-standard);
@@ -1212,6 +1218,7 @@ input[type="number"] {
 #login-password::placeholder,
 #input-gross-weight::placeholder,
 #input-tare-weight::placeholder,
+#input-refraction-percent::placeholder,
 #input-bag-count::placeholder,
 #input-k1-weight::placeholder,
 #input-k2-weight::placeholder,

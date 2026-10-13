@@ -756,6 +756,7 @@ body.dark-mode .nav-item.active::after {
 #login-password::placeholder,
 #input-gross-weight::placeholder,
 #input-tare-weight::placeholder,
+#input-refraction-percent::placeholder,
 #input-bag-count::placeholder,
 #input-k1-weight::placeholder,
 #input-k2-weight::placeholder,
@@ -849,6 +850,15 @@ body.dark-mode .nav-item.active::after {
   font-weight: 600 !important;
   margin-bottom: 6px !important;
   letter-spacing: 0.01em;
+}
+
+/* Final Net Weight Closing Label in Transaction Form */
+#section-nota-timbang #label-final-net,
+#section-nota-timbang .label-final-net,
+#label-final-net,
+.label-final-net {
+  font-weight: 700 !important;
+  color: var(--primary) !important;
 }
 
 .section-block {
