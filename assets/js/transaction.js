@@ -254,10 +254,10 @@ const TransactionEngine = {
     this.updateAreaDropdown('Majungan');
 
     const grossInput = document.getElementById('input-gross-weight');
-    if (grossInput) grossInput.value = '0';
+    if (grossInput) grossInput.value = '';
 
     const tareInput = document.getElementById('input-tare-weight');
-    if (tareInput) tareInput.value = '0';
+    if (tareInput) tareInput.value = '';
 
     const netLoadInput = document.getElementById('input-net-load');
     if (netLoadInput) netLoadInput.value = '0';
@@ -332,8 +332,10 @@ const TransactionEngine = {
   },
 
   handleCalculation(triggerId) {
-    const gross = Math.max(0, parseFloat(document.getElementById('input-gross-weight').value) || 0);
-    const tare = Math.max(0, parseFloat(document.getElementById('input-tare-weight').value) || 0);
+    const grossRaw = (document.getElementById('input-gross-weight')?.value || '').trim();
+    const tareRaw = (document.getElementById('input-tare-weight')?.value || '').trim();
+    const gross = grossRaw === '' ? 0 : Math.max(0, parseFloat(grossRaw) || 0);
+    const tare = tareRaw === '' ? 0 : Math.max(0, parseFloat(tareRaw) || 0);
     const refPercent = Math.max(0, parseFloat(document.getElementById('input-refraction-percent').value) || 0);
     const k1Price = Math.max(0, parseFloat(document.getElementById('input-k1-price').value) || 0);
     const k2Price = Math.max(0, parseFloat(document.getElementById('input-k2-price').value) || 0);
@@ -388,8 +390,10 @@ const TransactionEngine = {
   },
 
   getCurrentFormData() {
-    const gross = Math.max(0, parseFloat(document.getElementById('input-gross-weight').value) || 0);
-    const tare = Math.max(0, parseFloat(document.getElementById('input-tare-weight').value) || 0);
+    const grossRaw = (document.getElementById('input-gross-weight')?.value || '').trim();
+    const tareRaw = (document.getElementById('input-tare-weight')?.value || '').trim();
+    const gross = grossRaw === '' ? 0 : Math.max(0, parseFloat(grossRaw) || 0);
+    const tare = tareRaw === '' ? 0 : Math.max(0, parseFloat(tareRaw) || 0);
     const netLoad = Math.max(0, gross - tare);
     const refPercent = Math.max(0, parseFloat(document.getElementById('input-refraction-percent').value) || 0);
     const refractionKg = Math.round(netLoad * (refPercent / 100));

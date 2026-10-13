@@ -756,7 +756,9 @@ body.dark-mode .nav-item.active::after {
 #input-username::placeholder,
 #input-password::placeholder,
 #login-username::placeholder,
-#login-password::placeholder {
+#login-password::placeholder,
+#input-gross-weight::placeholder,
+#input-tare-weight::placeholder {
   font-size: 13px !important;
   font-weight: 500 !important;
   line-height: normal !important;
