@@ -334,6 +334,18 @@ body.dark-mode input.form-control,
 html.dark-mode input[type="text"],
 body.dark-mode input[type="text"],
 .dark-mode input[type="text"],
+html.dark-mode input[type="password"],
+body.dark-mode input[type="password"],
+.dark-mode input[type="password"],
+html.dark-mode input[type="url"],
+body.dark-mode input[type="url"],
+.dark-mode input[type="url"],
+html.dark-mode input[type="email"],
+body.dark-mode input[type="email"],
+.dark-mode input[type="email"],
+html.dark-mode input[type="search"],
+body.dark-mode input[type="search"],
+.dark-mode input[type="search"],
 html.dark-mode input[type="number"],
 body.dark-mode input[type="number"],
 .dark-mode input[type="number"],
@@ -406,7 +418,7 @@ body.dark-mode #input-k2-price,
   font-weight: 500 !important;
 }
 
-/* Explicit Pure Solid White Placeholders for ALL Form Fields in Dark Mode */
+/* Refined Muted Bluish Slate Gray (#94A3B8) Placeholders for ALL Form Fields in Dark Mode */
 html.dark-mode ::placeholder,
 body.dark-mode ::placeholder,
 .dark-mode ::placeholder,
@@ -452,6 +464,42 @@ body.dark-mode #input-new-pw::placeholder,
 html.dark-mode #input-confirm-pw::placeholder,
 body.dark-mode #input-confirm-pw::placeholder,
 .dark-mode #input-confirm-pw::placeholder,
+html.dark-mode #supplier-history-supplier-input::placeholder,
+body.dark-mode #supplier-history-supplier-input::placeholder,
+.dark-mode #supplier-history-supplier-input::placeholder,
+html.dark-mode #input-delete-reason::placeholder,
+body.dark-mode #input-delete-reason::placeholder,
+.dark-mode #input-delete-reason::placeholder,
+html.dark-mode #input-reset-reason::placeholder,
+body.dark-mode #input-reset-reason::placeholder,
+.dark-mode #input-reset-reason::placeholder,
+html.dark-mode #filter-supplier-custom-input::placeholder,
+body.dark-mode #filter-supplier-custom-input::placeholder,
+.dark-mode #filter-supplier-custom-input::placeholder,
+html.dark-mode #user-table-search-input::placeholder,
+body.dark-mode #user-table-search-input::placeholder,
+.dark-mode #user-table-search-input::placeholder,
+html.dark-mode #input-add-user-username::placeholder,
+body.dark-mode #input-add-user-username::placeholder,
+.dark-mode #input-add-user-username::placeholder,
+html.dark-mode #input-add-user-fullname::placeholder,
+body.dark-mode #input-add-user-fullname::placeholder,
+.dark-mode #input-add-user-fullname::placeholder,
+html.dark-mode #input-add-user-email::placeholder,
+body.dark-mode #input-add-user-email::placeholder,
+.dark-mode #input-add-user-email::placeholder,
+html.dark-mode #input-add-user-password::placeholder,
+body.dark-mode #input-add-user-password::placeholder,
+.dark-mode #input-add-user-password::placeholder,
+html.dark-mode #input-change-pw-new::placeholder,
+body.dark-mode #input-change-pw-new::placeholder,
+.dark-mode #input-change-pw-new::placeholder,
+html.dark-mode #history-search-input::placeholder,
+body.dark-mode #history-search-input::placeholder,
+.dark-mode #history-search-input::placeholder,
+html.dark-mode #supplier-history-search::placeholder,
+body.dark-mode #supplier-history-search::placeholder,
+.dark-mode #supplier-history-search::placeholder,
 #modal-user-profile input::placeholder,
 #modal-login input::placeholder,
 .login-box input::placeholder,
@@ -459,15 +507,15 @@ body.dark-mode #input-confirm-pw::placeholder,
 #input-password::placeholder,
 #login-username::placeholder,
 #login-password::placeholder {
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;
   text-transform: none !important;
 }
 
-/* WebKit Vendor Pseudo-Element for Pure Solid White Placeholder */
+/* WebKit Vendor Pseudo-Element for Muted Bluish Slate Gray (#94A3B8) Placeholder */
 html.dark-mode ::-webkit-input-placeholder,
 body.dark-mode ::-webkit-input-placeholder,
 .dark-mode ::-webkit-input-placeholder,
@@ -513,6 +561,42 @@ body.dark-mode #input-new-pw::-webkit-input-placeholder,
 html.dark-mode #input-confirm-pw::-webkit-input-placeholder,
 body.dark-mode #input-confirm-pw::-webkit-input-placeholder,
 .dark-mode #input-confirm-pw::-webkit-input-placeholder,
+html.dark-mode #supplier-history-supplier-input::-webkit-input-placeholder,
+body.dark-mode #supplier-history-supplier-input::-webkit-input-placeholder,
+.dark-mode #supplier-history-supplier-input::-webkit-input-placeholder,
+html.dark-mode #input-delete-reason::-webkit-input-placeholder,
+body.dark-mode #input-delete-reason::-webkit-input-placeholder,
+.dark-mode #input-delete-reason::-webkit-input-placeholder,
+html.dark-mode #input-reset-reason::-webkit-input-placeholder,
+body.dark-mode #input-reset-reason::-webkit-input-placeholder,
+.dark-mode #input-reset-reason::-webkit-input-placeholder,
+html.dark-mode #filter-supplier-custom-input::-webkit-input-placeholder,
+body.dark-mode #filter-supplier-custom-input::-webkit-input-placeholder,
+.dark-mode #filter-supplier-custom-input::-webkit-input-placeholder,
+html.dark-mode #user-table-search-input::-webkit-input-placeholder,
+body.dark-mode #user-table-search-input::-webkit-input-placeholder,
+.dark-mode #user-table-search-input::-webkit-input-placeholder,
+html.dark-mode #input-add-user-username::-webkit-input-placeholder,
+body.dark-mode #input-add-user-username::-webkit-input-placeholder,
+.dark-mode #input-add-user-username::-webkit-input-placeholder,
+html.dark-mode #input-add-user-fullname::-webkit-input-placeholder,
+body.dark-mode #input-add-user-fullname::-webkit-input-placeholder,
+.dark-mode #input-add-user-fullname::-webkit-input-placeholder,
+html.dark-mode #input-add-user-email::-webkit-input-placeholder,
+body.dark-mode #input-add-user-email::-webkit-input-placeholder,
+.dark-mode #input-add-user-email::-webkit-input-placeholder,
+html.dark-mode #input-add-user-password::-webkit-input-placeholder,
+body.dark-mode #input-add-user-password::-webkit-input-placeholder,
+.dark-mode #input-add-user-password::-webkit-input-placeholder,
+html.dark-mode #input-change-pw-new::-webkit-input-placeholder,
+body.dark-mode #input-change-pw-new::-webkit-input-placeholder,
+.dark-mode #input-change-pw-new::-webkit-input-placeholder,
+html.dark-mode #history-search-input::-webkit-input-placeholder,
+body.dark-mode #history-search-input::-webkit-input-placeholder,
+.dark-mode #history-search-input::-webkit-input-placeholder,
+html.dark-mode #supplier-history-search::-webkit-input-placeholder,
+body.dark-mode #supplier-history-search::-webkit-input-placeholder,
+.dark-mode #supplier-history-search::-webkit-input-placeholder,
 #modal-user-profile input::-webkit-input-placeholder,
 #modal-login input::-webkit-input-placeholder,
 .login-box input::-webkit-input-placeholder,
@@ -520,8 +604,146 @@ body.dark-mode #input-confirm-pw::-webkit-input-placeholder,
 #input-password::-webkit-input-placeholder,
 #login-username::-webkit-input-placeholder,
 #login-password::-webkit-input-placeholder {
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  text-transform: none !important;
+}
+
+/* Mozilla Firefox Pseudo-Element for Muted Bluish Slate Gray (#94A3B8) Placeholder */
+html.dark-mode ::-moz-placeholder,
+body.dark-mode ::-moz-placeholder,
+.dark-mode ::-moz-placeholder,
+html.dark-mode input::-moz-placeholder,
+body.dark-mode input::-moz-placeholder,
+.dark-mode input::-moz-placeholder,
+html.dark-mode textarea::-moz-placeholder,
+body.dark-mode textarea::-moz-placeholder,
+.dark-mode textarea::-moz-placeholder,
+html.dark-mode .form-control::-moz-placeholder,
+body.dark-mode .form-control::-moz-placeholder,
+.dark-mode .form-control::-moz-placeholder,
+html.dark-mode #input-plate-no::-moz-placeholder,
+body.dark-mode #input-plate-no::-moz-placeholder,
+.dark-mode #input-plate-no::-moz-placeholder,
+html.dark-mode #input-supplier::-moz-placeholder,
+body.dark-mode #input-supplier::-moz-placeholder,
+.dark-mode #input-supplier::-moz-placeholder,
+html.dark-mode #input-driver-name::-moz-placeholder,
+body.dark-mode #input-driver-name::-moz-placeholder,
+.dark-mode #input-driver-name::-moz-placeholder,
+html.dark-mode #input-weighmaster::-moz-placeholder,
+body.dark-mode #input-weighmaster::-moz-placeholder,
+.dark-mode #input-weighmaster::-moz-placeholder,
+html.dark-mode #input-notes::-moz-placeholder,
+body.dark-mode #input-notes::-moz-placeholder,
+.dark-mode #input-notes::-moz-placeholder,
+html.dark-mode #input-avatar-url::-moz-placeholder,
+body.dark-mode #input-avatar-url::-moz-placeholder,
+.dark-mode #input-avatar-url::-moz-placeholder,
+html.dark-mode #input-profile-fullname::-moz-placeholder,
+body.dark-mode #input-profile-fullname::-moz-placeholder,
+.dark-mode #input-profile-fullname::-moz-placeholder,
+html.dark-mode #input-profile-email::-moz-placeholder,
+body.dark-mode #input-profile-email::-moz-placeholder,
+.dark-mode #input-profile-email::-moz-placeholder,
+html.dark-mode #input-curr-pw::-moz-placeholder,
+body.dark-mode #input-curr-pw::-moz-placeholder,
+.dark-mode #input-curr-pw::-moz-placeholder,
+html.dark-mode #input-new-pw::-moz-placeholder,
+body.dark-mode #input-new-pw::-moz-placeholder,
+.dark-mode #input-new-pw::-moz-placeholder,
+html.dark-mode #input-confirm-pw::-moz-placeholder,
+body.dark-mode #input-confirm-pw::-moz-placeholder,
+.dark-mode #input-confirm-pw::-moz-placeholder,
+html.dark-mode #supplier-history-supplier-input::-moz-placeholder,
+body.dark-mode #supplier-history-supplier-input::-moz-placeholder,
+.dark-mode #supplier-history-supplier-input::-moz-placeholder,
+html.dark-mode #input-delete-reason::-moz-placeholder,
+body.dark-mode #input-delete-reason::-moz-placeholder,
+.dark-mode #input-delete-reason::-moz-placeholder,
+html.dark-mode #input-reset-reason::-moz-placeholder,
+body.dark-mode #input-reset-reason::-moz-placeholder,
+.dark-mode #input-reset-reason::-moz-placeholder,
+#modal-user-profile input::-moz-placeholder,
+#modal-login input::-moz-placeholder,
+.login-box input::-moz-placeholder,
+#input-username::-moz-placeholder,
+#input-password::-moz-placeholder,
+#login-username::-moz-placeholder,
+#login-password::-moz-placeholder {
+  color: #94A3B8 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  text-transform: none !important;
+}
+
+/* Microsoft Edge / IE Pseudo-Element for Muted Bluish Slate Gray (#94A3B8) Placeholder */
+html.dark-mode :-ms-input-placeholder,
+body.dark-mode :-ms-input-placeholder,
+.dark-mode :-ms-input-placeholder,
+html.dark-mode input:-ms-input-placeholder,
+body.dark-mode input:-ms-input-placeholder,
+.dark-mode input:-ms-input-placeholder,
+html.dark-mode textarea:-ms-input-placeholder,
+body.dark-mode textarea:-ms-input-placeholder,
+.dark-mode textarea:-ms-input-placeholder,
+html.dark-mode .form-control:-ms-input-placeholder,
+body.dark-mode .form-control:-ms-input-placeholder,
+.dark-mode .form-control:-ms-input-placeholder,
+html.dark-mode #input-plate-no:-ms-input-placeholder,
+body.dark-mode #input-plate-no:-ms-input-placeholder,
+.dark-mode #input-plate-no:-ms-input-placeholder,
+html.dark-mode #input-supplier:-ms-input-placeholder,
+body.dark-mode #input-supplier:-ms-input-placeholder,
+.dark-mode #input-supplier:-ms-input-placeholder,
+html.dark-mode #input-driver-name:-ms-input-placeholder,
+body.dark-mode #input-driver-name:-ms-input-placeholder,
+.dark-mode #input-driver-name:-ms-input-placeholder,
+html.dark-mode #input-weighmaster:-ms-input-placeholder,
+body.dark-mode #input-weighmaster:-ms-input-placeholder,
+.dark-mode #input-weighmaster:-ms-input-placeholder,
+html.dark-mode #input-notes:-ms-input-placeholder,
+body.dark-mode #input-notes:-ms-input-placeholder,
+.dark-mode #input-notes:-ms-input-placeholder,
+html.dark-mode #input-avatar-url:-ms-input-placeholder,
+body.dark-mode #input-avatar-url:-ms-input-placeholder,
+.dark-mode #input-avatar-url:-ms-input-placeholder,
+html.dark-mode #input-profile-fullname:-ms-input-placeholder,
+body.dark-mode #input-profile-fullname:-ms-input-placeholder,
+.dark-mode #input-profile-fullname:-ms-input-placeholder,
+html.dark-mode #input-profile-email:-ms-input-placeholder,
+body.dark-mode #input-profile-email:-ms-input-placeholder,
+.dark-mode #input-profile-email:-ms-input-placeholder,
+html.dark-mode #input-curr-pw:-ms-input-placeholder,
+body.dark-mode #input-curr-pw:-ms-input-placeholder,
+.dark-mode #input-curr-pw:-ms-input-placeholder,
+html.dark-mode #input-new-pw:-ms-input-placeholder,
+body.dark-mode #input-new-pw:-ms-input-placeholder,
+.dark-mode #input-new-pw:-ms-input-placeholder,
+html.dark-mode #input-confirm-pw:-ms-input-placeholder,
+body.dark-mode #input-confirm-pw:-ms-input-placeholder,
+.dark-mode #input-confirm-pw:-ms-input-placeholder,
+html.dark-mode #supplier-history-supplier-input:-ms-input-placeholder,
+body.dark-mode #supplier-history-supplier-input:-ms-input-placeholder,
+.dark-mode #supplier-history-supplier-input:-ms-input-placeholder,
+html.dark-mode #input-delete-reason:-ms-input-placeholder,
+body.dark-mode #input-delete-reason:-ms-input-placeholder,
+.dark-mode #input-delete-reason:-ms-input-placeholder,
+html.dark-mode #input-reset-reason:-ms-input-placeholder,
+body.dark-mode #input-reset-reason:-ms-input-placeholder,
+.dark-mode #input-reset-reason:-ms-input-placeholder,
+#modal-user-profile input:-ms-input-placeholder,
+#modal-login input:-ms-input-placeholder,
+.login-box input:-ms-input-placeholder,
+#input-username:-ms-input-placeholder,
+#input-password:-ms-input-placeholder,
+#login-username:-ms-input-placeholder,
+#login-password:-ms-input-placeholder {
+  color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;
@@ -1164,12 +1386,17 @@ body.dark-mode .custom-combobox input.form-control {
   background-color: #16243A !important;
   border-color: #334155 !important;
   color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
   font-weight: 500 !important;
   font-size: 13px !important;
 }
 
-body.dark-mode .custom-combobox input.form-control::placeholder {
-  color: #FFFFFF !important;
+body.dark-mode .custom-combobox input.form-control::placeholder,
+body.dark-mode .custom-combobox input.form-control::-webkit-input-placeholder,
+body.dark-mode .custom-combobox input.form-control::-moz-placeholder,
+body.dark-mode .custom-combobox input.form-control:-ms-input-placeholder {
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;
@@ -1362,6 +1589,7 @@ body.dark-mode #supplier-history-search {
   background-color: #16243A !important;
   border-color: #334155 !important;
   color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
   font-weight: 500 !important;
   font-size: 13px !important;
   height: 38px !important;
@@ -1389,12 +1617,13 @@ body.dark-mode #supplier-history-search:focus {
   outline: none !important;
 }
 
-/* High Contrast Pure White Placeholder for Search Inputs */
+/* Muted Bluish Slate Gray (#94A3B8) Placeholder for Search Inputs */
 body.dark-mode .search-box input.form-control::placeholder,
 body.dark-mode .search-box input::placeholder,
 body.dark-mode #history-search-input::placeholder,
 body.dark-mode #supplier-history-search::placeholder {
-  color: #FFFFFF !important;
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;
@@ -1404,7 +1633,8 @@ body.dark-mode .search-box input.form-control::-webkit-input-placeholder,
 body.dark-mode .search-box input::-webkit-input-placeholder,
 body.dark-mode #history-search-input::-webkit-input-placeholder,
 body.dark-mode #supplier-history-search::-webkit-input-placeholder {
-  color: #FFFFFF !important;
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;
@@ -1414,7 +1644,7 @@ body.dark-mode .search-box input.form-control::-moz-placeholder,
 body.dark-mode .search-box input::-moz-placeholder,
 body.dark-mode #history-search-input::-moz-placeholder,
 body.dark-mode #supplier-history-search::-moz-placeholder {
-  color: #FFFFFF !important;
+  color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;
@@ -1424,7 +1654,7 @@ body.dark-mode .search-box input.form-control:-ms-input-placeholder,
 body.dark-mode .search-box input:-ms-input-placeholder,
 body.dark-mode #history-search-input:-ms-input-placeholder,
 body.dark-mode #supplier-history-search:-ms-input-placeholder {
-  color: #FFFFFF !important;
+  color: #94A3B8 !important;
   opacity: 1 !important;
   font-weight: 500 !important;
   font-size: 13px !important;

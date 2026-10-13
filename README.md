@@ -247,10 +247,10 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Dokumen Acuan Resmi Design System (`DESIGN_SYSTEM.md`)**:
   - Proyek ini memiliki panduan spesifikasi master komprehensif sebanyak **80 bab** di dalam dokumen `DESIGN_SYSTEM.md`.
   - Dokumen tersebut menjadi *single source of truth* untuk seluruh token desain (`--rcg-*`), tipografi, sistem elevasi z-index, aturan paritas Dark Mode dan Light Mode, ergonomi formulir, checklist visual QA, serta protokol pencegahan *AI-slop* dan *Final Design Contract for AI Assistants*.
-- **Teks Input & Placeholder Putih Solid Kontras Tinggi (High-Contrast Solid White Styling)**:
-  - Penegakan warna teks solid `#FFFFFF` dan `-webkit-text-fill-color: #FFFFFF !important;` dengan `opacity: 1 !important;` serta bobot font 500 pada seluruh elemen input formulir maupun selektor pseudo `::placeholder` (beserta varian vendor `::-webkit-input-placeholder`).
-  - Menghilangkan rona kecokelatan kusam atau abu-abu redup akibat blending alpha bawaan engine peramban pada latar permukaan gelap `#16243A`.
-  - Diterapkan secara menyeluruh pada kolom formulir transaksi (Nama Supir, Catatan Transaksi, No. Polisi Kendaraan, Nama Pemasok, Petugas Timbang) serta bilah pencarian riwayat penimbangan (`#history-search-input`) dan riwayat pemasok (`#supplier-history-search`).
+- **Refinement Hierarki Tipografi Teks Input & Placeholder (Muted Slate Gray #94A3B8 Placeholder & Pure White #FFFFFF Active Input)**:
+  - Penegakan warna teks solid `#FFFFFF` dan `-webkit-text-fill-color: #FFFFFF !important;` untuk nilai input aktif yang diketik pengguna, dipadukan secara tegas dengan warna teks petunjuk placeholder abu-abu kebiruan netral `#94A3B8` (`-webkit-text-fill-color: #94A3B8 !important; opacity: 1 !important; font-weight: 500;`).
+  - Menghilangkan ambiguitas visual di mana teks instruksi panduan sebelumnya tampak seperti data yang sudah terisi permanen, sekaligus menjaga kenyamanan kontras visual pada latar permukaan gelap `#16243A`.
+  - Diterapkan secara menyeluruh pada kolom formulir transaksi (Nama Supir, Catatan Transaksi, No. Polisi Kendaraan, Nama Pemasok, Petugas Timbang), modul profil dan pengaturan akun (Kata Sandi Saat Ini, Baru, Konfirmasi), halaman login (Username dan Password), serta bilah pencarian riwayat penimbangan (`#history-search-input`) dan riwayat pemasok (`#supplier-history-search`).
 - **Standardisasi Dimensi Kontrol Toolbar & Tombol Aksi (Tinggi Presisi 38px)**:
   - Seluruh elemen kontrol interaktif pada formulir dan bilah alat (toolbar) memiliki standardisasi tinggi 38px (`height: 38px; min-height: 38px;`).
   - Diterapkan konsisten pada input teks, pencarian tabel, filter tanggal, custom dropdown (`.custom-select-trigger`), combobox (`.combobox-input`), tombol "Cari", tombol "Reset", serta tombol aksi jembatan timbang.
@@ -268,7 +268,7 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Menjamin elemen input fleksibel (`min-width: 0`) dan tombol aksi pendamping (`flex-shrink: 0`) tidak pernah saling menindih atau terkompresi di seluruh resolusi layar.
 - **Penyelarasan Visual Komponen Filter Dropdown & Combobox**:
   - Penyeragaman 100% gaya visual antara dropdown pilihan material ("Semua Jenis Garam") dan searchable combobox pemasok ("Semua Pemasok").
-  - Keduanya mengadopsi dimensi tinggi presisi 38px, batas tepi 1px solid `#334155`, latar belakang `#16243A` (hover `#1E2D44`), teks putih murni `#FFFFFF`, serta placeholder `#FFFFFF` berbobot medium (500).
+  - Keduanya mengadopsi dimensi tinggi presisi 38px, batas tepi 1px solid `#334155`, latar belakang `#16243A` (hover `#1E2D44`), teks putih murni `#FFFFFF`, serta placeholder abu-abu kebiruan netral `#94A3B8` berbobot medium (500).
 - **Mode Gelap & Mode Terang**: Dukungan tema gelap (Dark Mode) dan tema terang (Light Mode) yang nyaman untuk operasional siang maupun malam.
 - **Komponen Floating Dropdown Universal (Custom Select Component)**:
   - Seluruh elemen `<select>` formulir dikonversi menjadi custom floating dropdown yang elegan dengan trigger berstatus aktif.

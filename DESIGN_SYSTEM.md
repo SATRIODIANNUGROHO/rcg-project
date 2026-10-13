@@ -390,6 +390,7 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 
 - **Tinggi Standar Input & Select**: Wajib tepat **`38px`** (`height: 38px !important; box-sizing: border-box;`).
 - **Warna Teks Aktif**: Putih bersih (`#FFFFFF` dengan `-webkit-text-fill-color: #FFFFFF !important;`), Font Weight `500 Medium`, Font Size `13px`.
+- **Warna Teks Petunjuk (Placeholder Dark Mode)**: Abu-abu kebiruan netral (`#94A3B8` dengan `-webkit-text-fill-color: #94A3B8 !important; opacity: 1 !important;`), Font Weight `500 Medium`, Font Size `13px`.
 - **Warna Latar Belakang (Dark Mode)**: `#16243A` (Hover & Focus: `#1E2D44`).
 - **Batas Tepi (Border)**: `1px solid #334155` (Hover/Focus: `var(--color-primary)`).
 - **Padding Dalam**: `0 12px` (khusus combobox: `0 32px 0 12px` agar teks tidak tertimpa ikon panah).
@@ -469,7 +470,7 @@ Seluruh tombol dropdown di bilah filter dan form wajib memiliki gaya visual yang
 - Border: `1px solid #334155`.
 - Background: `#16243A` (Hover/Focus: `#1E2D44`).
 - Teks: `#FFFFFF`, Font Weight `500`, Font Size `13px`.
-- Placeholder: `#FFFFFF` (opacity `1`, Font Weight `500`).
+- Placeholder: `#94A3B8` (opacity `1`, Font Weight `500`).
 
 ### 26.2 Sinkronisasi Lebar Menu Melayang
 - Menu melayang (`.custom-select-menu`, `.custom-combobox-menu`) wajib terkunci tepat 100% sejajar dengan tombol pemicunya: `width: 100% !important; min-width: 100% !important; max-width: 100% !important; left: 0 !important; right: 0 !important; box-sizing: border-box !important;`.

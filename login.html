@@ -46,8 +46,8 @@
       --login-input-focus-bg: #111D31;        /* Focused subtle lift */
       --login-input-border: #334155;          /* Muted dark blue-gray border */
       --login-input-hover-border: #475569;
-      --login-input-text: #F8FAFC;            /* Clean bright white text */
-      --login-input-placeholder: #64748B;     /* Muted slate gray */
+      --login-input-text: #FFFFFF;            /* Clean bright white text */
+      --login-input-placeholder: #94A3B8;     /* Neutral bluish slate gray placeholder */
       --login-label-color: #E2E8F0;           /* Clean visible label */
       --login-eye-color: #94A3B8;             /* Eye toggle icon */
       --login-eye-hover-color: #38BDF8;
@@ -257,10 +257,22 @@
       font-weight: 500;
     }
 
-    html.dark-mode .login-box .form-control::placeholder,
-    body.dark-mode .login-box .form-control::placeholder {
+    html.dark-mode .login-box .form-control,
+    body.dark-mode .login-box .form-control {
       color: #FFFFFF !important;
       -webkit-text-fill-color: #FFFFFF !important;
+    }
+
+    html.dark-mode .login-box .form-control::placeholder,
+    body.dark-mode .login-box .form-control::placeholder,
+    html.dark-mode .login-box .form-control::-webkit-input-placeholder,
+    body.dark-mode .login-box .form-control::-webkit-input-placeholder,
+    html.dark-mode .login-box .form-control::-moz-placeholder,
+    body.dark-mode .login-box .form-control::-moz-placeholder,
+    html.dark-mode .login-box .form-control:-ms-input-placeholder,
+    body.dark-mode .login-box .form-control:-ms-input-placeholder {
+      color: #94A3B8 !important;
+      -webkit-text-fill-color: #94A3B8 !important;
       opacity: 1 !important;
       font-size: 13px !important;
       font-weight: 500 !important;
