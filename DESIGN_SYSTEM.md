@@ -390,7 +390,7 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 
 - **Tinggi Standar Input & Select**: Wajib tepat **`38px`** (`height: 38px !important; box-sizing: border-box;`).
 - **Warna Teks Aktif**: Putih bersih (`#FFFFFF` dengan `-webkit-text-fill-color: #FFFFFF !important;`), Font Weight `500 Medium`, Font Size `13px`.
-- **Warna Teks Petunjuk (Placeholder Dark Mode)**: Abu-abu kebiruan netral (`#94A3B8` dengan `-webkit-text-fill-color: #94A3B8 !important; opacity: 1 !important;`), Font Weight `500 Medium`, Font Size `13px`. Berlaku untuk seluruh form field, termasuk kolom Berat Kotor dan Berat Tara dengan teks placeholder `"Masukkan data hasil timbang"`, Berat Bersih Garam K1 (`"Netto Garam K1"`), Berat Bersih Garam K2 (`"Netto Garam K2"`), Harga K1 (`"Harga Garam K1"`), dan Harga K2 (`"Harga Garam K2"`).
+- **Warna Teks Petunjuk (Placeholder Dark Mode)**: Abu-abu kebiruan netral (`#94A3B8` dengan `-webkit-text-fill-color: #94A3B8 !important; opacity: 1 !important;`), Font Weight `500 Medium`, Font Size `13px`. Berlaku untuk seluruh form field, termasuk kolom Jumlah material garam (`"Jumlah material garam"` dengan inisialisasi awal nilai kosong `value=""`), Berat Kotor dan Berat Tara dengan teks placeholder `"Masukkan data hasil timbang"`, Berat Bersih Garam K1 (`"Netto Garam K1"`), Berat Bersih Garam K2 (`"Netto Garam K2"`), Harga K1 (`"Harga Garam K1"`), dan Harga K2 (`"Harga Garam K2"`).
 - **Warna Latar Belakang (Dark Mode)**: `#16243A` (Hover & Focus: `#1E2D44`).
 - **Batas Tepi (Border)**: `1px solid #334155` (Hover/Focus: `var(--color-primary)`).
 - **Padding Dalam**: `0 12px` (khusus combobox: `0 32px 0 12px` agar teks tidak tertimpa ikon panah).

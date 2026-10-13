@@ -1212,6 +1212,7 @@ input[type="number"] {
 #login-password::placeholder,
 #input-gross-weight::placeholder,
 #input-tare-weight::placeholder,
+#input-bag-count::placeholder,
 #input-k1-weight::placeholder,
 #input-k2-weight::placeholder,
 #input-k1-price::placeholder,

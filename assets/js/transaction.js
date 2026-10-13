@@ -247,7 +247,9 @@ const TransactionEngine = {
     if (materialSelect) materialSelect.value = 'Garam Karung';
 
     const bagCountInput = document.getElementById('input-bag-count');
-    if (bagCountInput) bagCountInput.value = '180';
+    if (bagCountInput) bagCountInput.value = '';
+    const unitTag = document.querySelector('#input-bag-count ~ .unit-tag');
+    if (unitTag) unitTag.textContent = 'Karung';
 
     const regionSelect = document.getElementById('select-origin-region');
     if (regionSelect) regionSelect.value = 'Pamekasan';
@@ -599,7 +601,11 @@ const TransactionEngine = {
     if (materialSelect) materialSelect.value = tx.material || 'Garam Karung';
 
     const bagCountInput = document.getElementById('input-bag-count');
-    if (bagCountInput) bagCountInput.value = tx.bagCount || 0;
+    if (bagCountInput) bagCountInput.value = (tx.bagCount && tx.bagCount > 0) ? tx.bagCount : '';
+    const unitTag = document.querySelector('#input-bag-count ~ .unit-tag');
+    if (unitTag) {
+      unitTag.textContent = (tx.material && tx.material.includes('Curah')) ? 'Kg' : 'Karung';
+    }
     
     const regionSelect = document.getElementById('select-origin-region');
     if (regionSelect) regionSelect.value = tx.originRegion || 'Pamekasan';
