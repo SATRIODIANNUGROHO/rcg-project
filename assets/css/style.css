@@ -2471,16 +2471,13 @@ input[type="number"] {
 .card-identitas-status {
   display: flex !important;
   flex-direction: column !important;
-  flex-grow: 1 !important;
-  min-height: 248px;
+  min-height: auto;
   margin-bottom: 0 !important;
 }
 
 .card-identitas-status .card-identitas-body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  flex: 1 1 auto;
 }
 
 .section-block {

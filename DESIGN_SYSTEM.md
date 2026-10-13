@@ -409,6 +409,14 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Jarak Antar-Kolom Form Horisontal**: `12px` s/d `16px`.
 - **Indikator Wajib (*Required*)**: Asterisk merah menyala `<span class="required" style="color: #EF4444;">*</span>`.
 
+### 20.1 Equalized Distributed Spacing Alignment pada Formulir Transaksi
+- **Penyelarasan Batas Bawah Antar-Kolom (Bottom Boundary Alignment)**: Pada tata letak formulir transaksi jembatan timbang (2 kolom), garis penutup batas bawah Kartu 4 (*4. Identitas & Status Pembayaran*) di kolom kiri wajib sejajar horizontal presisi (`0px` selisih) dengan garis batas bawah Kartu 6 (*6. Klasifikasi Mutu & Harga Satuan*) di kolom kanan.
+- **Distribusi Spasi Vertikal Merata (Equalized Row Gap)**: Dilarang memusatkan peregangan atau bantalan vertikal hanya pada Kartu 4 yang menimbulkan kekosongan ruang canggung antar-field. Selisih tinggi kolom kanan (`deficit`) wajib dibagi rata secara proporsional (`share = deficit / 3`) ke seluruh kartu formulir 2-baris di kolom kiri:
+  1. Kartu 1 (*1. Informasi Dokumen*): Jarak antara baris (No. Dokumen & Tanggal) dengan (Waktu Masuk & Waktu Keluar).
+  2. Kartu 3 (*3. Material & Asal Garam*): Jarak antara baris (Jenis Material Garam & Jumlah) dengan (Kabupaten Asal Garam & Desa Asal Garam).
+  3. Kartu 4 (*4. Identitas & Status Pembayaran*): Jarak antara baris (Nama Supir & Nama Admin) dengan (Status Pembayaran & Catatan Transaksi).
+- **Engine Sinkronisasi Otomatis**: Dikelola secara dinamis oleh `TransactionEngine.syncCardHeights()` dan `ResizeObserver` saat inisialisasi modul, perpindahan tab, maupun perubahan ukuran jendela (*responsive resize*).
+
 ---
 
 ## 21. Cards Component

@@ -885,19 +885,50 @@ const TransactionEngine = {
   },
 
   syncCardHeights() {
-    const card4 = document.getElementById('card-identitas-status') || document.querySelector('.card-identitas-status');
-    const card6 = document.getElementById('card-klasifikasi-mutu') || document.querySelector('.card-klasifikasi-mutu');
-    if (!card4 || !card6) return;
+    if (this._syncingCardHeights) return;
+    this._syncingCardHeights = true;
 
-    card4.style.minHeight = '';
-    const r4 = card4.getBoundingClientRect();
-    const r6 = card6.getBoundingClientRect();
+    try {
+      const card1 = document.getElementById('card-informasi-dokumen') || document.querySelector('.transaction-col-left > .section-block:nth-child(1)');
+      const card3 = document.getElementById('card-material-asal') || document.querySelector('.transaction-col-left > .section-block:nth-child(3)');
+      const card4 = document.getElementById('card-identitas-status') || document.querySelector('.card-identitas-status');
+      const card6 = document.getElementById('card-klasifikasi-mutu') || document.querySelector('.card-klasifikasi-mutu');
+      if (!card4 || !card6) return;
 
-    if (r4.width > 0 && r6.width > 0 && Math.abs(r4.left - r6.left) > 50) {
-      const targetHeight = Math.round(r6.bottom - r4.top);
-      if (targetHeight > 0) {
-        card4.style.minHeight = targetHeight + 'px';
+      const row1 = card1 ? card1.querySelectorAll('.form-row')[0] : null;
+      const row3 = card3 ? card3.querySelectorAll('.form-row')[0] : null;
+      const row4 = card4 ? card4.querySelectorAll('.form-row')[0] : null;
+
+      if (row1) row1.style.marginBottom = '';
+      if (row3) row3.style.marginBottom = '';
+      if (row4) row4.style.marginBottom = '';
+      card4.style.minHeight = '';
+
+      void card4.offsetHeight;
+
+      const r4 = card4.getBoundingClientRect();
+      const r6 = card6.getBoundingClientRect();
+
+      // Check if 2-column desktop layout is active
+      if (r4.width > 0 && r6.width > 0 && Math.abs(r4.left - r6.left) > 50) {
+        const deficit = r6.bottom - r4.bottom;
+        if (deficit > 0) {
+          const share = deficit / 3;
+          if (row1) row1.style.marginBottom = share + 'px';
+          if (row3) row3.style.marginBottom = share + 'px';
+          if (row4) row4.style.marginBottom = share + 'px';
+
+          void card4.offsetHeight;
+
+          const r4After = card4.getBoundingClientRect();
+          const remaining = r6.bottom - r4After.bottom;
+          if (Math.abs(remaining) > 0.001 && row4) {
+            row4.style.marginBottom = (share + remaining) + 'px';
+          }
+        }
       }
+    } finally {
+      this._syncingCardHeights = false;
     }
   },
 

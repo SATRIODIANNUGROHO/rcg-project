@@ -627,16 +627,13 @@ body.dark-mode .nav-item.active::after {
 .card-identitas-status {
   display: flex !important;
   flex-direction: column !important;
-  flex-grow: 1 !important;
-  min-height: 248px !important;
+  min-height: auto !important;
   margin-bottom: 0 !important;
 }
 
 .card-identitas-status .card-identitas-body {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
-  flex: 1 1 auto !important;
 }
 
 /* Paired Form Fields: Strictly Two Columns */
