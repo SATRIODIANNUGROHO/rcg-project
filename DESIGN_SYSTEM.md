@@ -435,6 +435,21 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Latar Belakang & Elevasi**: `background: var(--bg-card); box-shadow: var(--shadow-card);` (Dark Mode: `#16243A` dengan border `#334155`).
 - **Tata Letak Flexbox**: `display: flex; justify-content: space-between; align-items: center; margin-top: 14px;` dengan pemisahan margin luar yang rapi terhadap kontainer tabel di atasnya.
 
+### 21.2 Penyelarasan Tata Letak & Grid Adaptif Tab Tentang Sistem & Lisensi (`#section-about-licenses`)
+- **Harmonisasi Sistem Grid Adaptif**: Seluruh susunan kartu pada tampilan tab Tentang Sistem & Lisensi mengadopsi standar sistem grid adaptif yang selaras dengan kartu ringkasan Dashboard (`.stats-grid`).
+- **Jarak Horizontal Antar-Kartu Berdampingan (`gap: var(--gap-cards) !important;`)**:
+  - Diterapkan pada baris kartu *1. Entitas & Arsitektur Sistem* dan *2. Tim Kontributor (Credits)* (`.about-cards-grid`) serta grid kartu kecil pada *3. Lisensi Pihak Ketiga* (`.license-pill-grid`).
+  - Menggunakan formula token adaptif `--gap-cards: clamp(10px, 0.5vw + 4.4px, 18px);`.
+  - Menghasilkan jarak horizontal baseline `14px` pada layar standar 1080p, sekitar `11px` pada laptop 1366×768, dan `17px` pada layar 2K (1440p).
+- **Penguncian 2 Kolom Tanpa Pembungkusan (Strictly 2 Columns, 0px Vertical Distance)**:
+  - Kartu Entitas dan Kontributor dikunci dalam 2 kolom sejajar (`grid-template-columns: repeat(2, minmax(0, 1fr)) !important;`) sehingga memiliki jarak vertikal `0px` antar-kartu tanpa pembungkusan (*wrapping*) yang tidak diinginkan.
+- **Jarak Pemisah Vertikal Antar-Tingkatan Kartu (`margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;`)**:
+  - Diterapkan konsisten di bawah header (`.about-header-block`), di bawah banner produk utama (`.about-hero-banner`), di bawah baris kartu Entitas/Kontributor (`.about-cards-grid`), hingga kartu lisensi pihak ketiga (`.about-licenses-card`).
+  - Bilah hak cipta footer (`.about-legal-strip`) memiliki `margin-top: 0 !important;` sehingga pemisah vertikal murni ditentukan oleh kartu di atasnya tanpa tumpang tindih margin ganda.
+  - Nilai jarak vertikal secara otomatis ter-clamp di angka maksimal `18px` pada monitor desktop standar 1080p.
+- **Kepadatan Vertikal Layar Laptop Pendek (`@media (max-height: 800px)`)**:
+  - Seluruh jarak pemisah vertikal antar-tingkatan kartu otomatis memadat menjadi tepat `10px` pada viewport laptop pendek (tinggi jendela ≤ 800px seperti 1366×768), menjamin tampilan bebas dari scrollbar berlebih.
+
 ---
 
 ## 22. Navigation Bar System

@@ -1123,6 +1123,31 @@ body.dark-mode .nav-item.active::after {
 }
 
 /* ============================================================================
+   10.1 ABOUT & LICENSES — Harmonized Fluid Grid & Vertical Spacing
+   ============================================================================ */
+#section-about-licenses .about-cards-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: var(--gap-cards) !important;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
+#section-about-licenses .license-pill-grid {
+  display: grid !important;
+  gap: var(--gap-cards) !important;
+}
+
+#section-about-licenses .about-header-block,
+#section-about-licenses .about-hero-banner,
+#section-about-licenses .about-licenses-card {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
+#section-about-licenses .about-legal-strip {
+  margin-top: 0 !important;
+}
+
+/* ============================================================================
    11. VERTICAL DENSITY ADAPTATION (Short Viewports <= 800px / 720px)
    ============================================================================ */
 @media (max-height: 800px) {
@@ -1143,6 +1168,13 @@ body.dark-mode .nav-item.active::after {
   }
 
   .stats-grid {
+    margin-bottom: 10px !important;
+  }
+
+  #section-about-licenses .about-header-block,
+  #section-about-licenses .about-hero-banner,
+  #section-about-licenses .about-cards-grid,
+  #section-about-licenses .about-licenses-card {
     margin-bottom: 10px !important;
   }
 

@@ -3615,6 +3615,10 @@ input[type="range"] {
 /* ==========================================================================
    About & Licenses Section (Clean, Modern, Compact Aesthetics)
    ========================================================================== */
+.about-header-block {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
+}
+
 .about-hero-banner {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -3623,7 +3627,7 @@ input[type="range"] {
   display: flex;
   align-items: center;
   gap: 18px;
-  margin-bottom: 16px;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
 }
 
 .about-logo-wrapper {
@@ -3637,6 +3641,13 @@ input[type="range"] {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.about-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-cards, 14px);
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
 }
 
 .about-info-list {
@@ -3691,10 +3702,14 @@ input[type="range"] {
   text-decoration: none;
 }
 
+.about-licenses-card {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
+}
+
 .license-pill-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 8px;
+  gap: var(--gap-cards, 14px);
 }
 
 .license-pill-item {
@@ -3738,7 +3753,7 @@ input[type="range"] {
   color: var(--text-secondary);
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 0;
   box-sizing: border-box;
 }
 
