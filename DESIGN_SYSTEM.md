@@ -444,6 +444,19 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Tab Item (`.nav-item`)**: Teks `13.5px`, Font Weight `500`, Warna `#94A3B8`.
 - **Status Aktif (`.nav-item.active`)**: Teks `#FFFFFF`, Font Weight `600`, Latar `#16243A` membentang penuh tinggi baris (`height: 100%`), disertai garis bawah (*bottom indicator*) biru `#3671C6` setebal `3px` tanpa celah padding samping.
 
+### 22.1 Standardisasi Tab Navigasi Profil & Pengaturan Akun (`.profile-tabs-header` / `.profile-tab-btn`)
+Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Avatar & Profil*, dan *Ganti Password*) mengadopsi spesifikasi desain yang **100% selaras dan terintegrasi** dengan bilah navigasi utama:
+- **Tinggi Kontainer**: `44px` dengan `align-items: stretch; gap: 0; padding: 0 18px;`.
+- **Garis Pembatas Bawah Bilah**: `border-bottom: 1px solid rgba(255, 255, 255, 0.08)` (Dark Mode: `border-bottom: 1px solid #1E293B`).
+- **Tab Tidak Aktif (`.profile-tab-btn`)**:
+  - Teks: `#94A3B8` dengan bobot font reguler (`font-weight: 500`).
+  - Ikon: SVG Clean mewarisi warna teks (`currentColor`).
+  - Efek Hover: Teks & ikon menjadi `#FFFFFF` dengan latar sorotan halus `rgba(255, 255, 255, 0.04)`.
+- **Tab Aktif (`.profile-tab-btn.active`)**:
+  - Latar Sorotan (*Background Highlight*): Biru gelap transparan `rgba(37, 99, 184, 0.22)` (Dark Mode: `rgba(56, 189, 248, 0.16)`).
+  - Tipografi & Ikon: Teks putih solid `#FFFFFF` dengan bobot semi-tebal (`font-weight: 600`), ikon SVG berwana `#FFFFFF` selaras.
+  - Penanda Garis Bawah Aktif (*Active Underline Indicator*): Pseudo-element `::after` berupa garis horizontal solid biru terang setebal `3px` (`#38BDF8` pada Dark Mode / `var(--primary)` pada Light Mode) yang membentang penuh 100% di sepanjang sisi bawah tab, terpasang presisi, rata, dan sejajar tanpa terpotong dengan garis pembatas bilah tab.
+
 ---
 
 ## 23. Header Bar Architecture

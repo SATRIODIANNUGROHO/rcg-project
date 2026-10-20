@@ -195,6 +195,19 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
 - **Aksi Pengguna & Dialog Modal Terstandardisasi**: Tambah Pengguna Baru, Ubah Kata Sandi, Hapus Pengguna, serta tombol cepat Pilih Semua dan Kosongkan Semua dengan standardisasi dimensi tombol aksi dialog modal (tinggi seragam 38px, padding 0 16px, border-radius 6px, serta keseragaman tipografi dan kelas aksi Batal/Simpan/Hapus).
 - **Proteksi Perubahan Belum Disimpan**: Dialog konfirmasi otomatis saat tombol Tutup ditekan jika ada perubahan hak akses yang belum disimpan.
 
+#### 10.1 Modal Profil & Pengaturan Akun (Profile & Account Settings Modal)
+Aplikasi menyediakan modal mandiri terpadu bagi pengguna aktif untuk meninjau data identitas personal, mengelola tampilan profil, dan memperbarui kredensial keamanan akun:
+- **Tab 1: Informasi Akun (Personal Information)**: Kartu ringkasan profil yang memuat inisial avatar besar, nama lengkap, alamat email, username, hak akses/peran dalam sistem, badge status akun (*Aktif & Terverifikasi*), serta penanda waktu akun dibuat.
+- **Tab 2: Avatar & Profil (Avatar & Profile Customization)**: Fasilitas interaktif untuk memperbarui foto profil pengguna melalui unggah berkas gambar lokal (maksimal 2MB dengan konversi Base64 otomatis) atau penyematan tautan URL gambar eksternal, pembaruan nama lengkap, dan alamat email resmi.
+- **Tab 3: Ganti Password (Change Password)**: Formulir pembaruan kata sandi mandiri yang memverifikasi kata sandi saat ini, kata sandi baru, dan konfirmasi kata sandi baru secara ketat sebelum diterapkan menggunakan enkripsi PBKDF2 Web Crypto API, dilengkapi tombol pengalih visibilitas (*password visibility toggle*).
+- **Standardisasi Gaya Visual Tab Navigasi (Active Tab Styling Unification)**:
+  - Seluruh tab navigasi modal profil (*Informasi Akun*, *Avatar & Profil*, dan *Ganti Password*) mengadopsi spesifikasi desain yang **100% selaras dan terintegrasi** dengan bilah navigasi utama (`.main-nav`):
+  - **Latar Belakang Sorotan Status Aktif (Background Highlight)**: Menerapkan warna latar belakang biru gelap transparan `rgba(37, 99, 184, 0.22)` pada mode terang dan `rgba(56, 189, 248, 0.16)` pada mode gelap.
+  - **Garis Bawah Penanda Aktif (Active Underline Indicator)**: Garis horizontal solid setebal `3px` (`#38BDF8` pada mode gelap / `var(--primary)` pada mode terang) yang membentang penuh 100% di sepanjang sisi bawah tab yang dipilih, terpasang presisi, rata, dan sejajar tanpa terpotong dengan garis pembatas bilah tab (`border-bottom: 1px solid rgba(255, 255, 255, 0.08)` / `#1E293B`).
+  - **Tipografi & Ikon Status Aktif**: Teks putih solid (`#FFFFFF`) dengan bobot semi-tebal (`font-weight: 600`), ikon SVG berwana `#FFFFFF` selaras.
+  - **Status Tidak Aktif**: Mempertahankan warna teks abu-abu kebiruan redup (`#94A3B8`) dengan bobot reguler (`font-weight: 500`), ikon SVG `currentColor`, serta efek hover halus `rgba(255, 255, 255, 0.04)`.
+  - **Dimensi Kontainer Tab**: Tinggi bilah tab presisi `44px`, `gap: 0`, dan peniadaan scrollbar horizontal (`scrollbar-width: none`) demi menjamin keselarasan visual absolut.
+
 #### Matriks Hak Akses Berdasarkan Peran (Role Permission Matrix)
 
 | Fitur / Modul Operasional | Administrator | Supervisor | Operator |
@@ -292,7 +305,9 @@ Aplikasi ini dirancang khusus untuk mempermudah operasional harian, operator tim
   - Info (`#38BDF8`): Informasi Sistem, Panduan.
   - Primary Blue (`#3671C6`): Aksi Utama, Tombol Ambil Bobot, Header Dokumen.
 - **Tipografi Terpadu**: Menggunakan font Plus Jakarta Sans untuk teks antarmuka dan font monospace untuk angka numerik, nomor dokumen, dan nilai bobot.
-- **Ikon Vektor Bersih**: Seluruh ikon antarmuka menggunakan SVG industrial murni tanpa penggunaan emoji.
+- **Standardisasi Gaya Visual Tab Navigasi Terpadu (Active Tab Styling Unification)**:
+  - Penyelarasan visual komprehensif antara bilah navigasi utama (`.main-nav`) dan tab modal Profil & Pengaturan Akun (`.profile-tabs-header`).
+  - Ketika sebuah tab berstatus aktif, diterapkan sorotan latar belakang biru gelap transparan (`rgba(56, 189, 248, 0.16)` pada mode gelap dan `rgba(37, 99, 184, 0.22)` pada mode terang), teks putih solid `#FFFFFF` berbobot semi-tebal (`font-weight: 600`), ikon SVG berwana `#FFFFFF` selaras, serta penanda garis bawah (*active indicator*) solid 3px (`#38BDF8` pada mode gelap / `var(--primary)` pada mode terang) yang membentang penuh 100% dan sejajar rata tanpa terpotong dengan garis pembatas bilah tab.
 - **Modul Tentang Sistem & Lisensi**:
   - Penyajian identitas entitas pengembang, legalitas kepemilikan PT. Reka Cipta Garam, dan atribusi lisensi open-source pihak ketiga (Electron, SQLite, Chart.js, SheetJS, html2pdf, Plus Jakarta Sans).
   - Tautan profil GitHub tim pengembang yang terproteksi dengan penanganan pembukaan peramban eksternal bawaan via `shell.openExternal`.
@@ -386,7 +401,7 @@ Untuk membuat berkas installer mandiri Windows:
    *(atau jalankan perintah `npm run dist` pada terminal)*
 2. Skrip build secara otomatis mematikan proses aplikasi yang masih berjalan terlebih dahulu guna mencegah galat file locking EBUSY:
    ```cmd
-   cmd.exe /c "taskkill /F /IM \"RCG Salt Weighing System 8.0.0.exe\" /T 2>nul & taskkill /F /IM electron.exe /T 2>nul & exit 0"
+   cmd.exe /c "taskkill /F /IM \"RCG Salt Weighing System 8.0.0.exe\" /T 2>nul & taskkill /F /IM \"RCG Salt Weighing System.exe\" /T 2>nul & taskkill /F /IM electron.exe /T 2>nul & exit 0"
    ```
 3. Berkas hasil kompilasi akan tersimpan di dalam folder **`dist/`**:
    - **`dist/RCG Salt Weighing System Setup 8.0.0.exe`** (Installer Setup Windows berbasis NSIS)

@@ -1302,28 +1302,59 @@ body.dark-mode .modal-footer .btn-modal-cancel {
   border-radius: var(--radius-sm, 6px) !important;
 }
 
-/* Profile Modal in Dark Mode */
-body.dark-mode .profile-tabs-header {
-  background-color: #0F172A;
-  border-bottom-color: #334155;
+/* Profile Modal in Dark Mode (Unified with Main Navigation Bar) */
+body.dark-mode .profile-tabs-header,
+html.dark-mode .profile-tabs-header {
+  background-color: #070D1E;
+  border-bottom-color: #1E293B;
 }
 
-body.dark-mode .profile-tab-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+body.dark-mode .profile-tab-btn,
+html.dark-mode .profile-tab-btn {
+  font-family: var(--font-primary, 'Plus Jakarta Sans', sans-serif) !important;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.01em;
   color: #94A3B8;
+  background: transparent;
+  border: none;
 }
 
-body.dark-mode .profile-tab-btn:hover {
-  color: #F8FAFC;
+body.dark-mode .profile-tab-btn svg,
+html.dark-mode .profile-tab-btn svg {
+  stroke: currentColor;
+  color: inherit;
 }
 
-body.dark-mode .profile-tab-btn.active {
-  color: #38BDF8;
-  border-bottom-color: #38BDF8;
-  background-color: #1E293B;
+body.dark-mode .profile-tab-btn:hover,
+html.dark-mode .profile-tab-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.dark-mode .profile-tab-btn:hover svg,
+html.dark-mode .profile-tab-btn:hover svg {
+  stroke: #FFFFFF;
+  color: #FFFFFF;
+}
+
+body.dark-mode .profile-tab-btn.active,
+html.dark-mode .profile-tab-btn.active {
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  background: rgba(56, 189, 248, 0.16) !important;
+  border: none !important;
+}
+
+body.dark-mode .profile-tab-btn.active svg,
+html.dark-mode .profile-tab-btn.active svg {
+  stroke: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+body.dark-mode .profile-tab-btn.active::after,
+html.dark-mode .profile-tab-btn.active::after {
+  background: #38BDF8 !important;
 }
 
 body.dark-mode .profile-summary-card,
