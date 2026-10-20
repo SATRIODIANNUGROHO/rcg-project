@@ -3620,6 +3620,20 @@ input[type="range"] {
 }
 
 /* ==========================================================================
+   Backup & Data Management Section (Adaptive 3-Column Grid)
+   ========================================================================== */
+.backup-header-block {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
+}
+
+.backup-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-cards, 14px);
+  align-items: stretch;
+}
+
+/* ==========================================================================
    About & Licenses Section (Clean, Modern, Compact Aesthetics)
    ========================================================================== */
 .about-header-block {

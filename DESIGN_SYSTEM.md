@@ -462,6 +462,18 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Kepadatan Vertikal Layar Laptop Pendek (`@media (max-height: 800px)`)**:
   - Pada viewport laptop dengan tinggi jendela ≤ 800px (seperti 1366×768), seluruh jeda vertikal antar-kartu tersebut otomatis memadat menjadi tepat `10px` (`margin-bottom: 10px !important;`), menjaga komposisi halaman tetap proporsional dan bebas dari scrollbar berlebih.
 
+### 21.4 Standardisasi Tata Letak Sistem Grid Adaptif Backup & Manajemen Data (`#section-backup-restore`)
+- **Harmonisasi Sistem Grid Baris Tunggal (Strictly 3 Equal Columns)**: Ketiga kartu utama pada modul Backup & Manajemen Data (*1. Export & Cadangkan Data*, *2. Pulihkan & Impor Data*, dan *3. Reset Data*) diatur dalam satu baris horizontal penuh menggunakan `display: grid !important;` dan pembagian kolom seragam `grid-template-columns: repeat(3, minmax(0, 1fr)) !important;` dengan `align-items: stretch !important;`.
+- **Jarak Horizontal Antar-Kartu Berdampingan (`gap: var(--gap-cards) !important;`)**:
+  - Menggunakan formula token adaptif `--gap-cards: clamp(10px, 0.5vw + 4.4px, 18px);`.
+  - Menghasilkan jarak horizontal sekitar `11px` pada laptop 1366×768, baseline `14px` pada monitor 1080p, dan `17px` pada layar 2K (1440p).
+  - Jarak vertikal antar-kartu pada baris yang sama terkunci tepat `0px` tanpa pembungkusan (*wrapping*) ke baris baru.
+- **Jarak Pemisah Vertikal Adaptif (`margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;`)**:
+  - Diterapkan pada kartu indikator timbangan (`.scale-indicator-card`) serta pada header judul modul (`.backup-header-block`) menuju blok ketiga kartu utama.
+  - Ter-clamp otomatis pada angka maksimal `18px` di resolusi desktop 1080p ke atas.
+- **Optimasi Kepadatan Layar Laptop Pendek (`@media (max-height: 800px)`)**:
+  - Pada layar dengan tinggi viewport ≤ 800px (seperti laptop 1366×768), jarak vertikal otomatis memadat menjadi tepat `10px` (`margin-bottom: 10px !important;`), memastikan seluruh tampilan presisi, proporsional, dan bebas dari scrollbar vertikal.
+
 ---
 
 ## 22. Navigation Bar System

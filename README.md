@@ -256,6 +256,7 @@ Aplikasi menyediakan modal mandiri terpadu bagi pengguna aktif untuk meninjau da
 - **Dukungan Ganda Format Cadangan**: Mendukung format database biner SQLite (`.sqlite`) dan berkas log JSON (`.json`).
 - **Slot Pemulihan Auto-Backup**: Penyimpanan otomatis slot cadangan lokal terakhir yang dapat dipulihkan sewaktu-waktu.
 - **Reset Data**: Opsi penghapusan seluruh data transaksi dengan proteksi konfirmasi ganda, input alasan wajib, dan pencatatan audit log permanen.
+- **Standardisasi Tata Letak Sistem Grid Adaptif (Strictly 3 Equal Columns)**: Ketiga kartu utama (*1. Export & Cadangkan Data*, *2. Pulihkan & Impor Data*, dan *3. Reset Data*) diatur dalam satu baris horizontal penuh menggunakan `grid-template-columns: repeat(3, minmax(0, 1fr)) !important;` dengan jarak horizontal seragam `gap: var(--gap-cards) !important;` (`clamp(10px, 0.5vw + 4.4px, 18px)`) dan 0px jarak vertikal tanpa pembungkusan (*wrapping*). Jarak pemisah vertikal dari kartu indikator timbangan dan dari header modul menuju kontainer kartu dikunci konsisten menggunakan formula adaptif `margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;` (maksimal 18px pada desktop) dan memadat otomatis menjadi tepat 10px pada layar laptop (tinggi viewport <= 800px) via media query `@media (max-height: 800px)` agar bebas scrollbar vertikal.
 
 ### 14. Standar Desain Antarmuka Industrial (Design System)
 - **Dokumen Acuan Resmi Design System (`DESIGN_SYSTEM.md`)**:

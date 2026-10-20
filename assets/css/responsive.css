@@ -1132,6 +1132,20 @@ body.dark-mode .nav-item.active::after {
 }
 
 /* ============================================================================
+   9.1 BACKUP & DATA MANAGEMENT — Strictly 3 Columns Adaptive Grid
+   ============================================================================ */
+#section-backup-restore .backup-header-block {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
+#section-backup-restore .backup-cards-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: var(--gap-cards) !important;
+  align-items: stretch !important;
+}
+
+/* ============================================================================
    10.1 ABOUT & LICENSES — Harmonized Fluid Grid & Vertical Spacing
    ============================================================================ */
 #section-about-licenses .about-cards-grid {
@@ -1187,7 +1201,8 @@ body.dark-mode .nav-item.active::after {
   #section-about-licenses .about-header-block,
   #section-about-licenses .about-hero-banner,
   #section-about-licenses .about-cards-grid,
-  #section-about-licenses .about-licenses-card {
+  #section-about-licenses .about-licenses-card,
+  #section-backup-restore .backup-header-block {
     margin-bottom: 10px !important;
   }
 
