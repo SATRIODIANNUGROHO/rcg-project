@@ -450,6 +450,18 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Kepadatan Vertikal Layar Laptop Pendek (`@media (max-height: 800px)`)**:
   - Seluruh jarak pemisah vertikal antar-tingkatan kartu otomatis memadat menjadi tepat `10px` pada viewport laptop pendek (tinggi jendela ≤ 800px seperti 1366×768), menjamin tampilan bebas dari scrollbar berlebih.
 
+### 21.3 Standardisasi Ritme Spasi Vertikal Antar-Kartu Halaman Dashboard (`#section-dashboard`)
+- **Harmonisasi Ritme Vertikal Halaman Dashboard**: Seluruh pemisah vertikal antar-kartu di halaman Dashboard mengadopsi formula adaptif yang identik dengan pemisah `.stats-grid` menuju kartu *Analisis Periode Transaksi*.
+- **Peniadaan Nilai Piksel Statis (No Hardcoded px / mb-3 Replacement)**:
+  - Kelas bawaan dengan margin statis (`.mb-3`) dihapus dan digantikan oleh kelas semantik bermatrik adaptif.
+  - Kartu Analisis Periode Transaksi (`.dashboard-period-card`): `margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;` (sebagai pemisah menuju kartu Ringkasan Analitik Operasional).
+  - Kartu Ringkasan Analitik Operasional (`.dashboard-operational-card`): `margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;` (sebagai pemisah menuju baris kartu Grafik Transaksi per Minggu dan Komposisi Mutu Garam K1 dan Garam K2).
+  - Kontainer baris kedua kartu grafik (`.dashboard-charts-row`): `margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;` (sebagai pemisah menuju kartu Sebaran Asal Garam (Kabupaten & Desa)).
+- **Nilai Baseline Desktop**:
+  - Pada layar standar 1080p ke atas (1920×1080, 2K 1440p, 4K 2160p), formula secara otomatis terkunci simetris pada batas maksimum `18px`.
+- **Kepadatan Vertikal Layar Laptop Pendek (`@media (max-height: 800px)`)**:
+  - Pada viewport laptop dengan tinggi jendela ≤ 800px (seperti 1366×768), seluruh jeda vertikal antar-kartu tersebut otomatis memadat menjadi tepat `10px` (`margin-bottom: 10px !important;`), menjaga komposisi halaman tetap proporsional dan bebas dari scrollbar berlebih.
+
 ---
 
 ## 22. Navigation Bar System

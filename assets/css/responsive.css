@@ -448,6 +448,14 @@ body.dark-mode .nav-item.active::after {
   margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
 }
 
+/* Dashboard Inter-Card Vertical Rhythm Harmonization */
+#section-dashboard .dashboard-period-card,
+#section-dashboard .dashboard-operational-card,
+#section-dashboard .dashboard-charts-row,
+#section-dashboard .analytics-grid.dashboard-charts-row {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
 .stat-card {
   padding: var(--padding-card) !important;
   min-width: 0 !important;
@@ -523,6 +531,7 @@ body.dark-mode .nav-item.active::after {
   display: grid !important;
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
   gap: var(--gap-cards) !important;
+  row-gap: clamp(10px, 0.8vw + 4px, 18px) !important;
   margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
 }
 
@@ -1167,7 +1176,11 @@ body.dark-mode .nav-item.active::after {
     margin-bottom: 10px !important;
   }
 
-  .stats-grid {
+  .stats-grid,
+  #section-dashboard .dashboard-period-card,
+  #section-dashboard .dashboard-operational-card,
+  #section-dashboard .dashboard-charts-row,
+  #section-dashboard .analytics-grid.dashboard-charts-row {
     margin-bottom: 10px !important;
   }
 

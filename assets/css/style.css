@@ -2399,12 +2399,19 @@ input[type="number"] {
   color: var(--text-primary);
 }
 
+/* Dashboard Inter-Card Vertical Spacing */
+.dashboard-period-card,
+.dashboard-operational-card,
+.dashboard-charts-row {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
+}
+
 /* Analytics Row */
 .analytics-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
 }
 
 .col-8 {
