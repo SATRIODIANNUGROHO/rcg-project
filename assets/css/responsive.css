@@ -740,6 +740,7 @@ body.dark-mode .nav-item.active::after {
 .profile-tab-btn {
   padding: 0 clamp(12px, 0.8vw + 4px, 18px) !important;
   font-size: clamp(12px, 0.2vw + 11.5px, 13px) !important;
+  font-weight: 500 !important;
 }
 
 /* Authentication & Login Form Inputs Standardization (Visual Parity with Status Pembayaran) */

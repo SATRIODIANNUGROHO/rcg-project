@@ -1341,7 +1341,8 @@ html.dark-mode .profile-tab-btn:hover svg {
 body.dark-mode .profile-tab-btn.active,
 html.dark-mode .profile-tab-btn.active {
   color: #FFFFFF !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
+  font-size: 13px;
   background: rgba(56, 189, 248, 0.16) !important;
   border: none !important;
 }
