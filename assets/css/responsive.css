@@ -743,6 +743,14 @@ body.dark-mode .nav-item.active::after {
   font-weight: 500 !important;
 }
 
+#modal-user-profile .modal-body {
+  padding: 20px 18px !important;
+}
+
+#modal-user-profile .modal-footer {
+  padding: 12px 18px !important;
+}
+
 /* Authentication & Login Form Inputs Standardization (Visual Parity with Status Pembayaran) */
 .login-box .form-control,
 #modal-login .form-control,

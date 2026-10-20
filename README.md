@@ -207,6 +207,7 @@ Aplikasi menyediakan modal mandiri terpadu bagi pengguna aktif untuk meninjau da
   - **Tipografi & Ikon Status Aktif**: Teks putih solid (`#FFFFFF`) dengan ukuran teks (`13px`) dan bobot font yang dikunci identik (`font-weight: 500`) dengan tab nonaktif untuk mencegah efek teks membesar atau bergeser (*layout shift / font snapping*), serta warna ikon SVG `#FFFFFF` selaras.
   - **Status Tidak Aktif**: Mempertahankan warna teks abu-abu kebiruan redup (`#94A3B8`) dengan bobot reguler (`font-weight: 500`), ikon SVG `currentColor`, serta efek hover halus `rgba(255, 255, 255, 0.04)`.
   - **Dimensi Kontainer Tab**: Tinggi bilah tab presisi `44px`, `gap: 0`, dan peniadaan scrollbar horizontal (`scrollbar-width: none`) demi menjamin keselarasan visual absolut.
+  - **Perataan Horizontal Konten Modal (Horizontal Content Alignment Baseline)**: Bantalan horizontal bodi modal (`#modal-user-profile .modal-body`) dan footer diselaraskan presisi pada `padding: 20px 18px;` dan `padding: 12px 18px;` (menggantikan padding sebelumnya 24px) sehingga batas tepi luar sebelah kiri kartu-kartu informasi (kartu profil pengguna, kartu Username, dan kartu Status Akun) ditarik melebar dan sejajar tegak lurus sempurna secara vertikal dengan batas awal sisi kiri tab pertama (*Informasi Akun*).
 
 #### Matriks Hak Akses Berdasarkan Peran (Role Permission Matrix)
 

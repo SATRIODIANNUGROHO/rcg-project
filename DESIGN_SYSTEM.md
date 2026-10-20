@@ -456,6 +456,9 @@ Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Ava
   - Latar Sorotan (*Background Highlight*): Biru gelap transparan `rgba(37, 99, 184, 0.22)` (Dark Mode: `rgba(56, 189, 248, 0.16)`).
   - Tipografi & Ikon: Teks putih solid `#FFFFFF` dengan ukuran teks (`13px`) dan bobot font yang dikunci identik (`font-weight: 500`) dengan tab nonaktif untuk mencegah efek teks membesar atau bergeser (*layout shift / font snapping*), serta warna ikon SVG `#FFFFFF` selaras.
   - Penanda Garis Bawah Aktif (*Active Underline Indicator*): Pseudo-element `::after` berupa garis horizontal solid biru terang setebal `3px` (`#38BDF8` pada Dark Mode / `var(--primary)` pada Light Mode) yang membentang penuh 100% di sepanjang sisi bawah tab, terpasang presisi, rata, dan sejajar tanpa terpotong dengan garis pembatas bilah tab.
+- **Perataan Horizontal Konten Modal (*Horizontal Content Alignment Baseline*)**:
+  - Bantalan horizontal bodi modal (`#modal-user-profile .modal-body`) diselaraskan tepat pada `padding: 20px 18px;` (menggantikan padding sebelumnya 24px) dan footer pada `padding: 12px 18px;`.
+  - Memastikan batas tepi luar sebelah kiri dan kanan kartu informasi profil (`.profile-summary-card`), kartu grid akun (`.profile-info-item`), kartu avatar (`.profile-avatar-card`), dan form input membentang proporsional dari ujung ke ujung serta terpasang sejajar tegak lurus (*collinear*) mengikuti batas awal sisi kiri tab pertama (*Informasi Akun*).
 
 ---
 
