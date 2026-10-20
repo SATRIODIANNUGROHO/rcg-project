@@ -604,7 +604,8 @@ body.dark-mode .nav-item.active::after {
 .transaction-layout {
   display: grid !important;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
-  gap: var(--gap-cards) !important;
+  column-gap: var(--gap-cards) !important;
+  row-gap: 0 !important;
   align-items: start !important;
 }
 
@@ -617,16 +618,28 @@ body.dark-mode .nav-item.active::after {
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
-  gap: var(--gap-cards, 16px) !important;
+  gap: 0 !important;
   min-width: 0 !important;
 }
 
-.transaction-col-left > .section-block,
-.transaction-col-right > .section-block {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+#section-nota-timbang .transaction-header-block {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
 }
 
+#section-nota-timbang #card-informasi-dokumen,
+#section-nota-timbang #card-kendaraan-pemasok,
+#section-nota-timbang #card-material-asal,
+#section-nota-timbang #card-data-penimbangan,
+#section-nota-timbang #card-klasifikasi-mutu,
+.transaction-col-left > .section-block:not(:last-child),
+.transaction-col-right > .section-block {
+  margin-top: 0 !important;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;
+}
+
+#section-nota-timbang #card-identitas-status,
+.transaction-col-left > .section-block:last-child,
+#section-nota-timbang .grand-total-banner,
 .grand-total-banner {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
@@ -1202,8 +1215,23 @@ body.dark-mode .nav-item.active::after {
   #section-about-licenses .about-hero-banner,
   #section-about-licenses .about-cards-grid,
   #section-about-licenses .about-licenses-card,
-  #section-backup-restore .backup-header-block {
+  #section-backup-restore .backup-header-block,
+  #section-nota-timbang .transaction-header-block,
+  #section-nota-timbang #card-informasi-dokumen,
+  #section-nota-timbang #card-kendaraan-pemasok,
+  #section-nota-timbang #card-material-asal,
+  #section-nota-timbang #card-data-penimbangan,
+  #section-nota-timbang #card-klasifikasi-mutu,
+  #section-nota-timbang .transaction-col-left > .section-block:not(:last-child),
+  #section-nota-timbang .transaction-col-right > .section-block {
     margin-bottom: 10px !important;
+  }
+
+  #section-nota-timbang #card-identitas-status,
+  #section-nota-timbang .transaction-col-left > .section-block:last-child,
+  #section-nota-timbang .grand-total-banner,
+  .grand-total-banner {
+    margin-bottom: 0 !important;
   }
 
   .stat-card {
@@ -1258,7 +1286,8 @@ body.dark-mode .nav-item.active::after {
 
   .transaction-layout {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
-    gap: var(--gap-cards) !important;
+    column-gap: var(--gap-cards) !important;
+    row-gap: 0 !important;
   }
 }
 
@@ -1278,6 +1307,8 @@ body.dark-mode .nav-item.active::after {
 
   .transaction-layout {
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+    column-gap: var(--gap-cards) !important;
+    row-gap: 0 !important;
   }
 }
 

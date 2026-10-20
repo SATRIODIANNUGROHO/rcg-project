@@ -2463,7 +2463,8 @@ input[type="number"] {
 .transaction-layout {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: var(--gap-cards, 16px);
+  column-gap: var(--gap-cards, 14px);
+  row-gap: 0;
   align-items: start;
 }
 
@@ -2472,12 +2473,28 @@ input[type="number"] {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: var(--gap-cards, 16px);
+  gap: 0;
   min-width: 0;
 }
 
-.transaction-col-left > .section-block,
+.transaction-header-block {
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
+}
+
+#card-informasi-dokumen,
+#card-kendaraan-pemasok,
+#card-material-asal,
+#card-data-penimbangan,
+#card-klasifikasi-mutu,
+.transaction-col-left > .section-block:not(:last-child),
 .transaction-col-right > .section-block {
+  margin-top: 0;
+  margin-bottom: clamp(10px, 0.8vw + 4px, 18px);
+}
+
+#card-identitas-status,
+.transaction-col-left > .section-block:last-child,
+.grand-total-banner {
   margin-top: 0;
   margin-bottom: 0;
 }

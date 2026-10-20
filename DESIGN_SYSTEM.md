@@ -474,6 +474,21 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Optimasi Kepadatan Layar Laptop Pendek (`@media (max-height: 800px)`)**:
   - Pada layar dengan tinggi viewport ≤ 800px (seperti laptop 1366×768), jarak vertikal otomatis memadat menjadi tepat `10px` (`margin-bottom: 10px !important;`), memastikan seluruh tampilan presisi, proporsional, dan bebas dari scrollbar vertikal.
 
+### 21.5 Standardisasi Tata Letak Sistem Grid & Ritme Spasi Vertikal Transaksi Penimbangan (`#section-nota-timbang`)
+- **Struktur Tata Letak Formulir 2 Kolom Komprehensif**:
+  - Kolom kiri (`.transaction-col-left`) memuat 4 kartu: Kartu 1 (*1. Informasi Dokumen*), Kartu 2 (*2. Informasi Kendaraan & Pemasok*), Kartu 3 (*3. Material & Asal Garam*), dan Kartu 4 (*4. Identitas & Status Pembayaran*).
+  - Kolom kanan (`.transaction-col-right`) memuat 2 kartu dan 1 panel total: Kartu 5 (*5. Data Penimbangan (Kg)*), Kartu 6 (*6. Klasifikasi Mutu & Harga Satuan*), dan panel *TOTAL KESELURUHAN (RP)* (`.grand-total-banner`).
+- **Jarak Horizontal Antar-Kolom (`column-gap: var(--gap-cards) !important;`)**:
+  - Menggunakan variabel token adaptif `--gap-cards: clamp(10px, 0.5vw + 4.4px, 18px);`.
+  - Menghasilkan pemisah horizontal sekitar `11px` pada laptop 1366×768, baseline `14px` pada monitor 1080p, dan `17px` pada monitor 2K (1440p).
+  - Menghilangkan flex gap internal pada kolom (`gap: 0 !important;`) sehingga ritme spasi vertikal antar-kartu sepenuhnya terisolasi dan presisi.
+- **Ritme Spasi Vertikal Antar-Kartu (`margin-bottom: clamp(10px, 0.8vw + 4px, 18px) !important;`)**:
+  - Diterapkan secara seragam di sisi kiri (pemisah Kartu 1 ke 2, Kartu 2 ke 3, Kartu 3 ke 4) serta di sisi kanan (pemisah Kartu 5 ke 6, dan Kartu 6 ke panel Total Keseluruhan).
+  - Kartu terbawah pada masing-masing kolom (Kartu 4 di sisi kiri dan `.grand-total-banner` di sisi kanan) memiliki `margin-bottom: 0 !important;` untuk memastikan penutupan kontainer yang bersih dan simetris.
+  - Nilai jarak vertikal ter-clamp otomatis pada angka maksimal `18px` di monitor desktop 1080p ke atas.
+- **Kepadatan Layar Vertikal Pendek (`@media (max-height: 800px)`)**:
+  - Pada layar laptop bersumbu vertikal pendek (tinggi viewport <= 800px seperti 1366×768), seluruh margin pemisah vertikal kartu tersebut otomatis memadat menjadi tepat `10px` (`margin-bottom: 10px !important;`), menjaga formulir tetap proporsional dan bebas dari scrollbar vertikal yang tidak perlu.
+
 ---
 
 ## 22. Navigation Bar System
