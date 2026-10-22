@@ -541,7 +541,14 @@ Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Ava
 
 - **Tinggi**: `56px`.
 - **Background**: `#0B1120`, Border Bawah: `1px solid #253347`.
-- **Struktur**: Kiri memuat logo & wordmark, tengah memuat jam presisi operasional real-time format 24 jam dengan zona waktu WIB, kanan memuat indikator koneksi timbangan serial dan menu profil pengguna.
+- **Struktur**: Kiri memuat logo & wordmark, tengah memuat jam presisi digital real-time format 24 jam dengan kalibrasi waktu atomik, kanan memuat indikator penanggalan dinamis sesuai zona waktu lokal dan menu profil pengguna.
+- **Komponen Jam Digital & Penanggalan Atomik (*Atomic NTP Precision & Client Timezone Detection*)**:
+  - **Deteksi Zona Waktu Lokal Otomatis (*Client Local Timezone Detection*)**: Mendeteksi zona waktu perangkat pengguna secara dinamis melalui `Intl.DateTimeFormat().resolvedOptions().timeZone` (misal `Asia/Jakarta` untuk WIB, `Asia/Makassar` untuk WITA, `Asia/Jayapura` untuk WIT, atau zona internasional lainnya), dengan fallback aman ke `Asia/Jakarta`.
+  - **Sinkronisasi Waktu Jaringan Atomik (*Network Time Synchronization - SNTP Algorithm*)**: Mengirimkan permintaan sinkronisasi ringan saat aplikasi dimuat ke server waktu presisi tinggi (Cloudflare Anycast edge trace `https://cloudflare.com/cdn-cgi/trace` dan TimeAPI UTC `https://timeapi.io/api/v1/time/current/zone?timeZone=UTC`) untuk menghitung selisih deviasi waktu (*clock offset*) antara jam perangkat lokal dengan waktu atomik resmi: $\text{offset} = t_{server} - (t_0 + t_1)/2$.
+  - **Pembaruan Detak Tanpa Drift (*Drift-Free Boundary Alignment*)**: Siklus pembaruan detak jam digital (`HH:mm:ss`) disinkronkan tepat pada batas pergantian detik bulat integer (`1000 - (correctedEpoch % 1000)`) layaknya standar https://time.is/, bebas dari desinkronisasi jam internal sistem operasi perangkat.
+  - **Format Penanggalan Dinamis**: Komponen penanggalan (`#header-live-date`) memformat nama hari, tanggal, bulan, dan tahun secara presisi dalam bahasa Indonesia (`id-ID`) sesuai zona waktu aktif perangkat klien.
+  - **Penanganan Cadangan Luring (*Offline Fallback*)**: Jika koneksi internet luring (*offline*), jam tetap berdetak mulus tanpa galat menggunakan jam sistem internal perangkat klien (`clockOffset = 0`).
+  - **Penyegaran Berkala Otomatis**: Melakukan resinkronisasi waktu jaringan secara otomatis setiap 15 menit di latar belakang untuk mengoreksi pergeseran jam perangkat keras (*hardware clock drift*).
 
 ---
 

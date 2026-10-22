@@ -608,31 +608,166 @@ const App = {
   startLiveClock() {
     const clockEl = document.getElementById('header-digital-clock') || document.getElementById('header-live-clock');
     const dateEl = document.getElementById('header-live-date');
+
+    // Automatic client local timezone detection
+    this.userTimeZone = (typeof Intl !== 'undefined' && Intl.DateTimeFormat)
+      ? (Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta')
+      : 'Asia/Jakarta';
+
+    // Atomic / SNTP clock offset in milliseconds (difference between atomic standard time and local device time)
+    this.clockOffset = this.clockOffset || 0;
+
+    // Cache Intl DateTimeFormatters with client timezone
+    try {
+      this.timeFormatter = new Intl.DateTimeFormat('en-GB', {
+        timeZone: this.userTimeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+    } catch (e) {
+      this.timeFormatter = null;
+    }
+
+    try {
+      this.dateFormatter = new Intl.DateTimeFormat('id-ID', {
+        timeZone: this.userTimeZone,
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch (e) {
+      this.dateFormatter = null;
+    }
+
+    let lastDateStr = '';
+
     const updateClock = () => {
-      const now = new Date();
+      // Calculate atomic synchronized time using calculated clock offset
+      const correctedEpoch = Date.now() + (this.clockOffset || 0);
+      const now = new Date(correctedEpoch);
 
-      // Prominent Center Digital Clock: HH:mm:ss (24-hour, zero padded)
+      // Prominent Center Digital Clock: HH:mm:ss (24-hour format)
       if (clockEl) {
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+        if (this.timeFormatter) {
+          clockEl.textContent = this.timeFormatter.format(now);
+        } else {
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(now.getSeconds()).padStart(2, '0');
+          clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+        }
       }
 
-      // Simplified Right Date: e.g. "Rabu, 07 Oktober 2026"
+      // Simplified Right Date: e.g. "Kamis, 22 Oktober 2026"
       if (dateEl) {
-        const dateOptions = {
-          timeZone: 'Asia/Jakarta',
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        };
-        dateEl.textContent = now.toLocaleDateString('id-ID', dateOptions);
+        if (this.dateFormatter) {
+          const currentDateStr = this.dateFormatter.format(now);
+          if (currentDateStr !== lastDateStr) {
+            dateEl.textContent = currentDateStr;
+            lastDateStr = currentDateStr;
+          }
+        } else {
+          const dateOptions = {
+            timeZone: this.userTimeZone,
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+          };
+          dateEl.textContent = now.toLocaleDateString('id-ID', dateOptions);
+        }
       }
+
+      // Precision synchronization: align tick to exact integer second boundary (:000 ms)
+      const nextDelay = Math.max(25, 1000 - (correctedEpoch % 1000));
+      this.clockTimerId = setTimeout(updateClock, nextDelay);
     };
+
+    // Immediate initial tick
+    if (this.clockTimerId) clearTimeout(this.clockTimerId);
     updateClock();
-    setInterval(updateClock, 1000);
+
+    // Trigger Network Time Synchronization (NTP / Atomic Reference via SNTP algorithm)
+    this.syncNetworkTime();
+
+    // Periodic synchronization every 15 minutes to compensate for hardware clock drift
+    if (!this.timeSyncInterval) {
+      this.timeSyncInterval = setInterval(() => {
+        this.syncNetworkTime();
+      }, 15 * 60 * 1000);
+    }
+  },
+
+  async syncNetworkTime() {
+    const endpoints = [
+      // 1. Cloudflare Anycast Edge Trace (ultra-fast sub-100ms RTT with millisecond atomic timestamp)
+      async () => {
+        const t0 = Date.now();
+        const res = await fetch('https://cloudflare.com/cdn-cgi/trace', {
+          cache: 'no-store',
+          signal: (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(3500) : undefined
+        });
+        if (!res.ok) throw new Error('Cloudflare trace status not ok');
+        const text = await res.text();
+        const t1 = Date.now();
+        const match = text.match(/ts=([\d.]+)/);
+        if (!match) throw new Error('No timestamp found in Cloudflare trace');
+        const serverMs = Math.round(parseFloat(match[1]) * 1000);
+        return Math.round(serverMs - (t0 + t1) / 2);
+      },
+      // 2. TimeAPI.io UTC Endpoint (High precision public time provider)
+      async () => {
+        const t0 = Date.now();
+        const res = await fetch('https://timeapi.io/api/v1/time/current/zone?timeZone=UTC', {
+          cache: 'no-store',
+          signal: (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(3500) : undefined
+        });
+        if (!res.ok) throw new Error('TimeAPI status not ok');
+        const data = await res.json();
+        const t1 = Date.now();
+        const serverMs = new Date(data.date_time).getTime();
+        if (isNaN(serverMs)) throw new Error('Invalid date_time from TimeAPI');
+        return Math.round(serverMs - (t0 + t1) / 2);
+      },
+      // 3. World Time API UTC Endpoint
+      async () => {
+        const t0 = Date.now();
+        const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', {
+          cache: 'no-store',
+          signal: (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(3500) : undefined
+        });
+        if (!res.ok) throw new Error('WorldTimeAPI status not ok');
+        const data = await res.json();
+        const t1 = Date.now();
+        const serverMs = data.unixtime * 1000;
+        return Math.round(serverMs - (t0 + t1) / 2);
+      }
+    ];
+
+    for (const fetchEndpoint of endpoints) {
+      try {
+        const offset = await fetchEndpoint();
+        this.clockOffset = offset;
+        console.log(`[TimeSync] Synchronized with atomic time standard. Offset: ${offset}ms (${(offset / 1000).toFixed(3)}s) | TimeZone: ${this.userTimeZone}`);
+        return offset;
+      } catch (err) {
+        // Fallback to next endpoint
+      }
+    }
+
+    // Graceful offline fallback: retain existing offset or fallback to 0 (device local time)
+    if (this.clockOffset === undefined) {
+      this.clockOffset = 0;
+    }
+    console.warn('[TimeSync] Network time providers unreachable. Running with local device system clock.');
+    return this.clockOffset;
+  },
+
+  getSynchronizedDate() {
+    return new Date(Date.now() + (this.clockOffset || 0));
   },
 
   initTheme() {
