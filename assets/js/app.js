@@ -220,7 +220,7 @@ const App = {
       });
     });
 
-    // Profile Avatar Upload File Handler
+    // Profile Avatar Upload File Handler (Preview Only, Persisted via Simpan Button)
     const inputAvatarFile = document.getElementById('input-avatar-file');
     if (inputAvatarFile) {
       inputAvatarFile.addEventListener('change', (e) => {
@@ -228,14 +228,19 @@ const App = {
         if (!file) return;
         if (file.size > 2 * 1024 * 1024) {
           this.showToast('Ukuran foto maksimal 2MB.', 'danger');
+          e.target.value = '';
           return;
         }
         const reader = new FileReader();
         reader.onload = (evt) => {
           const base64 = evt.target.result;
-          AuthManager.updateAvatar(base64);
-          this.syncProfileModalUI();
-          this.showToast('Foto avatar berhasil diperbarui.', 'success');
+          this.pendingAvatarData = base64;
+          const inputAvatarUrl = document.getElementById('input-avatar-url');
+          if (inputAvatarUrl) inputAvatarUrl.value = '';
+          const eAvatar = document.getElementById('profile-edit-avatar-preview');
+          if (eAvatar) {
+            eAvatar.innerHTML = `<img src="${base64}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+          }
         };
         reader.readAsDataURL(file);
       });
@@ -246,41 +251,40 @@ const App = {
     if (inputAvatarUrl) {
       inputAvatarUrl.addEventListener('input', () => {
         const url = inputAvatarUrl.value.trim();
+        this.pendingAvatarData = url;
+        const inputAvatarFile = document.getElementById('input-avatar-file');
+        if (inputAvatarFile) inputAvatarFile.value = '';
         const eAvatar = document.getElementById('profile-edit-avatar-preview');
         if (eAvatar) {
           if (url) {
             eAvatar.innerHTML = `<img src="${url}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.onerror=null; this.parentElement.textContent='${AuthManager.getCurrentUser()?.initials || 'AD'}';">`;
           } else {
             const user = AuthManager.getCurrentUser();
-            eAvatar.innerHTML = user?.avatarUrl
-              ? `<img src="${user.avatarUrl}" alt="${user.username}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
-              : (user?.initials || 'AD');
+            eAvatar.innerHTML = user?.initials || 'AD';
           }
         }
       });
     }
 
-    // Profile Avatar Remove Handler (Requires User Verification Dialog)
+    // Profile Avatar Remove Handler (Preview Only, Persisted via Simpan Button)
     const btnRemoveAvatar = document.getElementById('btn-remove-avatar');
     if (btnRemoveAvatar) {
       btnRemoveAvatar.addEventListener('click', () => {
         const user = AuthManager.getCurrentUser();
-        if (!user.avatarUrl) {
+        const hasAvatar = !!(this.pendingAvatarData || (user && user.avatarUrl));
+        if (!hasAvatar) {
           this.showToast('Akun ini belum menggunakan foto avatar kustom.', 'info');
           return;
         }
-        this.openModal('modal-confirm-delete-avatar');
-      });
-    }
-
-    const btnConfirmDeleteAvatarYes = document.getElementById('btn-confirm-delete-avatar-yes');
-    if (btnConfirmDeleteAvatarYes) {
-      btnConfirmDeleteAvatarYes.addEventListener('click', () => {
-        this.closeModal('modal-confirm-delete-avatar');
-        AuthManager.removeAvatar();
-        this.syncProfileModalUI();
-        this.saveProfileSnapshot();
-        this.showToast('Foto avatar berhasil dihapus.', 'info');
+        this.pendingAvatarData = '';
+        const inputAvatarUrl = document.getElementById('input-avatar-url');
+        if (inputAvatarUrl) inputAvatarUrl.value = '';
+        const inputAvatarFile = document.getElementById('input-avatar-file');
+        if (inputAvatarFile) inputAvatarFile.value = '';
+        const eAvatar = document.getElementById('profile-edit-avatar-preview');
+        if (eAvatar) {
+          eAvatar.innerHTML = user?.initials || 'AD';
+        }
       });
     }
 
@@ -739,6 +743,8 @@ const App = {
   },
 
   openProfileModal() {
+    const user = AuthManager.getCurrentUser();
+    this.pendingAvatarData = user ? (user.avatarUrl || '') : '';
     this.syncProfileModalUI();
     this.saveProfileSnapshot();
     // Default to first tab
@@ -779,10 +785,13 @@ const App = {
   },
 
   collectProfileFormData() {
+    const user = AuthManager.getCurrentUser();
+    const currentAvatar = this.pendingAvatarData !== undefined ? this.pendingAvatarData : (user ? (user.avatarUrl || '') : '');
     return {
       fullName: document.getElementById('input-profile-fullname')?.value || '',
       email: document.getElementById('input-profile-email')?.value || '',
       avatarUrl: document.getElementById('input-avatar-url')?.value || '',
+      avatarData: currentAvatar,
       currPw: document.getElementById('input-curr-pw')?.value || '',
       newPw: document.getElementById('input-new-pw')?.value || '',
       confirmPw: document.getElementById('input-confirm-pw')?.value || ''
@@ -805,6 +814,7 @@ const App = {
       const inputFullName = document.getElementById('input-profile-fullname');
       const inputEmail = document.getElementById('input-profile-email');
       const inputAvatarUrl = document.getElementById('input-avatar-url');
+      const inputAvatarFile = document.getElementById('input-avatar-file');
       const inputCurrPw = document.getElementById('input-curr-pw');
       const inputNewPw = document.getElementById('input-new-pw');
       const inputConfirmPw = document.getElementById('input-confirm-pw');
@@ -812,10 +822,12 @@ const App = {
       if (inputFullName) inputFullName.value = data.fullName;
       if (inputEmail) inputEmail.value = data.email;
       if (inputAvatarUrl) inputAvatarUrl.value = data.avatarUrl;
+      if (inputAvatarFile) inputAvatarFile.value = '';
       if (inputCurrPw) inputCurrPw.value = data.currPw;
       if (inputNewPw) inputNewPw.value = data.newPw;
       if (inputConfirmPw) inputConfirmPw.value = data.confirmPw;
 
+      this.pendingAvatarData = data.avatarData !== undefined ? data.avatarData : '';
       this.syncProfileModalUI();
     } catch (e) {
       console.error('Failed to rollback profile form data:', e);
@@ -862,11 +874,10 @@ const App = {
   handleSaveProfile() {
     const inputFullName = document.getElementById('input-profile-fullname');
     const inputEmail = document.getElementById('input-profile-email');
-    const inputAvatarUrl = document.getElementById('input-avatar-url');
+    const inputAvatarFile = document.getElementById('input-avatar-file');
 
     const fullName = inputFullName ? inputFullName.value.trim() : '';
     const email = inputEmail ? inputEmail.value.trim() : '';
-    const avatarUrl = inputAvatarUrl ? inputAvatarUrl.value.trim() : '';
 
     if (!fullName) {
       this.showToast('Nama lengkap tidak boleh kosong!', 'warning');
@@ -884,13 +895,23 @@ const App = {
       return;
     }
 
-    // Update avatar URL if changed
+    // Update avatar if pendingAvatarData was modified
     const user = AuthManager.getCurrentUser();
-    if (avatarUrl && avatarUrl !== user.avatarUrl) {
-      AuthManager.updateAvatar(avatarUrl);
-    } else if (!avatarUrl && user.avatarUrl && !user.avatarUrl.startsWith('data:')) {
-      AuthManager.removeAvatar();
+    const currentSavedAvatar = user ? (user.avatarUrl || '') : '';
+    const targetAvatar = this.pendingAvatarData !== undefined ? this.pendingAvatarData : currentSavedAvatar;
+
+    if (targetAvatar !== currentSavedAvatar) {
+      if (targetAvatar) {
+        AuthManager.updateAvatar(targetAvatar);
+      } else {
+        AuthManager.removeAvatar();
+      }
     }
+
+    if (inputAvatarFile) inputAvatarFile.value = '';
+
+    const updatedUser = AuthManager.getCurrentUser();
+    this.pendingAvatarData = updatedUser ? (updatedUser.avatarUrl || '') : '';
 
     this.syncProfileModalUI();
     this.saveProfileSnapshot();

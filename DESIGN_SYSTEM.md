@@ -523,11 +523,16 @@ Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Ava
     - Jika tab *Avatar & Profil* aktif: memvalidasi dan memperbarui data profil pengguna (Nama Lengkap, Email, dan Avatar) ke penyimpanan, menyinkronkan tampilan UI, dan memutakhirkan snapshot acuan.
     - Jika tab *Ganti Password* aktif: memvalidasi kecocokan serta panjang kata sandi baru, mengeksekusi pembaruan sandi via Web Crypto PBKDF2, mengosongkan input sandi, dan memutakhirkan snapshot acuan.
     - Jika tab *Informasi Akun* aktif: menampilkan petunjuk informatif untuk memilih tab formulir yang ingin disimpan.
-  - Saat modal dibuka atau data profil dimuat, sistem merekam data acuan awal (*initial snapshot*) dari seluruh kolom isian formulir profil.
+  - Saat modal dibuka atau data profil dimuat, sistem merekam data acuan awal (*initial snapshot*) dari seluruh kolom isian formulir profil termasuk data avatar aktif.
+  - **Siklus Hidup Modifikasi & Unggah Avatar (*Avatar Unsaved Changes Lifecycle*)**:
+    - Pemilihan berkas gambar melalui tombol *Unggah Foto* (`#input-avatar-file`), penyuntingan *Tautan URL Avatar* (`#input-avatar-url`), maupun penekanan tombol *Hapus Avatar* (`#btn-remove-avatar`) hanya mengubah pratinjau sementara (*temporary preview state*) di dalam modal tanpa langsung menyimpan ke penyimpanan lokal / basis data SQLite dan tanpa menampilkan notifikasi sukses.
+    - Tindakan tersebut secara otomatis menandai status formulir sebagai memiliki modifikasi belum disimpan (*dirty state / hasUnsavedChanges = true*).
+    - Persistensi data avatar baru, pembaruan sesi pengguna, pencatatan riwayat aktivitas, dan penayangan notifikasi sukses hanya dieksekusi saat pengguna secara eksplisit menekan tombol utama **Simpan** di footer modal.
+    - Apabila pengguna menutup modal sebelum menekan tombol Simpan, sistem mencegat penutupan melalui dialog peringatan `#modal-confirm-unsaved-profile`; jika dipilih *Ya, Tutup Tanpa Simpan*, pratinjau avatar dibatalkan dan dikembalikan (*rollback*) ke foto semula sesuai snapshot awal.
   - Penekanan tombol *Simpan* memperbarui informasi ke penyimpanan lokal dan SQLite, mencatat riwayat audit log, dan memutakhirkan snapshot acuan sehingga formulir kembali dalam status bersih (*pristine*).
   - Jika pengguna menekan tombol *Tutup* atau tombol silang (*X*) saat ada perubahan data yang belum disimpan, sistem mencegat penutupan modal dan memunculkan dialog konfirmasi `#modal-confirm-unsaved-profile` bertajuk *Konfirmasi Perubahan Profil* dengan opsi:
     - *Batal*: Menutup dialog konfirmasi dan mempertahankan modal profil beserta isiannya.
-    - *Ya, Tutup Tanpa Simpan* (`btn btn-confirm-accent`): Mengembalikan (*rollback*) seluruh nilai isian ke snapshot acuan terakhir dan menutup modal secara penuh.
+    - *Ya, Tutup Tanpa Simpan* (`btn btn-confirm-accent`): Mengembalikan (*rollback*) seluruh nilai isian dan avatar ke snapshot acuan terakhir dan menutup modal secara penuh.
   - Apabila data tidak mengalami perubahan atau sudah tersimpan, tombol *Tutup* akan menutup modal secara instan tanpa dialog konfirmasi.
 
 ---
