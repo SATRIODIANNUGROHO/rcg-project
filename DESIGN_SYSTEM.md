@@ -517,12 +517,17 @@ Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Ava
   - Kolom isian Nama Lengkap (`#input-profile-fullname`) dan Email Akun (`#input-profile-email`) pada tab *Avatar & Profil* memuat nilai akun aktif saat modal dibuka dan dilengkapi atribut placeholder netral (`placeholder="Masukkan nama lengkap"` dan `placeholder="Masukkan email akun"`).
   - Apabila input dikosongkan oleh pengguna, teks placeholder otomatis tampil jelas menggunakan kode warna standar mode gelap `#94A3B8` (melalui pseudo-elemen `::placeholder` dengan bobot `font-weight: 500` dan ukuran `13px`) tanpa memengaruhi warna teks input utama (`#FFFFFF`) saat teks diketik kembali.
 - **Mekanisme Pelindung Perubahan & Pelacakan Status (*Unsaved Changes Guard & State Tracking*)**:
-  - Area footer modal dilengkapi tombol tindakan ganda: tombol *Simpan* (`#btn-save-profile-footer`, kelas `btn btn-primary`) di sebelah kiri tombol *Tutup* (`#btn-close-profile-modal`, kelas `btn btn-secondary btn-modal-cancel`).
+  - Seluruh alur penyimpanan perubahan pada formulir tab *Avatar & Profil* dan tab *Ganti Password* dipusatkan secara eksklusif ke tombol utama **Simpan** (`#btn-save-profile-footer`, kelas `btn btn-primary`) di sebelah kiri tombol **Tutup** (`#btn-close-profile-modal`, kelas `btn btn-secondary btn-modal-cancel`) pada area footer modal.
+  - Tombol aksi individual di dalam area isi tab (*Simpan Profil* dan *Perbarui Kata Sandi*) beserta wadah baris tombolnya (`.form-submit-row`) ditiadakan sehingga ruang vertikal di bagian bawah masing-masing formulir menjadi lebih bersih, rapi, dan konsisten langsung menuju ke batas modal footer.
+  - Tombol **Simpan** di footer memiliki fungsi pengendali yang mengenali konteks tab aktif (*context-aware*):
+    - Jika tab *Avatar & Profil* aktif: memvalidasi dan memperbarui data profil pengguna (Nama Lengkap, Email, dan Avatar) ke penyimpanan, menyinkronkan tampilan UI, dan memutakhirkan snapshot acuan.
+    - Jika tab *Ganti Password* aktif: memvalidasi kecocokan serta panjang kata sandi baru, mengeksekusi pembaruan sandi via Web Crypto PBKDF2, mengosongkan input sandi, dan memutakhirkan snapshot acuan.
+    - Jika tab *Informasi Akun* aktif: menampilkan petunjuk informatif untuk memilih tab formulir yang ingin disimpan.
   - Saat modal dibuka atau data profil dimuat, sistem merekam data acuan awal (*initial snapshot*) dari seluruh kolom isian formulir profil.
   - Penekanan tombol *Simpan* memperbarui informasi ke penyimpanan lokal dan SQLite, mencatat riwayat audit log, dan memutakhirkan snapshot acuan sehingga formulir kembali dalam status bersih (*pristine*).
   - Jika pengguna menekan tombol *Tutup* atau tombol silang (*X*) saat ada perubahan data yang belum disimpan, sistem mencegat penutupan modal dan memunculkan dialog konfirmasi `#modal-confirm-unsaved-profile` bertajuk *Konfirmasi Perubahan Profil* dengan opsi:
     - *Batal*: Menutup dialog konfirmasi dan mempertahankan modal profil beserta isiannya.
-    - *Ya, Tutup Tanpa Simpan* (`btn btn-confirm-accent`): Mengembalikan (*rollback*) seluruh nilai isian ke snapshot awal dan menutup modal secara penuh.
+    - *Ya, Tutup Tanpa Simpan* (`btn btn-confirm-accent`): Mengembalikan (*rollback*) seluruh nilai isian ke snapshot acuan terakhir dan menutup modal secara penuh.
   - Apabila data tidak mengalami perubahan atau sudah tersimpan, tombol *Tutup* akan menutup modal secara instan tanpa dialog konfirmasi.
 
 ---

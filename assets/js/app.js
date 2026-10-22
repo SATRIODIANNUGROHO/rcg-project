@@ -284,7 +284,7 @@ const App = {
       });
     }
 
-    // Profile Edit Form Submit
+    // Profile Edit Form Submit (Enter key support)
     const formEditProfile = document.getElementById('form-edit-profile');
     if (formEditProfile) {
       formEditProfile.addEventListener('submit', (e) => {
@@ -293,11 +293,11 @@ const App = {
       });
     }
 
-    // Profile Modal Footer Save Button
+    // Profile Modal Footer Save Button (Context-Aware for Active Tab)
     const btnSaveProfileFooter = document.getElementById('btn-save-profile-footer');
     if (btnSaveProfileFooter) {
       btnSaveProfileFooter.addEventListener('click', () => {
-        this.handleSaveProfile();
+        this.handleSaveProfileFooter();
       });
     }
 
@@ -342,30 +342,12 @@ const App = {
       });
     }
 
-    // Change Password Form Submit
+    // Change Password Form Submit (Enter key support)
     const formChangePw = document.getElementById('form-change-password');
     if (formChangePw) {
       formChangePw.addEventListener('submit', (e) => {
         e.preventDefault();
-        const currPw = document.getElementById('input-curr-pw').value;
-        const newPw = document.getElementById('input-new-pw').value;
-        const confirmPw = document.getElementById('input-confirm-pw').value;
-        if (newPw !== confirmPw) {
-          this.showToast('Konfirmasi kata sandi baru tidak cocok!', 'danger');
-          return;
-        }
-        if (newPw.length < 4) {
-          this.showToast('Password baru minimal 4 karakter!', 'warning');
-          return;
-        }
-        const res = AuthManager.changePassword(currPw, newPw);
-        if (res.success) {
-          formChangePw.reset();
-          this.saveProfileSnapshot();
-          this.showToast(res.message, 'success');
-        } else {
-          this.showToast(res.message, 'danger');
-        }
+        this.handleChangePassword();
       });
     }
 
@@ -865,6 +847,18 @@ const App = {
     }
   },
 
+  handleSaveProfileFooter() {
+    const activeTabBtn = document.querySelector('.profile-tab-btn.active');
+    const currentTab = activeTabBtn ? activeTabBtn.dataset.profileTab : 'personal-info';
+    if (currentTab === 'edit-profile') {
+      this.handleSaveProfile();
+    } else if (currentTab === 'change-password') {
+      this.handleChangePassword();
+    } else {
+      this.showToast('Pilih tab Avatar & Profil atau Ganti Password untuk menyimpan perubahan.', 'info');
+    }
+  },
+
   handleSaveProfile() {
     const inputFullName = document.getElementById('input-profile-fullname');
     const inputEmail = document.getElementById('input-profile-email');
@@ -898,7 +892,12 @@ const App = {
       AuthManager.removeAvatar();
     }
 
-    // Handle password change if user entered password in Tab 3
+    this.syncProfileModalUI();
+    this.saveProfileSnapshot();
+    this.showToast('Informasi profil berhasil diperbarui.', 'success');
+  },
+
+  handleChangePassword() {
     const inputCurrPw = document.getElementById('input-curr-pw');
     const inputNewPw = document.getElementById('input-new-pw');
     const inputConfirmPw = document.getElementById('input-confirm-pw');
@@ -907,28 +906,29 @@ const App = {
     const newPw = inputNewPw ? inputNewPw.value : '';
     const confirmPw = inputConfirmPw ? inputConfirmPw.value : '';
 
-    if (currPw || newPw || confirmPw) {
-      if (newPw !== confirmPw) {
-        this.showToast('Konfirmasi kata sandi baru tidak cocok!', 'danger');
-        return;
-      }
-      if (newPw.length < 4) {
-        this.showToast('Password baru minimal 4 karakter!', 'warning');
-        return;
-      }
-      const resPw = AuthManager.changePassword(currPw, newPw);
-      if (!resPw.success) {
-        this.showToast(resPw.message, 'danger');
-        return;
-      }
+    if (!currPw || !newPw || !confirmPw) {
+      this.showToast('Semua kolom kata sandi wajib diisi!', 'warning');
+      return;
+    }
+    if (newPw !== confirmPw) {
+      this.showToast('Konfirmasi kata sandi baru tidak cocok!', 'danger');
+      return;
+    }
+    if (newPw.length < 4) {
+      this.showToast('Password baru minimal 4 karakter!', 'warning');
+      return;
+    }
+
+    const res = AuthManager.changePassword(currPw, newPw);
+    if (res.success) {
       if (inputCurrPw) inputCurrPw.value = '';
       if (inputNewPw) inputNewPw.value = '';
       if (inputConfirmPw) inputConfirmPw.value = '';
+      this.saveProfileSnapshot();
+      this.showToast(res.message, 'success');
+    } else {
+      this.showToast(res.message, 'danger');
     }
-
-    this.syncProfileModalUI();
-    this.saveProfileSnapshot();
-    this.showToast('Informasi profil berhasil diperbarui.', 'success');
   },
 
   renderMyActivities() {
