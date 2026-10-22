@@ -513,6 +513,9 @@ Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Ava
 - **Perataan Horizontal Konten Modal (*Horizontal Content Alignment Baseline*)**:
   - Bantalan horizontal bodi modal (`#modal-user-profile .modal-body`) diselaraskan tepat pada `padding: 20px 18px;` (menggantikan padding sebelumnya 24px) dan footer pada `padding: 12px 18px;`.
   - Memastikan batas tepi luar sebelah kiri dan kanan kartu informasi profil (`.profile-summary-card`), kartu grid akun (`.profile-info-item`), kartu avatar (`.profile-avatar-card`), dan form input membentang proporsional dari ujung ke ujung serta terpasang sejajar tegak lurus (*collinear*) mengikuti batas awal sisi kiri tab pertama (*Informasi Akun*).
+- **Standardisasi Placeholder Kolom Isian (*Placeholder Styling and Fallback Behavior*)**:
+  - Kolom isian Nama Lengkap (`#input-profile-fullname`) dan Email Akun (`#input-profile-email`) pada tab *Avatar & Profil* memuat nilai akun aktif saat modal dibuka dan dilengkapi atribut placeholder netral (`placeholder="Masukkan nama lengkap"` dan `placeholder="Masukkan email akun"`).
+  - Apabila input dikosongkan oleh pengguna, teks placeholder otomatis tampil jelas menggunakan kode warna standar mode gelap `#94A3B8` (melalui pseudo-elemen `::placeholder` dengan bobot `font-weight: 500` dan ukuran `13px`) tanpa memengaruhi warna teks input utama (`#FFFFFF`) saat teks diketik kembali.
 
 ---
 
