@@ -241,15 +241,21 @@ const App = {
       });
     }
 
-    // Profile Avatar URL Handler
+    // Profile Avatar URL Handler (Live Preview, Saved via Simpan Button)
     const inputAvatarUrl = document.getElementById('input-avatar-url');
     if (inputAvatarUrl) {
-      inputAvatarUrl.addEventListener('change', () => {
+      inputAvatarUrl.addEventListener('input', () => {
         const url = inputAvatarUrl.value.trim();
-        if (url) {
-          AuthManager.updateAvatar(url);
-          this.syncProfileModalUI();
-          this.showToast('Avatar dari URL berhasil diterapkan.', 'success');
+        const eAvatar = document.getElementById('profile-edit-avatar-preview');
+        if (eAvatar) {
+          if (url) {
+            eAvatar.innerHTML = `<img src="${url}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.onerror=null; this.parentElement.textContent='${AuthManager.getCurrentUser()?.initials || 'AD'}';">`;
+          } else {
+            const user = AuthManager.getCurrentUser();
+            eAvatar.innerHTML = user?.avatarUrl
+              ? `<img src="${user.avatarUrl}" alt="${user.username}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+              : (user?.initials || 'AD');
+          }
         }
       });
     }
@@ -273,6 +279,7 @@ const App = {
         this.closeModal('modal-confirm-delete-avatar');
         AuthManager.removeAvatar();
         this.syncProfileModalUI();
+        this.saveProfileSnapshot();
         this.showToast('Foto avatar berhasil dihapus.', 'info');
       });
     }
@@ -282,12 +289,55 @@ const App = {
     if (formEditProfile) {
       formEditProfile.addEventListener('submit', (e) => {
         e.preventDefault();
-        const fullName = document.getElementById('input-profile-fullname').value;
-        const email = document.getElementById('input-profile-email').value;
-        const res = AuthManager.updateProfile(fullName, email);
-        if (res.success) {
-          this.syncProfileModalUI();
-          this.showToast('Informasi profil berhasil diperbarui.', 'success');
+        this.handleSaveProfile();
+      });
+    }
+
+    // Profile Modal Footer Save Button
+    const btnSaveProfileFooter = document.getElementById('btn-save-profile-footer');
+    if (btnSaveProfileFooter) {
+      btnSaveProfileFooter.addEventListener('click', () => {
+        this.handleSaveProfile();
+      });
+    }
+
+    // Profile Modal Close Handlers (Guarded with Unsaved Changes Detection)
+    const btnCloseProfileModal = document.getElementById('btn-close-profile-modal');
+    if (btnCloseProfileModal) {
+      btnCloseProfileModal.addEventListener('click', () => {
+        this.handleCloseProfileModal();
+      });
+    }
+
+    const btnCloseProfileModalX = document.getElementById('btn-close-profile-modal-x');
+    if (btnCloseProfileModalX) {
+      btnCloseProfileModalX.addEventListener('click', () => {
+        this.handleCloseProfileModal();
+      });
+    }
+
+    // Unsaved Profile Confirmation Modal Handlers
+    const btnCancelUnsavedProfile = document.getElementById('btn-cancel-unsaved-profile');
+    if (btnCancelUnsavedProfile) {
+      btnCancelUnsavedProfile.addEventListener('click', () => {
+        this.closeUnsavedProfileConfirmModal();
+      });
+    }
+
+    const btnCloseUnsavedProfileX = document.getElementById('btn-close-unsaved-profile-x');
+    if (btnCloseUnsavedProfileX) {
+      btnCloseUnsavedProfileX.addEventListener('click', () => {
+        this.closeUnsavedProfileConfirmModal();
+      });
+    }
+
+    const btnConfirmDiscardProfileYes = document.getElementById('btn-confirm-discard-profile-yes');
+    if (btnConfirmDiscardProfileYes) {
+      btnConfirmDiscardProfileYes.addEventListener('click', () => {
+        const cb = this.onDiscardProfileCallback;
+        this.closeUnsavedProfileConfirmModal();
+        if (typeof cb === 'function') {
+          cb();
         }
       });
     }
@@ -304,9 +354,14 @@ const App = {
           this.showToast('Konfirmasi kata sandi baru tidak cocok!', 'danger');
           return;
         }
+        if (newPw.length < 4) {
+          this.showToast('Password baru minimal 4 karakter!', 'warning');
+          return;
+        }
         const res = AuthManager.changePassword(currPw, newPw);
         if (res.success) {
           formChangePw.reset();
+          this.saveProfileSnapshot();
           this.showToast(res.message, 'success');
         } else {
           this.showToast(res.message, 'danger');
@@ -360,7 +415,7 @@ const App = {
     closeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const modal = btn.closest('.modal-overlay');
-        if (modal && modal.id === 'modal-user-permissions') {
+        if (modal && (modal.id === 'modal-user-permissions' || modal.id === 'modal-user-profile' || modal.id === 'modal-confirm-unsaved-profile')) {
           return;
         }
         if (modal && modal.id !== 'modal-login') {
@@ -703,6 +758,7 @@ const App = {
 
   openProfileModal() {
     this.syncProfileModalUI();
+    this.saveProfileSnapshot();
     // Default to first tab
     const firstTab = document.querySelector('.profile-tab-btn[data-profile-tab="personal-info"]');
     if (firstTab) firstTab.click();
@@ -738,6 +794,141 @@ const App = {
     if (inputFullName) inputFullName.value = user.fullName || '';
     if (inputEmail) inputEmail.value = user.email || '';
     if (inputAvatarUrl) inputAvatarUrl.value = (user.avatarUrl && !user.avatarUrl.startsWith('data:')) ? user.avatarUrl : '';
+  },
+
+  collectProfileFormData() {
+    return {
+      fullName: document.getElementById('input-profile-fullname')?.value || '',
+      email: document.getElementById('input-profile-email')?.value || '',
+      avatarUrl: document.getElementById('input-avatar-url')?.value || '',
+      currPw: document.getElementById('input-curr-pw')?.value || '',
+      newPw: document.getElementById('input-new-pw')?.value || '',
+      confirmPw: document.getElementById('input-confirm-pw')?.value || ''
+    };
+  },
+
+  saveProfileSnapshot() {
+    this.initialProfileSnapshot = JSON.stringify(this.collectProfileFormData());
+  },
+
+  hasUnsavedProfileChanges() {
+    if (!this.initialProfileSnapshot) return false;
+    return JSON.stringify(this.collectProfileFormData()) !== this.initialProfileSnapshot;
+  },
+
+  rollbackProfileFormData() {
+    if (!this.initialProfileSnapshot) return;
+    try {
+      const data = JSON.parse(this.initialProfileSnapshot);
+      const inputFullName = document.getElementById('input-profile-fullname');
+      const inputEmail = document.getElementById('input-profile-email');
+      const inputAvatarUrl = document.getElementById('input-avatar-url');
+      const inputCurrPw = document.getElementById('input-curr-pw');
+      const inputNewPw = document.getElementById('input-new-pw');
+      const inputConfirmPw = document.getElementById('input-confirm-pw');
+
+      if (inputFullName) inputFullName.value = data.fullName;
+      if (inputEmail) inputEmail.value = data.email;
+      if (inputAvatarUrl) inputAvatarUrl.value = data.avatarUrl;
+      if (inputCurrPw) inputCurrPw.value = data.currPw;
+      if (inputNewPw) inputNewPw.value = data.newPw;
+      if (inputConfirmPw) inputConfirmPw.value = data.confirmPw;
+
+      this.syncProfileModalUI();
+    } catch (e) {
+      console.error('Failed to rollback profile form data:', e);
+    }
+  },
+
+  showUnsavedProfileConfirmModal(onConfirmDiscard) {
+    this.onDiscardProfileCallback = onConfirmDiscard;
+    const modalConfirm = document.getElementById('modal-confirm-unsaved-profile');
+    if (modalConfirm) modalConfirm.classList.add('active');
+  },
+
+  closeUnsavedProfileConfirmModal() {
+    const modalConfirm = document.getElementById('modal-confirm-unsaved-profile');
+    if (modalConfirm) modalConfirm.classList.remove('active');
+    this.onDiscardProfileCallback = null;
+  },
+
+  handleCloseProfileModal() {
+    if (this.hasUnsavedProfileChanges()) {
+      this.showUnsavedProfileConfirmModal(() => {
+        this.rollbackProfileFormData();
+        const modal = document.getElementById('modal-user-profile');
+        if (modal) modal.classList.remove('active');
+      });
+    } else {
+      const modal = document.getElementById('modal-user-profile');
+      if (modal) modal.classList.remove('active');
+    }
+  },
+
+  handleSaveProfile() {
+    const inputFullName = document.getElementById('input-profile-fullname');
+    const inputEmail = document.getElementById('input-profile-email');
+    const inputAvatarUrl = document.getElementById('input-avatar-url');
+
+    const fullName = inputFullName ? inputFullName.value.trim() : '';
+    const email = inputEmail ? inputEmail.value.trim() : '';
+    const avatarUrl = inputAvatarUrl ? inputAvatarUrl.value.trim() : '';
+
+    if (!fullName) {
+      this.showToast('Nama lengkap tidak boleh kosong!', 'warning');
+      return;
+    }
+    if (!email) {
+      this.showToast('Email akun tidak boleh kosong!', 'warning');
+      return;
+    }
+
+    // Update profile info
+    const res = AuthManager.updateProfile(fullName, email);
+    if (!res.success) {
+      this.showToast(res.message, 'danger');
+      return;
+    }
+
+    // Update avatar URL if changed
+    const user = AuthManager.getCurrentUser();
+    if (avatarUrl && avatarUrl !== user.avatarUrl) {
+      AuthManager.updateAvatar(avatarUrl);
+    } else if (!avatarUrl && user.avatarUrl && !user.avatarUrl.startsWith('data:')) {
+      AuthManager.removeAvatar();
+    }
+
+    // Handle password change if user entered password in Tab 3
+    const inputCurrPw = document.getElementById('input-curr-pw');
+    const inputNewPw = document.getElementById('input-new-pw');
+    const inputConfirmPw = document.getElementById('input-confirm-pw');
+
+    const currPw = inputCurrPw ? inputCurrPw.value : '';
+    const newPw = inputNewPw ? inputNewPw.value : '';
+    const confirmPw = inputConfirmPw ? inputConfirmPw.value : '';
+
+    if (currPw || newPw || confirmPw) {
+      if (newPw !== confirmPw) {
+        this.showToast('Konfirmasi kata sandi baru tidak cocok!', 'danger');
+        return;
+      }
+      if (newPw.length < 4) {
+        this.showToast('Password baru minimal 4 karakter!', 'warning');
+        return;
+      }
+      const resPw = AuthManager.changePassword(currPw, newPw);
+      if (!resPw.success) {
+        this.showToast(resPw.message, 'danger');
+        return;
+      }
+      if (inputCurrPw) inputCurrPw.value = '';
+      if (inputNewPw) inputNewPw.value = '';
+      if (inputConfirmPw) inputConfirmPw.value = '';
+    }
+
+    this.syncProfileModalUI();
+    this.saveProfileSnapshot();
+    this.showToast('Informasi profil berhasil diperbarui.', 'success');
   },
 
   renderMyActivities() {

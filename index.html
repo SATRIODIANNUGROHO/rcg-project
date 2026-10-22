@@ -1396,7 +1396,7 @@
     <div class="modal-container" style="max-width: 620px;">
       <div class="modal-header">
         <h3>Profil &amp; Pengaturan Akun</h3>
-        <button class="modal-close-btn" type="button">&times;</button>
+        <button class="modal-close-btn" id="btn-close-profile-modal-x" type="button" aria-label="Tutup Modal">&times;</button>
       </div>
 
       <!-- Profile Sub-Navigation Tabs (Clean SVG Icons, Zero Emojis) -->
@@ -1570,7 +1570,28 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary btn-modal-cancel" type="button">Tutup</button>
+        <button type="button" id="btn-save-profile-footer" class="btn btn-primary">Simpan</button>
+        <button type="button" id="btn-close-profile-modal" class="btn btn-secondary btn-modal-cancel">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 0b: Konfirmasi Tutup Profil Tanpa Menyimpan -->
+  <div id="modal-confirm-unsaved-profile" class="modal-overlay" style="z-index: 1100;">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 600;">Konfirmasi Perubahan Profil</h3>
+        <button class="modal-close-btn" id="btn-close-unsaved-profile-x" type="button"
+          aria-label="Tutup Modal">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <p style="margin: 0; line-height: 1.5; color: var(--text-primary);">
+          Terdapat perubahan profil yang belum disimpan. Apakah Anda yakin ingin menutup tanpa menyimpan perubahan?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-unsaved-profile" class="btn btn-secondary btn-modal-cancel">Batal</button>
+        <button type="button" id="btn-confirm-discard-profile-yes" class="btn btn-confirm-accent">Ya, Tutup Tanpa Simpan</button>
       </div>
     </div>
   </div>
