@@ -82,7 +82,7 @@
 
   /* Layout Standards */
   --header-height: 60px;
-  --gap-cards: 16px;
+  --gap-cards: clamp(10px, 0.5vw + 4.4px, 18px);
   --btn-height-standard: 38px;
   --btn-height-sm: 32px;
   --btn-height-action: 28px;
@@ -2811,16 +2811,21 @@ input[type="number"] {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 14px;
+  flex-wrap: nowrap;
+  gap: var(--gap-cards, clamp(10px, 0.5vw + 4.4px, 18px));
+  margin-top: clamp(10px, 0.8vw + 4px, 18px);
   box-sizing: border-box;
 }
 
 .pagination-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap-cards, clamp(10px, 0.5vw + 4.4px, 18px));
+}
+
+.pagination-controls button,
+.pagination-controls .btn {
+  margin: 0 !important;
 }
 
 .page-indicator {

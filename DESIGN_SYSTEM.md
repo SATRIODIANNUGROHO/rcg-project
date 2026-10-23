@@ -433,7 +433,12 @@ Level 6: Toast Alerts & Micro Tooltips (z-index: 30000 / 40000)
 - **Dimensi & Bantalan**: `padding: 12px 18px; min-height: 48px; box-sizing: border-box;`.
 - **Garis Batas & Kelengkungan**: `border: 1px solid var(--border-color); border-radius: var(--radius-card, 8px);`.
 - **Latar Belakang & Elevasi**: `background: var(--bg-card); box-shadow: var(--shadow-card);` (Dark Mode: `#16243A` dengan border `#334155`).
-- **Tata Letak Flexbox**: `display: flex; justify-content: space-between; align-items: center; margin-top: 14px;` dengan pemisahan margin luar yang rapi terhadap kontainer tabel di atasnya.
+- **Standardisasi Ritme Spasi Vertikal Pemisah (`margin-top: clamp(10px, 0.8vw + 4px, 18px) !important;`)**:
+  - Jarak vertikal pemisah dari batas bawah kontainer tabel (`.table-responsive`) menuju bilah paginasi mengadopsi formula adaptif yang ter-clamp pada angka maksimal `18px` pada monitor desktop standar 1080p ke atas.
+  - **Optimasi Kepadatan Layar Laptop Pendek (`@media (max-height: 800px)`)**: Jarak vertikal pemisah tersebut otomatis memadat menjadi tepat `10px !important;` pada layar laptop pendek (tinggi viewport ≤ 800px seperti 1366×768), menjamin antarmuka bebas dari scrollbar vertikal yang tidak diinginkan.
+- **Tata Letak Flexbox & Harmonisasi Spasi Horizontal (`gap: var(--gap-cards) !important;`)**:
+  - Menggunakan `display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center !important; justify-content: space-between !important;` dengan posisi vertikal `0px` sejajar dalam satu baris tanpa pemisahan kolom berlebih.
+  - Spasi pemisah horizontal antartombol navigasi (`.pagination-controls`) antara tombol Prev (`#history-prev-page`, `#supplier-history-prev-page`) dan Next (`#history-next-page`, `#supplier-history-next-page`) menggunakan token adaptif `gap: var(--gap-cards) !important;` dengan formula `clamp(10px, 0.5vw + 4.4px, 18px)` (menghasilkan spasi sekitar 11px pada laptop 1366×768, baseline 14px pada layar 1080p, dan 17px pada layar 2K).
 
 ### 21.2 Penyelarasan Tata Letak & Grid Adaptif Tab Tentang Sistem & Lisensi (`#section-about-licenses`)
 - **Harmonisasi Sistem Grid Adaptif**: Seluruh susunan kartu pada tampilan tab Tentang Sistem & Lisensi mengadopsi standar sistem grid adaptif yang selaras dengan kartu ringkasan Dashboard (`.stats-grid`).
