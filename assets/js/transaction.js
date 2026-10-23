@@ -55,6 +55,18 @@ const TransactionEngine = {
       });
     }
 
+    // Document date change updates document number for new transactions
+    const docDateInput = document.getElementById('input-doc-date');
+    if (docDateInput) {
+      docDateInput.addEventListener('change', (e) => {
+        if (!this.isEditingExisting) {
+          this.activeDocNo = this.generateDocumentNumber(e.target.value);
+          const docNoInput = document.getElementById('input-doc-no');
+          if (docNoInput) docNoInput.value = this.activeDocNo;
+        }
+      });
+    }
+
     // Ambil Bobot Timbangan (Gross & Tare) dari ScaleEngine (COM Port / Simulator)
     const btnCaptureGross = document.getElementById('btn-capture-gross');
     if (btnCaptureGross) {
@@ -190,20 +202,25 @@ const TransactionEngine = {
     }
   },
 
-  generateDocumentNumber() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
+  generateDocumentNumber(dateStr = null) {
+    let year, month;
+    if (dateStr && typeof dateStr === 'string' && dateStr.includes('-')) {
+      const parts = dateStr.split('-');
+      year = parts[0];
+      month = parts[1].padStart(2, '0');
+    } else {
+      const now = new Date();
+      year = now.getFullYear();
+      month = String(now.getMonth() + 1).padStart(2, '0');
+    }
     const txs = StorageManager.getTransactions();
 
-    // Find sequence numbers for current month
-    const prefix = `PO-RCG/${year}/${month}/`;
+    // Find sequence numbers for the year
     let maxSeq = 0;
-
     txs.forEach(t => {
       if (t.docNo && t.docNo.startsWith(`PO-RCG/${year}/`)) {
         const parts = t.docNo.split('/');
-        const seq = parseInt(parts[parts.length - 1]);
+        const seq = parseInt(parts[parts.length - 1], 10);
         if (!isNaN(seq) && seq > maxSeq) {
           maxSeq = seq;
         }
@@ -217,18 +234,18 @@ const TransactionEngine = {
   newTransaction() {
     this.isEditingExisting = false;
     this.activeTxId = 'TRX-' + Date.now();
-    this.activeDocNo = this.generateDocumentNumber();
+    const today = new Date().toISOString().slice(0, 10);
+    this.activeDocNo = this.generateDocumentNumber(today);
 
     const settings = StorageManager.getSettings();
     const currentUser = AuthManager.getCurrentUser();
 
     // Form inputs reset
-    this.activeDocNo = this.generateDocumentNumber();
     const docNoInput = document.getElementById('input-doc-no');
     if (docNoInput) docNoInput.value = this.activeDocNo;
 
     const docDateInput = document.getElementById('input-doc-date');
-    if (docDateInput) docDateInput.value = new Date().toISOString().slice(0, 10);
+    if (docDateInput) docDateInput.value = today;
 
     const nowStr = new Date().toTimeString().slice(0, 5);
     const timeInInput = document.getElementById('input-time-in');
@@ -475,8 +492,12 @@ const TransactionEngine = {
       timeOut: document.getElementById('input-time-out').value || '-',
       plateNo: document.getElementById('input-plate-no').value.trim().toUpperCase(),
       supplier: document.getElementById('input-supplier').value.trim(),
-      material: document.getElementById('select-material').value,
-      bagCount: parseInt(document.getElementById('input-bag-count').value) || 0,
+      material: this.formatStandardMaterialName(
+        document.getElementById('select-material')?.value,
+        parseInt(document.getElementById('input-bag-count')?.value, 10) || 0,
+        finalNet
+      ),
+      bagCount: parseInt(document.getElementById('input-bag-count')?.value, 10) || 0,
       originRegion: document.getElementById('select-origin-region').value,
       originArea: document.getElementById('select-origin-area').value,
       grossWeight: gross,
@@ -598,13 +619,14 @@ const TransactionEngine = {
     if (supplierInput) supplierInput.value = tx.supplier || '';
 
     const materialSelect = document.getElementById('select-material');
-    if (materialSelect) materialSelect.value = tx.material || 'Garam Karung';
+    const isCurah = (tx.material && tx.material.toUpperCase().includes('CURAH'));
+    if (materialSelect) materialSelect.value = isCurah ? 'Garam Curah' : 'Garam Karung';
 
     const bagCountInput = document.getElementById('input-bag-count');
     if (bagCountInput) bagCountInput.value = (tx.bagCount && tx.bagCount > 0) ? tx.bagCount : '';
     const unitTag = document.querySelector('#input-bag-count ~ .unit-tag');
     if (unitTag) {
-      unitTag.textContent = (tx.material && tx.material.includes('Curah')) ? 'Kg' : 'Karung';
+      unitTag.textContent = isCurah ? 'Kg' : 'Karung';
     }
     
     const regionSelect = document.getElementById('select-origin-region');
@@ -680,14 +702,33 @@ const TransactionEngine = {
     App.showToast(`Memuat data transaksi ${tx.docNo} untuk disunting`, 'info');
   },
 
+  formatStandardMaterialName(materialType, bagCount, finalNetWeight) {
+    const isCurah = (materialType || '').toUpperCase().includes('CURAH');
+    if (isCurah) {
+      const net = parseFloat(finalNetWeight) || 0;
+      if (net > 0) {
+        const formattedNet = (net % 1 === 0) ? net.toFixed(1) : (Math.round(net * 10) / 10).toFixed(1);
+        return `GARAM CURAH ${formattedNet} KG`;
+      }
+      const bags = parseInt(bagCount, 10) || 0;
+      if (bags > 0) {
+        return `GARAM CURAH ${bags.toFixed(1)} KG`;
+      }
+      return 'GARAM CURAH';
+    } else {
+      const bags = parseInt(bagCount, 10) || 0;
+      if (bags > 0) {
+        return `GARAM ${bags} KARUNG`;
+      }
+      return 'GARAM KARUNG';
+    }
+  },
+
   formatMaterialDisplay(tx) {
     if (!tx) return 'GARAM';
     const mat = (tx.material || '').trim();
     const bagCount = parseInt(tx.bagCount, 10) || 0;
-
-    if (!mat) {
-      return bagCount > 0 ? `GARAM ${bagCount} KARUNG` : 'GARAM';
-    }
+    const finalNet = parseFloat(tx.finalNetWeight) || 0;
 
     const upper = mat.toUpperCase();
     const isCurah = upper.includes('CURAH');
@@ -702,15 +743,19 @@ const TransactionEngine = {
 
     // If string is without numbers (e.g. "Garam Karung", "Garam Curah", "GARAM")
     if (isCurah) {
+      if (finalNet > 0) {
+        const formattedNet = (finalNet % 1 === 0) ? finalNet.toFixed(1) : (Math.round(finalNet * 10) / 10).toFixed(1);
+        return `GARAM CURAH ${formattedNet} KG`;
+      }
       if (bagCount > 0) {
-        return `GARAM CURAH ${bagCount} KG`;
+        return `GARAM CURAH ${bagCount.toFixed(1)} KG`;
       }
       return 'GARAM CURAH';
     } else {
       if (bagCount > 0) {
         return `GARAM ${bagCount} KARUNG`;
       }
-      return upper.includes('KARUNG') ? upper : `${upper} KARUNG`;
+      return 'GARAM KARUNG';
     }
   },
 

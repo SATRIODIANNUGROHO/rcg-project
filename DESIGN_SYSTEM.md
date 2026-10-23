@@ -540,6 +540,17 @@ Seluruh tab navigasi pada modal Profil & Pengaturan Akun (*Informasi Akun*, *Ava
     - *Ya, Tutup Tanpa Simpan* (`btn btn-confirm-accent`): Mengembalikan (*rollback*) seluruh nilai isian dan avatar ke snapshot acuan terakhir dan menutup modal secara penuh.
   - Apabila data tidak mengalami perubahan atau sudah tersimpan, tombol *Tutup* akan menutup modal secara instan tanpa dialog konfirmasi.
 
+### 21.6 Standardisasi Format Penamaan Material & Penomoran Dokumen Transaksi
+- **Skema Penomoran Dokumen 4-Segmen (`PO-RCG/[TAHUN]/[BULAN]/[NOMOR_URUT]`)**:
+  - Seluruh kode nomor dokumen transaksi dibakukan ke dalam struktur standar penuh 4 segmen: `PO-RCG/YYYY/MM/NNNN` (contoh: `PO-RCG/2026/10/0769`, `PO-RCG/2026/09/0768`, `PO-RCG/2026/08/0001`).
+  - Segmen bulan 2 digit (`MM`) otomatis disinkronkan dari tanggal dokumen dibuat atau tanggal transaksi yang dipilih operator.
+  - Mekanisme normalizer data otomatis pada engine SQLite (`SQLiteEngine.normalizeLegacyRecords()`) serta skrip migrasi (`scripts/migrate-documents-and-materials.js`) mengonversi seluruh dokumen lama yang masih berformat 3 segmen tanpa bulan menjadi format baru 4 segmen sesuai tanggal dokumen, serta memperbarui referensi terkait pada jejak audit (`activity_logs`).
+- **Format Penamaan Material Dinamis Huruf Kapital (Uppercase Material Name with Quantity & Unit)**:
+  - Pembentukan nama material pada pembuatan transaksi baru distandardisasi dalam huruf kapital (*uppercase*) dan menyertakan kuantitas serta satuan secara dinamis:
+    - **Material Berbasis Kemasan Karung**: Format `GARAM [JUMLAH] KARUNG` (contoh: `GARAM 150 KARUNG`, `GARAM 180 KARUNG`, `GARAM 200 KARUNG`). Jika jumlah karung tidak diisi, fallback ke `GARAM KARUNG`.
+    - **Material Berbasis Curah**: Format `GARAM CURAH [TOTAL_BERSIH] KG` (contoh: `GARAM CURAH 10350.0 KG`, `GARAM CURAH 14220.0 KG`). Nilai numerik bobot bersih diformat secara proporsional dengan 1 angka desimal (`.toFixed(1)`) dan satuan `KG`. Jika penimbangan belum selesai, fallback ke `GARAM CURAH`.
+  - Fungsi penampil material standar (`formatMaterialDisplay(tx)`) diterapkan terpadu pada baris tabel Riwayat Penimbangan, modal Detail Transaksi, tabel Rekapitulasi Riwayat Pemasok, Nota Cetak Timbang, dan Ekspor Spreadsheet Excel (`formatMaterialStr(t)`).
+
 ---
 
 ## 23. Header Bar Architecture

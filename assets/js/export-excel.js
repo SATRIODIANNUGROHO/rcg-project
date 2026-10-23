@@ -206,19 +206,30 @@ const ExportExcelManager = {
 
   // Format material string identically to template
   formatMaterialStr(t) {
+    if (typeof TransactionEngine !== 'undefined' && typeof TransactionEngine.formatMaterialDisplay === 'function') {
+      return TransactionEngine.formatMaterialDisplay(t);
+    }
     const matRaw = (t.material || '').trim();
-    const isKarung = matRaw.toLowerCase().includes('karung');
-    const isCurah = matRaw.toLowerCase().includes('curah');
+    const upper = matRaw.toUpperCase();
+    if (/\d+/.test(upper) && (upper.includes('KARUNG') || upper.includes('KG'))) {
+      return upper;
+    }
+    const isKarung = upper.includes('KARUNG');
+    const isCurah = upper.includes('CURAH');
 
+    if (isCurah) {
+      const net = parseFloat(t.finalNetWeight) || 0;
+      if (net > 0) {
+        const formattedNet = (net % 1 === 0) ? net.toFixed(1) : (Math.round(net * 10) / 10).toFixed(1);
+        return `GARAM CURAH ${formattedNet} KG`;
+      }
+      return 'GARAM CURAH';
+    }
     if (isKarung) {
-      const bags = t.bagCount || 0;
+      const bags = parseInt(t.bagCount, 10) || 0;
       return bags > 0 ? `GARAM ${bags} KARUNG` : 'GARAM KARUNG';
     }
-    if (isCurah) {
-      const netKg = (t.finalNetWeight || 0).toLocaleString('id-ID');
-      return netKg && netKg !== '0' ? `GARAM CURAH ${netKg} KG` : 'GARAM CURAH';
-    }
-    return matRaw.toUpperCase() || 'GARAM';
+    return upper || 'GARAM';
   },
 
   formatTimeString(timeStr) {

@@ -136,7 +136,7 @@ const INITIAL_TRANSACTIONS = [
     timeOut: '08:45',
     plateNo: 'M 8234 UA',
     supplier: 'UD. Garam Sejahtera Madura',
-    material: 'Garam Karung',
+    material: 'GARAM 180 KARUNG',
     bagCount: 180,
     originRegion: 'Pamekasan',
     originArea: 'Majungan',
@@ -167,7 +167,7 @@ const INITIAL_TRANSACTIONS = [
     timeOut: '10:05',
     plateNo: 'M 9122 NC',
     supplier: 'Koperasi Garam Rakyat Sampang',
-    material: 'Garam Karung',
+    material: 'GARAM 200 KARUNG',
     bagCount: 200,
     originRegion: 'Sampang',
     originArea: 'Pangarengan',
@@ -198,7 +198,7 @@ const INITIAL_TRANSACTIONS = [
     timeOut: '13:40',
     plateNo: 'M 8891 UB',
     supplier: 'PT. Madura Garam Prima',
-    material: 'Garam Curah',
+    material: 'GARAM CURAH 13199.0 KG',
     bagCount: 0,
     originRegion: 'Sumenep',
     originArea: 'Pinggir Papas',
@@ -229,7 +229,7 @@ const INITIAL_TRANSACTIONS = [
     timeOut: '15:00',
     plateNo: 'L 9081 AB',
     supplier: 'Tambak Garam Sentosa Bangkalan',
-    material: 'Garam Karung',
+    material: 'GARAM 160 KARUNG',
     bagCount: 160,
     originRegion: 'Bangkalan',
     originArea: 'Labuhan',
@@ -362,6 +362,9 @@ const SQLiteEngine = {
         // 4. Migrate existing data if SQLite database is newly created
         this.autoMigrateLegacyData();
 
+        // 5. Standardize document numbers (4-segment) and material display names
+        this.normalizeLegacyRecords();
+
         this.isInitialized = true;
         this.persist();
         return this.db;
@@ -478,15 +481,37 @@ const SQLiteEngine = {
 
       this.db.run("BEGIN TRANSACTION;");
       legacyTxs.forEach(t => {
+        let docNo = t.docNo || '-';
+        if (typeof docNo === 'string') {
+          const m = docNo.match(/^PO-RCG\/(\d{4})\/(\d{4,})$/);
+          if (m) {
+            const year = m[1];
+            const seq = m[2];
+            const month = (t.date && t.date.includes('-')) ? t.date.split('-')[1].padStart(2, '0') : '01';
+            docNo = `PO-RCG/${year}/${month}/${seq}`;
+          }
+        }
+        let material = t.material || 'GARAM';
+        const upper = material.trim().toUpperCase();
+        if (!/\d+/.test(upper) || upper === 'GARAM KARUNG' || upper === 'GARAM CURAH') {
+          if (upper.includes('CURAH')) {
+            const net = parseFloat(t.finalNetWeight) || 0;
+            material = net > 0 ? `GARAM CURAH ${(net % 1 === 0 ? net.toFixed(1) : (Math.round(net * 10) / 10).toFixed(1))} KG` : 'GARAM CURAH';
+          } else {
+            const bags = parseInt(t.bagCount, 10) || 0;
+            material = bags > 0 ? `GARAM ${bags} KARUNG` : 'GARAM KARUNG';
+          }
+        }
+
         stmt.run([
           t.id || `TRX-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          t.docNo || '-',
+          docNo,
           t.date || new Date().toISOString().slice(0, 10),
           t.timeIn || '08:00',
           t.timeOut || '09:00',
           t.plateNo || '-',
           t.supplier || '-',
-          t.material || 'Garam Karung',
+          material,
           parseInt(t.bagCount) || 0,
           t.originRegion || 'Pamekasan',
           t.originArea || 'Majungan',
@@ -609,6 +634,174 @@ const SQLiteEngine = {
       });
       this.db.run("COMMIT;");
       stmt.free();
+    }
+  },
+
+  normalizeLegacyRecords() {
+    if (!this.db) return;
+    try {
+      const res = this.db.exec("SELECT id, doc_no, date, material, bag_count, final_net_weight FROM transactions;");
+      if (res && res[0] && res[0].values) {
+        const rows = res[0].values;
+        let hasChanges = false;
+
+        this.db.run("BEGIN TRANSACTION;");
+        const updateTxStmt = this.db.prepare("UPDATE transactions SET doc_no = ?, material = ? WHERE id = ?;");
+        const updateLogStmt = this.db.prepare("UPDATE activity_logs SET doc_no = ? WHERE doc_no = ?;");
+
+        for (const row of rows) {
+          const [id, docNo, date, material, bagCount, finalNetWeight] = row;
+          let newDocNo = docNo;
+          let newMaterial = material;
+          let changed = false;
+
+          // 1. Convert 3-segment doc_no (PO-RCG/YYYY/NNNN) to 4-segment (PO-RCG/YYYY/MM/NNNN)
+          if (docNo && typeof docNo === 'string') {
+            const m = docNo.match(/^PO-RCG\/(\d{4})\/(\d{4,})$/);
+            if (m) {
+              const year = m[1];
+              const seq = m[2];
+              const month = (date && date.includes('-')) ? date.split('-')[1].padStart(2, '0') : '01';
+              newDocNo = `PO-RCG/${year}/${month}/${seq}`;
+              changed = true;
+              updateLogStmt.run([newDocNo, docNo]);
+            }
+          }
+
+          // 2. Standardize material to uppercase with quantity and unit
+          if (material && typeof material === 'string') {
+            const upper = material.trim().toUpperCase();
+            const isCurah = upper.includes('CURAH');
+            const isKarung = upper.includes('KARUNG');
+
+            if (!/\d+/.test(upper) || upper === 'GARAM KARUNG' || upper === 'GARAM CURAH' || material === 'Garam Karung' || material === 'Garam Curah') {
+              if (isCurah) {
+                const net = parseFloat(finalNetWeight) || 0;
+                if (net > 0) {
+                  const formattedNet = (net % 1 === 0) ? net.toFixed(1) : (Math.round(net * 10) / 10).toFixed(1);
+                  newMaterial = `GARAM CURAH ${formattedNet} KG`;
+                } else if (bagCount && parseInt(bagCount, 10) > 0) {
+                  newMaterial = `GARAM CURAH ${parseInt(bagCount, 10).toFixed(1)} KG`;
+                } else {
+                  newMaterial = 'GARAM CURAH';
+                }
+                changed = true;
+              } else if (isKarung || upper === 'GARAM') {
+                const bags = parseInt(bagCount, 10) || 0;
+                if (bags > 0) {
+                  newMaterial = `GARAM ${bags} KARUNG`;
+                } else {
+                  newMaterial = 'GARAM KARUNG';
+                }
+                changed = true;
+              }
+            }
+          }
+
+          if (changed && (newDocNo !== docNo || newMaterial !== material)) {
+            updateTxStmt.run([newDocNo, newMaterial, id]);
+            hasChanges = true;
+          }
+        }
+
+        this.db.run("COMMIT;");
+        updateTxStmt.free();
+        updateLogStmt.free();
+
+        if (hasChanges) {
+          this.persist();
+        }
+      }
+    } catch (e) {
+      try { this.db.run("ROLLBACK;"); } catch (rb) {}
+      console.error('Failed to normalize legacy records in SQLiteEngine:', e);
+    }
+
+    // Patch localStorage / session cache
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
+      if (raw) {
+        let txs = JSON.parse(raw);
+        let lsChanged = false;
+        txs = txs.map(t => {
+          let tChanged = false;
+          let docNo = t.docNo;
+          let material = t.material;
+
+          if (docNo && typeof docNo === 'string') {
+            const m = docNo.match(/^PO-RCG\/(\d{4})\/(\d{4,})$/);
+            if (m) {
+              const year = m[1];
+              const seq = m[2];
+              const month = (t.date && t.date.includes('-')) ? t.date.split('-')[1].padStart(2, '0') : '01';
+              docNo = `PO-RCG/${year}/${month}/${seq}`;
+              tChanged = true;
+            }
+          }
+
+          if (material && typeof material === 'string') {
+            const upper = material.trim().toUpperCase();
+            const isCurah = upper.includes('CURAH');
+            const isKarung = upper.includes('KARUNG');
+            if (!/\d+/.test(upper) || upper === 'GARAM KARUNG' || upper === 'GARAM CURAH' || material === 'Garam Karung' || material === 'Garam Curah') {
+              if (isCurah) {
+                const net = parseFloat(t.finalNetWeight) || 0;
+                if (net > 0) {
+                  const formattedNet = (net % 1 === 0) ? net.toFixed(1) : (Math.round(net * 10) / 10).toFixed(1);
+                  material = `GARAM CURAH ${formattedNet} KG`;
+                } else if (t.bagCount && parseInt(t.bagCount, 10) > 0) {
+                  material = `GARAM CURAH ${parseInt(t.bagCount, 10).toFixed(1)} KG`;
+                }
+                tChanged = true;
+              } else if (isKarung || upper === 'GARAM') {
+                const bags = parseInt(t.bagCount, 10) || 0;
+                if (bags > 0) {
+                  material = `GARAM ${bags} KARUNG`;
+                }
+                tChanged = true;
+              }
+            }
+          }
+
+          if (tChanged) {
+            lsChanged = true;
+            return { ...t, docNo, material };
+          }
+          return t;
+        });
+
+        if (lsChanged) {
+          localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(txs));
+        }
+      }
+
+      // Also patch activity logs in localStorage
+      const rawLogs = localStorage.getItem(STORAGE_KEYS.LOGS);
+      if (rawLogs) {
+        let logs = JSON.parse(rawLogs);
+        let logsChanged = false;
+        logs = logs.map(l => {
+          if (l.docNo && typeof l.docNo === 'string') {
+            const m = l.docNo.match(/^PO-RCG\/(\d{4})\/(\d{4,})$/);
+            if (m) {
+              const year = m[1];
+              const seq = m[2];
+              let month = '01';
+              if (l.timestamp && l.timestamp.includes('-')) {
+                month = l.timestamp.split('-')[1].padStart(2, '0');
+              }
+              logsChanged = true;
+              return { ...l, docNo: `PO-RCG/${year}/${month}/${seq}` };
+            }
+          }
+          return l;
+        });
+        if (logsChanged) {
+          localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify(logs));
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to patch localStorage legacy data:', e);
     }
   },
 

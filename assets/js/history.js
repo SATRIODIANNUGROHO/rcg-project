@@ -197,7 +197,7 @@ const HistoryManager = {
 
       tr.innerHTML = `
         <td>
-          <div style="font-weight: 700; color: var(--primary);">${tx.material}</div>
+          <div style="font-weight: 700; color: var(--primary);">${(typeof TransactionEngine !== 'undefined' && TransactionEngine.formatMaterialDisplay) ? TransactionEngine.formatMaterialDisplay(tx) : tx.material}</div>
           <div class="text-small text-secondary mono-num">${tx.docNo}</div>
         </td>
         <td class="mono-num">${tx.date}</td>

@@ -397,13 +397,13 @@ const SupplierHistoryManager = {
   },
 
   formatMaterialDisplay(tx) {
+    if (typeof TransactionEngine !== 'undefined' && typeof TransactionEngine.formatMaterialDisplay === 'function') {
+      return TransactionEngine.formatMaterialDisplay(tx);
+    }
     if (!tx) return 'GARAM';
     const mat = (tx.material || '').trim();
     const bagCount = parseInt(tx.bagCount, 10) || 0;
-
-    if (!mat) {
-      return bagCount > 0 ? `GARAM ${bagCount} KARUNG` : 'GARAM';
-    }
+    const finalNet = parseFloat(tx.finalNetWeight) || 0;
 
     const upper = mat.toUpperCase();
     const isCurah = upper.includes('CURAH');
@@ -416,15 +416,19 @@ const SupplierHistoryManager = {
     }
 
     if (isCurah) {
+      if (finalNet > 0) {
+        const formattedNet = (finalNet % 1 === 0) ? finalNet.toFixed(1) : (Math.round(finalNet * 10) / 10).toFixed(1);
+        return `GARAM CURAH ${formattedNet} KG`;
+      }
       if (bagCount > 0) {
-        return `GARAM CURAH ${bagCount} KG`;
+        return `GARAM CURAH ${bagCount.toFixed(1)} KG`;
       }
       return 'GARAM CURAH';
     } else {
       if (bagCount > 0) {
         return `GARAM ${bagCount} KARUNG`;
       }
-      return upper.includes('KARUNG') ? upper : `${upper} KARUNG`;
+      return 'GARAM KARUNG';
     }
   },
 
