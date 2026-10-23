@@ -102,6 +102,14 @@ async function migrateDatabase(dbPath, SQL) {
     }
   }
 
+  // Normalize activity log arrow transition symbol -> and ⮞ to 🠊
+  const arrowCheck = db.exec("SELECT COUNT(*) FROM activity_logs WHERE activity LIKE '%->%' OR activity LIKE '%⮞%';");
+  const arrowCount = (arrowCheck[0] && arrowCheck[0].values[0] && arrowCheck[0].values[0][0]) || 0;
+  if (arrowCount > 0) {
+    db.run("UPDATE activity_logs SET activity = REPLACE(activity, '->', '🠊') WHERE activity LIKE '%->%';");
+    db.run("UPDATE activity_logs SET activity = REPLACE(activity, '⮞', '🠊') WHERE activity LIKE '%⮞%';");
+  }
+
   db.run("COMMIT;");
   updateTxStmt.free();
   updateLogStmt.free();
@@ -109,6 +117,7 @@ async function migrateDatabase(dbPath, SQL) {
   console.log(`Migration results:`);
   console.log(`  - Converted 3-segment doc_no to 4-segment: ${updatedDocsCount} records`);
   console.log(`  - Normalized material display name: ${updatedMaterialsCount} records`);
+  console.log(`  - Normalized activity log arrows (-> and ⮞ to 🠊): ${arrowCount} records`);
 
   // Write back to disk
   const exportedData = db.export();

@@ -844,6 +844,11 @@ const App = {
     }, 2600);
   },
 
+  formatActivityText(text) {
+    if (!text) return '-';
+    return String(text).replace(/\s*(?:->|⮞)\s*/g, ' 🠊 ');
+  },
+
   renderActivityLogs() {
     const tbody = document.getElementById('activity-log-table-body');
     if (!tbody) return;
@@ -869,7 +874,7 @@ const App = {
         <td class="mono-num">${log.time}</td>
         <td><strong>${log.user}</strong></td>
         <td><span class="role-text ${log.role === 'Administrator' ? 'role-admin' : (log.role === 'Supervisor' ? 'role-supervisor' : 'role-operator')}">${log.role}</span></td>
-        <td>${log.activity}</td>
+        <td>${this.formatActivityText(log.activity)}</td>
         <td class="mono-num">${log.docNo || '-'}</td>
         <td>${hasReason ? `<span class="badge badge-warning" style="font-weight: 600; white-space: normal; text-align: left;">${log.reason}</span>` : '<span class="text-secondary">-</span>'}</td>
       `;

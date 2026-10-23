@@ -247,7 +247,7 @@ const HistoryManager = {
       StorageManager.addLog(
         AuthManager.getCurrentUser().username,
         AuthManager.getCurrentUser().role,
-        `Ubah Status Bayar Transaksi ${tx.docNo} -> ${tx.paymentStatus}`,
+        `Ubah Status Bayar Transaksi ${tx.docNo} 🠊 ${tx.paymentStatus}`,
         tx.docNo
       );
       this.render();

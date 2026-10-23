@@ -607,7 +607,7 @@ const SQLiteEngine = {
           l.time || '2026-08-28 08:00:00',
           l.user || 'admin',
           l.role || 'Administrator',
-          l.activity || 'Aktivitas Sistem',
+          (l.activity || 'Aktivitas Sistem').replace(/\s*(?:->|⮞)\s*/g, ' 🠊 '),
           l.docNo || '-',
           l.reason || '-'
         ]);
@@ -704,6 +704,19 @@ const SQLiteEngine = {
           }
         }
 
+        // 3. Normalize activity log arrow transition symbol -> to 🠊
+        try {
+          const arrowCheckRes = this.db.exec("SELECT COUNT(*) FROM activity_logs WHERE activity LIKE '%->%' OR activity LIKE '%⮞%';");
+          const arrowCount = (arrowCheckRes[0] && arrowCheckRes[0].values[0] && arrowCheckRes[0].values[0][0]) || 0;
+          if (arrowCount > 0) {
+            this.db.run("UPDATE activity_logs SET activity = REPLACE(activity, '->', '🠊') WHERE activity LIKE '%->%';");
+            this.db.run("UPDATE activity_logs SET activity = REPLACE(activity, '⮞', '🠊') WHERE activity LIKE '%⮞%';");
+            hasChanges = true;
+          }
+        } catch (eLog) {
+          console.warn('Failed to normalize activity log arrows in SQLite:', eLog);
+        }
+
         this.db.run("COMMIT;");
         updateTxStmt.free();
         updateLogStmt.free();
@@ -776,28 +789,43 @@ const SQLiteEngine = {
       }
 
       // Also patch activity logs in localStorage
-      const rawLogs = localStorage.getItem(STORAGE_KEYS.LOGS);
+      const rawLogs = localStorage.getItem(STORAGE_KEYS.ACTIVITY_LOGS);
       if (rawLogs) {
         let logs = JSON.parse(rawLogs);
         let logsChanged = false;
         logs = logs.map(l => {
-          if (l.docNo && typeof l.docNo === 'string') {
-            const m = l.docNo.match(/^PO-RCG\/(\d{4})\/(\d{4,})$/);
+          let itemChanged = false;
+          let docNo = l.docNo;
+          let activity = l.activity;
+
+          if (docNo && typeof docNo === 'string') {
+            const m = docNo.match(/^PO-RCG\/(\d{4})\/(\d{4,})$/);
             if (m) {
               const year = m[1];
               const seq = m[2];
               let month = '01';
-              if (l.timestamp && l.timestamp.includes('-')) {
-                month = l.timestamp.split('-')[1].padStart(2, '0');
+              const timeField = l.time || l.timestamp;
+              if (timeField && timeField.includes('-')) {
+                month = timeField.split('-')[1].padStart(2, '0');
               }
-              logsChanged = true;
-              return { ...l, docNo: `PO-RCG/${year}/${month}/${seq}` };
+              docNo = `PO-RCG/${year}/${month}/${seq}`;
+              itemChanged = true;
             }
+          }
+
+          if (activity && typeof activity === 'string' && (activity.includes('->') || activity.includes('⮞'))) {
+            activity = activity.replace(/\s*(?:->|⮞)\s*/g, ' 🠊 ');
+            itemChanged = true;
+          }
+
+          if (itemChanged) {
+            logsChanged = true;
+            return { ...l, docNo, activity };
           }
           return l;
         });
         if (logsChanged) {
-          localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify(logs));
+          localStorage.setItem(STORAGE_KEYS.ACTIVITY_LOGS, JSON.stringify(logs));
         }
       }
     } catch (e) {
@@ -1057,7 +1085,7 @@ const StorageManager = {
               time: obj.timestamp,
               user: obj.username,
               role: obj.role,
-              activity: obj.activity,
+              activity: (obj.activity || '').replace(/\s*(?:->|⮞)\s*/g, ' 🠊 '),
               docNo: obj.doc_no,
               reason: obj.reason
             };
@@ -1070,13 +1098,21 @@ const StorageManager = {
 
     try {
       const data = localStorage.getItem(STORAGE_KEYS.ACTIVITY_LOGS);
-      return data ? JSON.parse(data) : INITIAL_LOGS;
+      const list = data ? JSON.parse(data) : INITIAL_LOGS;
+      return list.map(l => ({
+        ...l,
+        activity: (l.activity || '').replace(/\s*(?:->|⮞)\s*/g, ' 🠊 ')
+      }));
     } catch (e) {
-      return INITIAL_LOGS;
+      return (typeof INITIAL_LOGS !== 'undefined' ? INITIAL_LOGS : []).map(l => ({
+        ...l,
+        activity: (l.activity || '').replace(/\s*(?:->|⮞)\s*/g, ' 🠊 ')
+      }));
     }
   },
 
   addLog(user, role, activity, docNo = '-', reason = '-') {
+    const formattedActivity = (activity || '').replace(/\s*(?:->|⮞)\s*/g, ' 🠊 ');
     const now = new Date();
     const timeStr = now.getFullYear() + '-' +
       String(now.getMonth() + 1).padStart(2, '0') + '-' +
@@ -1092,7 +1128,7 @@ const StorageManager = {
         SQLiteEngine.db.run(`
           INSERT INTO activity_logs (id, timestamp, username, role, activity, doc_no, reason)
           VALUES (?, ?, ?, ?, ?, ?, ?);
-        `, [logId, timeStr, user || 'admin', role || 'Administrator', activity, docNo || '-', reason || '-']);
+        `, [logId, timeStr, user || 'admin', role || 'Administrator', formattedActivity, docNo || '-', reason || '-']);
 
         // Retain max 500 logs
         SQLiteEngine.db.run(`

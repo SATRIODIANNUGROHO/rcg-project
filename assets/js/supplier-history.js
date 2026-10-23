@@ -716,7 +716,7 @@ const SupplierHistoryManager = {
     StorageManager.addLog(
       AuthManager.getCurrentUser().username,
       AuthManager.getCurrentUser().role,
-      `Ubah Status Bayar Pemasok ${group.supplier} (${group.date}) -> ${newStatus} (${group.transactions.length} Transaksi)`,
+      `Ubah Status Bayar Pemasok ${group.supplier} (${group.date}) 🠊 ${newStatus} (${group.transactions.length} Transaksi)`,
       group.docNos[0] || '-'
     );
 

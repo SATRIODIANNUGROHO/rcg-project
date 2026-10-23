@@ -268,6 +268,8 @@ Aplikasi menyediakan modal mandiri terpadu bagi pengguna aktif untuk meninjau da
 
 ### 12. Audit Trail & Activity Log
 - **Pencatatan Aktivitas Otomatis**: Seluruh aktivitas penting (Login, Tambah Transaksi, Edit Transaksi, Hapus Transaksi, Ubah Status Bayar Satuan / Massal, Reset Database) tercatat otomatis di tabel `activity_logs`.
+- **Standardisasi Simbol Transisi Status (Unicode 🠊)**: Seluruh pencatatan transisi status (misal pengubahan status pembayaran pemasok atau status pembayaran transaksi) menggunakan simbol panah Unicode `🠊` (`U+1F80A` / RIGHTWARDS ARROW WITH LARGE TRIANGLE ARROWHEAD) seragam dengan spasi rapi, seperti format: `Ubah Status Bayar Pemasok [NAMA] ([TANGGAL]) 🠊 [STATUS_BARU] ([N] Transaksi)` dan `Ubah Status Bayar Transaksi [DOC_NO] 🠊 [STATUS_BARU]`, menggantikan simbol teks ASCII `->`.
+- **Sanitasi & Normalisasi Riwayat Otomatis**: Dilengkapi fungsi normalisasi string (`formatActivityText` dan sanitasi lapisan penyimpanan) yang secara otomatis mengonversi riwayat lama yang masih memuat simbol `->` menjadi ` 🠊 ` pada saat render baris tabel aktivitas, migrasi otomatis SQLite, dan pemuatan riwayat dari penyimpanan lokal.
 - **Validasi Alasan Wajib**: Setiap tindakan sensitif (seperti penghapusan atau reset data) mewajibkan input alasan tertulis sebelum dieksekusi demi kepatuhan audit.
 
 ### 13. Pencadangan Data, Pemulihan, & Reset Data

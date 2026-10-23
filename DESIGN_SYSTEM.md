@@ -819,6 +819,8 @@ Ketika menu opsi sedang terbuka (`.open`, `.is-active`) atau elemen sedang berst
 - **Mata Uang**: Format Rupiah baku dengan spasi dan pemisah ribuan titik: `Rp 45.430.600`.
 - **Berat Timbangan**: Disertai satuan `Kg` dan pemisah ribuan titik: `37.896 Kg`.
 - **Rata Kanan (Right-Aligned)**: Seluruh angka keuangan dan berat pada kolom tabel wajib rata kanan dengan font monospace.
+- **Simbol Transisi Status Audit Log (Unicode 🠊)**: Seluruh pencatatan transisi status pada kolom Aktivitas di modul Activity Log (seperti pengubahan status pembayaran pemasok maupun status transaksi) wajib menggunakan simbol panah Unicode `🠊` (`U+1F80A` / RIGHTWARDS ARROW WITH LARGE TRIANGLE ARROWHEAD) dengan spasi sebelum dan sesudah (` 🠊 `), menggantikan karakter teks ASCII `->`. Format standar: `Ubah Status Bayar Pemasok [NAMA] ([TANGGAL]) 🠊 [STATUS_BARU] ([N] Transaksi)` dan `Ubah Status Bayar Transaksi [DOC_NO] 🠊 [STATUS_BARU]`.
+- **Sanitasi & Normalisasi Otomatis Teks Log**: Fungsi normalisasi string (`formatActivityText` dan sanitasi di `StorageManager`/`SQLiteEngine`) secara otomatis mengonversi setiap entri riwayat lama atau teks yang memuat pola `->` menjadi ` 🠊 ` baik saat pencatatan data baru, pembacaan riwayat dari basis data SQLite/localStorage, maupun saat rendering baris tabel audit log.
 
 ---
 
