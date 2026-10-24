@@ -461,40 +461,29 @@ const SupplierHistoryManager = {
   },
 
   generateRekapHtml(group, copyNumber = 1, totalCopies = 1, scaleFactor = null) {
-    let copyBadgeText = 'REKAPITULASI PEMASOK';
+    let copyBadgeText = 'R E K A P I T U L A S I &nbsp;&nbsp; P E M A S O K';
     let copyReceiverText = 'LEMBAR REKAP HARIAN';
-    let copyFooterText = '* Dokumen ini merupakan bukti rekapitulasi sah penerimaan garam harian PT. Reka Cipta Garam.';
 
     if (totalCopies === 2) {
       if (copyNumber === 1) {
-        copyBadgeText = 'REKAPITULASI PEMASOK (ASLI)';
         copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK)';
-        copyFooterText = '* Lembar 1: Untuk Pemasok sebagai bukti rekapitulasi penerimaan harian.';
       } else {
-        copyBadgeText = 'REKAPITULASI PEMASOK (ARSIP)';
         copyReceiverText = 'LEMBAR 2: ARSIP KANTOR / KEUANGAN';
-        copyFooterText = '* Lembar 2: Untuk Arsip Kantor & Pembukuan Keuangan PT. RCG.';
       }
     } else if (totalCopies === 3) {
       if (copyNumber === 1) {
-        copyBadgeText = 'REKAPITULASI PEMASOK (ASLI)';
         copyReceiverText = 'LEMBAR 1: ASLI (PEMASOK)';
-        copyFooterText = '* Lembar 1: Untuk Pemasok sebagai bukti rekapitulasi penerimaan harian.';
       } else if (copyNumber === 2) {
-        copyBadgeText = 'REKAPITULASI PEMASOK (LAPANGAN)';
         copyReceiverText = 'LEMBAR 2: BAGIAN TIMBANG & LAPANGAN';
-        copyFooterText = '* Lembar 2: Untuk Arsip Bagian Timbangan & Lapangan.';
       } else {
-        copyBadgeText = 'REKAPITULASI PEMASOK (LEMBAR 3)';
         copyReceiverText = 'LEMBAR 3: KASIR & KEUANGAN';
-        copyFooterText = '* Lembar 3: Untuk Kasir & Verifikasi Pembayaran.';
       }
     }
 
     const firstTx = (group.transactions && group.transactions[0]) || {};
     const lastTx = (group.transactions && group.transactions[group.transactions.length - 1]) || firstTx;
 
-    // Format Indonesian date (e.g. 30 Agustus 2026)
+    // Format Indonesian date (e.g. 5 September 2026)
     let formattedDate = group.date || '-';
     if (group.date && group.date.includes('-')) {
       const parts = group.date.split('-');
@@ -529,20 +518,31 @@ const SupplierHistoryManager = {
       ? docArray[0]
       : (docArray[0] ? `${docArray[0]} (+${docArray.length - 1})` : `REKAP-${group.date}`);
 
-    const materialArray = Array.from(group.materials || []).filter(Boolean);
-    const materialsSummaryFull = materialArray.join(', ') || (group.materialsSummary || 'GARAM');
-    let materialDisplay = 'GARAM';
-    if (materialArray.length === 1) {
-      materialDisplay = materialArray[0];
-    } else if (materialArray.length === 2) {
-      materialDisplay = materialArray.join(', ');
-    } else if (materialArray.length > 2) {
-      materialDisplay = `${materialArray[0]} (+${materialArray.length - 1})`;
-    } else if (group.materialsSummary && group.materialsSummary !== '-') {
-      materialDisplay = group.materialsSummary;
+    // Material segregation: Bagged vs Curah
+    let totalKarung = 0;
+    let totalCurahKg = 0;
+    (group.transactions || []).forEach(tx => {
+      const upperMat = (tx.material || '').trim().toUpperCase();
+      const isCurah = upperMat.includes('CURAH');
+      const bagCount = parseInt(tx.bagCount, 10) || 0;
+      const net = parseFloat(tx.finalNetWeight) || parseFloat(tx.netLoadWeight) || 0;
+
+      if (isCurah) {
+        totalCurahKg += net;
+      } else {
+        totalKarung += bagCount;
+      }
+    });
+
+    if (totalKarung === 0 && group.bagCount > 0) {
+      totalKarung = group.bagCount;
     }
 
-    const adminDisplay = firstTx.weighmasterName || firstTx.adminName || 'PETUGAS TIMBANG';
+    const curahFormatted = (totalCurahKg % 1 === 0)
+      ? totalCurahKg.toLocaleString('en-US')
+      : totalCurahKg.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+    const adminDisplay = firstTx.weighmasterName || firstTx.adminName || 'PENJAGA TIMBANGAN';
     const originSummaryFull = group.originSummary || '-';
     let originDisplay = originSummaryFull;
 
@@ -552,141 +552,194 @@ const SupplierHistoryManager = {
     const avgK1Price = group.k1Weight > 0 ? Math.round(group.k1Total / group.k1Weight) : (firstTx.k1Price || 0);
     const avgK2Price = group.k2Weight > 0 ? Math.round(group.k2Total / group.k2Weight) : (firstTx.k2Price || 0);
 
-    const refractionDisplay = (group.transactions && group.transactions.length === 1)
-      ? `${firstTx.refractionPercent || 0}%`
-      : (group.netLoadWeight > 0
-          ? `${(((group.netLoadWeight - group.finalNetWeight) / group.netLoadWeight) * 100).toFixed(1)}%`
-          : '0%');
+    const calculatedRefraction = group.netLoadWeight > 0
+      ? (((group.netLoadWeight - group.finalNetWeight) / group.netLoadWeight) * 100)
+      : (firstTx.refractionPercent || 0);
+    const refractionDisplay = `${Number(calculatedRefraction).toFixed(1)} %`;
 
-    const scaleCssProp = (scaleFactor !== null && scaleFactor !== undefined) ? `--doc-scale: ${scaleFactor};` : '--doc-scale: var(--doc-scale, 1);';
+    const isAllLunas = (group.unpaidCount === 0 && group.lunasCount > 0);
+    const statusRekapDisplay = isAllLunas ? 'LUNAS' : (group.paymentStatus ? group.paymentStatus.toUpperCase() : 'BELUM LUNAS');
+
+    // Adapt scaleFactor for A4-based Rekap layout (fallback from A6 scale if necessary)
+    let activeScale = (scaleFactor !== null && scaleFactor !== undefined) ? scaleFactor : 1.0;
+    if (activeScale > 1.2) {
+      activeScale = activeScale / 2.0;
+    }
+    const scaleCssProp = `--doc-scale: ${activeScale};`;
 
     return `
-      <div class="nota-container" style="${scaleCssProp} background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: calc(6px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); border: none !important; outline: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%; page-break-inside: avoid !important; break-inside: avoid !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
-        <!-- Header Logo Centered -->
-        <div class="nota-header" style="text-align: center; margin-bottom: calc(6px * var(--doc-scale, 1));">
-          <img class="nota-logo" src="assets/images/kop surat nota timbang.webp" alt="PT REKA CIPTA GARAM - Subsidiary Bawang Mas Grup" style="max-height: calc(42px * var(--doc-scale, 1)); max-width: 100%; width: auto; height: auto; object-fit: contain; display: inline-block;">
+      <div class="nota-container rekap-container" style="${scaleCssProp} display: flex; flex-direction: column; justify-content: space-between; height: var(--printable-height, 100%); min-height: var(--printable-height, 100%); max-height: var(--printable-height, 100%); box-sizing: border-box; background: #FFFFFF; color: #0F172A; font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 0; border: none !important; outline: none !important; box-shadow: none !important; width: 100%; overflow: hidden; page-break-inside: avoid !important; break-inside: avoid !important; page-break-after: ${copyNumber < totalCopies ? 'always' : 'auto'}; break-after: ${copyNumber < totalCopies ? 'page' : 'auto'};">
+        <!-- Top Section Block -->
+        <div class="rekap-top-block" style="width: 100%; flex-shrink: 0;">
+          <!-- Official Kop Surat PT Reka Cipta Garam - Subsidiary Bawang Mas Grup (~5:1 aspect ratio) -->
+          <div class="rekap-header-area" style="width: 100%; text-align: center; margin-bottom: calc(6px * var(--doc-scale, 1));">
+            <div style="text-align: center; margin-bottom: calc(4px * var(--doc-scale, 1));">
+              <img class="nota-logo" src="assets/images/kop surat nota timbang.webp" alt="PT REKA CIPTA GARAM - Subsidiary Bawang Mas Grup" style="max-height: calc(60px * var(--doc-scale, 1)); max-width: 100%; width: auto; height: auto; object-fit: contain; display: inline-block;">
+            </div>
+            <div style="border-top: calc(1px * var(--doc-scale, 1)) solid #0B2545; margin: 0 0 calc(10px * var(--doc-scale, 1)) 0;"></div>
+            <div style="text-align: center; font-size: calc(15px * var(--doc-scale, 1)); font-weight: 800; letter-spacing: calc(3px * var(--doc-scale, 1)); text-transform: uppercase; color: #0B2545; line-height: 1.25;">
+              ${copyBadgeText}
+              ${totalCopies > 1 ? `<div style="font-size: calc(9px * var(--doc-scale, 1)); font-weight: 700; color: #64748B; margin-top: calc(2px * var(--doc-scale, 1)); letter-spacing: 0.05em;">[ ${copyReceiverText} ]</div>` : ''}
+            </div>
+          </div>
+
+          <!-- Seksi 1: DATA REKAPITULASI PEMASOK (Clean borderless 2-column grid with aligned colons) -->
+          <div class="rekap-section" style="width: 100%; margin-bottom: calc(10px * var(--doc-scale, 1));">
+            <div style="font-size: calc(11px * var(--doc-scale, 1)); font-weight: 800; color: #0B2545; text-transform: uppercase; letter-spacing: calc(2px * var(--doc-scale, 1)); margin-bottom: calc(6px * var(--doc-scale, 1));">
+              D A T A &nbsp;&nbsp; R E K A P I T U L A S I &nbsp;&nbsp; P E M A S O K
+            </div>
+            <table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed; margin-bottom: 0; font-size: calc(10.5px * var(--doc-scale, 1)); line-height: 1.4;">
+              <tbody>
+                <tr>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Tanggal Rekap</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${formattedDate}</td>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Jumlah Transaksi</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.txCount} Transaksi</td>
+                </tr>
+                <tr>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Pemasok</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</td>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">No. Dokumen</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${docSummaryFull}">${docNoDisplay}</td>
+                </tr>
+                <tr>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Asal Material</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${originSummaryFull}">${originDisplay}</td>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Nomor Polisi</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${plateSummaryFull}">${plateDisplay}</td>
+                </tr>
+                <tr>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Waktu Operasional</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: #0F172A; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeInDisplay} s/d ${timeOutDisplay}</td>
+                  <td style="width: 20%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 400; color: #0F172A; vertical-align: top;">Status Rekap</td>
+                  <td style="width: 2%; padding: calc(3px * var(--doc-scale, 1)) 0; border: none; font-weight: 800; color: #0B2545; text-align: center; vertical-align: top;">:</td>
+                  <td style="width: 28%; padding: calc(3px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: none; font-weight: 800; color: ${isAllLunas ? '#0B2545' : '#B45309'}; vertical-align: top; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase;">${statusRekapDisplay}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Seksi 2: RINCIAN MATERIAL (#0B2545 Navy Header, Bagged vs Bulk distinction) -->
+          <div class="rekap-section" style="width: 100%; margin-bottom: calc(10px * var(--doc-scale, 1));">
+            <div style="font-size: calc(11px * var(--doc-scale, 1)); font-weight: 800; color: #0B2545; text-transform: uppercase; letter-spacing: calc(2px * var(--doc-scale, 1)); margin-bottom: calc(6px * var(--doc-scale, 1));">
+              R I N C I A N &nbsp;&nbsp; M A T E R I A L
+            </div>
+            <table style="width: 100%; border-collapse: collapse; border: calc(1px * var(--doc-scale, 1)) solid #0B2545; margin-bottom: 0; font-size: calc(10.5px * var(--doc-scale, 1));">
+              <thead>
+                <tr style="background-color: #0B2545; color: #FFFFFF;">
+                  <th style="width: 50%; padding: calc(6px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center; letter-spacing: calc(1.5px * var(--doc-scale, 1)); text-transform: uppercase;">D E S K R I P S I &nbsp;&nbsp; M A T E R I A L</th>
+                  <th style="width: 50%; padding: calc(6px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center; letter-spacing: calc(1.5px * var(--doc-scale, 1)); text-transform: uppercase;">T O T A L &nbsp;&nbsp; K U A N T I T A S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: #FFFFFF;">
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: left;">GARAM KARUNG</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: left;">${totalKarung.toLocaleString('en-US')} KARUNG</td>
+                </tr>
+                <tr style="background: #FFFFFF;">
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: left;">GARAM CURAH</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: left;">${curahFormatted} KG</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Seksi 3: NOTA TIMBANG & REFRAKSI (5 Columns with #0B2545 Navy Header) -->
+          <div class="rekap-section" style="width: 100%; margin-bottom: calc(10px * var(--doc-scale, 1));">
+            <div style="font-size: calc(11px * var(--doc-scale, 1)); font-weight: 800; color: #0B2545; text-transform: uppercase; letter-spacing: calc(2px * var(--doc-scale, 1)); margin-bottom: calc(6px * var(--doc-scale, 1));">
+              N O T A &nbsp;&nbsp; T I M B A N G &nbsp;&nbsp; &amp; &nbsp;&nbsp; R E F R A K S I
+            </div>
+            <table style="width: 100%; border-collapse: collapse; border: calc(1px * var(--doc-scale, 1)) solid #0B2545; margin-bottom: 0; font-size: calc(10.5px * var(--doc-scale, 1));">
+              <thead>
+                <tr style="background-color: #0B2545; color: #FFFFFF;">
+                  <th style="width: 20%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Kotor (Gross)</th>
+                  <th style="width: 20%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Tara</th>
+                  <th style="width: 20%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Muatan (Bruto)</th>
+                  <th style="width: 20%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Refraksi</th>
+                  <th style="width: 20%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Total Bersih (Netto)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: #FFFFFF;">
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${(group.grossWeight || 0).toLocaleString('en-US')} Kg</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${(group.tareWeight || 0).toLocaleString('en-US')} Kg</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${(group.netLoadWeight || 0).toLocaleString('en-US')} Kg</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${refractionDisplay}</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${(group.finalNetWeight || 0).toLocaleString('en-US')} Kg</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Seksi 4: RINCIAN PERHITUNGAN & PEMBAYARAN (Comparison of Kualitas 1 and Kualitas 2 + Total Payment Banner) -->
+          <div class="rekap-section" style="width: 100%; margin-bottom: 0;">
+            <div style="font-size: calc(11px * var(--doc-scale, 1)); font-weight: 800; color: #0B2545; text-transform: uppercase; letter-spacing: calc(2px * var(--doc-scale, 1)); margin-bottom: calc(6px * var(--doc-scale, 1));">
+              R I N C I A N &nbsp;&nbsp; P E R H I T U N G A N &nbsp;&nbsp; &amp; &nbsp;&nbsp; P E M B A Y A R A N
+            </div>
+            <table style="width: 100%; border-collapse: collapse; border: calc(1px * var(--doc-scale, 1)) solid #0B2545; margin-bottom: 0; font-size: calc(10.5px * var(--doc-scale, 1));">
+              <thead>
+                <tr style="background-color: #0B2545; color: #FFFFFF;">
+                  <th style="width: 25%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Jenis Kualitas</th>
+                  <th style="width: 25%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Berat Bersih</th>
+                  <th style="width: 25%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Harga Per Kilo</th>
+                  <th style="width: 25%; padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #0B2545; font-weight: 800; text-align: center;">Total Harga</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: #FFFFFF;">
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: left;">Kualitas 1</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${(group.k1Weight || 0).toLocaleString('en-US')} Kg</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">Rp${(avgK1Price || 0).toLocaleString('en-US')}</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">Rp${(group.k1Total || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr style="background: #FFFFFF;">
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(6px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: left;">Kualitas 2</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">${(group.k2Weight || 0).toLocaleString('en-US')} Kg</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">Rp${(avgK2Price || 0).toLocaleString('en-US')}</td>
+                  <td style="padding: calc(6px * var(--doc-scale, 1)) calc(4px * var(--doc-scale, 1)); border: calc(1px * var(--doc-scale, 1)) solid #CBD5E1; font-weight: 400; color: #0F172A; text-align: center;">Rp${(group.k2Total || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Full Width Deep Navy Payment Total Banner directly joined below Table 4 -->
+            <div style="background-color: #0B2545; color: #FFFFFF; font-weight: 800; font-size: calc(11px * var(--doc-scale, 1)); letter-spacing: calc(1.5px * var(--doc-scale, 1)); padding: calc(7px * var(--doc-scale, 1)) calc(10px * var(--doc-scale, 1)); text-align: left; border: calc(1px * var(--doc-scale, 1)) solid #0B2545; border-top: none; margin-bottom: 0; box-sizing: border-box;">
+              T O T A L &nbsp;&nbsp; P E M B A Y A R A N &nbsp;&nbsp; : &nbsp; Rp${(group.grandTotal || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+          </div>
         </div>
 
-        <!-- Solid Theme Divider -->
-        <div class="nota-divider-solid" style="border-top: calc(2px * var(--doc-scale, 1)) solid #163A5F; margin: 0 0 calc(6px * var(--doc-scale, 1)) 0;"></div>
-
-        <!-- Title -->
-        <div class="nota-title" style="text-align: center; font-size: calc(13px * var(--doc-scale, 1)); font-weight: 800; letter-spacing: calc(1.5px * var(--doc-scale, 1)); text-transform: uppercase; margin-bottom: calc(6px * var(--doc-scale, 1)); color: #163A5F; line-height: 1.25;">
-          ${copyBadgeText}
-          ${totalCopies > 1 ? `<div class="nota-subtitle" style="font-size: calc(9px * var(--doc-scale, 1)); font-weight: 700; color: #64748B; margin-top: calc(1px * var(--doc-scale, 1)); letter-spacing: 0.03em;">[ ${copyReceiverText} ]</div>` : ''}
-        </div>
-
-        <!-- Metadata Section (2 Columns with resilient 50/50 minmax) -->
-        <div class="nota-grid" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); font-size: calc(10px * var(--doc-scale, 1)); margin-bottom: calc(2px * var(--doc-scale, 1)); line-height: 1.25; width: 100%; box-sizing: border-box;">
-          <div style="min-width: 0; overflow: hidden;">
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Tanggal</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.date}">${formattedDate}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Jumlah Transaksi</div>
-            <div class="nota-val" style="color: #163A5F; font-weight: 800; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.txCount} kali (${group.txCount} Transaksi)</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">No. Polisi</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${plateSummaryFull} (${plateArray.length} Kendaraan)">${plateDisplay}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Material</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${materialsSummaryFull}">${materialDisplay}</div>
+        <!-- Seksi 5: PENGESAHAN (Two center-aligned columns + Footnote anchored at bottom) -->
+        <div class="rekap-bottom-block" style="width: 100%; margin-top: auto; flex-shrink: 0; padding-top: calc(10px * var(--doc-scale, 1));">
+          <div style="font-size: calc(11px * var(--doc-scale, 1)); font-weight: 800; color: #0B2545; text-transform: uppercase; letter-spacing: calc(2px * var(--doc-scale, 1)); margin-bottom: calc(8px * var(--doc-scale, 1)); text-align: left;">
+            P E N G E S A H A N
           </div>
-
-          <div style="min-width: 0; overflow: hidden;">
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Pemasok</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 800; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${group.supplier}">${group.supplier}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">No. Dok Rekap</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 700; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${docSummaryFull}">${docNoDisplay}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Asal Material</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${originSummaryFull}">${originDisplay}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Waktu Operasional</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 500; font-size: calc(9.5px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${timeInDisplay} s/d ${timeOutDisplay}</div>
+          <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: calc(6px * var(--doc-scale, 1));">
+            <tbody>
+              <tr>
+                <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 calc(15px * var(--doc-scale, 1));">
+                  <div style="font-weight: 800; color: #0B2545; font-size: calc(11px * var(--doc-scale, 1)); margin-bottom: calc(52px * var(--doc-scale, 1));">Pemasok</div>
+                  <div style="border-top: calc(1px * var(--doc-scale, 1)) solid #000000; width: 60%; margin: 0 auto calc(4px * var(--doc-scale, 1)) auto;"></div>
+                  <div style="font-weight: 800; color: #0F172A; font-size: calc(11px * var(--doc-scale, 1)); text-transform: uppercase;">${group.supplier.toUpperCase()}</div>
+                </td>
+                <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 calc(15px * var(--doc-scale, 1));">
+                  <div style="font-weight: 800; color: #0B2545; font-size: calc(11px * var(--doc-scale, 1)); margin-bottom: calc(52px * var(--doc-scale, 1));">Penjaga Timbangan</div>
+                  <div style="border-top: calc(1px * var(--doc-scale, 1)) solid #000000; width: 60%; margin: 0 auto calc(4px * var(--doc-scale, 1)) auto;"></div>
+                  <div style="font-weight: 800; color: #0F172A; font-size: calc(11px * var(--doc-scale, 1)); text-transform: uppercase;">${adminDisplay.toUpperCase()}</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="border-top: calc(0.8px * var(--doc-scale, 1)) solid #94A3B8; margin: calc(10px * var(--doc-scale, 1)) 0 calc(3px * var(--doc-scale, 1)) 0;"></div>
+          <div style="text-align: center; font-style: italic; font-weight: 400; color: #334155; font-size: calc(8.5px * var(--doc-scale, 1)); line-height: 1.3;">
+            Dokumen ini merupakan bukti sah penerimaan &amp; penimbangan garam PT. Reka Cipta Garam.
           </div>
         </div>
-
-        <!-- Dashed Divider 1 -->
-        <div class="nota-divider-dashed" style="border-top: calc(1px * var(--doc-scale, 1)) dashed #94A3B8; margin: calc(4px * var(--doc-scale, 1)) 0;"></div>
-
-        <!-- Weight Section (2 Columns with resilient 50/50 minmax) -->
-        <div class="nota-grid" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); font-size: calc(10px * var(--doc-scale, 1)); margin-bottom: calc(2px * var(--doc-scale, 1)); line-height: 1.25; width: 100%; box-sizing: border-box;">
-          <div style="min-width: 0; overflow: hidden;">
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Kotor (Gross)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.grossWeight || 0).toLocaleString('id-ID')} Kg</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Muatan (Bruto)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.netLoadWeight || 0).toLocaleString('id-ID')} Kg</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Total Garam (Netto)</div>
-            <div class="nota-val" style="color: #163A5F; font-weight: 800; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.finalNetWeight || 0).toLocaleString('id-ID')} Kg</div>
-          </div>
-
-          <div style="min-width: 0; overflow: hidden;">
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Tara (Tare)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.tareWeight || 0).toLocaleString('id-ID')} Kg</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Refraksi (%)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${refractionDisplay}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Jumlah Muatan</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${group.bagCount > 0 ? `${group.bagCount.toLocaleString('id-ID')} Karung` : `${group.txCount} Rit / Truk`}</div>
-          </div>
-        </div>
-
-        <!-- Dashed Divider 2 -->
-        <div class="nota-divider-dashed" style="border-top: calc(1px * var(--doc-scale, 1)) dashed #94A3B8; margin: calc(4px * var(--doc-scale, 1)) 0;"></div>
-
-        <!-- Quality & Price Section (2 Columns with resilient 50/50 minmax) -->
-        <div class="nota-grid" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(2px * var(--doc-scale, 1)) calc(14px * var(--doc-scale, 1)); font-size: calc(10px * var(--doc-scale, 1)); margin-bottom: calc(2px * var(--doc-scale, 1)); line-height: 1.25; width: 100%; box-sizing: border-box;">
-          <div style="min-width: 0; overflow: hidden;">
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Bersih K1 (Kg)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.k1Weight || 0).toLocaleString('id-ID')} Kg</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Berat Bersih K2 (Kg)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(group.k2Weight || 0).toLocaleString('id-ID')} Kg</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Total K1 (Rp)</div>
-            <div class="nota-val" style="color: #163A5F; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(group.k1Total || 0).toLocaleString('id-ID')}</div>
-          </div>
-
-          <div style="min-width: 0; overflow: hidden;">
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Harga K1 / Kg (Rp)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(avgK1Price || 0).toLocaleString('id-ID')}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Harga K2 / Kg (Rp)</div>
-            <div class="nota-val" style="color: #0F172A; font-weight: 600; font-family: monospace; margin-bottom: calc(4px * var(--doc-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(avgK2Price || 0).toLocaleString('id-ID')}</div>
-
-            <div class="nota-label" style="font-weight: 700; color: #475569; font-size: calc(9.5px * var(--doc-scale, 1)); margin-bottom: calc(1px * var(--doc-scale, 1));">Total K2 (Rp)</div>
-            <div class="nota-val" style="color: #B45309; font-weight: 700; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Rp ${(group.k2Total || 0).toLocaleString('id-ID')}</div>
-          </div>
-        </div>
-
-        <!-- Total Keseluruhan (Thematic Accent Box) -->
-        <div class="nota-total-box" style="margin-top: calc(5px * var(--doc-scale, 1)); background: #F8FAFC; border-left: calc(3px * var(--doc-scale, 1)) solid #163A5F; border-top: calc(1px * var(--doc-scale, 1)) solid #E2E8F0; border-right: calc(1px * var(--doc-scale, 1)) solid #E2E8F0; border-bottom: calc(1px * var(--doc-scale, 1)) solid #E2E8F0; padding: calc(4px * var(--doc-scale, 1)) calc(8px * var(--doc-scale, 1)); border-radius: calc(3px * var(--doc-scale, 1)); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
-          <span class="nota-total-label" style="font-weight: 800; font-size: calc(9.5px * var(--doc-scale, 1)); color: #1E293B; text-transform: uppercase; letter-spacing: 0.03em;">TOTAL PEMBAYARAN:</span>
-          <span class="nota-total-amount" style="font-weight: 800; font-size: calc(11.5px * var(--doc-scale, 1)); color: #163A5F; font-family: monospace;">Rp ${(group.grandTotal || 0).toLocaleString('id-ID')}</span>
-        </div>
-
-        <!-- Signatures (Special Sign Box for Riwayat Pemasok: Pemasok + Penjaga Timbangan) -->
-        <div class="nota-signatures" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); text-align: center; margin-top: calc(12px * var(--doc-scale, 1)); font-size: calc(9.5px * var(--doc-scale, 1)); width: 100%; box-sizing: border-box;">
-          <div class="nota-sign-col" style="min-width: 0; overflow: hidden; padding: 0 calc(4px * var(--doc-scale, 1));">
-            <div class="nota-sign-title" style="color: #64748B; margin-bottom: calc(22px * var(--doc-scale, 1));">Pemasok</div>
-            <div class="nota-sign-line" style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: calc(1px * var(--doc-scale, 1)) solid #64748B; min-width: calc(100px * var(--doc-scale, 1)); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: calc(2px * var(--doc-scale, 1));" title="${group.supplier}">( ${group.supplier} )</div>
-          </div>
-          <div class="nota-sign-col" style="min-width: 0; overflow: hidden; padding: 0 calc(4px * var(--doc-scale, 1));">
-            <div class="nota-sign-title" style="color: #64748B; margin-bottom: calc(22px * var(--doc-scale, 1));">Penjaga Timbangan</div>
-            <div class="nota-sign-line" style="font-weight: 700; color: #0F172A; text-transform: uppercase; display: inline-block; border-top: calc(1px * var(--doc-scale, 1)) solid #64748B; min-width: calc(100px * var(--doc-scale, 1)); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: calc(2px * var(--doc-scale, 1));" title="${adminDisplay}">( ${adminDisplay} )</div>
-          </div>
-        </div>
-
-        <!-- Footer Note -->
-        ${totalCopies > 1 ? `
-          <div class="nota-footer" style="font-size: calc(8px * var(--doc-scale, 1)); color: #64748B; text-align: center; margin-top: calc(8px * var(--doc-scale, 1)); border-top: calc(1px * var(--doc-scale, 1)) dotted #CBD5E1; padding-top: calc(2px * var(--doc-scale, 1));">
-            ${copyFooterText}
-          </div>
-        ` : ''}
       </div>
     `;
   },

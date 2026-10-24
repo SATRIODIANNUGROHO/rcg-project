@@ -286,27 +286,44 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
 
     let pageSize = 'A4';
     let pageCSS = '210mm 297mm';
+    let pageHeightMm = 297;
+    let pageWidthMm = 210;
 
     if (paperSize === 'A6') {
       pageSize = { width: 105 / 25.4, height: 148 / 25.4 };
       pageCSS = '105mm 148mm';
+      pageHeightMm = 148;
+      pageWidthMm = 105;
     } else if (paperSize === 'A5') {
       pageSize = 'A5';
       pageCSS = '148mm 210mm';
+      pageHeightMm = 210;
+      pageWidthMm = 148;
     } else if (paperSize === 'Letter') {
       pageSize = 'Letter';
       pageCSS = '8.5in 11in';
+      pageHeightMm = 279.4;
+      pageWidthMm = 215.9;
     } else if (paperSize === 'NCR_Wartel' || paperSize === 'NCR' || paperSize === 'Continuous') {
       pageSize = { width: 9.5, height: 11.0 };
       pageCSS = '9.5in 11in';
+      pageHeightMm = 279.4;
+      pageWidthMm = 241.3;
     }
 
     const marginUnit = margins.unit || 'mm';
+    const factorToMm = (marginUnit === 'cm') ? 10 : (marginUnit === 'in' ? 25.4 : 1);
     const marginTop = (margins.top !== undefined && margins.top !== null) ? margins.top : 5;
     const marginBottom = (margins.bottom !== undefined && margins.bottom !== null) ? margins.bottom : 5;
     const marginLeft = (margins.left !== undefined && margins.left !== null) ? margins.left : 5;
     const marginRight = (margins.right !== undefined && margins.right !== null) ? margins.right : 5;
     const pageMarginCss = `${marginTop}${marginUnit} ${marginRight}${marginUnit} ${marginBottom}${marginUnit} ${marginLeft}${marginUnit}`;
+
+    const effectivePageHeightMm = landscape ? pageWidthMm : pageHeightMm;
+    const topMarginMm = marginTop * factorToMm;
+    const bottomMarginMm = marginBottom * factorToMm;
+    const printableHeightMm = Math.max(50, effectivePageHeightMm - (topMarginMm + bottomMarginMm));
+    const printableHeightCss = `${printableHeightMm}mm`;
 
     let processedHtml = htmlContent;
     const logoFile = path.join(__dirname, 'assets/images/RCG.webp');
@@ -332,6 +349,7 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     :root {
       --doc-scale: ${docScale} !important;
+      --printable-height: ${printableHeightCss} !important;
     }
     *, *::before, *::after {
       box-sizing: border-box !important;
@@ -339,6 +357,8 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
       print-color-adjust: exact !important;
     }
     html, body {
+      height: 100% !important;
+      min-height: 100% !important;
       margin: 0 !important;
       padding: 0 !important;
       background: #FFFFFF !important;
@@ -350,7 +370,7 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
       margin: ${pageMarginCss} !important;
       size: ${pageCSS} ${landscape ? 'landscape' : 'portrait'};
     }
-    .nota-container, .nota-sheet {
+    .nota-container, .nota-sheet, .rekap-container {
       --doc-scale: ${docScale} !important;
       width: 100% !important;
       max-width: 100% !important;
@@ -360,6 +380,14 @@ ipcMain.handle('app:generate-pdf-preview', async (event, options = {}) => {
       box-sizing: border-box !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;
+    }
+    .nota-container.rekap-container {
+      height: var(--printable-height, 100%) !important;
+      min-height: var(--printable-height, 100%) !important;
+      max-height: var(--printable-height, 100%) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
     }
     table {
       border-collapse: collapse !important;
@@ -492,23 +520,33 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     let pageSize = 'A4';
     let pageCSS = '210mm 297mm';
     let containerWidth = '190mm';
+    let pageHeightMm = 297;
+    let pageWidthMm = 210;
 
     if (options.paperSize === 'A6') {
       pageSize = { width: 105 / 25.4, height: 148 / 25.4 };
       pageCSS = '105mm 148mm';
       containerWidth = '98mm';
+      pageHeightMm = 148;
+      pageWidthMm = 105;
     } else if (options.paperSize === 'A5') {
       pageSize = 'A5';
       pageCSS = '148mm 210mm';
       containerWidth = '138mm';
+      pageHeightMm = 210;
+      pageWidthMm = 148;
     } else if (options.paperSize === 'Letter') {
       pageSize = 'Letter';
       pageCSS = '8.5in 11in';
       containerWidth = '7.8in';
+      pageHeightMm = 279.4;
+      pageWidthMm = 215.9;
     } else if (options.paperSize === 'NCR_Wartel' || options.paperSize === 'NCR' || options.paperSize === 'Continuous') {
       pageSize = { width: 9.5, height: 11.0 };
       pageCSS = '9.5in 11in';
       containerWidth = '8.8in';
+      pageHeightMm = 279.4;
+      pageWidthMm = 241.3;
     }
 
     let htmlContent = options.htmlContent || '';
@@ -542,11 +580,18 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
 
     const marginObj = options.margins || {};
     const marginUnit = marginObj.unit || 'mm';
+    const factorToMm = (marginUnit === 'cm') ? 10 : (marginUnit === 'in' ? 25.4 : 1);
     const marginTop = (marginObj.top !== undefined && marginObj.top !== null) ? marginObj.top : 5;
     const marginBottom = (marginObj.bottom !== undefined && marginObj.bottom !== null) ? marginObj.bottom : 5;
     const marginLeft = (marginObj.left !== undefined && marginObj.left !== null) ? marginObj.left : 5;
     const marginRight = (marginObj.right !== undefined && marginObj.right !== null) ? marginObj.right : 5;
     const pageMarginCss = `${marginTop}${marginUnit} ${marginRight}${marginUnit} ${marginBottom}${marginUnit} ${marginLeft}${marginUnit}`;
+
+    const effectivePageHeightMm = options.landscape ? pageWidthMm : pageHeightMm;
+    const topMarginMm = marginTop * factorToMm;
+    const bottomMarginMm = marginBottom * factorToMm;
+    const printableHeightMm = Math.max(50, effectivePageHeightMm - (topMarginMm + bottomMarginMm));
+    const printableHeightCss = `${printableHeightMm}mm`;
 
     const docScale = (options.scaleFactor !== null && options.scaleFactor !== undefined)
       ? options.scaleFactor
@@ -564,6 +609,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     :root {
       --doc-scale: ${docScale} !important;
+      --printable-height: ${printableHeightCss} !important;
     }
     *, *::before, *::after {
       box-sizing: border-box !important;
@@ -571,6 +617,8 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       print-color-adjust: exact !important;
     }
     html, body {
+      height: 100% !important;
+      min-height: 100% !important;
       margin: 0 !important;
       padding: 0 !important;
       background: #FFFFFF !important;
@@ -585,7 +633,7 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       margin: ${pageMarginCss} !important;
       size: ${pageCSS} ${options.landscape ? 'landscape' : 'portrait'};
     }
-    .nota-container, .nota-sheet {
+    .nota-container, .nota-sheet, .rekap-container {
       --doc-scale: ${docScale} !important;
       width: 100% !important;
       max-width: 100% !important;
@@ -598,6 +646,14 @@ ipcMain.handle('app:save-pdf', async (event, options = {}) => {
       box-sizing: border-box !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;
+    }
+    .nota-container.rekap-container {
+      height: var(--printable-height, 100%) !important;
+      min-height: var(--printable-height, 100%) !important;
+      max-height: var(--printable-height, 100%) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
     }
     table {
       border-collapse: collapse !important;

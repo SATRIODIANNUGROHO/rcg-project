@@ -247,4 +247,31 @@
     border: none !important;
     background: #FFFFFF !important;
   }
+
+  .nota-container.rekap-container {
+    height: var(--printable-height, 100%) !important;
+    min-height: var(--printable-height, 100%) !important;
+    max-height: var(--printable-height, 100%) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
 }
+
+/* 4. Rekapitulasi Pemasok Flexible Vertical Single-Page Layout System */
+.nota-container.rekap-container {
+  height: var(--printable-height, 100%) !important;
+  min-height: var(--printable-height, 100%) !important;
+  max-height: var(--printable-height, 100%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}

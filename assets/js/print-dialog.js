@@ -532,6 +532,14 @@ const PrintManager = {
 
   getScaleFactor(paperSize, orientation = 'portrait') {
     const isLandscape = (orientation === 'landscape');
+    if (this.currentDocType === 'Rekap_Pemasok') {
+      if (paperSize === 'A4') return isLandscape ? 0.70 : 1.0;
+      if (paperSize === 'Letter') return isLandscape ? 0.70 : 0.95;
+      if (paperSize === 'A5') return isLandscape ? 0.50 : 0.70;
+      if (paperSize === 'A6') return isLandscape ? 0.35 : 0.50;
+      if (paperSize === 'NCR_Wartel' || paperSize === 'NCR' || paperSize === 'Continuous') return 0.95;
+      return 1.0;
+    }
     const fmt = PAPER_FORMATS[paperSize];
     if (fmt) {
       return isLandscape ? (fmt.scaleFactorLandscape || fmt.scaleFactor || 1.0) : (fmt.scaleFactor || 1.0);
